@@ -13,8 +13,11 @@
     <color name="defaultBackground">#292929</color>
     <color name="customBlack">#323232</color>
     <color name="customGray">#616161</color>
-    <color name="button_language">#9F78FF</color>
+    <color name="unselected">#BCBCBC</color>
+    <color name="customText">#2C2C2C</color>
+    <color name="button_language">#8246FF</color>
     <color name="select_title">#3A236D</color>
-    <color name="main_color">#9F78FF</color>
+    <color name="main_color">#8246FF</color>
     <color name="gray">#79767A</color>
+    <color name="un_select">#EFEFEF</color>
 </resources>

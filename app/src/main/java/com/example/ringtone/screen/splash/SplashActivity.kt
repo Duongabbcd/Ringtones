@@ -26,6 +26,7 @@ import com.example.ringtone.remote.viewmodel.ContentViewModel
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
 import com.example.ringtone.remote.viewmodel.WallpaperViewModel
 import com.example.ringtone.screen.intro.IntroActivityNew
+import com.example.ringtone.screen.language.LanguageActivity
 import com.example.ringtone.utils.Common
 import com.example.ringtone.utils.Common.inVisible
 import com.example.ringtone.utils.Common.visible
@@ -40,7 +41,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.exitProcess
 
-@AndroidEntryPoint
 class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
     private var appOpenManager: AOAManager? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
@@ -68,7 +68,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
         Common.setPreLanguage(this, "en")
         handler.postDelayed(runnable, 20000)
-
+        val x = false
         if (isNetworkConnected(this)) {
             FireBaseConfig.initRemoteConfig(
                 R.xml.remote_config_default,
@@ -118,9 +118,16 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
         } else {
             binding.tvStart.inVisible()
             Handler(Looper.getMainLooper()).postDelayed({
-//                nextScreen()
+                nextScreen()
             }, 3000)
         }
+    }
+
+    private fun nextScreen() {
+        val intent = Intent(this@SplashActivity, LanguageActivity::class.java)
+        intent.putExtra("fromSplash", true)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun setupCMP() {
@@ -146,7 +153,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
     private fun initAdmob() {
         showAds = false
         handler.removeCallbacks(runnable)
-        AdmobUtils.initAdmob(thiscom.musicplayer.mp3.playeroffline.screen.splash.SplashActivity,
+        AdmobUtils.initAdmob(this@SplashActivity,
             isDebug,
             true,
             isCheckTestDevice = true,

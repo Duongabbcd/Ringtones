@@ -9,7 +9,6 @@ import com.example.ringtone.screen.MainActivity
 import com.musicplayer.mp3.playeroffline.ads.AdsManager
 import com.musicplayer.mp3.playeroffline.ads.AdsManager.isTestDevice
 import com.musicplayer.mp3.playeroffline.ads.RemoteConfig
-import com.musicplayer.mp3.playeroffline.screen.intro.new.SlideAdapter
 import kotlin.jvm.java
 
 class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding::inflate), IntroFragmentNew.CallbackIntro {

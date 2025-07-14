@@ -2,11 +2,37 @@
     <string name="app_name" translatable="false">Ringtones &amp; Wallpapers - Ringify</string>
 
     <string name="admob_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="adjust_token_key" translatable="false"></string>
-    <string name="facebook_id" translatable="false"></string>
-    <string name="facebook_client_token" translatable="false"></string>
+    <string name="adjust_token_key" translatable="false"> </string>
+    <string name="facebook_id" translatable="false"> </string>
+    <string name="facebook_client_token" translatable="false"> </string>
 
     <string name="imageview">imageView</string>
 
     <string name="appDesc">#1 High Quality Ringtones</string>
+    <string name="next_title">Let\'s get it</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="intro_1">Let’s Start…</string>
+    <string name="intro_2">One More…</string>
+    <string name="intro_3">And we are done.</string>
+    <string name="desc_1"><![CDATA[Welcome to Ringtones & Wallpapers - Ringify]]></string>
+    <string name="desc_2">Get full
+3D Parallax and 4K wallpapers</string>
+    <string name="desc_3">Color Phone
+Dynamic Call Screen Themes</string>
+
+    <string name="english">English</string>
+    <string name="hindi">Hindi</string>
+    <string name="spanish">Spanish</string>
+    <string name="french">French</string>
+    <string name="arabic">Arabic</string>
+    <string name="bengali">Bengali</string>
+    <string name="russian">Russian</string>
+    <string name="portuguese">Portuguese</string>
+    <string name="indonesian">Indonesian</string>
+    <string name="german">German</string>
+    <string name="italian">Italian</string>
+    <string name="korean">Korean</string>
+    <string name="language">Language</string>
+    <string name="ok">Ok</string>
 </resources>

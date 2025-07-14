@@ -1,4 +1,4 @@
-package com.musicplayer.mp3.playeroffline.screen.intro.new
+package com.example.ringtone.screen.intro
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

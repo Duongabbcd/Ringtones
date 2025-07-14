@@ -1,76 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:paddingTop="@dimen/_40sdp">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_52sdp"
-        app:layout_constraintBottom_toTopOf="@id/bottomControlLayout"
-        app:layout_constraintTop_toTopOf="parent">
+    <!-- Top Title -->
+    <LinearLayout
+        android:id="@+id/topControl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/_26sdp"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_20sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/_200sdp"
-                android:background="@drawable/background_black_gradient"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomControlLayout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_68sdp"
-        app:layout_constraintBottom_toTopOf="@id/frNative">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomControl"
+        <TextView
+            android:id="@+id/title"
+            style="@style/CustomTextStyleSemiBold24sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:text="@string/intro_1"/>
+    </LinearLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="@dimen/_40sdp"
+        app:layout_constraintTop_toBottomOf="@id/topControl"
+        app:layout_constraintBottom_toTopOf="@id/bottomControlLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/_20sdp"
+            android:paddingEnd="@dimen/_24sdp">
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/CustomTextStyleSemiBold18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/desc_1"/>
 
             <ImageView
-                android:id="@+id/slideDot"
-                android:layout_width="@dimen/_64sdp"
-                android:layout_height="@dimen/_8sdp"
-                android:layout_marginStart="@dimen/_20sdp"
+                android:id="@+id/image2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/imageview"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:src="@drawable/bg_intro1" />
+        </LinearLayout>
+    </ScrollView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Bottom Control -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomControlLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/frNative"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:id="@+id/skipBtn"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_26sdp"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_12sdp"
+            android:text="@string/skip"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="@+id/nextBtn"
+            app:layout_constraintBottom_toBottomOf="@+id/nextBtn"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/nextBtn"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:background="@drawable/background_radius_12"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_12sdp"
+            android:text="@string/next_title"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Native Ad Frame -->
     <FrameLayout
         android:id="@+id/frNative"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Fullscreen Ad Overlay -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutFull"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <FrameLayout
             android:id="@+id/frNativeFull"
@@ -78,8 +128,8 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
             android:id="@+id/closeAds"
@@ -92,9 +142,8 @@
             android:padding="@dimen/_8sdp"
             android:src="@drawable/icon_close_black"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
