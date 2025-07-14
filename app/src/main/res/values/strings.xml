@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name" translatable="false">Ringtones &amp; Wallpapers - Ringify</string>
+
+    <string name="admob_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="adjust_token_key" translatable="false"></string>
+    <string name="facebook_id" translatable="false"></string>
+    <string name="facebook_client_token" translatable="false"></string>
+
+    <string name="imageview">imageView</string>
+
+    <string name="appDesc">#1 High Quality Ringtones</string>
+</resources>
