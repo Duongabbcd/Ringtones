@@ -68,11 +68,11 @@ abstract class BaseActivity<T : ViewBinding>(private val inflater: Inflate<T>) :
     }
 
 
-//    open fun openFragment(fragment: Fragment) {
-//        val manager: FragmentManager = supportFragmentManager
-//        val transaction: FragmentTransaction = manager.beginTransaction()
-//        transaction.replace(R.id.frameLayout,fragment)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
-//    }
+    open fun openFragment(fragment: Fragment) {
+        val manager: FragmentManager = supportFragmentManager
+        val transaction: FragmentTransaction = manager.beginTransaction()
+        transaction.replace(R.id.frameLayout,fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 }

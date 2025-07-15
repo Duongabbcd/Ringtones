@@ -1,7 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingTop="@dimen/_40sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topController"
+        android:background="@drawable/top_background"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="@dimen/_40sdp"
+        android:paddingBottom="@dimen/_24sdp"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/appName"
+            android:layout_width="@dimen/_129sdp"
+            android:contentDescription="@string/imageview"
+            android:layout_height="@dimen/_44sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/icon_app_name"/>
+
+        <LinearLayout
+            android:id="@+id/searchButton"
+            android:orientation="horizontal"
+            android:layout_width="@dimen/_110sdp"
+            android:contentDescription="@string/imageview"
+            android:layout_height="@dimen/_36sdp"
+            android:paddingHorizontal="@dimen/_17sdp"
+            android:paddingVertical="@dimen/_8sdp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/appName"
+            android:background="@drawable/background_radius_60"
+            android:src="@drawable/icon_app_name">
+            
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/icon_search"
+                    android:contentDescription="@string/imageview"/>
+            <TextView
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                style="@style/CustomTextStyleMedium14sp"
+                android:gravity="center"
+                android:textColor="@color/selectBottom"
+                android:text="@string/search"
+                android:layout_height="@dimen/_20sdp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        app:layout_constraintTop_toBottomOf="@id/topController"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@color/white"
+        app:menu="@menu/bottom_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemBackground="@color/transparent"
+        style="@style/NoRippleStyle"
+        app:itemVerticalPadding="@dimen/_9sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/view" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toTopOf="@id/frBanner" />
+
+    <FrameLayout
+        android:id="@+id/frBanner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

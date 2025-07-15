@@ -5,7 +5,7 @@ plugins {
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
 //    id("com.google.gms.google-services")
-//    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.crashlytics")
 
 }
 
@@ -85,6 +85,9 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.6")
 
     implementation("com.google.android.material:material:1.10.0")
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
 
     //advertisement
     implementation("com.github.thienlp201097:DktechLib:2.1.5")

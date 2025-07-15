@@ -22,7 +22,8 @@ data class Ringtone(
     val id: Int,
     val name: String,
     val contents: RingtoneContents,
-    @SerializedName("author_id") val authorId: Int,
+    val author: Author,
+    val category: Category,
     val active: Int,
     @SerializedName("alert_license") val alertLicense: Int,
     @SerializedName("order") val order: Int,
@@ -44,4 +45,10 @@ data class RingtoneContents(
     val disk: String?,
     val path: String,
     val url: String
+)
+
+data class Author(
+    val id: Int,
+    val name: String,
+    val active: Int
 )

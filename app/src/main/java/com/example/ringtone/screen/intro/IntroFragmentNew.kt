@@ -10,6 +10,7 @@ import kotlin.apply
 import androidx.core.view.isVisible
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ViewpagerIntroItempageBinding
+import com.example.ringtone.screen.intro.IntroActivityNew.Companion.numberPage
 import com.example.ringtone.utils.Common.gone
 import com.example.ringtone.utils.Common.visible
 import com.musicplayer.mp3.playeroffline.ads.AdsManager
@@ -56,19 +57,21 @@ class IntroFragmentNew : Fragment() {
             var positionIntro = 0
             when (binding.title.text) {
                 getString(R.string.intro_1) -> {
-                    binding.skipBtn.visible()
                     positionIntro = 1
                 }
                 getString(R.string.intro_2) -> {
-                    binding.skipBtn.visible()
                     positionIntro = 2
                 }
                 getString(R.string.intro_3) -> {
-                    binding.skipBtn.gone()
                     positionIntro = 3
                 }
             }
             callbackIntro.onNext(position,positionIntro)
+
+        }
+
+        binding.skipBtn.setOnClickListener {
+            callbackIntro.onNext(numberPage - 1,3)
         }
 
 
@@ -176,7 +179,10 @@ class IntroFragmentNew : Fragment() {
         binding.title.text = getString(R.string.intro_3)
         binding.description.text = getString(R.string.desc_3)
         binding.image2.setImageResource(R.drawable.bg_intro3)
-//        binding.slideDot.setImageResource(R.drawable.bg_intro1)
+        binding.slideDot.setImageResource(R.drawable.third_intro)
+        binding.introImage.setImageResource(R.drawable.icon_call)
+        binding.introTitle.text = getString(R.string.intro_title_3)
+        binding.skipBtn.gone()
 //        binding.intro2.visible()
 //     binding.intro3.gone()
 //        binding.intro4.gone()
@@ -188,7 +194,10 @@ class IntroFragmentNew : Fragment() {
         binding.title.text = getString(R.string.intro_2)
         binding.description.text = getString(R.string.desc_2)
         binding.image2.setImageResource(R.drawable.bg_intro2)
-//        binding.slideDot.setImageResource(R.drawable.bg_intro1)
+        binding.slideDot.setImageResource(R.drawable.second_intro)
+        binding.introImage.setImageResource(R.drawable.icon_frame)
+        binding.introTitle.text = getString(R.string.intro_title_2)
+        binding.skipBtn.visible()
 //        binding.intro2.visible()
 //     binding.intro3.gone()
 //        binding.intro4.gone()
@@ -198,9 +207,11 @@ class IntroFragmentNew : Fragment() {
         showNativeIntro(0)
         binding.title.text = getString(R.string.intro_1)
         binding.description.text = getString(R.string.desc_1)
-
+        binding.introTitle.text = getString(R.string.intro_title_1)
         binding.image2.setImageResource(R.drawable.bg_intro1)
-//        binding.slideDot.setImageResource(R.drawable.bg_intro1)
+        binding.introImage.setImageResource(R.drawable.icon_song)
+        binding.slideDot.setImageResource(R.drawable.first_intro)
+        binding.skipBtn.visible()
 //        binding.intro2.visible()
 //     binding.intro3.gone()
 //        binding.intro4.gone()

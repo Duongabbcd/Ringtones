@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/_20sdp"
+    android:paddingTop="@dimen/_16sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/explore"
+        android:text="@string/explore"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/CustomTextStyleMedium16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <HorizontalScrollView
+        android:id="@+id/allTopFunctions"
+        app:layout_constraintTop_toBottomOf="@id/explore"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_80sdp"
+        android:scrollbars="none"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/newRingtones"
+                android:background="@drawable/new_ringtones"
+                android:layout_width="@dimen/_186sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="@string/new_ringtones"
+                    android:gravity="start"
+                    android:textColor="@color/white"
+                    android:layout_width="@dimen/_96sdp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:paddingVertical="@dimen/_20sdp"
+                    android:paddingStart="@dimen/_12sdp"
+                    style="@style/CustomTextStyleSemiBold16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/weeklyTrending"
+                android:background="@drawable/weekly_trending"
+                android:layout_width="@dimen/_186sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="@string/weekly_trending"
+                    android:gravity="start"
+                    android:textColor="@color/white"
+                    android:layout_width="@dimen/_96sdp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:paddingVertical="@dimen/_20sdp"
+                    android:paddingStart="@dimen/_12sdp"
+                    style="@style/CustomTextStyleSemiBold16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/editorChoice"
+                android:background="@drawable/editor_choices"
+                android:layout_width="@dimen/_186sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="@string/editor_s_choices"
+                    android:gravity="start"
+                    android:textColor="@color/white"
+                    android:layout_width="@dimen/_96sdp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:paddingVertical="@dimen/_20sdp"
+                    android:paddingStart="@dimen/_12sdp"
+                    style="@style/CustomTextStyleSemiBold16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/category"
+        android:text="@string/categories"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@+id/allTopFunctions"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/CustomTextStyleMedium16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/openAll1"
+        android:text="@string/see_all"
+        android:textColor="#8246FF"
+        app:layout_constraintTop_toTopOf="@+id/category"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="@id/category"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/CustomTextStyleMedium12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allCategories"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/category" />
+
+    <TextView
+        android:id="@+id/popular"
+        android:text="@string/popular"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintTop_toBottomOf="@+id/allCategories"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/CustomTextStyleMedium16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/openAll2"
+        android:text="@string/see_all"
+        android:textColor="#8246FF"
+        app:layout_constraintTop_toTopOf="@+id/popular"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="@id/popular"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/CustomTextStyleMedium12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allPopular"
+        android:layout_marginTop="@dimen/_13sdp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_ringtone"
+        app:layout_constraintTop_toBottomOf="@id/popular"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/loading1"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:progressTint="@color/main_color"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/allCategories"
+        app:layout_constraintTop_toTopOf="@+id/allCategories"
+        app:layout_constraintEnd_toEndOf="@+id/allCategories"
+        app:layout_constraintBottom_toBottomOf="@+id/allCategories"/>
+
+    <ProgressBar
+        android:id="@+id/loading2"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:progressTint="@color/main_color"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/allPopular"
+        app:layout_constraintTop_toTopOf="@+id/allPopular"
+        app:layout_constraintEnd_toEndOf="@+id/allPopular"
+        app:layout_constraintBottom_toBottomOf="@+id/allPopular"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

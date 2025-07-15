@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="@dimen/_20sdp"
+    android:paddingTop="@dimen/_40sdp">
+    
+    
+    <ImageView
+        android:id="@+id/backBtn"
+        android:contentDescription="@string/imageview"
+        android:src="@drawable/icon_back"
+        android:layout_width="@dimen/_24sdp"
+        android:padding="@dimen/_2sdp"
+        android:layout_height="@dimen/_24sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/nameScreen"
+        android:contentDescription="@string/imageview"
+        android:text="Find ringtone"
+        android:layout_marginStart="@dimen/_2sdp"
+        style="@style/CustomTextStyleSemiBold18sp"
+        android:textColor="@color/main_color"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_24sdp"
+        app:layout_constraintStart_toEndOf="@id/backBtn"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText
+        android:id="@+id/searchText"
+        style="@style/CustomTextStyle16sp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_56sdp"
+        android:layout_marginTop="@dimen/_21sdp"
+        android:background="@drawable/background_radius_100"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:hint="@string/searching"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:textColor="@color/customBlack"
+        android:textColorHint="@color/textColorHint"
+        android:textCursorDrawable="@drawable/cursor_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameScreen" />
+
+    <ImageView
+        android:id="@+id/trendingIcon"
+        android:contentDescription="@string/imageview"
+        app:layout_constraintTop_toBottomOf="@id/searchText"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:src="@drawable/icon_fire"/>
+
+
+    <TextView
+        android:id="@+id/trendingTitle"
+        android:contentDescription="@string/imageview"
+        app:layout_constraintStart_toEndOf="@id/trendingIcon"
+        android:text="@string/trending"
+        android:gravity="center"
+        style="@style/CustomTextStyleMedium16sp"
+        app:layout_constraintTop_toTopOf="@id/trendingIcon"
+        app:layout_constraintBottom_toBottomOf="@id/trendingIcon"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_height="@dimen/_24sdp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trendingRecyclerView"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/trendingIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        android:clipToPadding="false"/>
+
+    <ProgressBar
+        android:id="@+id/loading1"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:progressTint="@color/main_color"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

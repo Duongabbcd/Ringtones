@@ -173,20 +173,20 @@ object Common {
         preferences.edit().putInt("KEY_CountRate", flag).apply()
     }
 
-    fun getFirstUse2(mContext: Context): Boolean {
+    fun getFirstUse2(mContext: Context): Int {
         val preferences = mContext.getSharedPreferences(
             mContext.packageName,
             Context.MODE_MULTI_PROCESS
         )
-        return preferences.getBoolean("KEY_FirstUse2", true)
+        return preferences.getInt("KEY_FirstUse2", 0)
     }
 
-    fun setFirstUse2(context: Context, isFirstUse: Boolean) {
+    fun setFirstUse2(context: Context, isFirstUse: Int = 0 ) {
         val preferences = context.getSharedPreferences(
             context.packageName,
             Context.MODE_MULTI_PROCESS
         )
-        preferences.edit().putBoolean("KEY_FirstUse2", isFirstUse).apply()
+        preferences.edit().putInt("KEY_FirstUse2", isFirstUse).apply()
     }
 
 

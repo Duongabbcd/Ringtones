@@ -3,18 +3,24 @@ package com.example.ringtone
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import com.admob.max.dktlibrary.application.AdsApplication
 import com.example.ringtone.remote.repository.RingtoneRepository
 import com.example.ringtone.utils.Common
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MyApplication : Application(), Application.ActivityLifecycleCallbacks{
+class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
     override fun onCreate() {
         super.onCreate()
         val deviceId = Common.getDeviceId(this)
         val secret = "abcadhjgashjd1231" // TODO: Replace with your actual secret
         val jwt = Common.generateJwt(deviceId, secret)
+        println("MyApplication: $jwt")
         RingtoneRepository.TOKEN = jwt
+    }
+
+    override fun onCreateApplication() {
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -46,5 +52,6 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks{
     override fun onActivityDestroyed(activity: Activity) {
         TODO("Not yet implemented")
     }
+
 
 }

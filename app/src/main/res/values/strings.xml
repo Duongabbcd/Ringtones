@@ -15,11 +15,12 @@
     <string name="intro_1">Let’s Start…</string>
     <string name="intro_2">One More…</string>
     <string name="intro_3">And we are done.</string>
-    <string name="desc_1"><![CDATA[Welcome to Ringtones & Wallpapers - Ringify]]></string>
-    <string name="desc_2">Get full
-3D Parallax and 4K wallpapers</string>
-    <string name="desc_3">Color Phone
-Dynamic Call Screen Themes</string>
+    <string name="intro_title_1">Welcome to</string>
+    <string name="intro_title_2">Get full</string>
+    <string name="intro_title_3">Color phone</string>
+    <string name="desc_1">Ringtones &amp; Wallpaper - Ringify</string>
+    <string name="desc_2">3D Parallax and 4K wallpapers</string>
+    <string name="desc_3">Dynamic Call Screen Themes</string>
 
     <string name="english">English</string>
     <string name="hindi">Hindi</string>
@@ -35,4 +36,20 @@ Dynamic Call Screen Themes</string>
     <string name="korean">Korean</string>
     <string name="language">Language</string>
     <string name="ok">Ok</string>
+
+
+    <string name="ringTone">Ringtone</string>
+    <string name="wallPaper">Wallpaper</string>
+    <string name="callScreen">Call Screen</string>
+    <string name="setting">Setting</string>
+    <string name="search">Search</string>
+    <string name="searching">Searching…</string>
+    <string name="see_all">See all</string>
+    <string name="categories">Categories</string>
+    <string name="popular">Popular</string>
+    <string name="explore">Explore</string>
+    <string name="new_ringtones">New Ringtones</string>
+    <string name="weekly_trending">Weekly Trending</string>
+    <string name="editor_s_choices">Editor\'s Choices</string>
+    <string name="trending">Trending</string>
 </resources>

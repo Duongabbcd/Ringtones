@@ -20,4 +20,10 @@
     <color name="main_color">#8246FF</color>
     <color name="gray">#79767A</color>
     <color name="un_select">#EFEFEF</color>
+    <color name="unselectBottom">#B9B9B9</color>
+    <color name="selectBottom">#8246FF</color>
+    <color name="subTitle">#8F8F8F</color>
+    <color name="high_light">#347BFA</color>
+    <color name="textColorHint">#939393</color>
+    <color name="textTrending">#686A71</color>
 </resources>

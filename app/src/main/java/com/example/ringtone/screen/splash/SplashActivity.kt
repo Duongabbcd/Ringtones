@@ -1,43 +1,29 @@
 package com.example.ringtone.screen.splash
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import com.admob.max.dktlibrary.AOAManager
 import com.admob.max.dktlibrary.AdmobUtils
 import com.admob.max.dktlibrary.AdmobUtils.isNetworkConnected
-import com.admob.max.dktlibrary.AppOpenManager
-import com.admob.max.dktlibrary.ApplovinUtil.showBanner
 import com.admob.max.dktlibrary.cmp.GoogleMobileAdsConsentManager
 import com.admob.max.dktlibrary.firebase.FireBaseConfig
 import com.admob.max.dktlibrary.utils.admod.callback.MobileAdsListener
-import com.airbnb.lottie.animation.content.Content
 import com.example.ringtone.R
-import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.base.BaseActivity2
 import com.example.ringtone.databinding.ActivitySplashBinding
-import com.example.ringtone.remote.model.CallScreenResponse
-import com.example.ringtone.remote.viewmodel.CallScreenViewModel
-import com.example.ringtone.remote.viewmodel.ContentViewModel
-import com.example.ringtone.remote.viewmodel.RingtoneViewModel
-import com.example.ringtone.remote.viewmodel.WallpaperViewModel
-import com.example.ringtone.screen.intro.IntroActivityNew
 import com.example.ringtone.screen.language.LanguageActivity
 import com.example.ringtone.utils.Common
 import com.example.ringtone.utils.Common.inVisible
-import com.example.ringtone.utils.Common.visible
 import com.google.android.ump.FormError
+import com.google.firebase.FirebaseApp
 import com.musicplayer.mp3.playeroffline.ads.AdsManager
 import com.musicplayer.mp3.playeroffline.ads.AdsManager.isDebug
 import com.musicplayer.mp3.playeroffline.ads.RemoteConfig
 import com.musicplayer.mp3.playeroffline.ads.RemoteConfig.NATIVE_FULL_SCREEN_INTRO_070625
 import com.musicplayer.mp3.playeroffline.ads.RemoteConfig.NATIVE_FULL_SPLASH_070625
 import com.musicplayer.mp3.playeroffline.ads.RemoteConfig.NATIVE_INTRO_070625
-import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.exitProcess
 
@@ -57,7 +43,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        FirebaseApp.initializeApp(this)
     }
 
     override fun initView() {
@@ -69,7 +55,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
         Common.setPreLanguage(this, "en")
         handler.postDelayed(runnable, 20000)
         val x = false
-        if (isNetworkConnected(this)) {
+        if (x) {
             FireBaseConfig.initRemoteConfig(
                 R.xml.remote_config_default,
                 object : FireBaseConfig.CompleteListener {

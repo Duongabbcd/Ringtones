@@ -68,6 +68,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="CustomTextStyleMedium16sp" parent="@style/CustomTextStyleMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <style name="CustomTextStyle14sp" parent="@style/CustomTextStyle">
         <item name="android:textSize">14sp</item>
@@ -153,6 +157,7 @@
         <item name="cornerSize">@dimen/_8sdp</item>
         <item name="background">@color/transparent</item>
     </style>
+
     <style name="ShapeAppearanceOverlay_CustomShape20dp">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/_20sdp</item>
@@ -164,6 +169,14 @@
         <item name="cornerSize">50%</item>
         <item name="strokeColor">#888888</item>
         <item name="strokeWidth">2dp</item>
+    </style>
+
+
+    <style name="NoRippleStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@drawable/bottom_nav_item_selector</item>
+        <item name="itemTextColor">@drawable/bottom_nav_item_selector</item>
+        <item name="itemBackground">@android:color/transparent</item>
+        <item name="android:stateListAnimator">@null</item> <!-- Disables the ripple effect -->
     </style>
 
 </resources>

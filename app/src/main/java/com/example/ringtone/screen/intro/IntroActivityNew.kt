@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.admob.max.dktlibrary.AdmobUtils
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityIntroBinding
-import com.example.ringtone.screen.MainActivity
+import com.example.ringtone.screen.home.MainActivity
 import com.musicplayer.mp3.playeroffline.ads.AdsManager
 import com.musicplayer.mp3.playeroffline.ads.AdsManager.isTestDevice
 import com.musicplayer.mp3.playeroffline.ads.RemoteConfig
