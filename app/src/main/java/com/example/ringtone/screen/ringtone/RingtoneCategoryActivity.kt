@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.category
+package com.example.ringtone.screen.ringtone
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.activity.viewModels
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityRingtoneCategoryBinding
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
-import com.example.ringtone.screen.category.adapter.CategoryDetailAdapter
+import com.example.ringtone.screen.ringtone.adapter.CategoryDetailAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.category.adapter
+package com.example.ringtone.screen.ringtone.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemBigCategoryBinding
 import com.example.ringtone.remote.model.Category
+import com.example.ringtone.utils.RingtonePlayerRemote
 
 class CategoryDetailAdapter(private val onClickListener: (Int) -> Unit): RecyclerView.Adapter<CategoryDetailAdapter.CategoryViewHolder>() {
     private val allCategories : MutableList<Category> = mutableListOf()

@@ -1,6 +1,7 @@
 package com.example.ringtone.remote.model
 
 import com.google.gson.annotations.SerializedName
+import java.net.URL
 
 data class RingtoneResponse(
     val data: RingtoneData
@@ -39,7 +40,35 @@ data class Ringtone(
     val country: Int,
     @SerializedName("updated_at") val updatedAt: String,
     @SerializedName("created_at") val createdAt: String
-)
+) {
+    companion object {
+        val EMPTY_RINGTONE = Ringtone(
+            -1, "", contents = RingtoneContents("", "", ""),
+            author = Author(-1, "", -1),
+            category = Category(
+                -1,
+                "",
+                Thumbnail("", size = Size(0, 0), url = Url("", "", "", "")),
+                0,0,0,0,0,0,0,0,0,0,0,"", ""
+            ),
+            active = 0,
+            alertLicense = 0,
+            order = 0,
+            isPrivate = 0,
+            trend = 0,
+            popular = 0,
+            dailyRating = 0,
+            weeklyRating = 0,
+            monthlyRating = 0,
+            like = 0,
+            set = 0,
+            download = 0,
+            country = 0,
+            updatedAt = "",
+            createdAt = ""
+        )
+    }
+}
 
 data class RingtoneContents(
     val disk: String?,

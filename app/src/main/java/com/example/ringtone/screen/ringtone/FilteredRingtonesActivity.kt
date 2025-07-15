@@ -1,11 +1,11 @@
-package com.example.ringtone.screen.category
+package com.example.ringtone.screen.ringtone
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityFilteredCategoryBinding
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
-import com.example.ringtone.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
+import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.home.subscreen.ringtone
+package com.example.ringtone.screen.home.subscreen.first_screen
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,9 +10,9 @@ import com.example.ringtone.base.BaseFragment
 import com.example.ringtone.databinding.FragmentRingtoneBinding
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
-import com.example.ringtone.screen.category.RingtoneCategoryActivity
-import com.example.ringtone.screen.home.subscreen.ringtone.adapter.CategoryAdapter
-import com.example.ringtone.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
+import com.example.ringtone.screen.ringtone.RingtoneCategoryActivity
+import com.example.ringtone.screen.home.subscreen.first_screen.adapter.CategoryAdapter
+import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

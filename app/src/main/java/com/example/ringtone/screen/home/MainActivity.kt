@@ -6,7 +6,7 @@ import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 import com.example.ringtone.R
-import com.example.ringtone.screen.home.subscreen.ringtone.RingtoneFragment
+import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
 import com.example.ringtone.screen.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 

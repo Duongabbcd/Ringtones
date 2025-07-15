@@ -1,11 +1,14 @@
-package com.example.ringtone.screen.home.subscreen.ringtone.adapter
+package com.example.ringtone.screen.home.subscreen.first_screen.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.databinding.ItemRingtoneBinding
 import com.example.ringtone.remote.model.Ringtone
+import com.example.ringtone.screen.player.PlayerActivity
+import com.example.ringtone.utils.RingtonePlayerRemote
 
 class RingtoneAdapter: RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
     private val allRingtones : MutableList<Ringtone> = mutableListOf()
@@ -47,6 +50,12 @@ class RingtoneAdapter: RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>(
                 ringToneName.text = ringTone.name
                 ringToneAuthor.text = ringTone.author.name
 
+                root.setOnClickListener {
+                    RingtonePlayerRemote.setPlayingQueue(allRingtones)
+                    RingtonePlayerRemote.setCurrentRingtone(ringTone)
+
+                    context.startActivity(Intent(context, PlayerActivity::class.java))
+                }
             }
         }
     }
