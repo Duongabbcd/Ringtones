@@ -1,15 +1,15 @@
-package com.example.ringtone.screen.home.subscreen.ringtone.adapter
+package com.example.ringtone.screen.category.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ringtone.databinding.ItemCategoriesBinding
-import com.example.ringtone.remote.model.Category
 import com.example.ringtone.R
+import com.example.ringtone.databinding.ItemBigCategoryBinding
+import com.example.ringtone.remote.model.Category
 
-class CategoryAdapter: RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryDetailAdapter(private val onClickListener: (Int) -> Unit): RecyclerView.Adapter<CategoryDetailAdapter.CategoryViewHolder>() {
     private val allCategories : MutableList<Category> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -17,7 +17,7 @@ class CategoryAdapter: RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>(
     ): CategoryViewHolder {
         context = parent.context
         return CategoryViewHolder(
-            ItemCategoriesBinding.inflate(
+            ItemBigCategoryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -42,18 +42,22 @@ class CategoryAdapter: RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>(
 
     override fun getItemCount(): Int =allCategories.size
 
-    inner class CategoryViewHolder(private val binding: ItemCategoriesBinding )  : RecyclerView.ViewHolder(binding.root){
+    inner class CategoryViewHolder(private val binding: ItemBigCategoryBinding )  : RecyclerView.ViewHolder(binding.root){
         fun bind(position: Int) {
-           val ringTone = allCategories[position]
+            val category = allCategories[position]
             binding.apply {
-                categoryName.text = ringTone.name
-                println("ringTone: ${ringTone.thumbnail}")
-
-                ringTone.thumbnail?.url?.full.let {
+                categoryName.text = category.name
+                val subtitle = if(category.contentCount <= 1)context.getString(R.string.ringTone) else context.getString(R.string.ringTones)
+                categoryCount.text = "${category.contentCount}".plus(" $subtitle")
+                println("ringTone: ${category.thumbnail}")
+                category.thumbnail?.url?.full.let {
                     Glide.with(context).load(it).placeholder(R.drawable.icon_default_category).error(
-                        R.drawable.icon_default_category).into(binding.defaultBg)
+                        R.drawable.icon_default_category).into(binding.categoryAvatar)
                 }
 
+                root.setOnClickListener {
+                    onClickListener(category.id)
+                }
             }
         }
     }

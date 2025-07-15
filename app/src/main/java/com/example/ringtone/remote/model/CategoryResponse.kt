@@ -24,7 +24,7 @@ data class Category(
     val name: String,
 
     @SerializedName("thumbnail")
-    val thumbnail: String?,  // nullable
+    val thumbnail: Thumbnail?,  // nullable
 
     @SerializedName("type")
     val type: Int,
@@ -64,4 +64,22 @@ data class Category(
 
     @SerializedName("created_at")
     val createdAt: String
+)
+
+data class Thumbnail(
+    val path: String,
+    val size: Size,
+    val url: Url
+)
+
+data class Size(
+    val width: Int,
+    val height: Int
+)
+
+data class Url(
+    val full: String,
+    val medium: String,
+    val small: String,
+    val extra_small: String
 )

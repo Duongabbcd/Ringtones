@@ -39,7 +39,6 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding
                 finish()
             }
 
-
             trendingRecyclerView.adapter = ringtoneTrendingAdapter
             val layoutManager = FlexboxLayoutManager(this@SearchActivity).apply {
                 flexDirection = FlexDirection.ROW

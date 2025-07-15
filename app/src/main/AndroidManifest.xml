@@ -39,6 +39,8 @@
         <activity android:name=".screen.language.LanguageActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.setting.SettingActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.search.SearchActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.category.RingtoneCategoryActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.category.FilteredRingtonesActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

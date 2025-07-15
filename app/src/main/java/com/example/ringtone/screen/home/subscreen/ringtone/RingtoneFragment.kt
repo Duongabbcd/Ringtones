@@ -1,5 +1,6 @@
 package com.example.ringtone.screen.home.subscreen.ringtone
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -9,6 +10,7 @@ import com.example.ringtone.base.BaseFragment
 import com.example.ringtone.databinding.FragmentRingtoneBinding
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
+import com.example.ringtone.screen.category.RingtoneCategoryActivity
 import com.example.ringtone.screen.home.subscreen.ringtone.adapter.CategoryAdapter
 import com.example.ringtone.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +40,16 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 allCategories.layoutManager = GridLayoutManager(ctx, 2)
             }
 
+            openAll1.setOnClickListener {
+                withSafeContext {  ctx ->
+                    startActivity(Intent(ctx, RingtoneCategoryActivity::class.java))
+                }
+            }
+
+            openAll2.setOnClickListener {
+
+            }
+
             categoryViewModel.category.observe(viewLifecycleOwner) { items ->
                 categoryAdapter.submitList(items.take(6))
             }
@@ -53,9 +65,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 loading2.isVisible = it
             }
 
-            openAll1.setOnClickListener {
 
-            }
         }
     }
 

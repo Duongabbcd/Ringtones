@@ -27,7 +27,7 @@ class CategoryViewModel @Inject constructor(
     fun loadCategories() = viewModelScope.launch {
         _loading.value = true
         try {
-            val result = repository.fetchCategories()
+            val result = repository.fetchRingtoneCategories()
             _category.value = result.dataPage.categories
             _error.value = null
         } catch (e: Exception) {

@@ -39,6 +39,7 @@
 
 
     <string name="ringTone">Ringtone</string>
+    <string name="ringTones">Ringtones</string>
     <string name="wallPaper">Wallpaper</string>
     <string name="callScreen">Call Screen</string>
     <string name="setting">Setting</string>
@@ -52,4 +53,5 @@
     <string name="weekly_trending">Weekly Trending</string>
     <string name="editor_s_choices">Editor\'s Choices</string>
     <string name="trending">Trending</string>
+    <string name="find_ringtone">Find ringtone</string>
 </resources>

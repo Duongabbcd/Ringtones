@@ -145,6 +145,11 @@
         <item name="cornerSize">@dimen/_10sdp</item>
         <item name="background">@color/transparent</item>
     </style>
+    <style name="ShapeAppearanceOverlay_CustomShape12dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/_12sdp</item>
+        <item name="background">@color/transparent</item>
+    </style>
 
     <style name="ShapeAppearanceOverlay_CustomShape6dp">
         <item name="cornerFamily">rounded</item>

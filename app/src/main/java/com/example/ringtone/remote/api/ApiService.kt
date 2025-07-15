@@ -6,6 +6,7 @@ import com.example.ringtone.remote.model.ContentResponse
 import com.example.ringtone.remote.model.RingtoneResponse
 import com.example.ringtone.remote.model.WallpaperResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface ApiService {
     //Ringtones
@@ -31,5 +32,16 @@ interface ApiService {
     //Categories
     @GET("api/v1/categories?page=2&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
+
+    @GET("api/v1/categories?page=1&with=author+id%2Cname%2Clink&type=1")
+    suspend fun getRingtoneCategory(): CategoriesResponse
+
+    @GET("api/v1/ringtones")
+    suspend fun getRingtonesByCategory(
+        @Query("category") categoryId: Int,
+        @Query("with") with: String = "author+id,name,active-categories+id,name,thumbnail,active,content_count",
+        @Query("order_by") orderBy: String = "id+desc",
+        @Query("page") page: Int = 1
+    ): RingtoneResponse
 
 }
