@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/_260sdp"
-    android:layout_height="@dimen/_330sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_240sdp"
+    android:layout_height="@dimen/_320sdp"
+    android:backgroundTint="#E9DCFF"
     app:cardCornerRadius="@dimen/_20sdp"
-    app:cardElevation="@dimen/_8sdp"
-    android:backgroundTint="#E9DCFF">
+    app:cardElevation="@dimen/_8sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/_14sdp"
         android:paddingTop="@dimen/_14sdp"
-        android:paddingBottom="@dimen/_28sdp">
+        android:paddingBottom="@dimen/_20sdp">
 
         <!-- Top Time and Icon -->
         <RelativeLayout
@@ -22,10 +22,10 @@
 
             <TextView
                 android:id="@+id/tvTime"
+                style="@style/CustomTextStyleMedium14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00:10"
-                style="@style/CustomTextStyleMedium14sp" />
+                android:text="00:10" />
 
             <ImageView
                 android:id="@+id/ccIcon"
@@ -35,44 +35,82 @@
                 android:src="@drawable/icon_subtitle" />
         </RelativeLayout>
 
-        <!-- Record Image -->
-        <ImageView
-            android:id="@+id/imageRecord"
-            android:layout_marginTop="@dimen/_4sdp"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/_190sdp"
             android:layout_height="@dimen/_190sdp"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_red_disc" />
+            android:layout_gravity="center">
+
+            <!-- Your CircularSeekBar -->
+            <me.tankery.lib.circularseekbar.CircularSeekBar
+                android:id="@+id/csb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cs_circle_color="@color/transparent"
+                app:cs_circle_progress_color="#FF6586"
+                app:cs_circle_stroke_width="@dimen/_2sdp"
+                app:cs_circle_style="round"
+                app:cs_disable_pointer="false"
+                app:cs_disable_progress_glow="true"
+                app:cs_end_angle="180"
+                app:cs_max="100"
+                app:cs_move_outside_circle="true"
+                app:cs_pointer_color="#FF6586"
+                app:cs_pointer_halo_border_width="@dimen/_2sdp"
+                app:cs_pointer_halo_color="@color/transparent"
+                app:cs_pointer_halo_width="@dimen/_8sdp"
+                app:cs_pointer_radius="10dp"
+                app:cs_negative_enabled="true"
+                app:cs_progress="10"
+                app:cs_rounded="true"
+                app:cs_start_angle="180" />
+
+            <!-- Your center image -->
+            <ImageView
+                android:id="@+id/imageRecord"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_red_disc"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- Control Icons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_28sdp"
             android:layout_marginTop="@dimen/_22sdp"
             android:gravity="center"
-            android:layout_marginHorizontal="@dimen/_46sdp"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_weight="1"
-                android:contentDescription="@string/imageview"
+                android:id="@+id/previous"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
+                android:layout_weight="1"
+                android:contentDescription="@string/imageview"
                 android:src="@drawable/icon_prev" />
 
             <ImageView
-                android:layout_weight="2"
-                android:contentDescription="@string/imageview"
+                android:id="@+id/play"
                 android:layout_width="@dimen/_26sdp"
                 android:layout_height="@dimen/_26sdp"
                 android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_weight="2"
+                android:contentDescription="@string/imageview"
                 android:src="@drawable/icon_play" />
 
             <ImageView
-                android:layout_weight="1"
-                android:contentDescription="@string/imageview"
+                android:id="@+id/next"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
+                android:layout_weight="1"
+                android:contentDescription="@string/imageview"
                 android:src="@drawable/icon_next_ring" />
         </LinearLayout>
     </LinearLayout>

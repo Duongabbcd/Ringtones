@@ -9,7 +9,7 @@ import com.example.ringtone.databinding.ItemCategoriesBinding
 import com.example.ringtone.remote.model.Category
 import com.example.ringtone.R
 
-class CategoryAdapter(private val onClickListener: (Int) -> Unit): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+class CategoryAdapter(private val onClickListener: (Category) -> Unit): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
     private val allCategories : MutableList<Category> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -44,18 +44,18 @@ class CategoryAdapter(private val onClickListener: (Int) -> Unit): RecyclerView.
 
     inner class CategoryViewHolder(private val binding: ItemCategoriesBinding )  : RecyclerView.ViewHolder(binding.root){
         fun bind(position: Int) {
-           val ringTone = allCategories[position]
+           val category = allCategories[position]
             binding.apply {
-                categoryName.text = ringTone.name
-                println("ringTone: ${ringTone.thumbnail}")
+                categoryName.text = category.name
+                println("ringTone: ${category.thumbnail}")
 
-                ringTone.thumbnail?.url?.full.let {
+                category.thumbnail?.url?.full.let {
                     Glide.with(context).load(it).placeholder(R.drawable.icon_default_category).error(
                         R.drawable.icon_default_category).into(binding.defaultBg)
                 }
 
                 root.setOnClickListener {
-                    onClickListener(position)
+                    onClickListener(category)
                 }
 
             }

@@ -6,8 +6,10 @@ import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 import com.example.ringtone.R
+import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
 import com.example.ringtone.screen.search.SearchActivity
+import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,6 +17,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
         binding.searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }

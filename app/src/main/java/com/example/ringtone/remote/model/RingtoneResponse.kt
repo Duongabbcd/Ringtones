@@ -1,7 +1,7 @@
 package com.example.ringtone.remote.model
 
 import com.google.gson.annotations.SerializedName
-import java.net.URL
+
 
 data class RingtoneResponse(
     val data: RingtoneData
@@ -39,7 +39,8 @@ data class Ringtone(
     val download: Int,
     val country: Int,
     @SerializedName("updated_at") val updatedAt: String,
-    @SerializedName("created_at") val createdAt: String
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("duration") val duration: Int
 ) {
     companion object {
         val EMPTY_RINGTONE = Ringtone(
@@ -65,7 +66,8 @@ data class Ringtone(
             download = 0,
             country = 0,
             updatedAt = "",
-            createdAt = ""
+            createdAt = "",
+            duration = 0
         )
     }
 }

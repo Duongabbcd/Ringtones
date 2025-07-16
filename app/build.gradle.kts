@@ -90,6 +90,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.11.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
+    implementation("me.tankery.lib:circularSeekBar:1.4.2")
+
 
     //advertisement
     implementation("com.github.thienlp201097:DktechLib:2.1.5")

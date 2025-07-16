@@ -35,8 +35,10 @@
         android:id="@+id/searchText"
         style="@style/CustomTextStyle16sp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_21sdp"
         android:layout_marginEnd="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_50sdp"
         android:background="@drawable/background_radius_100"
         android:paddingVertical="@dimen/_15sdp"
         android:focusable="true"
@@ -51,6 +53,16 @@
         android:textCursorDrawable="@drawable/cursor_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameScreen" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        android:src="@drawable/icon_close_black"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="@id/searchText"
+        app:layout_constraintTop_toTopOf="@id/searchText"
+        app:layout_constraintBottom_toBottomOf="@id/searchText"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp" />
 
     <ImageView
         android:id="@+id/trendingIcon"
@@ -80,9 +92,23 @@
         android:id="@+id/trendingRecyclerView"
         android:layout_marginEnd="@dimen/_20sdp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_120sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/trendingIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:clipToPadding="false"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allResults"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/searchText"
         app:layout_constraintStart_toStartOf="parent"
         android:clipToPadding="false"/>
 
@@ -96,5 +122,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/noDataLayout"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/searchText"
+        android:layout_marginTop="@dimen/_43sdp">
+
+
+        <ImageView
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/no_data"/>
+
+        <TextView
+            style="@style/CustomTextStyle14sp"
+            android:gravity="center"
+            android:text="@string/no_data_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,7 @@
     <string name="searching">Searching…</string>
     <string name="see_all">See all</string>
     <string name="categories">Categories</string>
+    <string name="unknown_cat">Unknown category</string>
     <string name="popular">Popular</string>
     <string name="explore">Explore</string>
     <string name="new_ringtones">New Ringtones</string>
@@ -54,4 +55,8 @@
     <string name="editor_s_choices">Editor\'s Choices</string>
     <string name="trending">Trending</string>
     <string name="find_ringtone">Find ringtone</string>
+    <string name="notification">Notification</string>
+    <string name="download">Download</string>
+    <string name="set_ringotne">Set as Ringotne</string>
+    <string name="no_data_desc">Can\'t find the music you\'re looking for?</string>
 </resources>

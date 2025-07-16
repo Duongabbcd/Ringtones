@@ -10,7 +10,7 @@ import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.screen.player.PlayerActivity
 import com.example.ringtone.utils.RingtonePlayerRemote
 
-class RingtoneAdapter(): RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
+class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
     private val allRingtones : MutableList<Ringtone> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -41,7 +41,7 @@ class RingtoneAdapter(): RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int =allRingtones.size
+    override fun getItemCount(): Int = allRingtones.size
 
     inner class RingtoneViewHolder(private val binding: ItemRingtoneBinding )  : RecyclerView.ViewHolder(binding.root){
         fun bind(position: Int) {
@@ -51,9 +51,10 @@ class RingtoneAdapter(): RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder
                 ringToneAuthor.text = ringTone.author.name
 
                 root.setOnClickListener {
-                    RingtonePlayerRemote.setPlayingQueue(allRingtones)
                     RingtonePlayerRemote.setCurrentRingtone(ringTone)
-
+                    if(!isPopular) {
+                        RingtonePlayerRemote.setPlayingQueue(allRingtones)
+                    }
                     context.startActivity(Intent(context, PlayerActivity::class.java))
                 }
             }

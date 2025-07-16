@@ -22,7 +22,7 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        categoryViewModel.loadCategories()
+        categoryViewModel.loadRingtoneCategories()
         binding.apply {
             allCategories.adapter = categoryDetailAdapter
 

@@ -14,6 +14,7 @@ import com.example.ringtone.screen.ringtone.RingtoneCategoryActivity
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.CategoryAdapter
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
 import com.example.ringtone.screen.ringtone.FilteredRingtonesActivity
+import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,21 +23,22 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
     private val categoryViewModel: CategoryViewModel by viewModels()
 
     private val categoryAdapter : CategoryAdapter by lazy {
-        CategoryAdapter { categoryId ->
+        CategoryAdapter { category ->
             val ctx = context ?: return@CategoryAdapter
             ctx.startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
-                putExtra("categoryId", categoryId)
+                putExtra("categoryId", category.id)
+                putExtra("categoryName", category.name)
             })
         }
     }
 
     private val ringToneAdapter : RingtoneAdapter by lazy {
-        RingtoneAdapter()
+        RingtoneAdapter(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        categoryViewModel.loadCategories()
+        categoryViewModel.loadRingtoneCategories()
         ringtoneViewModel.loadPopular()
 
         binding.apply {
@@ -53,7 +55,9 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             }
 
             openAll2.setOnClickListener {
-
+                withSafeContext {  ctx ->
+                    startActivity(Intent(ctx, FilteredRingtonesActivity::class.java))
+                }
             }
 
             categoryViewModel.category.observe(viewLifecycleOwner) { items ->
@@ -61,7 +65,8 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             }
 
             ringtoneViewModel.popular.observe(viewLifecycleOwner) { items ->
-                ringToneAdapter.submitList(items.take(2))
+                RingtonePlayerRemote.setPlayingQueue(items)
+                ringToneAdapter.submitList(items.take(5))
             }
 
             categoryViewModel.loading.observe(viewLifecycleOwner) {

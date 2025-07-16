@@ -101,11 +101,19 @@ object Utils {
         }
     }
 
+    fun getAudioDuration(url: String): Long {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(url, HashMap())
+        val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        retriever.release()
+        return durationStr?.toLongOrNull() ?: 0L
+    }
+
     @SuppressLint("DefaultLocale")
     fun formatDuration(duration: Long): String {
-        val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
-        val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -
-                minutes * TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
+        println("formatDuration: $duration")
+        val minutes =duration / 60
+        val seconds = duration % 60
         val result = String.format("%02d:%02d", minutes, seconds)
         return result
     }

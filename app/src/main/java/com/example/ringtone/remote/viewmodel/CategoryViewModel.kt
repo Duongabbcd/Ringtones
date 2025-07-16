@@ -24,7 +24,7 @@ class CategoryViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    fun loadCategories() = viewModelScope.launch {
+    fun loadRingtoneCategories() = viewModelScope.launch {
         _loading.value = true
         try {
             val result = repository.fetchRingtoneCategories()

@@ -9,7 +9,7 @@
         android:background="@drawable/top_background"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingTop="@dimen/_40sdp"
-        android:paddingBottom="@dimen/_24sdp"
+        android:paddingBottom="@dimen/_21sdp"
         android:paddingHorizontal="@dimen/_20sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

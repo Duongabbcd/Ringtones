@@ -130,57 +130,79 @@ class CarouselView
     /**
      * @return onItemTouchListener for calculate velocity and position fix view center
      */
+    private var downX = 0f
+    private var downY = 0f
+    private val velocityThreshold = 700
+    private val minFlingDistance = 30
+
     private fun onItemTouchListener(): OnItemTouchListener {
         return object : OnItemTouchListener {
+
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 val action = e.actionMasked
+
+                val manager = layoutManager as? CarouselLayoutManager ?: return false
+
                 when (action) {
-                    MotionEvent.ACTION_MOVE -> if (actionDown) {
-                        actionDown = false
+                    MotionEvent.ACTION_DOWN -> {
+                        downX = e.x
+                        downY = e.y
                         if (velocityTracker == null) {
                             velocityTracker = VelocityTracker.obtain()
                         } else {
-                            velocityTracker!!.clear()
+                            velocityTracker?.clear()
                         }
-                        velocityTracker!!.addMovement(e)
-                    } else {
-                        velocityTracker!!.addMovement(e)
-                        velocityTracker!!.computeCurrentVelocity(1000)
-                    }
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        velocityTracker?.addMovement(e)
                         actionDown = true
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        velocityTracker?.addMovement(e)
+                        velocityTracker?.computeCurrentVelocity(1000)
+                        actionDown = false
+                    }
+
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        velocityTracker?.addMovement(e)
+                        velocityTracker?.computeCurrentVelocity(1000)
+
+                        val deltaX = Math.abs(e.x - downX)
+                        val deltaY = Math.abs(e.y - downY)
+
                         if (velocityTracker != null) {
+                            val xVelocity = velocityTracker!!.xVelocity
+                            val yVelocity = velocityTracker!!.yVelocity
+
                             when (manager.orientation) {
-                                HORIZONTAL -> if (velocityTracker!!.xVelocity <= 0) {
-                                    if (!isTrustLayout)
-                                        scrolling(-1)// rtl or reverse mode
-                                    else
-                                        scrolling(1)//scroll to right
-                                } else if (velocityTracker!!.xVelocity > 0) {
-                                    if (!isTrustLayout)
-                                        scrolling(1)// rtl or reverse mode
-                                    else
-                                        scrolling(-1)//scroll to left
+                                HORIZONTAL -> {
+                                    if (deltaX > minFlingDistance && Math.abs(xVelocity) > velocityThreshold) {
+                                        if (xVelocity <= 0) {
+                                            if (!isTrustLayout) scrolling(-1) else scrolling(1)
+                                        } else {
+                                            if (!isTrustLayout) scrolling(1) else scrolling(-1)
+                                        }
+                                    }
                                 }
-                                VERTICAL -> if (velocityTracker!!.yVelocity <= 0) {
-                                    if (manager.getReverseLayout())
-                                        scrolling(-1)// rtl or reverse mode
-                                    else
-                                        scrolling(1)//scroll to up
-                                } else if (velocityTracker!!.yVelocity > 0) {
-                                    if (manager.getReverseLayout())
-                                        scrolling(1)// rtl or reverse mode
-                                    else
-                                        scrolling(-1)//scroll to down
+                                VERTICAL -> {
+                                    if (deltaY > minFlingDistance && Math.abs(yVelocity) > velocityThreshold) {
+                                        if (yVelocity <= 0) {
+                                            if (manager.getReverseLayout()) scrolling(-1) else scrolling(1)
+                                        } else {
+                                            if (manager.getReverseLayout()) scrolling(1) else scrolling(-1)
+                                        }
+                                    }
                                 }
                             }
-                            velocityTracker!!.recycle()
+                            velocityTracker?.recycle()
                             velocityTracker = null
                         }
+                        actionDown = true
                     }
                 }
                 return false
             }
+
+
 
             override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
