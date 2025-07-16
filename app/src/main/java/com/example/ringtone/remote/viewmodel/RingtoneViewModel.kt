@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ringtone.remote.model.Category
 import com.example.ringtone.remote.model.Ringtone
-import com.example.ringtone.remote.model.RingtoneResponse
 import com.example.ringtone.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,8 +18,8 @@ class RingtoneViewModel @Inject constructor(
     private val _ringtones = MutableLiveData<List<Ringtone>>()
     val ringtones: LiveData<List<Ringtone>> = _ringtones
 
-    private val _selectedCategory = MutableLiveData<List<Ringtone>>()
-    val selectedCategory: LiveData<List<Ringtone>> = _selectedCategory
+    private val _selectedRingtone = MutableLiveData<List<Ringtone>>()
+    val selectedRingtone: LiveData<List<Ringtone>> = _selectedRingtone
 
     private val _popular = MutableLiveData<List<Ringtone>>()
     val popular: LiveData<List<Ringtone>> = _popular
@@ -81,7 +79,7 @@ class RingtoneViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchRingtoneByCategory(categoryId)
-            _selectedCategory.value = result.data.data
+            _selectedRingtone.value = result.data.data
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")

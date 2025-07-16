@@ -65,6 +65,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(project(":carouselview"))
     implementation ("com.auth0:java-jwt:4.4.0")
 
     implementation("com.google.dagger:hilt-android:2.55")

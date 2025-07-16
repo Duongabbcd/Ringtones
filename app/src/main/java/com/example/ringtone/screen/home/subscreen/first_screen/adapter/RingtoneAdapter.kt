@@ -10,7 +10,7 @@ import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.screen.player.PlayerActivity
 import com.example.ringtone.utils.RingtonePlayerRemote
 
-class RingtoneAdapter: RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
+class RingtoneAdapter(): RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
     private val allRingtones : MutableList<Ringtone> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,

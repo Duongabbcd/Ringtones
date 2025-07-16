@@ -6,7 +6,7 @@
     android:layout_marginHorizontal="@dimen/_8sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/defaultBg"
             android:contentDescription="@string/imageview"
             app:layout_constraintTop_toTopOf="parent"
@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_53sdp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_default_category"/>
+            android:src="@drawable/icon_default_category"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape10dp"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:contentDescription="@string/imageview"

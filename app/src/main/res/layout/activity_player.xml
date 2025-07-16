@@ -50,12 +50,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <androidx.viewpager2.widget.ViewPager2
+    <alirezat775.lib.carouselview.CarouselView
         android:id="@+id/viewPager2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_360sdp"
-        android:layout_marginTop="@dimen/_32sdp"
-        android:paddingBottom="@dimen/_32sdp"
+        android:layout_marginTop="@dimen/_25sdp"
         android:paddingHorizontal="@dimen/_20sdp"
         android:clipChildren="false"
         android:clipToPadding="false"

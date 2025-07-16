@@ -31,7 +31,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             }
             allCategories.adapter = ringtoneAdapter
             ringtoneViewModel.loadSelectedCategories(categoryId)
-            ringtoneViewModel.selectedCategory.observe(this@FilteredRingtonesActivity) { items ->
+            ringtoneViewModel.selectedRingtone.observe(this@FilteredRingtonesActivity) { items ->
                 ringtoneAdapter.submitList(items)
             }
         }

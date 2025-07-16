@@ -13,6 +13,7 @@ import com.example.ringtone.remote.viewmodel.RingtoneViewModel
 import com.example.ringtone.screen.ringtone.RingtoneCategoryActivity
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.CategoryAdapter
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
+import com.example.ringtone.screen.ringtone.FilteredRingtonesActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +22,12 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
     private val categoryViewModel: CategoryViewModel by viewModels()
 
     private val categoryAdapter : CategoryAdapter by lazy {
-        CategoryAdapter()
+        CategoryAdapter { categoryId ->
+            val ctx = context ?: return@CategoryAdapter
+            ctx.startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
+                putExtra("categoryId", categoryId)
+            })
+        }
     }
 
     private val ringToneAdapter : RingtoneAdapter by lazy {
