@@ -14,12 +14,30 @@ import com.example.ringtone.databinding.ActivityPlayerBinding
 import com.example.ringtone.screen.player.adapter.PlayerAdapter
 import com.example.ringtone.utils.RingtonePlayerRemote
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.SimpleItemAnimator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
     private lateinit var handler: Handler
-    private lateinit var playerAdapter: PlayerAdapter
+    private val playerAdapter: PlayerAdapter by lazy {
+        PlayerAdapter(onRequestScrollToPosition = { newPosition ->
+                binding.viewPager2.smoothScrollToPosition(newPosition)
+            setUpNewPlayer(newPosition)
+            }
+        ){ result ->
+            if(result) {
+                playRingtone(true)
+            } else {
+                exoPlayer.pause()
+            }
+        }
+    }
+
+
+
     lateinit var exoPlayer: ExoPlayer
 
     private fun playRingtone(isPlaying: Boolean = false) {
@@ -31,8 +49,39 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         // Prepare and start playback
         exoPlayer.prepare()
         exoPlayer.play()
+        println("▶️ Starting playback & posting progressUpdater")
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                println("🎧 onIsPlayingChanged: $isPlaying")
+                if (isPlaying) {
+                    handler.post(progressUpdater)
+                } else {
+                    handler.removeCallbacks(progressUpdater)
+                }
+            }
+
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_ENDED) {
+                    println("🎵 Song ended")
+                    playerAdapter.onSongEnded()
+                }
+            }
+        })
     }
 
+    private val progressUpdater = object : Runnable {
+        override fun run() {
+            println("⏱ progressUpdater running...")
+            if (exoPlayer.isPlaying) {
+                val progress = exoPlayer.currentPosition.toFloat()
+                println("⏳ Progress: $progress")
+                playerAdapter.updateProgress(progress)
+                handler.postDelayed(this, 800)
+            } else {
+                println("⏸️ Not playing, stopping progress updates.")
+            }
+        }
+    }
 
 
     private var currentRingtone = RingtonePlayerRemote.currentPlayingRingtone
@@ -45,8 +94,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
         // Initialize ExoPlayer
-
-        playerAdapter = PlayerAdapter(exoPlayer)
+        exoPlayer = ExoPlayer.Builder(this).build()
+        playRingtone(false)
         initViewPager()
 
         binding.apply {
@@ -59,11 +108,35 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
     }
 
+    private fun setUpNewPlayer(position: Int) {
+        currentRingtone = allRingtones[position]
+        RingtonePlayerRemote.currentPlayingRingtone = allRingtones[position]
+        playerAdapter.setCurrentPlayingPosition(position)
+        Log.d("PlayerActivity",  "onPositionChange $currentRingtone")
+        binding.currentRingtoneName.text = currentRingtone.name
+        binding.currentRingtoneAuthor.text = currentRingtone.author.name
+        exoPlayer.release()
+        handler.removeCallbacks(progressUpdater)
+    }
+
     private fun initViewPager() {
         playerAdapter.submitList(allRingtones)
         val carousel = Carousel(this, binding.viewPager2, playerAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
+        carousel.scrollSpeed(100f)
         carousel.scaleView(true)
+
+        val recyclerView = binding.viewPager2.getChildAt(0) as? RecyclerView
+
+        recyclerView?.let {
+            it.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            PagerSnapHelper().attachToRecyclerView(it)
+
+            // Disable flickering during item change animations
+            it.itemAnimator?.changeDuration = 0
+            (it.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
+        }
+
 
         binding.apply {
             viewPager2.adapter = playerAdapter
@@ -71,12 +144,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
-                    currentRingtone = allRingtones[position]
-                    Log.d("PlayerActivity",  "onPositionChange $currentRingtone")
-                    currentRingtoneName.text = currentRingtone.name
-                    currentRingtoneAuthor.text = currentRingtone.author.name
-                    exoPlayer.release()
-
+                    setUpNewPlayer(position)
+                    // 🔁 force rebind to update playingHolder
                 }
 
                 override fun onScroll(dx: Int, dy: Int) {
@@ -107,6 +176,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
     override fun onPause() {
         super.onPause()
+        handler.removeCallbacks(progressUpdater)
         exoPlayer.release()
     }
 

@@ -7,16 +7,18 @@
     app:cardCornerRadius="@dimen/_20sdp"
     app:cardElevation="@dimen/_8sdp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/_14sdp"
-        android:paddingTop="@dimen/_14sdp"
-        android:paddingBottom="@dimen/_20sdp">
+        android:orientation="vertical">
 
         <!-- Top Time and Icon -->
         <RelativeLayout
+            android:id="@+id/top"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -36,6 +38,10 @@
         </RelativeLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top"
+            app:layout_constraintBottom_toTopOf="@id/bottom"
             android:layout_width="@dimen/_190sdp"
             android:layout_height="@dimen/_190sdp"
             android:layout_gravity="center">
@@ -58,10 +64,8 @@
                 app:cs_pointer_halo_border_width="@dimen/_2sdp"
                 app:cs_pointer_halo_color="@color/transparent"
                 app:cs_pointer_halo_width="@dimen/_8sdp"
-                app:cs_pointer_radius="10dp"
                 app:cs_negative_enabled="true"
-                app:cs_progress="10"
-                app:cs_rounded="true"
+                app:cs_progress="0"
                 app:cs_start_angle="180" />
 
             <!-- Your center image -->
@@ -78,9 +82,26 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:id="@+id/leftView"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/rightView"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- Control Icons -->
         <LinearLayout
+            android:id="@+id/bottom"
+            android:layout_marginBottom="@dimen/_20sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_28sdp"
@@ -113,5 +134,5 @@
                 android:contentDescription="@string/imageview"
                 android:src="@drawable/icon_next_ring" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
