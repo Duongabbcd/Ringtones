@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/_220sdp"
     android:layout_height="@dimen/_280sdp"
-    android:backgroundTint="#E9DCFF"
+    android:backgroundTint="#F2EBFD"
     app:cardCornerRadius="@dimen/_20sdp"
-    app:cardElevation="@dimen/_8sdp">
+    app:cardElevation="@dimen/_4sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import com.example.ringtone.remote.model.ContentResponse
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.model.RingtoneResponse
 import com.example.ringtone.remote.model.WallpaperResponse
+import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -17,10 +18,8 @@ interface ApiService {
     @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&order_by=id+desc")
     suspend fun getRingtones(): RingtoneResponse
 
-    @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1")
-    suspend fun getPopularRingtones(
-        @Query("order_by") orderBy: String,
-    ) : RingtoneResponse
+    @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1&order_by=name+asc")
+    suspend fun getPopularRingtones() : RingtoneResponse
 
     @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
     suspend fun getTrendingRingtones() : RingtoneResponse
@@ -58,7 +57,17 @@ interface ApiService {
     suspend fun searchRingtonesByName(
         @Body request: SearchRequest
     ):  SearchResponse
+
+    @POST("api/v1/interactions")
+    suspend fun setLike(
+        @Body request: InteractionRequest)
 }
+
+data class InteractionRequest(
+    val type: Int,           // 1: set, 2: download, 3: like
+    @SerializedName("content_type") val contentType: Int, // 1: ringtones, etc.
+    @SerializedName("content_id") val contentId: Int
+)
 
 data class SearchRequest(
     val name: String

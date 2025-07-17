@@ -24,7 +24,10 @@ data class Ringtone(
     val name: String,
     val contents: RingtoneContents,
     val author: Author,
-    val category: Category,
+
+    @SerializedName("categories")
+    val categories: List<Category>,
+
     val active: Int,
     @SerializedName("alert_license") val alertLicense: Int,
     @SerializedName("order") val order: Int,
@@ -40,37 +43,18 @@ data class Ringtone(
     val country: Int,
     @SerializedName("updated_at") val updatedAt: String,
     @SerializedName("created_at") val createdAt: String,
-    @SerializedName("duration") val duration: Int
+    val duration: Int
 ) {
     companion object {
         val EMPTY_RINGTONE = Ringtone(
-            -1, "", contents = RingtoneContents("", "", ""),
-            author = Author(-1, "", -1),
-            category = Category(
-                -1,
-                "",
-                Thumbnail("", size = Size(0, 0), url = Url("", "", "", "")),
-                0,0,0,0,0,0,0,0,0,0,0,"", ""
-            ),
-            active = 0,
-            alertLicense = 0,
-            order = 0,
-            isPrivate = 0,
-            trend = 0,
-            popular = 0,
-            dailyRating = 0,
-            weeklyRating = 0,
-            monthlyRating = 0,
-            like = 0,
-            set = 0,
-            download = 0,
-            country = 0,
-            updatedAt = "",
-            createdAt = "",
-            duration = 0
+            -1, "", RingtoneContents("", "", ""),
+            Author(-1, "", -1),
+            emptyList(), // 🛠 Corrected from "category" to "categories"
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, "", "", 0
         )
     }
 }
+
 
 data class RingtoneContents(
     val disk: String?,

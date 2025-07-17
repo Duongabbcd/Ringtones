@@ -328,6 +328,13 @@ class CarouselView
         }
     }
 
+    private val maxFlingVelocity = 1000 // Lower value = more control
+    override fun fling(velocityX: Int, velocityY: Int): Boolean {
+        val limitedVelocityX = velocityX.coerceIn(-maxFlingVelocity, maxFlingVelocity)
+        val limitedVelocityY = velocityY.coerceIn(-maxFlingVelocity, maxFlingVelocity)
+        return super.fling(limitedVelocityX, limitedVelocityY)
+    }
+
     companion object {
 
         //carousel orientation

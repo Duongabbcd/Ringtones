@@ -3,10 +3,12 @@ package com.example.ringtone.screen.player
 import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.base.BaseActivity
@@ -15,16 +17,20 @@ import com.example.ringtone.screen.player.adapter.PlayerAdapter
 import com.example.ringtone.utils.RingtonePlayerRemote
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import com.example.ringtone.R
 
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
+    private val viewModel : FavouriteRingtoneViewModel by viewModels()
+
     private lateinit var handler: Handler
     private val playerAdapter: PlayerAdapter by lazy {
         PlayerAdapter(onRequestScrollToPosition = { newPosition ->
-                binding.viewPager2.smoothScrollToPosition(newPosition)
+                binding.horizontalRingtones.smoothScrollToPosition(newPosition)
             setUpNewPlayer(newPosition)
             }
         ){  result , id ->
@@ -102,8 +108,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
+
+        viewModel.loadRingtoneById(currentRingtone.id)
+        displayFavouriteIcon()
         // Initialize ExoPlayer
-        exoPlayer = ExoPlayer.Builder(this).build()
         playRingtone(false)
         initViewPager()
 
@@ -113,7 +121,32 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 finish()
             }
             val index = allRingtones.indexOf(currentRingtone)
-            viewPager2.scrollToPosition(index)
+            horizontalRingtones.scrollToPosition(index)
+
+            favourite.setOnClickListener {
+                displayFavouriteIcon(true)
+            }
+        }
+    }
+
+    private fun displayFavouriteIcon(isManualChange: Boolean = false) {
+        viewModel.ringtone.observe(this) { ringtone ->
+            if(ringtone.id == currentRingtone.id) {
+
+                if(isManualChange) {
+                    viewModel.deleteRingtone(currentRingtone)
+                    binding.favourite.setImageResource(R.drawable.icon_unfavourite)
+                } else {
+                    binding.favourite.setImageResource(R.drawable.icon_favourite)
+                }
+            } else {
+                if(isManualChange) {
+                    viewModel.insertRingtone(currentRingtone)
+                    binding.favourite.setImageResource(R.drawable.icon_favourite)
+                } else {
+                    binding.favourite.setImageResource(R.drawable.icon_unfavourite)
+                }
+            }
         }
     }
 
@@ -125,21 +158,30 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         binding.currentRingtoneName.text = currentRingtone.name
         binding.currentRingtoneAuthor.text = currentRingtone.author.name
         exoPlayer.release()
+        exoPlayer = ExoPlayer.Builder(this).build()
         handler.removeCallbacks(progressUpdater)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
         playerAdapter.submitList(allRingtones)
-        val carousel = Carousel(this, binding.viewPager2, playerAdapter)
+        val carousel = Carousel(this, binding.horizontalRingtones, playerAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
         carousel.scrollSpeed(100f)
         carousel.scaleView(true)
+//        binding.horizontalRingtones.layoutManager = OneItemScrollManager(this)
 
-        val recyclerView = binding.viewPager2.getChildAt(0) as? RecyclerView
+        val recyclerView = binding.horizontalRingtones.getChildAt(0) as? RecyclerView
 
         recyclerView?.let {
-            it.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-            PagerSnapHelper().attachToRecyclerView(it)
+            val snapHelper = OneItemAtATimeSnapHelper ()
+            snapHelper.attachToRecyclerView(recyclerView)
+
+            it.onFlingListener = null
+            it.setOnTouchListener { _, event ->
+                // Optional: custom touch logic to restrict fast flings
+                false
+            }
 
             // Disable flickering during item change animations
             it.itemAnimator?.changeDuration = 0
@@ -147,8 +189,9 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
 
 
+
         binding.apply {
-            viewPager2.adapter = playerAdapter
+            horizontalRingtones.adapter = playerAdapter
 
 
             carousel.addCarouselListener(object : CarouselListener {
@@ -159,11 +202,11 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 }
 
                 override fun onScroll(dx: Int, dy: Int) {
-                    Log.d("PlayerActivity",  "onScroll dx : $dx -- dy : $dx")
+//                    Log.d("PlayerActivity",  "onScroll dx : $dx -- dy : $dx")
                 }
             })
 
-         viewPager2.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+         horizontalRingtones.addOnScrollListener(object: RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
                     when(newState) {
@@ -190,8 +233,51 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         exoPlayer.release()
     }
 
-
-
-
-
 }
+
+class OneItemAtATimeSnapHelper : LinearSnapHelper() {
+    override fun findTargetSnapPosition(
+        layoutManager: RecyclerView.LayoutManager,
+        velocityX: Int,
+        velocityY: Int
+    ): Int {
+        val currentPosition = super.findTargetSnapPosition(layoutManager, velocityX, velocityY)
+        val visibleView = findSnapView(layoutManager)
+        val currentViewPosition = layoutManager.getPosition(visibleView!!)
+
+        return when {
+            velocityX > 0 -> currentViewPosition + 1
+            velocityX < 0 -> currentViewPosition - 1
+            else -> currentViewPosition
+        }.coerceIn(0, layoutManager.itemCount - 1)
+    }
+}
+
+//class OneItemScrollManager(context: Context) : LinearLayoutManager(context, HORIZONTAL, false) {
+//    override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State, position: Int) {
+//        val smoothScroller = object : LinearSmoothScroller(recyclerView.context) {
+//            override fun getHorizontalSnapPreference(): Int {
+//                return SNAP_TO_START
+//            }
+//
+//            override fun calculateTimeForScrolling(dx: Int): Int {
+//                return 150 // control scroll speed
+//            }
+//        }
+//        smoothScroller.targetPosition = position
+//        startSmoothScroll(smoothScroller)
+//    }
+//
+//    override fun canScrollHorizontally(): Boolean = true
+//
+//    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler?, state: RecyclerView.State?): Int {
+//        // Clamp scroll amount if needed
+//        return super.scrollHorizontallyBy(dx, recycler, state)
+//    }
+//
+//    override fun fling(velocityX: Int, velocityY: Int): Boolean {
+//        // Optional: fully block flings
+//        return false
+//    }
+//}
+

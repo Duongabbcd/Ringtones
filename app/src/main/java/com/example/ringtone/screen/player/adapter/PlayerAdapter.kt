@@ -2,9 +2,12 @@ package com.example.ringtone.screen.player.adapter
 
 import alirezat775.lib.carouselview.CarouselAdapter
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemMusicBinding
@@ -71,6 +74,14 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
         notifyItemChanged(currentPos)
     }
 
+    fun isItemFullyVisible(recyclerView: RecyclerView, position: Int): Boolean {
+        val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return false
+        return( layoutManager.findFirstCompletelyVisibleItemPosition() == position ||
+                layoutManager.findLastCompletelyVisibleItemPosition() == position).also {
+                    println("isItemFullyVisible: $it")
+        }
+    }
+
     inner class PlayerViewHolder(val binding: ItemMusicBinding) : CarouselViewHolder(binding.root) {
         private var boundId: Int = -1
 
@@ -85,8 +96,6 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
             }
 
             println("setCurrentPlayingPosition 2: ${ringtone.name} $isPlaying")
-            val displayIcon =  if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
-//            binding.play.setImageResource(R.drawable.icon_play)
             // Disable touch on seekbar
             binding.csb.setOnTouchListener { _, _ -> true }
 
@@ -98,12 +107,18 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
             // Scroll to previous
             binding.previous.setOnClickListener {
+
                 if (pos > 0) {
                     onRequestScrollToPosition(pos - 1)
                 }
             }
 
             binding.leftView.setOnClickListener {
+                val recyclerView = itemView.parent as? RecyclerView ?: return@setOnClickListener
+                val position = bindingAdapterPosition
+
+                if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
+
                 if (pos > 0) {
                     onRequestScrollToPosition(pos - 1)
                 }
@@ -111,12 +126,18 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
             // Scroll to next
             binding.next.setOnClickListener {
+
                 if (pos < items.lastIndex) {
                     onRequestScrollToPosition(pos + 1)
                 }
             }
 
             binding.rightView.setOnClickListener {
+                val recyclerView = itemView.parent as? RecyclerView ?: return@setOnClickListener
+                val position = bindingAdapterPosition
+
+                if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
+
                 if (pos < items.lastIndex) {
                     onRequestScrollToPosition(pos + 1)
                 }
@@ -136,6 +157,7 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
             }
         }
     }
+
 
 }
 

@@ -96,6 +96,9 @@ class RingtoneViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchRingtoneByCategory(categoryId, orderBy)
+            result.data.data.onEach {
+                println("loadSelectedRingtones: $it")
+            }
             _selectedRingtone.value = result.data.data
             _error.value = null
         } catch (e: Exception) {

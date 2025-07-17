@@ -1,6 +1,7 @@
 package com.example.ringtone.remote.repository
 
 import com.example.ringtone.remote.api.ApiService
+import com.example.ringtone.remote.api.InteractionRequest
 import com.example.ringtone.remote.api.SearchRequest
 import com.example.ringtone.remote.api.SearchResponse
 import com.example.ringtone.remote.model.CallScreenResponse
@@ -17,7 +18,7 @@ class RingtoneRepository @Inject constructor(
     private val apiService: ApiService
 ) {
     suspend fun fetchRingtones(): RingtoneResponse = apiService.getRingtones()
-    suspend fun fetchPopularRingtones(orderBy: String): RingtoneResponse = apiService.getPopularRingtones(orderBy)
+    suspend fun fetchPopularRingtones(orderBy: String): RingtoneResponse = apiService.getPopularRingtones()
     suspend fun fetchTrendingRingtones(): RingtoneResponse = apiService.getTrendingRingtones()
 
     suspend fun fetchWallpapers(): WallpaperResponse = apiService.getWallpapers()
@@ -29,6 +30,7 @@ class RingtoneRepository @Inject constructor(
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
         SearchRequest(name))
 
+   suspend fun setLike(request: InteractionRequest) = apiService.setLike(request)
 
     companion object {
         var TOKEN: String = ""

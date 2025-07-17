@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.lifecycle.livedata.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,6 +94,9 @@ dependencies {
 
     implementation("me.tankery.lib:circularSeekBar:1.4.2")
 
+    implementation("androidx.room:room-runtime:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
+    kapt("androidx.room:room-compiler:2.7.1")
 
     //advertisement
     implementation("com.github.thienlp201097:DktechLib:2.1.5")
