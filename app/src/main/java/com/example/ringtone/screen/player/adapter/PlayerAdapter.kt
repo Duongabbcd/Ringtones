@@ -1,11 +1,9 @@
 package com.example.ringtone.screen.player.adapter
 
 import alirezat775.lib.carouselview.CarouselAdapter
-import android.os.Looper
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.R
@@ -13,9 +11,10 @@ import com.example.ringtone.databinding.ItemMusicBinding
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.utils.RingtonePlayerRemote
 import com.example.ringtone.utils.Utils
+import kotlin.math.round
 
 
-class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, private val onClickListener: (Boolean) -> Unit) : CarouselAdapter() {
+class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, private val onClickListener: (Boolean, Int) -> Unit) : CarouselAdapter() {
 
     private val items = mutableListOf<Ringtone>()
     private var currentPos = RecyclerView.NO_POSITION
@@ -26,9 +25,9 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
     fun updateProgress(progress: Float) {
         val currentDuration = RingtonePlayerRemote.currentPlayingRingtone.duration.toFloat()
-        val result = progress / 1000 % currentDuration
-        println("updateProgress: $progress and $currentDuration and $result ")
-        playingHolder?.binding?.csb?.progress = result
+        val result = round(progress) / 1000 % currentDuration
+        println("updateProgress: $progress and $currentDuration and ${round(result)} ")
+        playingHolder?.binding?.csb?.progress = round(result)
     }
 
     override fun getItemCount() = items.size
@@ -46,6 +45,7 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
         val previous = currentPos
         currentPos = position
         isPlaying = playingSong
+        println("setCurrentPlayingPosition: $isPlaying")
         if (previous != RecyclerView.NO_POSITION) notifyItemChanged(previous)
         notifyItemChanged(currentPos)
     }
@@ -74,6 +74,7 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
     inner class PlayerViewHolder(val binding: ItemMusicBinding) : CarouselViewHolder(binding.root) {
         private var boundId: Int = -1
 
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(ringtone: Ringtone, pos: Int) {
             // Avoid unnecessary rebind
             if (boundId != ringtone.id) {
@@ -83,6 +84,9 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
                 binding.csb.progress = 0f
             }
 
+            println("setCurrentPlayingPosition 2: ${ringtone.name} $isPlaying")
+            val displayIcon =  if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
+//            binding.play.setImageResource(R.drawable.icon_play)
             // Disable touch on seekbar
             binding.csb.setOnTouchListener { _, _ -> true }
 
@@ -120,20 +124,15 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
             if(isEnded) {
                 updateProgress(0f)
-                binding.play.setImageResource(R.drawable.icon_pause)
+                binding.play.setImageResource(R.drawable.icon_play)
             }
 
             binding.play.setOnClickListener {
                 isPlaying = !isPlaying
-                isEnded = !isEnded
-                if(isEnded) {
-                    updateProgress(0f)
-                    binding.play.setImageResource(R.drawable.icon_pause)
-                }
                 binding.play.setImageResource(
                     if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
                 )
-                onClickListener(isPlaying)
+                onClickListener(isPlaying, ringtone.id)
             }
         }
     }

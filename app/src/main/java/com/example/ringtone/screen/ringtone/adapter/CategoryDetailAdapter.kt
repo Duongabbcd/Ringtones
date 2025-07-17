@@ -10,7 +10,7 @@ import com.example.ringtone.databinding.ItemBigCategoryBinding
 import com.example.ringtone.remote.model.Category
 import com.example.ringtone.utils.RingtonePlayerRemote
 
-class CategoryDetailAdapter(private val onClickListener: (Int) -> Unit): RecyclerView.Adapter<CategoryDetailAdapter.CategoryViewHolder>() {
+class CategoryDetailAdapter(private val onClickListener: (Category) -> Unit): RecyclerView.Adapter<CategoryDetailAdapter.CategoryViewHolder>() {
     private val allCategories : MutableList<Category> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -57,7 +57,7 @@ class CategoryDetailAdapter(private val onClickListener: (Int) -> Unit): Recycle
                 }
 
                 root.setOnClickListener {
-                    onClickListener(category.id)
+                    onClickListener(category)
                 }
             }
         }

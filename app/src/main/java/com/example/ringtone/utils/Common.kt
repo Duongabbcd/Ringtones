@@ -270,4 +270,14 @@ object Common {
             .sign(algorithm)
     }
 
+    fun setSortOrder(context: Context, sortOrder: String)  {
+        val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
+       preferences.edit().putString("KEY_SortOrder", sortOrder).apply()
+    }
+
+    fun getSortOrder(context: Context) : String {
+        val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
+        return preferences.getString("KEY_SortOrder", "name+asc").toString()
+    }
+
 }

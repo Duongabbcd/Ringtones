@@ -4,15 +4,31 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/_20sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    
 
     <ImageView
         android:id="@+id/ringToneAvatar"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="@dimen/_54sdp"
         android:layout_height="@dimen/_54sdp"
-        app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/icon_red_disc"
         android:contentDescription="@string/imageview"/>
+
+    <TextView
+        android:id="@+id/marker"
+        android:background="@drawable/green_bg_gradient"
+        android:gravity="center"
+        style="@style/CustomTextStyleBold"
+        android:textSize="@dimen/_10sdp"
+        android:textColor="@color/white"
+        android:layout_marginStart="@dimen/_26sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ringToneAvatar"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_16sdp" />
+
 
     <LinearLayout
         android:layout_marginHorizontal="@dimen/_16sdp"

@@ -1,5 +1,7 @@
 package com.example.ringtone.remote.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.ringtone.remote.api.SearchRequest
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.repository.RingtoneRepository
+import com.example.ringtone.utils.Common
 import com.example.ringtone.utils.Utils
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,10 +61,10 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
-    fun loadPopular() = viewModelScope.launch {
+    fun loadPopular(orderBy: String = "name+asc" ) = viewModelScope.launch {
         _loading.value = true
         try {
-            val result = repository.fetchPopularRingtones()
+            val result = repository.fetchPopularRingtones(orderBy)
             result.data.data.onEach {
                 println("loadPopular: $it")
             }
@@ -88,10 +92,10 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
-    fun loadSelectedRingtones(categoryId: Int) = viewModelScope.launch {
+    fun loadSelectedRingtones(categoryId: Int, orderBy: String  = "name+asc") = viewModelScope.launch {
         _loading.value = true
         try {
-            val result = repository.fetchRingtoneByCategory(categoryId)
+            val result = repository.fetchRingtoneByCategory(categoryId, orderBy)
             _selectedRingtone.value = result.data.data
             _error.value = null
         } catch (e: Exception) {

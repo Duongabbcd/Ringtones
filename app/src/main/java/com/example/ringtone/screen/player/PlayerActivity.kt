@@ -27,15 +27,24 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 binding.viewPager2.smoothScrollToPosition(newPosition)
             setUpNewPlayer(newPosition)
             }
-        ){ result ->
+        ){  result , id ->
             if(result) {
-                playRingtone(true)
+                if(id != currentId) {
+                    playRingtone(true)
+                    currentId = id
+                } else {
+                    if (exoPlayer.currentPosition >= exoPlayer.duration) {
+                        exoPlayer.seekTo(0)
+                    }
+                    exoPlayer.play()
+                }
             } else {
                 exoPlayer.pause()
             }
         }
     }
 
+    private var currentId = -10
 
 
     lateinit var exoPlayer: ExoPlayer
@@ -76,7 +85,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 val progress = exoPlayer.currentPosition.toFloat()
                 println("⏳ Progress: $progress")
                 playerAdapter.updateProgress(progress)
-                handler.postDelayed(this, 800)
+                handler.postDelayed(this, 1000)
             } else {
                 println("⏸️ Not playing, stopping progress updates.")
             }
@@ -99,7 +108,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         initViewPager()
 
         binding.apply {
-
+            currentRingtoneName.isSelected = true
             backBtn.setOnClickListener {
                 finish()
             }
@@ -144,6 +153,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
+                    currentId = -10
                     setUpNewPlayer(position)
                     // 🔁 force rebind to update playingHolder
                 }

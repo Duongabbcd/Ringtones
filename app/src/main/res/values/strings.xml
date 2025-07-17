@@ -35,7 +35,7 @@
     <string name="italian">Italian</string>
     <string name="korean">Korean</string>
     <string name="language">Language</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
 
 
     <string name="ringTone">Ringtone</string>
@@ -59,4 +59,26 @@
     <string name="download">Download</string>
     <string name="set_ringotne">Set as Ringotne</string>
     <string name="no_data_desc">Can\'t find the music you\'re looking for?</string>
+
+    <string name="phone_settings">Phone settings</string>
+    <string name="rate_us">Rate us</string>
+    <string name="rate_desc">Support us here</string>
+    <string name="setting_desc">History, cache, notification and more</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_desc">Let’s us know about your experiences</string>
+    <string name="share">Share</string>
+    <string name="share_desc">Recommend App to your friends</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="policy_desc">About App privacy</string>
+
+    <string name="welcome_back">Welcome back!</string>
+
+    <string name="first_sort">Date created: New to Old</string>
+    <string name="second_sort">Date created: Old to New</string>
+    <string name="third_sort">Name: A to Z</string>
+    <string name="forth_song">Name: Z to A</string>
+    <string name="sort_by">Sort by</string>
+    <string name="cancel">Cancel</string>
+    <string name="hot_title">Hot</string>
+    <string name="new_title">New</string>
 </resources>

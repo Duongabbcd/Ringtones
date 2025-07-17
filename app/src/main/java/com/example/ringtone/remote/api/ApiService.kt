@@ -18,7 +18,9 @@ interface ApiService {
     suspend fun getRingtones(): RingtoneResponse
 
     @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1")
-    suspend fun getPopularRingtones() : RingtoneResponse
+    suspend fun getPopularRingtones(
+        @Query("order_by") orderBy: String,
+    ) : RingtoneResponse
 
     @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
     suspend fun getTrendingRingtones() : RingtoneResponse
@@ -47,7 +49,7 @@ interface ApiService {
     suspend fun getRingtonesByCategory(
         @Query("category") categoryId: Int,
         @Query("with") with: String = "author+id,name,active-categories+id,name,thumbnail,active,content_count",
-        @Query("order_by") orderBy: String = "id+desc",
+        @Query("order_by") orderBy: String,
         @Query("page") page: Int = 1
     ): RingtoneResponse
 

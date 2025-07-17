@@ -10,7 +10,7 @@
         android:background="@drawable/top_background"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingTop="@dimen/_40sdp"
-        android:paddingBottom="@dimen/_24sdp"
+        android:paddingBottom="@dimen/_21sdp"
         android:paddingHorizontal="@dimen/_20sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -19,7 +19,7 @@
             android:contentDescription="@string/imageview"
             android:src="@drawable/icon_back"
             android:layout_width="@dimen/_24sdp"
-            android:padding="@dimen/_2sdp"
+            android:padding="@dimen/_4sdp"
             android:layout_height="@dimen/_24sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -29,14 +29,14 @@
             android:id="@+id/nameScreen"
             android:contentDescription="@string/imageview"
             android:text="@string/categories"
-            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_6sdp"
             style="@style/CustomTextStyleSemiBold18sp"
             android:textColor="@color/main_color"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="@dimen/_22sdp"
             app:layout_constraintStart_toEndOf="@id/backBtn"
-            app:layout_constraintTop_toTopOf="parent"/>
-
+            app:layout_constraintTop_toTopOf="@id/backBtn"
+            app:layout_constraintBottom_toBottomOf="@id/backBtn"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -13,9 +13,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(ActivityRingtoneCategoryBinding::inflate){
     private val categoryViewModel: CategoryViewModel by viewModels()
     private val categoryDetailAdapter: CategoryDetailAdapter by lazy {
-        CategoryDetailAdapter { categoryId ->
+        CategoryDetailAdapter { category ->
             startActivity(Intent(this, FilteredRingtonesActivity::class.java).apply {
-                putExtra("categoryId", categoryId)
+                putExtra("categoryId", category.id)
+                putExtra("categoryName", category.name)
             })
         }
     }

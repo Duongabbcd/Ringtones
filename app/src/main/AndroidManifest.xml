@@ -45,6 +45,7 @@
         <activity android:name=".screen.ringtone.RingtoneCategoryActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.FilteredRingtonesActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.player.PlayerActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.welcome.WelcomeActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

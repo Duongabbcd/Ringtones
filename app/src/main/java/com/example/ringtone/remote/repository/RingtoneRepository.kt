@@ -17,7 +17,7 @@ class RingtoneRepository @Inject constructor(
     private val apiService: ApiService
 ) {
     suspend fun fetchRingtones(): RingtoneResponse = apiService.getRingtones()
-    suspend fun fetchPopularRingtones(): RingtoneResponse = apiService.getPopularRingtones()
+    suspend fun fetchPopularRingtones(orderBy: String): RingtoneResponse = apiService.getPopularRingtones(orderBy)
     suspend fun fetchTrendingRingtones(): RingtoneResponse = apiService.getTrendingRingtones()
 
     suspend fun fetchWallpapers(): WallpaperResponse = apiService.getWallpapers()
@@ -25,7 +25,7 @@ class RingtoneRepository @Inject constructor(
     suspend fun fetchContents(): ContentResponse = apiService.getContents()
     suspend fun fetchRingtoneCategories(): CategoriesResponse = apiService.getRingtoneCategory()
 
-    suspend fun fetchRingtoneByCategory(categoryId: Int): RingtoneResponse = apiService.getRingtonesByCategory(categoryId)
+    suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy)
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
         SearchRequest(name))
 

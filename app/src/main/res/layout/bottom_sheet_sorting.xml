@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="@dimen/_30sdp"
+    android:paddingHorizontal="@dimen/_20sdp"
+    android:paddingBottom="@dimen/_18sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_corner_top_round"
+    android:backgroundTint="@color/white"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/songAvatar"
+        style="@style/CustomTextStyleSemiBold16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/sort_by"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/songAvatar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="#ECECEC"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLayout"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:id="@+id/fromNewToOld"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/firstSortIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/first_sort"
+                    android:layout_toEndOf="@id/firstSortIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/fromOldToNew"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/secondSortIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/second_sort"
+                    android:layout_toEndOf="@id/secondSortIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fromAToZ"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/thirdSortIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/third_sort"
+                    android:layout_toEndOf="@id/thirdSortIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fromZtoA"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/forthSongIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/forth_song"
+                    android:layout_toEndOf="@id/forthSongIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_24sdp"
+        app:layout_constraintTop_toBottomOf="@id/bottomLayout">
+
+        <TextView
+            android:id="@+id/cancelBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/main_color"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:background="@drawable/background_radius_12_purple_stroke"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/okBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/ok"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/white"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:background="@drawable/background_radius_12"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
