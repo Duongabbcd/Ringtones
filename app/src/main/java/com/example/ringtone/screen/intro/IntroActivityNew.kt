@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.admob.max.dktlibrary.AdmobUtils
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityIntroBinding
+import com.example.ringtone.screen.favourite.FavouriteActivity
 import com.example.ringtone.screen.home.MainActivity
 import com.musicplayer.mp3.playeroffline.ads.AdsManager
 import com.musicplayer.mp3.playeroffline.ads.AdsManager.isTestDevice
@@ -61,7 +62,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
     }
 
     private fun startAc() {
-        startActivity(Intent(this, MainActivity::class.java).apply {
+        startActivity(Intent(this, FavouriteActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         })
         finish()

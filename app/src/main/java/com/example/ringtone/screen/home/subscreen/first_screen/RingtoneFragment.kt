@@ -60,7 +60,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 }
             }
 
-            categoryViewModel.category.observe(viewLifecycleOwner) { items ->
+            categoryViewModel.ringtoneCategory.observe(viewLifecycleOwner) { items ->
                 categoryAdapter.submitList(items.take(6))
             }
 

@@ -7,7 +7,6 @@ import com.example.ringtone.remote.api.SearchResponse
 import com.example.ringtone.remote.model.CallScreenResponse
 import com.example.ringtone.remote.model.CategoriesResponse
 import com.example.ringtone.remote.model.ContentResponse
-import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.model.RingtoneResponse
 import com.example.ringtone.remote.model.WallpaperResponse
 import javax.inject.Inject
@@ -25,12 +24,13 @@ class RingtoneRepository @Inject constructor(
     suspend fun fetchCallScreens(): CallScreenResponse = apiService.getCallScreens()
     suspend fun fetchContents(): ContentResponse = apiService.getContents()
     suspend fun fetchRingtoneCategories(): CategoriesResponse = apiService.getRingtoneCategory()
+    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
 
     suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy)
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
         SearchRequest(name))
 
-   suspend fun setLike(request: InteractionRequest) = apiService.setLike(request)
+   suspend fun setLike(request: InteractionRequest) = apiService.updateStatus(request)
 
     companion object {
         var TOKEN: String = ""

@@ -4,11 +4,16 @@ import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.base.BaseActivity
@@ -22,10 +27,12 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
     private val viewModel : FavouriteRingtoneViewModel by viewModels()
+    private var downloadedUri: Uri? = null
 
     private lateinit var handler: Handler
     private val playerAdapter: PlayerAdapter by lazy {
@@ -126,6 +133,55 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             favourite.setOnClickListener {
                 displayFavouriteIcon(true)
             }
+
+            setupButtons()
+        }
+    }
+
+    private fun setupButtons() {
+        binding.apply {
+              download.setOnClickListener {
+                   downloadRingtone()
+                }
+
+            ringTone.setOnClickListener {
+                setupRingtone()
+            }
+        }
+    }
+
+    private fun downloadRingtone() {
+        RingtoneHelper.requestMediaPermissions(this@PlayerActivity)
+        val ringtoneUrl = currentRingtone.contents.url
+        val ringtoneTitle = currentRingtone.name
+        lifecycleScope.launch {
+            val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle)
+            if (uri != null) {
+                downloadedUri = uri
+                Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupRingtone() {
+        val ringtoneUrl = currentRingtone.contents.url
+        val ringtoneTitle = currentRingtone.name
+
+        lifecycleScope.launch {
+            val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle)
+            if (downloadedUri == null || downloadedUri != uri) {
+                Toast.makeText(this@PlayerActivity, "Download ringtone first", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+        }
+
+        RingtoneHelper.requestWriteSettingsPermission(this@PlayerActivity)
+
+        if (Settings.System.canWrite(this@PlayerActivity)) {
+            val success = RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, downloadedUri!!)
+            Toast.makeText(this@PlayerActivity, if (success) "Ringtone set!" else "Failed to set ringtone.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -231,6 +287,22 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         super.onPause()
         handler.removeCallbacks(progressUpdater)
         exoPlayer.release()
+    }
+
+    // ✅ Handle permission result
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101) {
+            if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 }

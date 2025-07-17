@@ -1,9 +1,14 @@
 package com.example.ringtone.screen.intro
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.admob.max.dktlibrary.AdmobUtils
 import kotlin.apply
@@ -177,7 +182,9 @@ class IntroFragmentNew : Fragment() {
     private fun setUiIntro3() {
         showNativeIntro(2)
         binding.title.text = getString(R.string.intro_3)
-        binding.description.text = getString(R.string.desc_3)
+        val third = getString(R.string.desc_3)
+        val highlight3 = getString(R.string.high_light_3)
+        setSpannableString(third,highlight3,  binding.description)
         binding.image2.setImageResource(R.drawable.bg_intro3)
         binding.slideDot.setImageResource(R.drawable.third_intro)
         binding.introImage.setImageResource(R.drawable.icon_call)
@@ -192,7 +199,9 @@ class IntroFragmentNew : Fragment() {
         println("setUiIntro2")
         showNativeIntro(1)
         binding.title.text = getString(R.string.intro_2)
-        binding.description.text = getString(R.string.desc_2)
+        val second = getString(R.string.desc_2)
+        val highlight2 = getString(R.string.high_light_2)
+        setSpannableString(second,highlight2,  binding.description)
         binding.image2.setImageResource(R.drawable.bg_intro2)
         binding.slideDot.setImageResource(R.drawable.second_intro)
         binding.introImage.setImageResource(R.drawable.icon_frame)
@@ -206,7 +215,9 @@ class IntroFragmentNew : Fragment() {
     private fun setUiIntro1() {
         showNativeIntro(0)
         binding.title.text = getString(R.string.intro_1)
-        binding.description.text = getString(R.string.desc_1)
+        val first = getString(R.string.desc_1)
+        val highlight1 = getString(R.string.high_light_1)
+       setSpannableString(first,highlight1,  binding.description)
         binding.introTitle.text = getString(R.string.intro_title_1)
         binding.image2.setImageResource(R.drawable.bg_intro1)
         binding.introImage.setImageResource(R.drawable.icon_song)
@@ -317,7 +328,35 @@ class IntroFragmentNew : Fragment() {
             fragment.arguments = args
             return fragment
         }
+
+        fun setSpannableString(fullText: String, target: String, textView: TextView) {
+            val spannable = SpannableString(fullText)
+
+// Set all text to black (optional if default is black)
+            spannable.setSpan(
+                ForegroundColorSpan(Color.BLACK),
+                0,
+                fullText.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+// Highlight "Ringify" in purple
+            val start = fullText.indexOf(target)
+            if (start >= 0) {
+                spannable.setSpan(
+                    ForegroundColorSpan(Color.parseColor("#8246FF")),
+                    start,
+                    start + target.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+// Apply to TextView
+            textView.text = spannable
+        }
     }
+
+
 
     interface CallbackIntro {
         fun onNext(position: Int, introPos : Int)

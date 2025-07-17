@@ -15,8 +15,11 @@ class CategoryViewModel @Inject constructor(
     private val repository: RingtoneRepository
 ) : ViewModel() {
 
-    private val _category = MutableLiveData<List<Category>>()
-    val category: LiveData<List<Category>> = _category
+    private val _ringtoneCategory = MutableLiveData<List<Category>>()
+    val ringtoneCategory: LiveData<List<Category>> = _ringtoneCategory
+
+    private val _wallpaperCategory = MutableLiveData<List<Category>>()
+    val wallpaperCategory: LiveData<List<Category>> = _wallpaperCategory
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
@@ -28,7 +31,21 @@ class CategoryViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchRingtoneCategories()
-            _category.value = result.dataPage.categories
+            _ringtoneCategory.value = result.dataPage.categories
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadRingtones: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+    fun loadWallpaperCategories() = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.fetchWallpaperCategories()
+            _ringtoneCategory.value = result.dataPage.categories
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")

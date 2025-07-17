@@ -8,7 +8,6 @@ import com.example.ringtone.remote.model.RingtoneResponse
 import com.example.ringtone.remote.model.WallpaperResponse
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -59,7 +58,7 @@ interface ApiService {
     ):  SearchResponse
 
     @POST("api/v1/interactions")
-    suspend fun setLike(
+    suspend fun updateStatus(
         @Body request: InteractionRequest)
 }
 

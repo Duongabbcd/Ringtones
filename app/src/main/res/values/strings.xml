@@ -19,8 +19,16 @@
     <string name="intro_title_2">Get full</string>
     <string name="intro_title_3">Color phone</string>
     <string name="desc_1">Ringtones &amp; Wallpaper - Ringify</string>
+    <string name="high_light_1">Ringify</string>
     <string name="desc_2">3D Parallax and 4K wallpapers</string>
+    <string name="high_light_2">wallpapers</string>
     <string name="desc_3">Dynamic Call Screen Themes</string>
+    <string name="high_light_3">Call Screen</string>
+
+    <string name="fav_1">Select at least 3 music genres you like</string>
+    <string name="fav_light_1">music genres</string>
+    <string name="fav_2">Choose your favorite wallpaper</string>
+    <string name="fav_light_2">favorite wallpaper</string>
 
     <string name="english">English</string>
     <string name="hindi">Hindi</string>
@@ -81,4 +89,5 @@
     <string name="cancel">Cancel</string>
     <string name="hot_title">Hot</string>
     <string name="new_title">New</string>
+    <string name="favourite_desc">What you interested in?</string>
 </resources>

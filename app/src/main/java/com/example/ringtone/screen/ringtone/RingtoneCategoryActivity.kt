@@ -31,7 +31,7 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
                 finish()
             }
 
-            categoryViewModel.category.observe(this@RingtoneCategoryActivity) {items ->
+            categoryViewModel.ringtoneCategory.observe(this@RingtoneCategoryActivity) {items ->
                 categoryDetailAdapter.submitList(items)
             }
 
