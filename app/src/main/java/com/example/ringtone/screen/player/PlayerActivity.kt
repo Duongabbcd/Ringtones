@@ -26,6 +26,7 @@ import com.example.ringtone.screen.player.adapter.PlayerAdapter
 import com.example.ringtone.utils.RingtonePlayerRemote
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
@@ -71,6 +72,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     }
 
     private var currentId = -10
+
+    private var index = 0
 
 
     lateinit var exoPlayer: ExoPlayer
@@ -132,6 +135,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
 
+        lastCenter = getCurrentCenterPosition()
 
         checkDownloadPermissions()
 
@@ -147,7 +151,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             backBtn.setOnClickListener {
                 finish()
             }
-            val index = allRingtones.indexOf(currentRingtone)
+            index = allRingtones.indexOf(currentRingtone)
             horizontalRingtones.scrollToPosition(index)
 
             favourite.setOnClickListener {
