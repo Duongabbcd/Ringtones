@@ -90,4 +90,8 @@
     <string name="hot_title">Hot</string>
     <string name="new_title">New</string>
     <string name="favourite_desc">What you interested in?</string>
+
+    <string name="title_grant_Permission">Grant Permission</string>
+    <string name="message_grant_Permission">Please grant all permissions to access additional functionality.</string>
+    <string name="goto_setting">Go to setting</string>
 </resources>

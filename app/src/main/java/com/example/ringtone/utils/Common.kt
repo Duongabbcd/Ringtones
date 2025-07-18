@@ -207,46 +207,46 @@ object Common {
     }
 
 
-//    fun showDialogGoToSetting(context: Context, onClickListener: (Boolean) -> Unit) {
-//        val alertDialog = AlertDialog.Builder(context).create()
-//        alertDialog.setTitle(R.string.title_grant_Permission)
-//        alertDialog.setMessage(context.getString(R.string.message_grant_Permission))
-//        alertDialog.setCancelable(true)
-//        alertDialog.setButton(
-//            DialogInterface.BUTTON_POSITIVE, context.getString(R.string.goto_setting)
-//        ) { _: DialogInterface?, _: Int ->
-//            onClickListener(true)
-//            alertDialog.dismiss()
-//        }
-//
-//        // Negative button: Cancel
-//        alertDialog.setButton(
-//            DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.cancel)
-//        ) { _: DialogInterface?, _: Int ->
-//            onClickListener(false)
-//            alertDialog.dismiss()
-//        }
-//
-//        // Handle cancel (e.g., tapped outside or pressed back)
-//        alertDialog.setOnCancelListener {
-//            onClickListener(false)
-//        }
-//
-//        alertDialog.show ()
-//
-//        // Set background to white
-//        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-//
-//        // Set positive button text color to black
-//        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.BLACK)
-//        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.BLACK)
-//        // Set title and message text color to black
-//        val titleId = context.resources.getIdentifier("alertTitle", "id", "android")
-//        val messageId = android.R.id.message
-//
-//        alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.BLACK)
-//        alertDialog.findViewById<TextView>(messageId)?.setTextColor(Color.BLACK)
-//    }
+    fun showDialogGoToSetting(context: Context, onClickListener: (Boolean) -> Unit) {
+        val alertDialog = AlertDialog.Builder(context).create()
+        alertDialog.setTitle(R.string.title_grant_Permission)
+        alertDialog.setMessage(context.getString(R.string.message_grant_Permission))
+        alertDialog.setCancelable(true)
+        alertDialog.setButton(
+            DialogInterface.BUTTON_POSITIVE, context.getString(R.string.goto_setting)
+        ) { _: DialogInterface?, _: Int ->
+            onClickListener(true)
+            alertDialog.dismiss()
+        }
+
+        // Negative button: Cancel
+        alertDialog.setButton(
+            DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.cancel)
+        ) { _: DialogInterface?, _: Int ->
+            onClickListener(false)
+            alertDialog.dismiss()
+        }
+
+        // Handle cancel (e.g., tapped outside or pressed back)
+        alertDialog.setOnCancelListener {
+            onClickListener(false)
+        }
+
+        alertDialog.show ()
+
+        // Set background to white
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+
+        // Set positive button text color to black
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.BLACK)
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.BLACK)
+        // Set title and message text color to black
+        val titleId = context.resources.getIdentifier("alertTitle", "id", "android")
+        val messageId = android.R.id.message
+
+        alertDialog.findViewById<TextView>(titleId)?.setTextColor(Color.BLACK)
+        alertDialog.findViewById<TextView>(messageId)?.setTextColor(Color.BLACK)
+    }
 
     fun setCountDownTime(context: Context, totalTime: Long) {
         val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)

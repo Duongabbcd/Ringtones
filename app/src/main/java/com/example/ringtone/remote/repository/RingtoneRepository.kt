@@ -30,7 +30,7 @@ class RingtoneRepository @Inject constructor(
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
         SearchRequest(name))
 
-   suspend fun setLike(request: InteractionRequest) = apiService.updateStatus(request)
+   suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
 
     companion object {
         var TOKEN: String = ""

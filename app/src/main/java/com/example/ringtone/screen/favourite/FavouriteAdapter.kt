@@ -13,6 +13,9 @@ class FavouriteAdapter(fragmentActivity: FragmentActivity) :
     }
 
     override fun createFragment(position: Int): Fragment {
-        return FavouriteFragmentNew.newInstance(position)
+        return when(position) {
+            0 -> FavouriteRingtoneFragment.newInstance(0)
+            else -> FavouriteWallpaperFragment.newInstance(1)
+        }
     }
 }

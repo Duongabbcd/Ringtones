@@ -5,13 +5,12 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,7 @@ import java.net.URL
 
 object RingtoneHelper {
 
-    fun requestMediaPermissions(activity: Activity, requestCode: Int = 101) {
+    fun getMissingMediaPermissions(context: Context): List<String>  {
         val permissions = mutableListOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -34,12 +33,8 @@ object RingtoneHelper {
             permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
-        val missing = permissions.filter {
-            ContextCompat.checkSelfPermission(activity, it) != android.content.pm.PackageManager.PERMISSION_GRANTED
-        }
-
-        if (missing.isNotEmpty()) {
-            ActivityCompat.requestPermissions(activity, missing.toTypedArray(), requestCode)
+        return permissions.filter {
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
     }
 

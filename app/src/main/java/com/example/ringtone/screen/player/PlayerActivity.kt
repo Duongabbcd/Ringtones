@@ -4,6 +4,7 @@ import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +13,10 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +31,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
+import com.example.ringtone.utils.Common
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -61,6 +66,9 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
 
     lateinit var exoPlayer: ExoPlayer
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+
+    private var returnedFromSettings = false
 
     private fun playRingtone(isPlaying: Boolean = false) {
         exoPlayer = ExoPlayer.Builder(this).build()
@@ -116,6 +124,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
 
+
+        checkDownloadPermissions()
+
+
         viewModel.loadRingtoneById(currentRingtone.id)
         displayFavouriteIcon()
         // Initialize ExoPlayer
@@ -138,6 +150,46 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
     }
 
+
+    private fun checkDownloadPermissions() {
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val allGranted = permissions.values.all { it }
+            if (allGranted) {
+                actuallyDownloadRingtone()
+            } else {
+                // Loop through each permission
+                val permanentlyDenied = permissions.keys.any { permission ->
+                    !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+                }
+
+                if (permanentlyDenied) {
+                    // User denied and selected "Don't ask again"
+                    showGoToSettingsDialog()
+                } else {
+                    Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+    }
+
+
+    private fun showGoToSettingsDialog() {
+        Common.showDialogGoToSetting(this@PlayerActivity) { result ->
+            if (result) {
+                returnedFromSettings = true
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", packageName, null)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+    }
+
     private fun setupButtons() {
         binding.apply {
               download.setOnClickListener {
@@ -151,14 +203,31 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     }
 
     private fun downloadRingtone() {
-        RingtoneHelper.requestMediaPermissions(this@PlayerActivity)
+
+        val missingPermissions = RingtoneHelper.getMissingMediaPermissions(this)
+
+        if (missingPermissions.isEmpty()) {
+            // All permissions granted
+            actuallyDownloadRingtone()
+        } else {
+            // Request the missing permissions using launcher
+            requestPermissionLauncher.launch(missingPermissions.toTypedArray())
+        }
+
+        RingtoneHelper.getMissingMediaPermissions(this@PlayerActivity)
+
+    }
+
+    private fun actuallyDownloadRingtone() {
         val ringtoneUrl = currentRingtone.contents.url
         val ringtoneTitle = currentRingtone.name
         lifecycleScope.launch {
             val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle)
             if (uri != null) {
                 downloadedUri = uri
-                Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show().also {
+                    viewModel.increaseDownload(currentRingtone)
+                }
             } else {
                 Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT).show()
             }
@@ -166,22 +235,27 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     }
 
     private fun setupRingtone() {
-        val ringtoneUrl = currentRingtone.contents.url
         val ringtoneTitle = currentRingtone.name
 
-        lifecycleScope.launch {
-            val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle)
-            if (downloadedUri == null || downloadedUri != uri) {
-                Toast.makeText(this@PlayerActivity, "Download ringtone first", Toast.LENGTH_SHORT).show()
-                return@launch
-            }
+        val fileName = "$ringtoneTitle.mp3"
+        val relativePath = "Ringtones/Ringtone/"
+
+        RingtoneHelper.fileAlreadyExists(this@PlayerActivity, fileName, relativePath)?.let {
+            Toast.makeText(this@PlayerActivity, "Download ringtone first", Toast.LENGTH_SHORT).show()
+            return@let
         }
 
         RingtoneHelper.requestWriteSettingsPermission(this@PlayerActivity)
 
         if (Settings.System.canWrite(this@PlayerActivity)) {
             val success = RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, downloadedUri!!)
-            Toast.makeText(this@PlayerActivity, if (success) "Ringtone set!" else "Failed to set ringtone.", Toast.LENGTH_SHORT).show()
+            if(success) {
+                Toast.makeText(this@PlayerActivity, "Ringtone set!", Toast.LENGTH_SHORT).show().also {
+                    viewModel.increaseSet(currentRingtone)
+                }
+            } else {
+                Toast.makeText(this@PlayerActivity, "Failed to set ringtone.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -209,6 +283,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private fun setUpNewPlayer(position: Int) {
         currentRingtone = allRingtones[position]
         RingtonePlayerRemote.currentPlayingRingtone = allRingtones[position]
+        displayFavouriteIcon()
         playerAdapter.setCurrentPlayingPosition(position)
         Log.d("PlayerActivity",  "onPositionChange $currentRingtone")
         binding.currentRingtoneName.text = currentRingtone.name
@@ -225,7 +300,6 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
         carousel.scrollSpeed(100f)
         carousel.scaleView(true)
-//        binding.horizontalRingtones.layoutManager = OneItemScrollManager(this)
 
         val recyclerView = binding.horizontalRingtones.getChildAt(0) as? RecyclerView
 

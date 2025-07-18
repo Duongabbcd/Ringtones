@@ -37,10 +37,10 @@ interface ApiService {
     @GET("api/v1/categories?page=2&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?page=1&with=author+id%2Cname%2Clink&type=1")
+    @GET("api/v1/categories?page=1&with=author+name,id&where=type+2")
     suspend fun getRingtoneCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?page=1&with=author+id%2Cname%2Clink&type=2")
+    @GET("api/v1/categories?page=1&with=author+name,id&where=type+1")
     suspend fun getWallpaperCategory(): CategoriesResponse
 
     @GET("api/v1/ringtones")
@@ -64,7 +64,7 @@ interface ApiService {
 
 data class InteractionRequest(
     val type: Int,           // 1: set, 2: download, 3: like
-    @SerializedName("content_type") val contentType: Int, // 1: ringtones, etc.
+    @SerializedName("content_type") val contentType: Int, //1: ringtones, 2: content, 3:wallpaper: 4: callscreen
     @SerializedName("content_id") val contentId: Int
 )
 

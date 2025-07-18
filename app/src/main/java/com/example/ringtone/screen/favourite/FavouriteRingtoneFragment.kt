@@ -22,14 +22,18 @@ import kotlin.getValue
 
 
 @AndroidEntryPoint
-class FavouriteFragmentNew : Fragment() {
+class FavouriteRingtoneFragment : Fragment() {
     private val binding by lazy { ViewpagerFavouriteItempageBinding.inflate(layoutInflater) }
     private lateinit var callbackIntro: CallbackIntro
     private var position = 0
 
     private val categoryViewModel: CategoryViewModel by viewModels()
 
-    private val favouriteAdapter: SelectingFavouriteAdapter by lazy {
+    private val ringtoneAdapter: SelectingFavouriteAdapter by lazy {
+        SelectingFavouriteAdapter()
+    }
+
+    private val wallpaperAdapter: SelectingFavouriteAdapter by lazy {
         SelectingFavouriteAdapter()
     }
 
@@ -47,10 +51,10 @@ class FavouriteFragmentNew : Fragment() {
         val ctx = context ?: return
         val layoutManager = GridLayoutManager(ctx, 3)
         binding.allFavourite.layoutManager = layoutManager
-        binding.allFavourite.adapter = favouriteAdapter
+
 
         if (arguments != null) {
-            fragmentPosition2()
+            setUiIntro1()
         }
 
         binding.nextBtn.setOnClickListener {
@@ -60,30 +64,16 @@ class FavouriteFragmentNew : Fragment() {
         }
     }
 
-    private fun fragmentPosition2() {
-        when (position) {
-            0 -> {
-                categoryViewModel.loadRingtoneCategories()
-                setUiIntro1()
-            }
-
-            1 -> {
-                categoryViewModel.loadWallpaperCategories()
-                setUiIntro2()
-            }
-
-        }
-    }
 
     private fun setUiIntro1() {
         val first = getString(R.string.fav_1)
         val highlight1 = getString(R.string.fav_light_1)
         setSpannableString(first,highlight1,  binding.description)
         binding.slideDot.setImageResource(R.drawable.first_favourite)
-
-
+        binding.allFavourite.adapter = ringtoneAdapter
+        categoryViewModel.loadRingtoneCategories()
         categoryViewModel.ringtoneCategory.observe(viewLifecycleOwner) { items ->
-            favouriteAdapter.submitList(items)
+            ringtoneAdapter.submitList(items)
         }
 
     }
@@ -93,17 +83,21 @@ class FavouriteFragmentNew : Fragment() {
         val highlight1 = getString(R.string.fav_light_2)
         setSpannableString(first,highlight1,  binding.description)
         binding.slideDot.setImageResource(R.drawable.second_favourite)
-
+        binding.allFavourite.adapter = wallpaperAdapter
+        categoryViewModel.loadWallpaperCategories()
         categoryViewModel.wallpaperCategory.observe(viewLifecycleOwner) { items ->
-            favouriteAdapter.submitList(items)
+            items.onEach {
+                println("setUiIntro2: $it")
+            }
+            wallpaperAdapter.submitList(items)
         }
 
     }
 
     companion object {
         private const val ARG_POSITION = "position"
-        fun newInstance(position: Int): FavouriteFragmentNew {
-            val fragment = FavouriteFragmentNew()
+        fun newInstance(position: Int): FavouriteRingtoneFragment {
+            val fragment = FavouriteRingtoneFragment()
             val args = Bundle()
             args.putInt(ARG_POSITION, position)
             fragment.arguments = args
@@ -138,6 +132,7 @@ class SelectingFavouriteAdapter(): RecyclerView.Adapter<SelectingFavouriteAdapte
     }
 
     fun submitList(list: List<Category>) {
+
         alLCategories.clear()
         alLCategories.addAll(list)
         notifyDataSetChanged()

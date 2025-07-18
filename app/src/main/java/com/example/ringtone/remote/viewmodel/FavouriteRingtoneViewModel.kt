@@ -3,7 +3,6 @@ package com.example.ringtone.remote.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.ringtone.remote.api.InteractionRequest
 import com.example.ringtone.remote.model.Ringtone
@@ -12,7 +11,6 @@ import com.example.ringtone.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Interceptor
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +31,7 @@ class FavouriteRingtoneViewModel @Inject constructor(
     fun insertRingtone(ringtone: Ringtone) = viewModelScope.launch(Dispatchers.IO) {
         repository.insertRingtone(ringtone).also {
             println("insertRingtone: ${ringtone.id}")
-            ringtoneRepository.setLike(InteractionRequest(
+            ringtoneRepository.updateStatus(InteractionRequest(
                 3, 1 , ringtone.id
             ))
         }
@@ -41,5 +39,21 @@ class FavouriteRingtoneViewModel @Inject constructor(
 
     fun deleteRingtone(ringtone: Ringtone) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteRingtone(ringtone)
+    }
+
+    fun increaseDownload(ringtone: Ringtone) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ringtoneRepository.updateStatus(InteractionRequest (
+                2,1, ringtone.id
+            ))
+        }
+    }
+
+    fun increaseSet(ringtone: Ringtone) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ringtoneRepository.updateStatus(InteractionRequest (
+                1,1, ringtone.id
+            ))
+        }
     }
 }
