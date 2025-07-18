@@ -184,7 +184,7 @@ class IntroFragmentNew : Fragment() {
         binding.title.text = getString(R.string.intro_3)
         val third = getString(R.string.desc_3)
         val highlight3 = getString(R.string.high_light_3)
-        setSpannableString(third,highlight3,  binding.description)
+        setSpannableString(third,listOf(highlight3),  binding.description)
         binding.image2.setImageResource(R.drawable.bg_intro3)
         binding.slideDot.setImageResource(R.drawable.third_intro)
         binding.introImage.setImageResource(R.drawable.icon_call)
@@ -201,7 +201,7 @@ class IntroFragmentNew : Fragment() {
         binding.title.text = getString(R.string.intro_2)
         val second = getString(R.string.desc_2)
         val highlight2 = getString(R.string.high_light_2)
-        setSpannableString(second,highlight2,  binding.description)
+        setSpannableString(second,listOf(highlight2),  binding.description)
         binding.image2.setImageResource(R.drawable.bg_intro2)
         binding.slideDot.setImageResource(R.drawable.second_intro)
         binding.introImage.setImageResource(R.drawable.icon_frame)
@@ -217,7 +217,7 @@ class IntroFragmentNew : Fragment() {
         binding.title.text = getString(R.string.intro_1)
         val first = getString(R.string.desc_1)
         val highlight1 = getString(R.string.high_light_1)
-       setSpannableString(first,highlight1,  binding.description)
+       setSpannableString(first,listOf(highlight1),  binding.description)
         binding.introTitle.text = getString(R.string.intro_title_1)
         binding.image2.setImageResource(R.drawable.bg_intro1)
         binding.introImage.setImageResource(R.drawable.icon_song)
@@ -329,7 +329,7 @@ class IntroFragmentNew : Fragment() {
             return fragment
         }
 
-        fun setSpannableString(fullText: String, target: String, textView: TextView) {
+        fun setSpannableString(fullText: String, target: List<String>, textView: TextView) {
             val spannable = SpannableString(fullText)
 
 // Set all text to black (optional if default is black)
@@ -340,18 +340,20 @@ class IntroFragmentNew : Fragment() {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-// Highlight "Ringify" in purple
-            val start = fullText.indexOf(target)
-            if (start >= 0) {
-                spannable.setSpan(
-                    ForegroundColorSpan(Color.parseColor("#8246FF")),
-                    start,
-                    start + target.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
+            target.onEach { item ->
+                val start = fullText.indexOf(item)
+                if (start >= 0) {
+                    spannable.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#8246FF")),
+                        start,
+                        start + item.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
             }
 
-// Apply to TextView
+
+
             textView.text = spannable
         }
     }

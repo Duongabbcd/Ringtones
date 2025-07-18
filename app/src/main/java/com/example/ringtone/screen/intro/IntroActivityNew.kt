@@ -62,7 +62,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
     }
 
     private fun startAc() {
-        startActivity(Intent(this, FavouriteActivity::class.java).apply {
+        startActivity(Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         })
         finish()

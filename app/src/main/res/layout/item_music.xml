@@ -12,31 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Top Time and Icon -->
-        <RelativeLayout
-            android:id="@+id/top"
-            android:layout_marginTop="@dimen/_14sdp"
-            android:layout_marginHorizontal="@dimen/_14sdp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tvTime"
-                style="@style/CustomTextStyleMedium14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:10" />
-
-            <ImageView
-                android:id="@+id/ccIcon"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/icon_subtitle" />
-        </RelativeLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +28,7 @@
                 android:layout_height="match_parent"
                 app:cs_circle_color="@color/transparent"
                 app:cs_circle_progress_color="#FF6586"
-                app:cs_circle_stroke_width="@dimen/_2sdp"
+                app:cs_circle_stroke_width="@dimen/_3sdp"
                 app:cs_circle_style="round"
                 app:cs_disable_pointer="false"
                 app:cs_disable_progress_glow="true"
@@ -95,6 +70,33 @@
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+
+
+        <!-- Top Time and Icon -->
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvTime"
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:contentDescription="@string/imageview"
+                android:id="@+id/ccIcon"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/icon_subtitle" />
+        </RelativeLayout>
 
         <!-- Control Icons -->
         <LinearLayout

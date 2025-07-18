@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_marginHorizontal="@dimen/_20sdp"
+    android:background="@drawable/background_radius_16"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/_16sdp"
+    android:paddingVertical="@dimen/_20sdp">
+
+    <ImageView
+        android:src="@drawable/icon_feedback_logo"
+        android:contentDescription="@string/imageview"
+        android:layout_width="@dimen/_83sdp"
+        android:layout_height="@dimen/_89sdp"/>
+
+    <TextView
+        android:text="@string/feedback"
+        android:layout_marginTop="@dimen/_12sdp"
+        style="@style/CustomTextStyleSemiBold16sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/ringToneName"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:textColor="@color/main_color"
+        style="@style/CustomTextStyleSemiBold14sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLayout"
+        android:layout_marginTop="@dimen/_17sdp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:id="@+id/feedback1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/firstIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:id="@+id/firstTitle"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/feedback_1"
+                    android:layout_toEndOf="@id/firstIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/feedback2"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/secondIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:id="@+id/secondTitle"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/feedback_2"
+                    android:layout_toEndOf="@id/secondIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/feedback3"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/thirdIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:id="@+id/thirdTitle"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="start"
+                    android:text="@string/feedback_3"
+                    android:layout_toEndOf="@id/thirdIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_40sdp"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+        android:id="@+id/okBtn"
+        android:textColor="@color/white"
+        android:gravity="center"
+        style="@style/CustomTextStyleSemiBold14sp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:text="@string/send"
+        android:textAllCaps="false"
+        android:background="@drawable/background_radius_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

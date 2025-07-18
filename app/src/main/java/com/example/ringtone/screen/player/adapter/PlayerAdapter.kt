@@ -2,16 +2,19 @@ package com.example.ringtone.screen.player.adapter
 
 import alirezat775.lib.carouselview.CarouselAdapter
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.contextaware.ContextAware
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemMusicBinding
 import com.example.ringtone.remote.model.Ringtone
+import com.example.ringtone.screen.player.dialog.CreditDialog
 import com.example.ringtone.utils.RingtonePlayerRemote
 import com.example.ringtone.utils.Utils
 import kotlin.math.round
@@ -25,6 +28,8 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
     private  var isPlaying = false
     private  var isEnded = false
+
+    private lateinit var context: Context
 
     fun updateProgress(progress: Float) {
         val currentDuration = RingtonePlayerRemote.currentPlayingRingtone.duration.toFloat()
@@ -56,6 +61,7 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
+        context = parent.context
         val binding = ItemMusicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PlayerViewHolder(binding)
     }
@@ -126,7 +132,6 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
 
             // Scroll to next
             binding.next.setOnClickListener {
-
                 if (pos < items.lastIndex) {
                     onRequestScrollToPosition(pos + 1)
                 }
@@ -154,6 +159,13 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
                     if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
                 )
                 onClickListener(isPlaying, ringtone.id)
+            }
+
+            binding.ccIcon.setOnClickListener {
+                println("ccIcon is here!")
+                val dialog = CreditDialog(context)
+                dialog.setCreditContent(ringtone)
+                dialog.show()
             }
         }
     }

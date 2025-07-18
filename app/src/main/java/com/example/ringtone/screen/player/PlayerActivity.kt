@@ -32,25 +32,28 @@ import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
 import com.example.ringtone.screen.player.bottomsheet.DownloadBottomSheet
+import com.example.ringtone.screen.player.dialog.FeedbackDialog
 import com.example.ringtone.utils.Common
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
-    private val viewModel : FavouriteRingtoneViewModel by viewModels()
+    private val viewModel: FavouriteRingtoneViewModel by viewModels()
     private var downloadedUri: Uri? = null
 
     private lateinit var handler: Handler
     private val playerAdapter: PlayerAdapter by lazy {
         PlayerAdapter(onRequestScrollToPosition = { newPosition ->
-                binding.horizontalRingtones.smoothScrollToPosition(newPosition)
+            binding.horizontalRingtones.smoothScrollToPosition(newPosition)
             setUpNewPlayer(newPosition)
-            }
-        ){  result , id ->
-            if(result) {
-                if(id != currentId) {
+        }
+        ) { result, id ->
+            if (result) {
+                if (id != currentId) {
                     playRingtone(true)
                     currentId = id
                 } else {
@@ -76,7 +79,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private fun playRingtone(isPlaying: Boolean = false) {
         exoPlayer = ExoPlayer.Builder(this).build()
         // Prepare the media item
-        if(!isPlaying) return
+        if (!isPlaying) return
         val mediaItem = MediaItem.fromUri(currentRingtone.contents.url)
         exoPlayer.setMediaItem(mediaItem)
         // Prepare and start playback
@@ -149,6 +152,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 displayFavouriteIcon(true)
             }
 
+
+            feedback.setOnClickListener {
+                val dialog = FeedbackDialog(this@PlayerActivity)
+                dialog.setRingtoneFeedback(currentRingtone)
+                dialog.show()
+            }
             setupButtons()
         }
     }
@@ -195,9 +204,9 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
     private fun setupButtons() {
         binding.apply {
-              download.setOnClickListener {
-                   downloadRingtone()
-                }
+            download.setOnClickListener {
+                downloadRingtone()
+            }
 
             ringTone.setOnClickListener {
                 setupRingtone()
@@ -221,14 +230,23 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
     }
 
-    private fun actuallyDownloadRingtone() {
+    private fun actuallyDownloadRingtone(isBackground: Boolean = false) {
+
         val bottomSheet = DownloadBottomSheet(this)
-        bottomSheet.show()
+
+        if (!isBackground) {
+            bottomSheet.show()
+        }
+
 
         val ringtoneUrl = currentRingtone.contents.url
         val ringtoneTitle = currentRingtone.name
         lifecycleScope.launch {
-            val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle) { progress ->
+            val uri = RingtoneHelper.downloadRingtoneFile(
+                this@PlayerActivity,
+                ringtoneUrl,
+                ringtoneTitle
+            ) { progress ->
                 bottomSheet.updateProgress(progress)
             }
             withContext(Dispatchers.Main) {
@@ -239,49 +257,78 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                     Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show()
                 } else {
                     bottomSheet.showFailure()
-                    Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
     private fun setupRingtone() {
-        val ringtoneTitle = currentRingtone.name
-
-        val fileName = "$ringtoneTitle.mp3"
-        val relativePath = "Ringtones/Ringtone/"
-
-        RingtoneHelper.fileAlreadyExists(this@PlayerActivity, fileName, relativePath)?.let {
-            Toast.makeText(this@PlayerActivity, "Download ringtone first", Toast.LENGTH_SHORT).show()
-            return@let
+        if (!RingtoneHelper.hasWriteSettingsPermission(this)) {
+            // Ask the user to grant WRITE_SETTINGS
+            returnedFromSettings = true
+            RingtoneHelper.requestWriteSettingsPermission(this)
+            return
         }
 
-        RingtoneHelper.requestWriteSettingsPermission(this@PlayerActivity)
+        // Now permission is granted—set the ringtone
+        setRingtoneAfterPermission()
 
+
+    }
+
+    private fun setRingtoneAfterPermission() {
+        val ringtoneTitle = currentRingtone.name
+        val ringtoneUrl = currentRingtone.contents.url
+        Toast.makeText(this@PlayerActivity, "Preparing...", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch {
+            val uri = RingtoneHelper.downloadRingtoneFile(
+                this@PlayerActivity,
+                ringtoneUrl,
+                ringtoneTitle
+            ) { progress ->
+                println("progress: $progress")
+            }
+            downloadedUri = uri
+            withContext(Dispatchers.Main) {
+                saveRingtone()
+            }
+        }
+
+
+    }
+
+    private fun saveRingtone() {
         if (Settings.System.canWrite(this@PlayerActivity)) {
-            val success = RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, downloadedUri!!)
-            if(success) {
-                Toast.makeText(this@PlayerActivity, "Ringtone set!", Toast.LENGTH_SHORT).show().also {
-                    viewModel.increaseSet(currentRingtone)
-                }
+            println("System can write: $downloadedUri")
+            val success = downloadedUri?.let {
+                RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, it)
+            } == true
+            if (success) {
+                Toast.makeText(this@PlayerActivity, "Ringtone set!", Toast.LENGTH_SHORT).show()
+                    .also {
+                        viewModel.increaseSet(currentRingtone)
+                    }
             } else {
-                Toast.makeText(this@PlayerActivity, "Failed to set ringtone.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PlayerActivity, "Failed to set ringtone.", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     private fun displayFavouriteIcon(isManualChange: Boolean = false) {
         viewModel.ringtone.observe(this) { ringtone ->
-            if(ringtone.id == currentRingtone.id) {
+            if (ringtone.id == currentRingtone.id) {
 
-                if(isManualChange) {
+                if (isManualChange) {
                     viewModel.deleteRingtone(currentRingtone)
                     binding.favourite.setImageResource(R.drawable.icon_unfavourite)
                 } else {
                     binding.favourite.setImageResource(R.drawable.icon_favourite)
                 }
             } else {
-                if(isManualChange) {
+                if (isManualChange) {
                     viewModel.insertRingtone(currentRingtone)
                     binding.favourite.setImageResource(R.drawable.icon_favourite)
                 } else {
@@ -296,7 +343,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         RingtonePlayerRemote.currentPlayingRingtone = allRingtones[position]
         displayFavouriteIcon()
         playerAdapter.setCurrentPlayingPosition(position)
-        Log.d("PlayerActivity",  "onPositionChange $currentRingtone")
+        Log.d("PlayerActivity", "onPositionChange $currentRingtone")
         binding.currentRingtoneName.text = currentRingtone.name
         binding.currentRingtoneAuthor.text = currentRingtone.author.name
         exoPlayer.release()
@@ -315,7 +362,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         val recyclerView = binding.horizontalRingtones.getChildAt(0) as? RecyclerView
 
         recyclerView?.let {
-            val snapHelper = OneItemAtATimeSnapHelper ()
+            val snapHelper = OneItemAtATimeSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
 
             it.onFlingListener = null
@@ -347,14 +394,15 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 }
             })
 
-         horizontalRingtones.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            horizontalRingtones.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    when(newState) {
+                    when (newState) {
                         RecyclerView.SCROLL_STATE_DRAGGING -> {
                             // User started scrolling
                             Log.d("WheelPicker", "User is actively scrolling")
                         }
+
                         RecyclerView.SCROLL_STATE_IDLE -> {
                             // User started scrolling
 

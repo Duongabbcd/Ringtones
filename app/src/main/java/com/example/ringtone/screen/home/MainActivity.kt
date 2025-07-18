@@ -7,6 +7,7 @@ import com.example.ringtone.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 import com.example.ringtone.R
 import com.example.ringtone.remote.model.Ringtone
+import com.example.ringtone.screen.home.dialog.NotificationDialog
 import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
 import com.example.ringtone.screen.search.SearchActivity
 import com.example.ringtone.screen.setting.SettingActivity
@@ -21,6 +22,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
         binding.searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
+        }
+
+        binding.appName.setOnClickListener {
+            val notificationDialog = NotificationDialog(this)
+            notificationDialog.show()
         }
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->

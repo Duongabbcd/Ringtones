@@ -60,10 +60,13 @@ class SortBottomSheet(private val context: Context,private val onClickListener: 
 
     }
 
-    private fun updateDisplayIcons(selected: ImageView, unselected: List<ImageView>) {
-        selected.setImageResource(R.drawable.icon_select_circle)
-        unselected.onEach {
-            it.setImageResource(R.drawable.icon_unselect_circle)
+    companion object {
+        fun updateDisplayIcons(selected: ImageView, unselected: List<ImageView>) {
+            selected.setImageResource(R.drawable.icon_select_circle)
+            unselected.onEach {
+                it.setImageResource(R.drawable.icon_unselect_circle)
+            }
         }
     }
+
 }

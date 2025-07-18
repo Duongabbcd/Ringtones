@@ -45,6 +45,7 @@
     <string name="language">Language</string>
     <string name="ok">OK</string>
     <string name="done">Done</string>
+    <string name="send">Send</string>
 
 
     <string name="ringTone">Ringtone</string>
@@ -99,4 +100,11 @@
     <string name="downloading">Downloading</string>
     <string name="successfully">Successfully!</string>
     <string name="failed">Failed!</string>
+    <string name="notif_title">Don’t miss the last updates</string>
+    <string name="notif_desc">Turn on notifications to get information about new ringtone, wallpaper, features…</string>
+    <string name="feedback_1">Want more ringtone like this</string>
+    <string name="feedback_2">Can’t play this ringtone</string>
+    <string name="feedback_3">Ringtone do not work after set ringtone</string>
+    <string name="credits">Credits</string>
+    <string name="credits_desc">This ringtone is create by [%1$s] under [%2$s] license</string>
 </resources>

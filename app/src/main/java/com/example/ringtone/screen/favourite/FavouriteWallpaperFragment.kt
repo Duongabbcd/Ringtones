@@ -57,8 +57,8 @@ class FavouriteWallpaperFragment : Fragment() {
 
     private fun setUiIntro2() {
         val first = getString(R.string.fav_2)
-        val highlight1 = getString(R.string.fav_light_2)
-        setSpannableString(first,highlight1,  binding.description)
+        val highlight2 = getString(R.string.fav_light_2)
+        setSpannableString(first,listOf(highlight2),  binding.description)
         binding.slideDot.setImageResource(R.drawable.second_favourite)
         binding.allFavourite.adapter = wallpaperAdapter
         categoryViewModel.loadWallpaperCategories()

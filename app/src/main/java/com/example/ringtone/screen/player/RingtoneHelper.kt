@@ -40,10 +40,17 @@ object RingtoneHelper {
 
     fun requestWriteSettingsPermission(activity: Activity) {
         if (!Settings.System.canWrite(activity)) {
-            val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
-            intent.data = Uri.parse("package:${activity.packageName}")
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS).apply {
+                data = Uri.parse("package:${activity.packageName}")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
             activity.startActivity(intent)
+        }
+    }
+
+    fun hasWriteSettingsPermission(context: Context): Boolean {
+        return Settings.System.canWrite(context).also {
+            println("hasWriteSettingsPermission: $it")
         }
     }
 

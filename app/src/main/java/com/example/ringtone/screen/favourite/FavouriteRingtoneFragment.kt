@@ -68,7 +68,7 @@ class FavouriteRingtoneFragment : Fragment() {
     private fun setUiIntro1() {
         val first = getString(R.string.fav_1)
         val highlight1 = getString(R.string.fav_light_1)
-        setSpannableString(first,highlight1,  binding.description)
+        setSpannableString(first,listOf(highlight1),  binding.description)
         binding.slideDot.setImageResource(R.drawable.first_favourite)
         binding.allFavourite.adapter = ringtoneAdapter
         categoryViewModel.loadRingtoneCategories()
@@ -78,21 +78,6 @@ class FavouriteRingtoneFragment : Fragment() {
 
     }
 
-    private fun setUiIntro2() {
-        val first = getString(R.string.fav_2)
-        val highlight1 = getString(R.string.fav_light_2)
-        setSpannableString(first,highlight1,  binding.description)
-        binding.slideDot.setImageResource(R.drawable.second_favourite)
-        binding.allFavourite.adapter = wallpaperAdapter
-        categoryViewModel.loadWallpaperCategories()
-        categoryViewModel.wallpaperCategory.observe(viewLifecycleOwner) { items ->
-            items.onEach {
-                println("setUiIntro2: $it")
-            }
-            wallpaperAdapter.submitList(items)
-        }
-
-    }
 
     companion object {
         private const val ARG_POSITION = "position"
