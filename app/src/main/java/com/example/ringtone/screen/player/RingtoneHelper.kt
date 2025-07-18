@@ -132,7 +132,7 @@ object RingtoneHelper {
 
             RingtoneManager.setActualDefaultRingtoneUri(
                 context,
-                RingtoneManager.TYPE_RINGTONE,
+                RingtoneManager.TYPE_RINGTONE, //  RingtoneManager.TYPE_NOTIFICATION,
                 uri
             )
             true
