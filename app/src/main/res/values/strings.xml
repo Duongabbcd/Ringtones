@@ -44,6 +44,7 @@
     <string name="korean">Korean</string>
     <string name="language">Language</string>
     <string name="ok">OK</string>
+    <string name="done">Done</string>
 
 
     <string name="ringTone">Ringtone</string>
@@ -94,4 +95,8 @@
     <string name="title_grant_Permission">Grant Permission</string>
     <string name="message_grant_Permission">Please grant all permissions to access additional functionality.</string>
     <string name="goto_setting">Go to setting</string>
+    <string name="download_title">Your Ringtone is Download</string>
+    <string name="downloading">Downloading</string>
+    <string name="successfully">Successfully!</string>
+    <string name="failed">Failed!</string>
 </resources>

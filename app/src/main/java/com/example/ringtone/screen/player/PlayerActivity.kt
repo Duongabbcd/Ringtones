@@ -31,8 +31,11 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
+import com.example.ringtone.screen.player.bottomsheet.DownloadBottomSheet
 import com.example.ringtone.utils.Common
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
@@ -219,17 +222,25 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     }
 
     private fun actuallyDownloadRingtone() {
+        val bottomSheet = DownloadBottomSheet(this)
+        bottomSheet.show()
+
         val ringtoneUrl = currentRingtone.contents.url
         val ringtoneTitle = currentRingtone.name
         lifecycleScope.launch {
-            val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle)
-            if (uri != null) {
-                downloadedUri = uri
-                Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show().also {
+            val uri = RingtoneHelper.downloadRingtoneFile(this@PlayerActivity, ringtoneUrl, ringtoneTitle) { progress ->
+                bottomSheet.updateProgress(progress)
+            }
+            withContext(Dispatchers.Main) {
+                if (uri != null) {
+                    downloadedUri = uri
+                    bottomSheet.showSuccess()
                     viewModel.increaseDownload(currentRingtone)
+                    Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show()
+                } else {
+                    bottomSheet.showFailure()
+                    Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT).show()
             }
         }
     }

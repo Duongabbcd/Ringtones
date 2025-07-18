@@ -8,34 +8,34 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topController"
-        android:paddingStart="@dimen/_20sdp"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/_15sdp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/backBtn"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
             android:contentDescription="@string/imageview"
+            android:paddingVertical="@dimen/_4sdp"
             android:src="@drawable/icon_back_black"
-            android:padding="@dimen/_4sdp"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="@dimen/_32sdp"
-            android:layout_height="@dimen/_32sdp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/appName"
             style="@style/CustomTextStyleBold20sp"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_36sdp"
+            android:layout_height="@dimen/_27sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:ellipsize="marquee"
             android:focusable="true"
             android:gravity="center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
-            android:paddingHorizontal="@dimen/_4sdp"
             android:text="@string/language"
             app:layout_constraintBottom_toBottomOf="@id/backBtn"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,12 +48,12 @@
         android:id="@+id/allLanguages"
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_width="match_parent"
-        android:paddingHorizontal="@dimen/_14sdp"
+        android:paddingHorizontal="@dimen/_20sdp"
         android:layout_height="0dp"
         tools:listitem="@layout/rcv_language"
         app:layout_constraintBottom_toTopOf="@+id/applyBtn"
         app:layout_constraintTop_toBottomOf="@id/topController"
-        android:layout_marginBottom="@dimen/_30sdp"/>
+        android:layout_marginBottom="@dimen/_18sdp"/>
 
 
     <TextView

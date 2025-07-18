@@ -20,7 +20,7 @@ import java.net.URL
 
 object RingtoneHelper {
 
-    fun getMissingMediaPermissions(context: Context): List<String>  {
+    fun getMissingMediaPermissions(context: Context): List<String> {
         val permissions = mutableListOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -47,58 +47,81 @@ object RingtoneHelper {
         }
     }
 
-    suspend fun downloadRingtoneFile(context: Context, url: String, title: String): Uri? = withContext(Dispatchers.IO) {
-        try {
-            val resolver = context.contentResolver
-            println("downloadRingtoneFile 0: $url")
-            println("downloadRingtoneFile 1: $title")
-            val safeTitle = title.replace(Regex("[\\\\/:*?\"<>|]"), "").trim()
-            val fileName = "$safeTitle.mp3"
-            val relativePath = "Ringtones/Ringtone"
+    suspend fun downloadRingtoneFile(
+        context: Context,
+        url: String,
+        title: String,
+        onProgress: (Int) -> Unit  // progress 0-100
+    ): Uri? =
+        withContext(Dispatchers.IO) {
+            try {
+                val resolver = context.contentResolver
+                println("downloadRingtoneFile 0: $url")
+                println("downloadRingtoneFile 1: $title")
+                val safeTitle = title.replace(Regex("[\\\\/:*?\"<>|]"), "").trim()
+                val fileName = "$safeTitle.mp3"
+                val relativePath = "Ringtones/Ringtone"
 
-            // 🔁 Delete existing entry with same name and path
-            fileAlreadyExists(context, fileName, "$relativePath/")?.let {
-                resolver.delete(it, null, null)
-            }
-
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.TITLE, safeTitle)
-                put(MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg")
-                put(MediaStore.Audio.Media.IS_RINGTONE, true)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
-                }
-            }
-
-            val uri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
-                ?: return@withContext null
-
-            resolver.openOutputStream(uri)?.use { output ->
-                val connection = URL(url).openConnection() as HttpURLConnection
-                connection.connect()
-
-                if (connection.responseCode != HttpURLConnection.HTTP_OK) {
-                    resolver.delete(uri, null, null)
-                    return@withContext null
+                // 🔁 Delete existing entry with same name and path
+                fileAlreadyExists(context, fileName, "$relativePath/")?.let {
+                    resolver.delete(it, null, null)
                 }
 
-                connection.inputStream.use { input -> input.copyTo(output) }
-            }
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.TITLE, safeTitle)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "audio/mpeg")
+                    put(MediaStore.Audio.Media.IS_RINGTONE, true)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
+                    }
+                }
 
-            return@withContext uri
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+                val uri =
+                    resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, contentValues)
+                        ?: return@withContext null
+
+                resolver.openOutputStream(uri)?.use { output ->
+                    val connection = URL(url).openConnection() as HttpURLConnection
+                    connection.connect()
+
+                    if (connection.responseCode != HttpURLConnection.HTTP_OK) {
+                        resolver.delete(uri, null, null)
+                        return@withContext null
+                    }
+
+                    val totalSize = connection.contentLength
+                    var downloadedSize = 0
+
+                    connection.inputStream.use { input ->
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        var bytesRead: Int
+                        while (input.read(buffer).also { bytesRead = it } >= 0) {
+                            output.write(buffer, 0, bytesRead)
+                            downloadedSize += bytesRead
+                            val progress = if (totalSize > 0) (downloadedSize * 100 / totalSize) else 0
+                            onProgress(progress)
+                        }
+                    }
+                }
+
+                return@withContext uri
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
-    }
 
 
     fun setAsSystemRingtone(context: Context, uri: Uri): Boolean {
         return try {
             if (!Settings.System.canWrite(context)) return false
 
-            Settings.System.putString(context.contentResolver, Settings.System.RINGTONE, uri.toString())
+            Settings.System.putString(
+                context.contentResolver,
+                Settings.System.RINGTONE,
+                uri.toString()
+            )
 
             RingtoneManager.setActualDefaultRingtoneUri(
                 context,
@@ -116,7 +139,8 @@ object RingtoneHelper {
     fun fileAlreadyExists(context: Context, fileName: String, relativePath: String): Uri? {
         val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(MediaStore.MediaColumns._ID)
-        val selection = "${MediaStore.MediaColumns.DISPLAY_NAME}=? AND ${MediaStore.MediaColumns.RELATIVE_PATH}=?"
+        val selection =
+            "${MediaStore.MediaColumns.DISPLAY_NAME}=? AND ${MediaStore.MediaColumns.RELATIVE_PATH}=?"
         val selectionArgs = arrayOf(fileName, relativePath)
 
         context.contentResolver.query(
