@@ -34,9 +34,11 @@ import com.example.ringtone.R
 import com.example.ringtone.screen.player.bottomsheet.DownloadBottomSheet
 import com.example.ringtone.screen.player.dialog.FeedbackDialog
 import com.example.ringtone.utils.Common
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -233,7 +235,15 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private fun actuallyDownloadRingtone(isBackground: Boolean = false) {
 
         val bottomSheet = DownloadBottomSheet(this)
-
+        bottomSheet.apply {
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+            setOnShowListener { dialog ->
+                val b = (dialog as BottomSheetDialog).behavior
+                b.isDraggable = false
+                b.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
         if (!isBackground) {
             bottomSheet.show()
         }
@@ -247,20 +257,35 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 ringtoneUrl,
                 ringtoneTitle
             ) { progress ->
-                bottomSheet.updateProgress(progress)
+                println("progress: $progress")
             }
             withContext(Dispatchers.Main) {
                 if (uri != null) {
                     downloadedUri = uri
-                    bottomSheet.showSuccess()
+                    delay(5000L)
+                    bottomSheet.showSuccess().also {
+                        enableDismiss(bottomSheet)
+                    }
                     viewModel.increaseDownload(currentRingtone)
-                    Toast.makeText(this@PlayerActivity, "Downloaded!", Toast.LENGTH_SHORT).show()
                 } else {
-                    bottomSheet.showFailure()
-                    Toast.makeText(this@PlayerActivity, "Download failed.", Toast.LENGTH_SHORT)
-                        .show()
+                    bottomSheet.showFailure().also {
+                        enableDismiss(bottomSheet)
+                    }
                 }
             }
+        }
+    }
+
+    private fun enableDismiss(bottomSheet: DownloadBottomSheet) {
+        bottomSheet.apply {
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+        }
+
+        (bottomSheet as? BottomSheetDialog)?.behavior?.apply {
+            isDraggable = true
+            // Optional: let it collapse instead of staying expanded
+            state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
@@ -281,7 +306,6 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private fun setRingtoneAfterPermission() {
         val ringtoneTitle = currentRingtone.name
         val ringtoneUrl = currentRingtone.contents.url
-        Toast.makeText(this@PlayerActivity, "Preparing...", Toast.LENGTH_SHORT).show()
         CoroutineScope(Dispatchers.IO).launch {
             val uri = RingtoneHelper.downloadRingtoneFile(
                 this@PlayerActivity,
@@ -300,19 +324,32 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     }
 
     private fun saveRingtone() {
+        val dialog = DownloadBottomSheet(this, "ringtone")
+        dialog.apply {
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+            setOnShowListener { dialog ->
+                val b = (dialog as BottomSheetDialog).behavior
+                b.isDraggable = false
+                b.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        dialog.show()
         if (Settings.System.canWrite(this@PlayerActivity)) {
             println("System can write: $downloadedUri")
             val success = downloadedUri?.let {
                 RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, it)
             } == true
             if (success) {
-                Toast.makeText(this@PlayerActivity, "Ringtone set!", Toast.LENGTH_SHORT).show()
-                    .also {
-                        viewModel.increaseSet(currentRingtone)
-                    }
+                handler.postDelayed(  {  dialog.showSuccess().also {
+                    enableDismiss(dialog)
+                }}, 5000L)
+
+                viewModel.increaseSet(currentRingtone)
             } else {
-                Toast.makeText(this@PlayerActivity, "Failed to set ringtone.", Toast.LENGTH_SHORT)
-                    .show()
+                dialog.showFailure().also {
+                    enableDismiss(dialog)
+                }
             }
         }
     }

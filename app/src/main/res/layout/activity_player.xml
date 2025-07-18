@@ -49,22 +49,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/topController"
         app:layout_constraintBottom_toTopOf="@id/frBanner"
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_height="0dp" >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <alirezat775.lib.carouselview.CarouselView
                 android:id="@+id/horizontalRingtones"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_300sdp"
                 android:paddingTop="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:paddingHorizontal="@dimen/_20sdp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
@@ -145,8 +142,8 @@
 
                     <ImageView
                         android:contentDescription="@string/imageview"
-                        android:layout_width="@dimen/_48sdp"
-                        android:layout_height="@dimen/_48sdp"
+                        android:layout_width="@dimen/_54sdp"
+                        android:layout_height="@dimen/_54sdp"
                         android:src="@drawable/ringtone_button"/>
 
                     <TextView
@@ -190,9 +187,8 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <View
@@ -206,7 +202,7 @@
         android:id="@+id/frBanner"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="@dimen/_50sdp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,6 +45,7 @@
     <string name="language">Language</string>
     <string name="ok">OK</string>
     <string name="done">Done</string>
+    <string name="retry">Retry</string>
     <string name="send">Send</string>
 
 
@@ -97,9 +98,13 @@
     <string name="message_grant_Permission">Please grant all permissions to access additional functionality.</string>
     <string name="goto_setting">Go to setting</string>
     <string name="download_title">Your Ringtone is Download</string>
+    <string name="ringtone_title">Setup ringtone processing</string>
+    <string name="set_title">Setup notification processing</string>
     <string name="downloading">Downloading</string>
+    <string name="processing">Processing</string>
+
     <string name="successfully">Successfully!</string>
-    <string name="failed">Failed!</string>
+    <string name="failed">Fail!</string>
     <string name="notif_title">Don’t miss the last updates</string>
     <string name="notif_desc">Turn on notifications to get information about new ringtone, wallpaper, features…</string>
     <string name="feedback_1">Want more ringtone like this</string>

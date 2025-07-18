@@ -86,6 +86,7 @@
                 android:layout_height="@dimen/_36sdp" />
 
             <TextView
+                android:id="@+id/processTxt"
                 android:text="@string/downloading"
                 style="@style/CustomTextStyleMedium16sp"
                 android:layout_marginStart="@dimen/_20sdp"
