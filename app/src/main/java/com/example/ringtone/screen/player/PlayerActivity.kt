@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,7 +27,6 @@ import com.example.ringtone.screen.player.adapter.PlayerAdapter
 import com.example.ringtone.utils.RingtonePlayerRemote
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
@@ -49,10 +49,14 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private var downloadedUri: Uri? = null
 
     private lateinit var handler: Handler
+    private lateinit var carousel: Carousel
     private val playerAdapter: PlayerAdapter by lazy {
         PlayerAdapter(onRequestScrollToPosition = { newPosition ->
-            binding.horizontalRingtones.smoothScrollToPosition(newPosition)
+            carousel.scrollSpeed(200f)
             setUpNewPlayer(newPosition)
+            carousel.setCurrentPosition(newPosition).also {
+                playerAdapter.setCurrentPlayingPosition(newPosition, false)
+            }
         }
         ) { result, id ->
             if (result) {
@@ -104,7 +108,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_ENDED) {
                     println("🎵 Song ended")
-                    playerAdapter.onSongEnded()
+                    handler.postDelayed(  {playerAdapter.onSongEnded()} , 300)
+
                 }
             }
         })
@@ -135,7 +140,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
 
-        lastCenter = getCurrentCenterPosition()
+//        lastCenter = getCurrentCenterPosition()
 
         checkDownloadPermissions()
 
@@ -217,6 +222,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             ringTone.setOnClickListener {
                 setupRingtone()
             }
+
+            notification.setOnClickListener {
+                setupRingtone(true)
+            }
         }
     }
 
@@ -293,7 +302,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
     }
 
-    private fun setupRingtone() {
+    private fun setupRingtone(isNotification: Boolean = false) {
         if (!RingtoneHelper.hasWriteSettingsPermission(this)) {
             // Ask the user to grant WRITE_SETTINGS
             returnedFromSettings = true
@@ -302,12 +311,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
 
         // Now permission is granted—set the ringtone
-        setRingtoneAfterPermission()
-
-
+        setRingtoneAfterPermission(isNotification)
     }
 
-    private fun setRingtoneAfterPermission() {
+    private fun setRingtoneAfterPermission(isNotification: Boolean = false) {
         val ringtoneTitle = currentRingtone.name
         val ringtoneUrl = currentRingtone.contents.url
         CoroutineScope(Dispatchers.IO).launch {
@@ -320,15 +327,15 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             }
             downloadedUri = uri
             withContext(Dispatchers.Main) {
-                saveRingtone()
+                saveRingtone(isNotification)
             }
         }
 
 
     }
 
-    private fun saveRingtone() {
-        val dialog = DownloadBottomSheet(this, "ringtone")
+    private fun saveRingtone(isNotification: Boolean) {
+        val dialog = DownloadBottomSheet(this, if(isNotification) "notification" else "ringtone")
         dialog.apply {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
@@ -342,7 +349,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         if (Settings.System.canWrite(this@PlayerActivity)) {
             println("System can write: $downloadedUri")
             val success = downloadedUri?.let {
-                RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, it)
+                RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, it, isNotification)
             } == true
             if (success) {
                 handler.postDelayed(  {  dialog.showSuccess().also {
@@ -383,6 +390,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         currentRingtone = allRingtones[position]
         RingtonePlayerRemote.currentPlayingRingtone = allRingtones[position]
         displayFavouriteIcon()
+        binding.horizontalRingtones.smoothScrollToPosition(position)
         playerAdapter.setCurrentPlayingPosition(position)
         Log.d("PlayerActivity", "onPositionChange $currentRingtone")
         binding.currentRingtoneName.text = currentRingtone.name
@@ -392,12 +400,15 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         handler.removeCallbacks(progressUpdater)
     }
 
+    private var lastDx: Int = 0
+
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
         playerAdapter.submitList(allRingtones)
-        val carousel = Carousel(this, binding.horizontalRingtones, playerAdapter)
+
+        carousel = Carousel(this, binding.horizontalRingtones, playerAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
-        carousel.scrollSpeed(100f)
+
         carousel.scaleView(true)
 
         val recyclerView = binding.horizontalRingtones.getChildAt(0) as? RecyclerView
@@ -427,13 +438,61 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 override fun onPositionChange(position: Int) {
                     currentId = -10
                     setUpNewPlayer(position)
+                    playerAdapter.setCurrentPlayingPosition(position, false)
                     // 🔁 force rebind to update playingHolder
                 }
 
                 override fun onScroll(dx: Int, dy: Int) {
-//                    Log.d("PlayerActivity",  "onScroll dx : $dx -- dy : $dx")
+                    lastDx = dx // ⬅️ Save dx for later use
+                    Log.d("PlayerActivity", "Scrolling... dx = $dx")
                 }
             })
+
+            horizontalRingtones.setOnTouchListener { _, event ->
+                carousel.scrollSpeed(300f)
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        Log.d("PlayerActivity", "Touch DOWN")
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        Log.d("PlayerActivity", "Touch MOVE")
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+
+                        val direction = when {
+                            lastDx > 0 -> {
+                                println("MotionEvent.ACTION_UP 0: ${index < allRingtones.size - 1}")
+                                if(index < allRingtones.size - 1) {
+                                   index ++
+                                    setUpNewPlayer(index)
+                                    carousel.setCurrentPosition(index).also {
+                                        playerAdapter.setCurrentPlayingPosition(index, false)
+                                    }
+                                }
+                                "➡️ Left (Next)"
+                            }
+                            lastDx < 0 -> {
+                                println("MotionEvent.ACTION_UP 1: ${index > 0}")
+                                if(index > 0) {
+                                    index --
+                                    setUpNewPlayer(index)
+                                    carousel.setCurrentPosition(index).also {
+                                        playerAdapter.setCurrentPlayingPosition(index, false)
+                                    }
+                                }
+                                "⬅️ Right (Previous)"
+                            }
+                            else -> "No scroll"
+                        }
+                        Log.d("PlayerActivity", "Touch UP - Last scroll direction: $direction (dx=$lastDx)")
+                    }
+                }
+                false
+            }
+
+
 
             horizontalRingtones.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

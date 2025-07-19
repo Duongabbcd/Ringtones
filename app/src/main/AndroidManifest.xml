@@ -53,7 +53,7 @@
         <activity android:name=".screen.intro.IntroActivityNew" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.language.LanguageActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.setting.SettingActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.search.SearchActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.ringtone.search.SearchRingtoneActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.RingtoneCategoryActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.FilteredRingtonesActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.player.PlayerActivity" android:exported="false" android:screenOrientation="portrait"/>

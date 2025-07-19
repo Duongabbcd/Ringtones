@@ -17,14 +17,14 @@ class DownloadBottomSheet(private val context: Context, private val type: String
     private val title = when(type) {
         "download" -> context.getString(R.string.download_title)
         "ringtone" -> context.getString(R.string.ringtone_title)
-        "set" -> context.getString(R.string.set_title)
+        "notification" -> context.getString(R.string.set_title)
         else -> context.getString(R.string.download_title)
     }
 
     private val desc = when(type) {
         "download" -> context.getString(R.string.download_title)
         "ringtone" -> context.getString(R.string.processing)
-        "set" -> context.getString(R.string.processing)
+        "notification" -> context.getString(R.string.processing)
         else -> context.getString(R.string.download_title)
     }
 

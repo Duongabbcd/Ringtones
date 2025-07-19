@@ -5,6 +5,8 @@ import alirezat775.lib.carouselview.helper.ViewHelper
 import android.content.Context
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -123,8 +125,24 @@ class Carousel constructor(
     /**
      * @param currentPosition
      */
-    fun setCurrentPosition(currentPosition: Int) {
-        carouselView.scrollToPosition(currentPosition)
+    fun setCurrentPosition(currentPosition: Int, smooth: Boolean = false) {
+        if (smooth) {
+            smoothScrollTo(currentPosition)
+        } else {
+            carouselView.scrollToPosition(currentPosition)
+        }
+    }
+
+    fun smoothScrollTo(index: Int) {
+        val layoutManager = carouselView.layoutManager as? LinearLayoutManager ?: return
+
+        val smoothScroller = object : LinearSmoothScroller(carouselView.context) {
+            override fun getHorizontalSnapPreference(): Int = SNAP_TO_START
+            override fun getVerticalSnapPreference(): Int = SNAP_TO_START
+        }
+
+        smoothScroller.targetPosition = index
+        layoutManager.startSmoothScroll(smoothScroller)
     }
 
     /**

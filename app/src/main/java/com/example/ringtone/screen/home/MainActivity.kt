@@ -2,6 +2,7 @@ package com.example.ringtone.screen.home
 
 import android.content.Intent
 import android.os.Bundle
+import com.admob.max.dktlibrary.AdmobUtils
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
@@ -9,7 +10,7 @@ import com.example.ringtone.R
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.screen.home.dialog.NotificationDialog
 import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
-import com.example.ringtone.screen.search.SearchActivity
+import com.example.ringtone.screen.ringtone.search.SearchRingtoneActivity
 import com.example.ringtone.screen.setting.SettingActivity
 import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
         RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
         binding.searchButton.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
+            startActivity(Intent(this, SearchRingtoneActivity::class.java))
         }
 
         binding.appName.setOnClickListener {
@@ -62,6 +63,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onResume() {
         super.onResume()
+
+         internetConnected = AdmobUtils.isNetworkConnected(this@MainActivity)
         displayScreen()
     }
 
@@ -97,6 +100,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         var isChangeTheme = false
         var count = 0
         var displayMode = DisplayMode.WALLPAPER
+
+        var internetConnected = false
     }
 
     override fun onBackPressed() {

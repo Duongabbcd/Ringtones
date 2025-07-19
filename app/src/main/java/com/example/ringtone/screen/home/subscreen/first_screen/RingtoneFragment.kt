@@ -10,10 +10,13 @@ import com.example.ringtone.base.BaseFragment
 import com.example.ringtone.databinding.FragmentRingtoneBinding
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
+import com.example.ringtone.screen.home.MainActivity
 import com.example.ringtone.screen.ringtone.RingtoneCategoryActivity
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.CategoryAdapter
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
 import com.example.ringtone.screen.ringtone.FilteredRingtonesActivity
+import com.example.ringtone.utils.Common.gone
+import com.example.ringtone.utils.Common.visible
 import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -77,6 +80,17 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             }
 
 
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(MainActivity.internetConnected) {
+            binding.origin.visible()
+            binding.noInternet.gone()
+        } else {
+            binding.origin.gone()
+            binding.noInternet.visible()
         }
     }
 

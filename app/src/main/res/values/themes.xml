@@ -140,6 +140,12 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay_CustomShape16dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/_16sdp</item>
+        <item name="background">@color/transparent</item>
+    </style>
+
     <style name="ShapeAppearanceOverlay_CustomShape10dp">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/_10sdp</item>

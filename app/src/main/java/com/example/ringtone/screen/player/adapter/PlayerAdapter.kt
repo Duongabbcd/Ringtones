@@ -101,7 +101,7 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
                 binding.csb.progress = 0f
             }
 
-            println("setCurrentPlayingPosition 2: ${ringtone.name} $isPlaying")
+
             // Disable touch on seekbar
             binding.csb.setOnTouchListener { _, _ -> true }
 
@@ -148,9 +148,11 @@ class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, privat
                 }
             }
 
-            if(isEnded) {
-                updateProgress(0f)
+            if( !isPlaying) {
+                println("setCurrentPlayingPosition 123: ${ringtone.name} $isPlaying")
                 binding.play.setImageResource(R.drawable.icon_play)
+                updateProgress(0f)
+
             }
 
             binding.play.setOnClickListener {

@@ -82,7 +82,7 @@ class RingtoneViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchTrendingRingtones()
-            _trending.value = result.data.data
+            _trending.value = result.data.data.take(10)
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")

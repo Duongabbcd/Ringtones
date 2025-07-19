@@ -120,7 +120,7 @@ object RingtoneHelper {
         }
 
 
-    fun setAsSystemRingtone(context: Context, uri: Uri): Boolean {
+    fun setAsSystemRingtone(context: Context, uri: Uri, isNotification: Boolean =  false): Boolean {
         return try {
             if (!Settings.System.canWrite(context)) return false
 
@@ -130,9 +130,11 @@ object RingtoneHelper {
                 uri.toString()
             )
 
+            val type = if(isNotification) RingtoneManager.TYPE_NOTIFICATION else RingtoneManager.TYPE_RINGTONE
+
             RingtoneManager.setActualDefaultRingtoneUri(
                 context,
-                RingtoneManager.TYPE_RINGTONE, //  RingtoneManager.TYPE_NOTIFICATION,
+                type, //  RingtoneManager.TYPE_NOTIFICATION,
                 uri
             )
             true

@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.search
+package com.example.ringtone.screen.ringtone.search
 
 import android.content.Context
 import android.content.Intent
@@ -13,9 +13,9 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.base.BaseActivity
-import com.example.ringtone.databinding.ActivitySearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
+import com.example.ringtone.databinding.ActivitySearchRingtoneBinding
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
@@ -31,7 +31,7 @@ import kotlin.toString
 import com.example.ringtone.utils.Utils.hideKeyBoard
 
 @AndroidEntryPoint
-class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding::inflate){
+class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(ActivitySearchRingtoneBinding::inflate){
 //    private var ignoreTextChange = false
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val ringtoneTrendingAdapter : TrendingAdapter by lazy {
@@ -51,7 +51,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding
             }
 
             trendingRecyclerView.adapter = ringtoneTrendingAdapter
-            val layoutManager = FlexboxLayoutManager(this@SearchActivity).apply {
+            val layoutManager = FlexboxLayoutManager(this@SearchRingtoneActivity).apply {
                 flexDirection = FlexDirection.ROW
                 justifyContent = JustifyContent.FLEX_START
                 flexWrap = FlexWrap.WRAP
@@ -75,7 +75,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding
                     // Text is changing
                     val searchText = s.toString()
                     ringtoneViewModel.searchRingtonesByName(searchText)
-                    ringtoneViewModel.search.observe(this@SearchActivity) { result ->
+                    ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
                         if(result.isEmpty()) {
                             noDataLayout.visible()
                             allResults.gone()
@@ -99,7 +99,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding
             searchText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     val query = searchText.text.toString()
-                    this@SearchActivity.hideKeyBoard(binding.searchText)
+                    this@SearchRingtoneActivity.hideKeyBoard(binding.searchText)
                     // Do something with the search query
                     // For example: performSearch(query)
                     true // consume the action
@@ -111,7 +111,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(ActivitySearchBinding
             allResults.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     if (newState != RecyclerView.SCROLL_STATE_IDLE) {
-                        this@SearchActivity.hideKeyBoard(binding.searchText)
+                        this@SearchRingtoneActivity.hideKeyBoard(binding.searchText)
                     }
                 }
             })
