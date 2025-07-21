@@ -60,6 +60,9 @@
         <activity android:name=".screen.welcome.WelcomeActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.favourite.FavouriteActivity" android:exported="false" android:screenOrientation="portrait"/>
 
+        <!--wallpaper-->
+        <activity android:name=".screen.wallpaper.SearchWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>\
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_id" />

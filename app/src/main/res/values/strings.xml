@@ -56,6 +56,7 @@
     <string name="setting">Setting</string>
     <string name="search">Search</string>
     <string name="searching">Searching…</string>
+    <string name="topic">Topic you want</string>
     <string name="see_all">See all</string>
 
     <string name="unknown_cat">Unknown category</string>
@@ -64,7 +65,8 @@
     <string name="new_ringtones">New Ringtones</string>
     <string name="weekly_trending">Weekly Trending</string>
     <string name="editor_s_choices">Editor\'s Choices</string>
-    <string name="find_ringtone">Find ringtone</string>
+    <string name="find_ringtone">Find Ringtone</string>
+    <string name="find_wallpaper">Find Wallpaper</string>
     <string name="notification">Notification</string>
     <string name="download">Download</string>
     <string name="set_ringotne">Set as Ringotne</string>
@@ -115,6 +117,7 @@
 
     <string name="categories">Categories</string>
     <string name="trending">Trending</string>
+    <string name="hot_search">Hot searches</string>
     <string name="live">Live wallpaper</string>
     <string name="favourite">Favourite</string>
     <string name="premiums">Premiums</string>

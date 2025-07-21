@@ -72,7 +72,7 @@ class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adap
                 root.setOnClickListener {
                     RingtonePlayerRemote.setCurrentRingtone(ringTone)
                     if(!isPopular) {
-                        RingtonePlayerRemote.setPlayingQueue(allRingtones)
+                        RingtonePlayerRemote.setRingtoneQueue(allRingtones)
                     }
                     context.startActivity(Intent(context, PlayerActivity::class.java))
                 }

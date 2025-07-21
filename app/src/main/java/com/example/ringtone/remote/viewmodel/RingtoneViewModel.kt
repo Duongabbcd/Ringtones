@@ -37,7 +37,6 @@ class RingtoneViewModel @Inject constructor(
     private val _trending = MutableLiveData<List<Ringtone>>()
     val trending: LiveData<List<Ringtone>> = _trending
 
-
     private val _search = MutableLiveData<List<Ringtone>>()
     val search: LiveData<List<Ringtone>> = _search
 

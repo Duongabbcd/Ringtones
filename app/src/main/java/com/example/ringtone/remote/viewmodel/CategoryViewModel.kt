@@ -44,12 +44,12 @@ class CategoryViewModel @Inject constructor(
     fun loadWallpaperCategories() = viewModelScope.launch {
         _loading.value = true
         try {
-            val result = repository.fetchWallpaperCategories()
+            val result = repository.fetchAllWallpaperCategories()
             result.dataPage.categories.onEach {
                 println("fetchWallpaperCategories: $it")
             }
 
-            _wallpaperCategory.value = result.dataPage.categories
+            _wallpaperCategory.value = result.dataPage.categories.take(12)
             _error.value = null
         } catch (e: Exception) {
             println("Exception: ${e.message}")
@@ -58,4 +58,5 @@ class CategoryViewModel @Inject constructor(
             _loading.value = false
         }
     }
+
 }

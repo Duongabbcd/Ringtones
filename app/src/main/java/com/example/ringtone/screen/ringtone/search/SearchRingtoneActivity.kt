@@ -177,7 +177,7 @@ class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TagViewHolder>() 
         holder.tagText.text = ringTone.name
         holder.itemView.setOnClickListener {
             context.startActivity(Intent(context, PlayerActivity::class.java).apply {
-                RingtonePlayerRemote.setPlayingQueue(listOf(ringTone))
+                RingtonePlayerRemote.setRingtoneQueue(listOf(ringTone))
                 RingtonePlayerRemote.setCurrentRingtone(ringTone)
             })
         }

@@ -12,6 +12,7 @@ import com.example.ringtone.screen.home.dialog.NotificationDialog
 import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
 import com.example.ringtone.screen.ringtone.search.SearchRingtoneActivity
 import com.example.ringtone.screen.setting.SettingActivity
+import com.example.ringtone.screen.wallpaper.SearchWallpaperActivity
 import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onCreate(savedInstanceState)
         RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
         binding.searchButton.setOnClickListener {
-            startActivity(Intent(this, SearchRingtoneActivity::class.java))
+            if(selectedTab == 0) {
+                startActivity(Intent(this, SearchRingtoneActivity::class.java))
+            } else {
+                startActivity(Intent(this, SearchWallpaperActivity::class.java))
+            }
+
         }
 
         binding.appName.setOnClickListener {

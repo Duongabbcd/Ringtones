@@ -68,7 +68,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             }
 
             ringtoneViewModel.popular.observe(viewLifecycleOwner) { items ->
-                RingtonePlayerRemote.setPlayingQueue(items)
+                RingtonePlayerRemote.setRingtoneQueue(items)
                 ringToneAdapter.submitList(items.take(5))
             }
 

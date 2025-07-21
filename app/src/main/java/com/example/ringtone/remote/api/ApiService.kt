@@ -40,9 +40,6 @@ interface ApiService {
     @GET("api/v1/categories?page=1&with=author+name,id&where=type+2")
     suspend fun getRingtoneCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?page=1&with=author+name,id&where=type+1")
-    suspend fun getWallpaperCategory(): CategoriesResponse
-
     @GET("api/v1/ringtones")
     suspend fun getRingtonesByCategory(
         @Query("category") categoryId: Int,
@@ -51,11 +48,28 @@ interface ApiService {
         @Query("page") page: Int = 1
     ): RingtoneResponse
 
+    //Wallpaper
+    @GET("api/v1/categories?page=1&with=author+name,id&where=type+1")
+    suspend fun getWallpaperCategory(): CategoriesResponse
+
+    @GET("api/v1/categories?where=type+1")
+    suspend fun getAllWallpaperCategories(): CategoriesResponse
+
     //Search
     @POST("api/v1/ringtones/search?with=author+id,name,active-categories+id,name,thumbnail,active,content_count")
     suspend fun searchRingtonesByName(
         @Body request: SearchRequest
     ):  SearchResponse
+
+    @POST("api/v1/tags/search")
+    suspend fun searchTags(
+        @Body request: SearchRequest
+    ):  SearchResponse
+
+
+    @POST("api/v1/wallpapers?with=tags+id,name-apps+id,name&tag=11&app=1")
+    suspend fun searchWallpapersByTag(
+    ):  WallpaperResponse
 
     @POST("api/v1/interactions")
     suspend fun updateStatus(
