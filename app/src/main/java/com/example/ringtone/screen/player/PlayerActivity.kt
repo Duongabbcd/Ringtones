@@ -27,6 +27,7 @@ import com.example.ringtone.screen.player.adapter.PlayerAdapter
 import com.example.ringtone.utils.RingtonePlayerRemote
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
@@ -54,9 +55,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         PlayerAdapter(onRequestScrollToPosition = { newPosition ->
             carousel.scrollSpeed(200f)
             setUpNewPlayer(newPosition)
-            carousel.setCurrentPosition(newPosition).also {
-                playerAdapter.setCurrentPlayingPosition(newPosition, false)
-            }
+            handler.postDelayed(   {playerAdapter.setCurrentPlayingPosition(newPosition, false)}, 200)
         }
         ) { result, id ->
             if (result) {
@@ -437,6 +436,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
                     currentId = -10
+                    index = position
                     setUpNewPlayer(position)
                     playerAdapter.setCurrentPlayingPosition(position, false)
                     // 🔁 force rebind to update playingHolder
@@ -450,6 +450,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
             horizontalRingtones.setOnTouchListener { _, event ->
                 carousel.scrollSpeed(300f)
+                val duration = event.eventTime - event.downTime
+
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         Log.d("PlayerActivity", "Touch DOWN")
@@ -460,33 +462,39 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                     }
 
                     MotionEvent.ACTION_UP -> {
-
-                        val direction = when {
-                            lastDx > 0 -> {
-                                println("MotionEvent.ACTION_UP 0: ${index < allRingtones.size - 1}")
-                                if(index < allRingtones.size - 1) {
-                                   index ++
-                                    setUpNewPlayer(index)
-                                    carousel.setCurrentPosition(index).also {
-                                        playerAdapter.setCurrentPlayingPosition(index, false)
-                                    }
-                                }
-                                "➡️ Left (Next)"
-                            }
-                            lastDx < 0 -> {
-                                println("MotionEvent.ACTION_UP 1: ${index > 0}")
-                                if(index > 0) {
-                                    index --
-                                    setUpNewPlayer(index)
-                                    carousel.setCurrentPosition(index).also {
-                                        playerAdapter.setCurrentPlayingPosition(index, false)
-                                    }
-                                }
-                                "⬅️ Right (Previous)"
-                            }
-                            else -> "No scroll"
+                        if(duration > 100) {
+                            println("horizontalRingtones: $duration and $index")
+                            binding.horizontalRingtones.stopScroll()
+                            setUpNewPlayer(index)
+                            playerAdapter.setCurrentPlayingPosition(index, false)
+                            return@setOnTouchListener false
                         }
-                        Log.d("PlayerActivity", "Touch UP - Last scroll direction: $direction (dx=$lastDx)")
+
+                        // 👇 Get current visible position
+                        val layoutManager = horizontalRingtones.layoutManager as LinearLayoutManager
+                        val visiblePos = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+                        // 👇 Decide scroll direction (and clamp to ±1)
+                        val newIndex = when {
+                            lastDx > 0 && index < allRingtones.size - 1 -> index + 1
+                            lastDx < 0 && index > 0 -> index - 1
+                            else -> index
+                        }
+
+                        // 👇 Update only if actual index changes
+                        if (newIndex != index) {
+                            index = newIndex
+                            setUpNewPlayer(index)
+                            handler.postDelayed({
+                                playerAdapter.setCurrentPlayingPosition(index, false)
+                            }, 200)
+                        } else {
+                            // stay on current
+                            setUpNewPlayer(index)
+                            playerAdapter.setCurrentPlayingPosition(index, false)
+                        }
+
+                        Log.d("PlayerActivity", "Touch UP - Scrolled to index=$index (dx=$lastDx)")
                     }
                 }
                 false
