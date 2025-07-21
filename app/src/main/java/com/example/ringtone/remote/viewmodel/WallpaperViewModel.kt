@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ringtone.remote.model.RingtoneResponse
+import com.example.ringtone.remote.api.SearchRequest
+import com.example.ringtone.remote.model.Tag
 import com.example.ringtone.remote.model.Wallpaper
 import com.example.ringtone.remote.model.WallpaperResponse
 import com.example.ringtone.remote.repository.RingtoneRepository
@@ -35,6 +36,13 @@ class WallpaperViewModel @Inject constructor(
     private val _subWallpaper3 = MutableLiveData<List<Wallpaper>>()
     val subWallpaper3: LiveData<List<Wallpaper>> = _subWallpaper3
 
+
+    private val _tags = MutableLiveData<Tag?>()
+    val tags: LiveData<Tag?> = _tags
+
+    private val _searchWallpapers = MutableLiveData<List<Wallpaper>>()
+    val searchWallpapers: LiveData<List<Wallpaper>> = _searchWallpapers
+
     private var _total1 = MutableLiveData<Int>()
     val total1: LiveData<Int> get() = _total1
     private var _total2 = MutableLiveData<Int>()
@@ -59,7 +67,7 @@ class WallpaperViewModel @Inject constructor(
         try {
             val result = repository.fetchTrendingWallpapers()
             _total1.value = result.data.total
-            _trendingWallpaper.value = result.data.data.take(10)
+            _trendingWallpaper.value = result.data.data
             result.data.data.apply {
                 this.onEach {
                println("loadTrendingWallpapers: $it")
@@ -135,4 +143,44 @@ class WallpaperViewModel @Inject constructor(
             _loading.value = false
         }
     }
+
+    fun searchTag(searchText: String) = viewModelScope.launch {
+        _loading.value = true
+        try {
+            _tags.value = null // Clear the old tag first
+            val result = repository.searchTag(SearchRequest(searchText))
+            println("searchTag: $searchText and $result")
+
+            if (result.data.isEmpty()) {
+                _error.value = "No matching tags found"
+                _tags.value = null // explicitly notify observers there's no tag
+            } else {
+                _tags.value = result.data.first() // only set if not empty
+                _error.value = null
+            }
+        } catch (e: Exception) {
+            println("searchTag exception: ${e.message}")
+            _tags.value = null
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+
+    fun searchWallpaperByTag(tagId: Int) = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getWallPapersByTag(tagId)
+            _searchWallpapers.value = result.data.data
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
 }

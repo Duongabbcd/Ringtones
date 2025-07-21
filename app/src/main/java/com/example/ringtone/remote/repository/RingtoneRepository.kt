@@ -35,6 +35,8 @@ class RingtoneRepository @Inject constructor(
         SearchRequest(name))
 
    suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
+   suspend fun searchTag(request: SearchRequest) = apiService.searchTags(request)
+   suspend fun getWallPapersByTag(tagId: Int) = apiService.getWallpapersByTag(tagId = tagId)
 
     companion object {
         var TOKEN: String = ""

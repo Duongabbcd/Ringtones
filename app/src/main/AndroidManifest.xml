@@ -62,6 +62,7 @@
 
         <!--wallpaper-->
         <activity android:name=".screen.wallpaper.SearchWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>\
+        <activity android:name=".screen.wallpaper.PreviewWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>\
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

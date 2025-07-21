@@ -5,6 +5,7 @@ import com.example.ringtone.remote.model.CategoriesResponse
 import com.example.ringtone.remote.model.ContentResponse
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.model.RingtoneResponse
+import com.example.ringtone.remote.model.Tag
 import com.example.ringtone.remote.model.WallpaperResponse
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
@@ -46,7 +47,7 @@ interface ApiService {
     ): RingtoneResponse
 
     //Wallpaper
-    @GET("api/v1/categories?page=1&with=author+name,id&where=type+1")
+    @GET("api/v1/categories?&with=author+name,id&where=type+1")
     suspend fun getWallpaperCategory(): CategoriesResponse
 
     @GET("api/v1/categories?where=type+1")
@@ -75,7 +76,7 @@ interface ApiService {
     @POST("api/v1/tags/search")
     suspend fun searchTags(
         @Body request: SearchRequest
-    ):  SearchResponse
+    ):  TagResponse
 
     @GET("api/v1/wallpapers")
     suspend fun getWallpapersByTag(
@@ -84,9 +85,6 @@ interface ApiService {
         @Query("tag") tagId: Int
     ): WallpaperResponse
 
-    @POST("api/v1/wallpapers?with=tags+id,name-apps+id,name&tag=11&app=1")
-    suspend fun searchWallpapersByTag(
-    ):  WallpaperResponse
 
     @POST("api/v1/interactions")
     suspend fun updateStatus(
@@ -105,4 +103,8 @@ data class SearchRequest(
 
 data class SearchResponse(
     val data: List<Ringtone>
+)
+
+data class TagResponse(
+    val data: List<Tag>
 )

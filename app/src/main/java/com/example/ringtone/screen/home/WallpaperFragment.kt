@@ -1,5 +1,6 @@
 package com.example.ringtone.screen.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.example.ringtone.databinding.FragmentRingtoneBinding
 import com.example.ringtone.databinding.FragmentRingtoneBinding.inflate
 import com.example.ringtone.databinding.FragmentWallpaperBinding
 import com.example.ringtone.remote.viewmodel.WallpaperViewModel
+import com.example.ringtone.screen.wallpaper.PreviewWallpaperActivity
 import com.example.ringtone.screen.wallpaper.adapter.WallpaperAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,7 +70,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             allSub2.layoutManager = LinearLayoutManager(ctx, RecyclerView.HORIZONTAL, false)
             allSub3.layoutManager = LinearLayoutManager(ctx, RecyclerView.HORIZONTAL, false)
             wallPaperViewModel.trendingWallpaper.observe(viewLifecycleOwner) { items ->
-                wallPaperAdapter.submitList(items)
+                wallPaperAdapter.submitList(items.take(10))
             }
 
             wallPaperViewModel.total1.observe(viewLifecycleOwner) { number ->
@@ -78,7 +80,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             trendingCount.text = wallPaperViewModel.total1.toString()
 
             wallPaperViewModel.newWallpaper.observe(viewLifecycleOwner) {items ->
-                newWallpaperAdapter.submitList(items)
+                newWallpaperAdapter.submitList(items.take(10))
             }
 
             wallPaperViewModel.total2.observe(viewLifecycleOwner) { number ->
@@ -112,6 +114,44 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
 
             wallPaperViewModel.total5.observe(viewLifecycleOwner) { number ->
                 sub3Count.text = "$number"
+            }
+
+            openAll1.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", -2)
+                    })
+                }
+            }
+            openAll2.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", -1)
+                    })
+                }
+            }
+
+            openAll3.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", 30)
+                    })
+                }
+            }
+            openAll4.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", 31)
+                    })
+                }
+            }
+
+            openAll5.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", 32)
+                    })
+                }
             }
 
         }
