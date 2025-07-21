@@ -29,6 +29,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -139,13 +140,11 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
 
-//        lastCenter = getCurrentCenterPosition()
-
         checkDownloadPermissions()
 
 
         viewModel.loadRingtoneById(currentRingtone.id)
-        displayFavouriteIcon()
+        observeRingtoneFromDb()
         // Initialize ExoPlayer
         playRingtone(false)
         initViewPager()
@@ -364,10 +363,20 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
     }
 
-    private fun displayFavouriteIcon(isManualChange: Boolean = false) {
-        viewModel.ringtone.observe(this) { ringtone ->
-            if (ringtone.id == currentRingtone.id) {
+    private fun observeRingtoneFromDb() {
+        viewModel.ringtone.observe(this) { dbRingtone ->
+            val isFavorite = dbRingtone.id == currentRingtone.id
+            binding.favourite.setImageResource(
+                if (isFavorite) R.drawable.icon_favourite
+                else R.drawable.icon_unfavourite
+            )
+        }
+    }
 
+    private fun displayFavouriteIcon(isManualChange: Boolean = false) {
+        viewModel.ringtone.observe(this) { dbRingtone ->
+            if (dbRingtone.id == currentRingtone.id) {
+                // It's a favorite
                 if (isManualChange) {
                     viewModel.deleteRingtone(currentRingtone)
                     binding.favourite.setImageResource(R.drawable.icon_unfavourite)
@@ -375,6 +384,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                     binding.favourite.setImageResource(R.drawable.icon_favourite)
                 }
             } else {
+                // Not a favorite
                 if (isManualChange) {
                     viewModel.insertRingtone(currentRingtone)
                     binding.favourite.setImageResource(R.drawable.icon_favourite)
@@ -385,13 +395,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         }
     }
 
+
     private fun setUpNewPlayer(position: Int) {
-        currentRingtone = allRingtones[position]
-        RingtonePlayerRemote.currentPlayingRingtone = allRingtones[position]
-        displayFavouriteIcon()
         binding.horizontalRingtones.smoothScrollToPosition(position)
+        currentRingtone = allRingtones[position]
         playerAdapter.setCurrentPlayingPosition(position)
-        Log.d("PlayerActivity", "onPositionChange $currentRingtone")
+        viewModel.loadRingtoneById(currentRingtone.id)
         binding.currentRingtoneName.text = currentRingtone.name
         binding.currentRingtoneAuthor.text = currentRingtone.author.name
         exoPlayer.release()
@@ -401,6 +410,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
     private var lastDx: Int = 0
 
+    private var duration = 0L
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
         playerAdapter.submitList(allRingtones)
@@ -450,7 +460,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
             horizontalRingtones.setOnTouchListener { _, event ->
                 carousel.scrollSpeed(300f)
-                val duration = event.eventTime - event.downTime
+                duration = event.eventTime - event.downTime
 
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -500,20 +510,26 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                 false
             }
 
-
+            val snapHelper = PagerSnapHelper()
+            snapHelper.attachToRecyclerView(horizontalRingtones)
 
             horizontalRingtones.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    when (newState) {
-                        RecyclerView.SCROLL_STATE_DRAGGING -> {
-                            // User started scrolling
-                            Log.d("WheelPicker", "User is actively scrolling")
-                        }
 
-                        RecyclerView.SCROLL_STATE_IDLE -> {
-                            // User started scrolling
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                        val view = snapHelper.findSnapView(layoutManager)
+                        val position = layoutManager.getPosition(view!!)
 
+                        if (position != index) {
+                            index = position
+                            setUpNewPlayer(index)
+                            playerAdapter.setCurrentPlayingPosition(index, false)
+                        } else {
+                            binding.horizontalRingtones.stopScroll()
+                            setUpNewPlayer(index)
+                            playerAdapter.setCurrentPlayingPosition(index, false)
                         }
                     }
                 }

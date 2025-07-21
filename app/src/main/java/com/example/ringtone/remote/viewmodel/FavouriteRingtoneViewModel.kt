@@ -22,8 +22,10 @@ class FavouriteRingtoneViewModel @Inject constructor(
     val ringtone: LiveData<Ringtone> get() = _ringtone
 
     fun loadRingtoneById(id: Int) {
+        println("loadRingtoneById 0: $id")
         viewModelScope.launch {
             _ringtone.value = repository.getRingtoneById(id)
+            println("loadRingtoneById: ${_ringtone.value}")
         }
     }
 
