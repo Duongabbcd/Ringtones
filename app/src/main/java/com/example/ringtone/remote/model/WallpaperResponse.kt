@@ -15,7 +15,8 @@ data class WallpaperPaging(
     val path: String,
     @SerializedName("per_page") val perPage: Int,
     @SerializedName("prev_page_url") val prevPageUrl: String?,
-    val to: Int
+    val to: Int,
+    @SerializedName("total") val total: Int
 )
 
 data class Wallpaper(

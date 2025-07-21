@@ -23,9 +23,6 @@ interface ApiService {
     @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
     suspend fun getTrendingRingtones() : RingtoneResponse
 
-    //Wallpapers
-    @GET("api/v1/wallpapers?page=2")
-    suspend fun getWallpapers(): WallpaperResponse
 
     @GET("api/v1/call_screens")
     suspend fun getCallScreens(): CallScreenResponse
@@ -55,6 +52,20 @@ interface ApiService {
     @GET("api/v1/categories?where=type+1")
     suspend fun getAllWallpaperCategories(): CategoriesResponse
 
+    @GET("api/v1/wallpapers?where=trend+1")
+    suspend fun getTrendingWallpapers() : WallpaperResponse
+
+    @GET("api/v1/wallpapers?order_by=updated_at+desc")
+    suspend fun getNewWallpapers(): WallpaperResponse
+
+    @GET("api/v1/wallpapers")
+    suspend fun getWallpapersByCategory(
+        @Query("with") with: String = "tags+id,name-apps+id,name",
+        @Query("app") appId: Int = 1,
+        @Query("category") categoryId: Int
+    ): WallpaperResponse
+
+
     //Search
     @POST("api/v1/ringtones/search?with=author+id,name,active-categories+id,name,thumbnail,active,content_count")
     suspend fun searchRingtonesByName(
@@ -66,6 +77,12 @@ interface ApiService {
         @Body request: SearchRequest
     ):  SearchResponse
 
+    @GET("api/v1/wallpapers")
+    suspend fun getWallpapersByTag(
+        @Query("with") with: String = "tags+id,name-apps+id,name",
+        @Query("app") app: Int = 1,
+        @Query("tag") tagId: Int
+    ): WallpaperResponse
 
     @POST("api/v1/wallpapers?with=tags+id,name-apps+id,name&tag=11&app=1")
     suspend fun searchWallpapersByTag(

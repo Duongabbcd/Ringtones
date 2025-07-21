@@ -152,17 +152,17 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
     }
 }
 
-class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TagViewHolder>() {
+class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TrendingViewHolder>() {
     private lateinit var context: Context
     private val items : MutableList<Ringtone> = mutableListOf()
-    inner class TagViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TrendingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tagText: TextView = itemView.findViewById(R.id.tagText)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrendingViewHolder {
         context = parent.context
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_trending, parent, false)
-        return TagViewHolder(view)
+        return TrendingViewHolder(view)
     }
 
     fun submitList(list: List<Ringtone>) {
@@ -172,7 +172,7 @@ class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TagViewHolder>() 
     }
 
 
-    override fun onBindViewHolder(holder: TagViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrendingViewHolder, position: Int) {
         val ringTone = items[position]
         holder.tagText.text = ringTone.name
         holder.itemView.setOnClickListener {

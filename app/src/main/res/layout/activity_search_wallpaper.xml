@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/nameScreen"
         android:contentDescription="@string/imageview"
-        android:text="@string/find_ringtone"
+        android:text="@string/find_wallpaper"
         android:layout_marginStart="@dimen/_2sdp"
         style="@style/CustomTextStyleSemiBold18sp"
         android:textColor="@color/main_color"

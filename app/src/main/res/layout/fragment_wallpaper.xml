@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/_16sdp"
+    android:paddingBottom="@dimen/_8sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,8 +32,8 @@
                 <ImageView
                     android:contentDescription="@string/imageview"
                     android:src="@drawable/icon_wpp_cate"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"/>
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"/>
 
 
                 <TextView
@@ -59,8 +60,8 @@
                 <ImageView
                     android:contentDescription="@string/imageview"
                     android:src="@drawable/icon_wpp_live"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"/>
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"/>
 
 
                 <TextView
@@ -87,8 +88,8 @@
                 <ImageView
                     android:contentDescription="@string/imageview"
                     android:src="@drawable/icon_wpp_fav"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"/>
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"/>
 
 
                 <TextView
@@ -115,8 +116,8 @@
                 <ImageView
                     android:contentDescription="@string/imageview"
                     android:src="@drawable/icon_wpp_premium"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"/>
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"/>
 
 
                 <TextView
@@ -221,15 +222,151 @@
             android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/allPopular"
+            android:id="@+id/allNewWallpaper"
             android:layout_marginTop="@dimen/_12sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_ringtone"
-            app:layout_constraintTop_toBottomOf="@id/newWallpaperCount"
+            app:layout_constraintTop_toBottomOf="@id/newWallpaperCount" />
+
+
+        <TextView
+            android:id="@+id/sub1"
+            android:text="Anime"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:layout_constraintTop_toBottomOf="@+id/allNewWallpaper"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/CustomTextStyleMedium16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/sub1Count"
+            android:text="100,000"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_20sdp"
+            app:layout_constraintTop_toBottomOf="@+id/sub1"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/CustomTextStyleMedium16sp"
+            android:textColor="@color/subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/openAll3"
+            android:text="@string/see_all"
+            android:textColor="#8246FF"
+            app:layout_constraintTop_toTopOf="@+id/sub1"
+            android:layout_marginEnd="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="@id/sub1"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/CustomTextStyleMedium12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allSub1"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/sub1Count" />
+
+
+        <TextView
+            android:id="@+id/sub2"
+            android:text="Art"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:layout_constraintTop_toBottomOf="@+id/allSub1"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/CustomTextStyleMedium16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/sub2Count"
+            android:text="100,000"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_20sdp"
+            app:layout_constraintTop_toBottomOf="@+id/sub2"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/CustomTextStyleMedium16sp"
+            android:textColor="@color/subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/openAll4"
+            android:text="@string/see_all"
+            android:textColor="#8246FF"
+            app:layout_constraintTop_toTopOf="@+id/sub2"
+            android:layout_marginEnd="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="@id/sub2"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/CustomTextStyleMedium12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allSub2"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/sub2Count" />
+
+        <TextView
+            android:id="@+id/sub3"
+            android:text="Car &amp; Motorcycle"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:layout_constraintTop_toBottomOf="@+id/allSub2"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/CustomTextStyleMedium16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/sub3Count"
+            android:text="100,000"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_20sdp"
+            app:layout_constraintTop_toBottomOf="@+id/sub3"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/CustomTextStyleMedium16sp"
+            android:textColor="@color/subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/openAll5"
+            android:text="@string/see_all"
+            android:textColor="#8246FF"
+            app:layout_constraintTop_toTopOf="@+id/sub3"
+            android:layout_marginEnd="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="@id/sub3"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/CustomTextStyleMedium12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allSub3"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/sub3Count"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ProgressBar
@@ -249,10 +386,10 @@
             android:layout_height="@dimen/_24sdp"
             android:progressTint="@color/main_color"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/allPopular"
-            app:layout_constraintTop_toTopOf="@+id/allPopular"
-            app:layout_constraintEnd_toEndOf="@+id/allPopular"
-            app:layout_constraintBottom_toBottomOf="@+id/allPopular"/>
+            app:layout_constraintStart_toStartOf="@+id/allNewWallpaper"
+            app:layout_constraintTop_toTopOf="@+id/allNewWallpaper"
+            app:layout_constraintEnd_toEndOf="@+id/allNewWallpaper"
+            app:layout_constraintBottom_toBottomOf="@+id/allNewWallpaper"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

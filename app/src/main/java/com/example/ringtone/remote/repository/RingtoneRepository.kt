@@ -20,12 +20,15 @@ class RingtoneRepository @Inject constructor(
     suspend fun fetchPopularRingtones(orderBy: String): RingtoneResponse = apiService.getPopularRingtones()
     suspend fun fetchTrendingRingtones(): RingtoneResponse = apiService.getTrendingRingtones()
 
-    suspend fun fetchWallpapers(): WallpaperResponse = apiService.getWallpapers()
     suspend fun fetchCallScreens(): CallScreenResponse = apiService.getCallScreens()
     suspend fun fetchContents(): ContentResponse = apiService.getContents()
     suspend fun fetchRingtoneCategories(): CategoriesResponse = apiService.getRingtoneCategory()
+
+    suspend fun fetchNewWallpapers(): WallpaperResponse = apiService.getNewWallpapers()
     suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
     suspend fun fetchAllWallpaperCategories(): CategoriesResponse = apiService.getAllWallpaperCategories()
+    suspend fun fetchTrendingWallpapers(): WallpaperResponse = apiService.getTrendingWallpapers()
+    suspend fun fetchWallpaperByCategory(categoryId: Int): WallpaperResponse = apiService.getWallpapersByCategory(categoryId = categoryId)
 
     suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy)
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
