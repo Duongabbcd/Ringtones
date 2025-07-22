@@ -74,8 +74,6 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
 
             categoryViewModel.loading.observe(viewLifecycleOwner) {
                 loading1.isVisible = it
-            }
-            ringtoneViewModel.loading.observe(viewLifecycleOwner) {
                 loading2.isVisible = it
             }
 

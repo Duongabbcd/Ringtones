@@ -47,8 +47,8 @@ interface ApiService {
     ): RingtoneResponse
 
     //Wallpaper
-    @GET("api/v1/categories?&with=author+name,id&where=type+1")
-    suspend fun getWallpaperCategory(): CategoriesResponse
+//    @GET("api/v1/categories?&with=author+name,id&where=type+1")
+//    suspend fun getWallpaperCategory(): CategoriesResponse
 
     @GET("api/v1/categories?where=type+1")
     suspend fun getAllWallpaperCategories(): CategoriesResponse
@@ -66,6 +66,10 @@ interface ApiService {
         @Query("category") categoryId: Int
     ): WallpaperResponse
 
+    @GET("api/v1/categories")
+    suspend fun getAllExcludingCategory(
+        @Query("where") where: String = "type+1,id+!=+75"
+    ): CategoriesResponse
 
     //Search
     @POST("api/v1/ringtones/search?with=author+id,name,active-categories+id,name,thumbnail,active,content_count")
@@ -89,6 +93,13 @@ interface ApiService {
     @POST("api/v1/interactions")
     suspend fun updateStatus(
         @Body request: InteractionRequest)
+
+
+    @GET("api/v1/categories")
+    suspend fun getCategoryById(
+        @Query("with") with: String = "author name,id",
+        @Query("where") where: String
+    ): CategoriesResponse
 }
 
 data class InteractionRequest(

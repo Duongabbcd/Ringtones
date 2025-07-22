@@ -25,10 +25,11 @@ class RingtoneRepository @Inject constructor(
     suspend fun fetchRingtoneCategories(): CategoriesResponse = apiService.getRingtoneCategory()
 
     suspend fun fetchNewWallpapers(): WallpaperResponse = apiService.getNewWallpapers()
-    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
+//    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
     suspend fun fetchAllWallpaperCategories(): CategoriesResponse = apiService.getAllWallpaperCategories()
     suspend fun fetchTrendingWallpapers(): WallpaperResponse = apiService.getTrendingWallpapers()
     suspend fun fetchWallpaperByCategory(categoryId: Int): WallpaperResponse = apiService.getWallpapersByCategory(categoryId = categoryId)
+    suspend fun getAllExcludingCategory(): CategoriesResponse = apiService.getAllExcludingCategory()
 
     suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy)
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
@@ -37,6 +38,7 @@ class RingtoneRepository @Inject constructor(
    suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
    suspend fun searchTag(request: SearchRequest) = apiService.searchTags(request)
    suspend fun getWallPapersByTag(tagId: Int) = apiService.getWallpapersByTag(tagId = tagId)
+   suspend fun getCategoryById(categoryId: Int) = apiService.getCategoryById(where = "type 1,id $categoryId")
 
     companion object {
         var TOKEN: String = ""

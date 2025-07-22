@@ -34,6 +34,13 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     private val searchWallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter {
 
+        }.apply {
+            onAllImagesLoaded = {
+                // Safely post notifyDataSetChanged on RecyclerView's message queue
+                binding.allResults.post {
+                    notifyDataSetChanged()
+                }
+            }
         }
     }
 

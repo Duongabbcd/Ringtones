@@ -21,6 +21,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import com.example.ringtone.R
 import java.io.IOException
+import java.text.NumberFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -124,6 +126,12 @@ object Utils {
             gestureDetector.onTouchEvent(event)
         }
     }
+
+
+    fun Int.formatWithComma(): String {
+        return NumberFormat.getNumberInstance(Locale.US).format(this)
+    }
+
 
     fun getMP3Metadata(uri: Uri, context: Context): Pair<String, String> {
         val retriever = MediaMetadataRetriever()

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,8 +14,11 @@ import com.example.ringtone.databinding.FragmentRingtoneBinding
 import com.example.ringtone.databinding.FragmentRingtoneBinding.inflate
 import com.example.ringtone.databinding.FragmentWallpaperBinding
 import com.example.ringtone.remote.viewmodel.WallpaperViewModel
+import com.example.ringtone.screen.wallpaper.AllWallpaperActivity
 import com.example.ringtone.screen.wallpaper.PreviewWallpaperActivity
 import com.example.ringtone.screen.wallpaper.adapter.WallpaperAdapter
+import com.example.ringtone.utils.Utils
+import com.example.ringtone.utils.Utils.formatWithComma
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,27 +29,52 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
     private val wallPaperAdapter : WallpaperAdapter by lazy {
         WallpaperAdapter{
             println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                    putExtra("categoryId", -2)
+                })
+            }
         }
     }
      private val newWallpaperAdapter : WallpaperAdapter by lazy {
         WallpaperAdapter{
             println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                    putExtra("categoryId", -1)
+                })
+            }
         }
     }
     private val subWallpaperAdapter1 : WallpaperAdapter by lazy {
         WallpaperAdapter{
             println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                    putExtra("categoryId", 30)
+                })
+            }
         }
     }
     private val subWallpaperAdapter2 : WallpaperAdapter by lazy {
         WallpaperAdapter{
             println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                    putExtra("categoryId", 31)
+                })
+            }
         }
     }
 
     private val subWallpaperAdapter3 : WallpaperAdapter by lazy {
         WallpaperAdapter{
             println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                    putExtra("categoryId", 32)
+                })
+            }
         }
     }
 
@@ -74,7 +103,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             }
 
             wallPaperViewModel.total1.observe(viewLifecycleOwner) { number ->
-                trendingCount.text = "$number"
+                trendingCount.text = number.formatWithComma()
             }
 
             trendingCount.text = wallPaperViewModel.total1.toString()
@@ -84,7 +113,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             }
 
             wallPaperViewModel.total2.observe(viewLifecycleOwner) { number ->
-                newWallpaperCount.text = "$number"
+                newWallpaperCount.text = number.formatWithComma()
             }
 
 
@@ -94,7 +123,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
 
 
             wallPaperViewModel.total3.observe(viewLifecycleOwner) { number ->
-                sub1Count.text = "$number"
+                sub1Count.text = number.formatWithComma()
             }
 
 
@@ -103,7 +132,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             }
 
             wallPaperViewModel.total4.observe(viewLifecycleOwner) { number ->
-                sub2Count.text = "$number"
+                sub2Count.text = number.formatWithComma()
             }
 
 
@@ -113,7 +142,7 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             }
 
             wallPaperViewModel.total5.observe(viewLifecycleOwner) { number ->
-                sub3Count.text = "$number"
+                sub3Count.text = number.formatWithComma()
             }
 
             openAll1.setOnClickListener {
@@ -154,6 +183,28 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
                 }
             }
 
+
+            wallPaperViewModel.loading.observe(viewLifecycleOwner) {
+                loading1.isVisible = it
+                loading2.isVisible = it
+                loading3.isVisible = it
+                loading4.isVisible = it
+                loading5.isVisible = it
+            }
+
+            premium.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", 75)
+                    })
+                }
+            }
+
+            categories.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, AllWallpaperActivity::class.java))
+                }
+            }
         }
 
     }

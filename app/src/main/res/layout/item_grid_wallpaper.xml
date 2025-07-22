@@ -14,4 +14,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+
+    <ImageView
+        android:id="@+id/liveIcon"
+        android:contentDescription="@string/imageview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/icon_live_wallpaper"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp" />
+
+    <ImageView
+        android:id="@+id/premiumIcon"
+        android:contentDescription="@string/imageview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/icon_premium"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

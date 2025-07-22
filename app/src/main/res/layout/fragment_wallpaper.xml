@@ -155,7 +155,6 @@
 
         <TextView
             android:id="@+id/trendingCount"
-            android:text="100,000"
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginStart="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@+id/trending"
@@ -199,7 +198,7 @@
 
         <TextView
             android:id="@+id/newWallpaperCount"
-            android:text="100,000"
+             
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginStart="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@+id/newWallpaper"
@@ -245,7 +244,7 @@
 
         <TextView
             android:id="@+id/sub1Count"
-            android:text="100,000"
+             
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginStart="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@+id/sub1"
@@ -291,7 +290,7 @@
 
         <TextView
             android:id="@+id/sub2Count"
-            android:text="100,000"
+             
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginStart="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@+id/sub2"
@@ -336,7 +335,7 @@
 
         <TextView
             android:id="@+id/sub3Count"
-            android:text="100,000"
+             
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginStart="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@+id/sub3"
@@ -390,6 +389,37 @@
             app:layout_constraintTop_toTopOf="@+id/allNewWallpaper"
             app:layout_constraintEnd_toEndOf="@+id/allNewWallpaper"
             app:layout_constraintBottom_toBottomOf="@+id/allNewWallpaper"/>
+        <ProgressBar
+            android:id="@+id/loading3"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:progressTint="@color/main_color"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/allSub1"
+            app:layout_constraintTop_toTopOf="@+id/allSub1"
+            app:layout_constraintEnd_toEndOf="@+id/allSub1"
+            app:layout_constraintBottom_toBottomOf="@+id/allSub1"/>
+        <ProgressBar
+            android:id="@+id/loading4"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:progressTint="@color/main_color"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/allSub2"
+            app:layout_constraintTop_toTopOf="@+id/allSub2"
+            app:layout_constraintEnd_toEndOf="@+id/allSub2"
+            app:layout_constraintBottom_toBottomOf="@+id/allSub2"/>
+
+        <ProgressBar
+            android:id="@+id/loading5"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:progressTint="@color/main_color"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/allSub3"
+            app:layout_constraintTop_toTopOf="@+id/allSub3"
+            app:layout_constraintEnd_toEndOf="@+id/allSub3"
+            app:layout_constraintBottom_toBottomOf="@+id/allSub3"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
