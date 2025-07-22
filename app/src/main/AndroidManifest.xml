@@ -57,7 +57,7 @@
         <activity android:name=".screen.ringtone.search.SearchRingtoneActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.RingtoneCategoryActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.FilteredRingtonesActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.player.PlayerActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.ringtone.player.RingtoneActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.welcome.WelcomeActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.favourite.FavouriteActivity" android:exported="false" android:screenOrientation="portrait"/>
 
@@ -67,6 +67,7 @@
         <activity android:name=".screen.wallpaper.PreviewWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <activity android:name=".screen.wallpaper.AllWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.wallpaper.player.WallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

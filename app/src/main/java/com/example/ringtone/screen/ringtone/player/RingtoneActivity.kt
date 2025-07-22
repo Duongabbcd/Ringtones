@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.player
+package com.example.ringtone.screen.ringtone.player
 
 import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
@@ -22,20 +22,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.base.BaseActivity
-import com.example.ringtone.databinding.ActivityPlayerBinding
-import com.example.ringtone.screen.player.adapter.PlayerAdapter
+import com.example.ringtone.screen.ringtone.player.adapter.PlayRingtoneAdapter
 import com.example.ringtone.utils.RingtonePlayerRemote
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
-import com.example.ringtone.screen.player.bottomsheet.DownloadBottomSheet
-import com.example.ringtone.screen.player.dialog.FeedbackDialog
+import com.example.ringtone.databinding.ActivityRingtoneBinding
+import com.example.ringtone.screen.ringtone.player.bottomsheet.DownloadBottomSheet
+import com.example.ringtone.screen.ringtone.player.dialog.FeedbackDialog
 import com.example.ringtone.utils.Common
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -44,18 +42,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 @AndroidEntryPoint
-class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding::inflate) {
+class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneBinding::inflate) {
     private val viewModel: FavouriteRingtoneViewModel by viewModels()
     private var downloadedUri: Uri? = null
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
-    private val playerAdapter: PlayerAdapter by lazy {
-        PlayerAdapter(onRequestScrollToPosition = { newPosition ->
+    private val playRingtoneAdapter: PlayRingtoneAdapter by lazy {
+        PlayRingtoneAdapter(onRequestScrollToPosition = { newPosition ->
             carousel.scrollSpeed(200f)
             setUpNewPlayer(newPosition)
-            handler.postDelayed(   {playerAdapter.setCurrentPlayingPosition(newPosition, false)}, 300)
+            handler.postDelayed(   {playRingtoneAdapter.setCurrentPlayingPosition(newPosition, false)}, 300)
         }
         ) { result, id ->
             if (result) {
@@ -107,7 +106,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_ENDED) {
                     println("🎵 Song ended")
-                    handler.postDelayed(  {playerAdapter.onSongEnded()} , 300)
+                    handler.postDelayed(  {playRingtoneAdapter.onSongEnded()} , 300)
 
                 }
             }
@@ -120,7 +119,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             if (exoPlayer.isPlaying) {
                 val progress = exoPlayer.currentPosition.toFloat()
                 println("⏳ Progress: $progress")
-                playerAdapter.updateProgress(progress)
+                playRingtoneAdapter.updateProgress(progress)
                 handler.postDelayed(this, 1000)
             } else {
                 println("⏸️ Not playing, stopping progress updates.")
@@ -165,7 +164,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
 
             feedback.setOnClickListener {
-                val dialog = FeedbackDialog(this@PlayerActivity)
+                val dialog = FeedbackDialog(this@RingtoneActivity)
                 dialog.setRingtoneFeedback(currentRingtone)
                 dialog.show()
             }
@@ -200,7 +199,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
 
     private fun showGoToSettingsDialog() {
-        Common.showDialogGoToSetting(this@PlayerActivity) { result ->
+        Common.showDialogGoToSetting(this@RingtoneActivity) { result ->
             if (result) {
                 returnedFromSettings = true
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -241,7 +240,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             requestPermissionLauncher.launch(missingPermissions.toTypedArray())
         }
 
-        RingtoneHelper.getMissingMediaPermissions(this@PlayerActivity)
+        RingtoneHelper.getMissingMediaPermissions(this@RingtoneActivity)
 
     }
 
@@ -270,7 +269,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         val ringtoneTitle = currentRingtone.name
         lifecycleScope.launch {
             val uri = RingtoneHelper.downloadRingtoneFile(
-                this@PlayerActivity,
+                this@RingtoneActivity,
                 ringtoneUrl,
                 ringtoneTitle
             ) { progress ->
@@ -323,7 +322,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
         val ringtoneUrl = currentRingtone.contents.url
         CoroutineScope(Dispatchers.IO).launch {
             val uri = RingtoneHelper.downloadRingtoneFile(
-                this@PlayerActivity,
+                this@RingtoneActivity,
                 ringtoneUrl,
                 ringtoneTitle
             ) { progress ->
@@ -350,10 +349,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
             }
         }
         dialog.show()
-        if (Settings.System.canWrite(this@PlayerActivity)) {
+        if (Settings.System.canWrite(this@RingtoneActivity)) {
             println("System can write: $downloadedUri")
             val success = downloadedUri?.let {
-                RingtoneHelper.setAsSystemRingtone(this@PlayerActivity, it, isNotification)
+                RingtoneHelper.setAsSystemRingtone(this@RingtoneActivity, it, isNotification)
             } == true
             if (success) {
                 handler.postDelayed(  {  dialog.showSuccess().also {
@@ -400,7 +399,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private fun setUpNewPlayer(position: Int) {
         binding.horizontalRingtones.smoothScrollToPosition(position)
         currentRingtone = allRingtones[position]
-        playerAdapter.setCurrentPlayingPosition(position)
+        playRingtoneAdapter.setCurrentPlayingPosition(position)
         viewModel.loadRingtoneById(currentRingtone.id)
         binding.currentRingtoneName.text = currentRingtone.name
         binding.currentRingtoneAuthor.text = currentRingtone.author.name
@@ -413,23 +412,23 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
     private var duration = 0L
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
-        playerAdapter.submitList(allRingtones)
+        playRingtoneAdapter.submitList(allRingtones)
 
-        carousel = Carousel(this, binding.horizontalRingtones, playerAdapter)
+        carousel = Carousel(this, binding.horizontalRingtones, playRingtoneAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
         carousel.scaleView(true)
 
         snapHelper.attachToRecyclerView(binding.horizontalRingtones)
 
         binding.apply {
-            horizontalRingtones.adapter = playerAdapter
+            horizontalRingtones.adapter = playRingtoneAdapter
 
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
                     currentId = -10
                     index = position
                     setUpNewPlayer(position)
-                    playerAdapter.setCurrentPlayingPosition(position, false)
+                    playRingtoneAdapter.setCurrentPlayingPosition(position, false)
                     // 🔁 force rebind to update playingHolder
                 }
 
@@ -456,7 +455,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                             println("horizontalRingtones: $duration and $index")
                             binding.horizontalRingtones.stopScroll()
                             setUpNewPlayer(index)
-                            playerAdapter.setCurrentPlayingPosition(index, false)
+                            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
                             return@setOnTouchListener false
                         }
 
@@ -472,12 +471,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                             index = newIndex
                             setUpNewPlayer(index)
                             handler.postDelayed({
-                                playerAdapter.setCurrentPlayingPosition(index, false)
+                                playRingtoneAdapter.setCurrentPlayingPosition(index, false)
                             }, 300)
                         } else {
                             // stay on current
                             setUpNewPlayer(index)
-                            playerAdapter.setCurrentPlayingPosition(index, false)
+                            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
                         }
 
                         Log.d("PlayerActivity", "Touch UP - Scrolled to index=$index (dx=$lastDx)")
@@ -501,7 +500,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
                         }
 
                         RecyclerView.SCROLL_STATE_IDLE -> {
-                            val distanceJumped = kotlin.math.abs(newIndex - previousIndex)
+                            val distanceJumped = abs(newIndex - previousIndex)
                             println("🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)")
 
                             if (distanceJumped >= 2) {
@@ -511,7 +510,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>(ActivityPlayerBinding
 
                             index = newIndex
                             setUpNewPlayer(index)
-                            playerAdapter.setCurrentPlayingPosition(index, false)
+                            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
                         }
                     }
                 }

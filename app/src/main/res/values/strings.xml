@@ -70,6 +70,7 @@
     <string name="notification">Notification</string>
     <string name="download">Download</string>
     <string name="set_ringotne">Set as Ringotne</string>
+    <string name="set_wallpaper">Set as Wallpaper</string>
     <string name="no_data_desc">Can\'t find the music you\'re looking for?</string>
 
     <string name="phone_settings">Phone settings</string>

@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.player.dialog
+package com.example.ringtone.screen.ringtone.player.dialog
 
 import android.app.Dialog
 import android.content.Context

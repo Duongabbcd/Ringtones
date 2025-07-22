@@ -1,28 +1,26 @@
 package com.example.ringtone.screen.wallpaper.adapter
 
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemGridWallpaperBinding
 import com.example.ringtone.databinding.ItemLoadingBinding
 import com.example.ringtone.remote.model.Wallpaper
-import com.example.ringtone.utils.Common.gone
-import com.example.ringtone.utils.Common.visible
+import com.example.ringtone.screen.ringtone.player.RingtoneActivity
+import com.example.ringtone.screen.wallpaper.player.WallpaperActivity
+import com.example.ringtone.utils.RingtonePlayerRemote
 
 
-class GridWallpaperAdapter(
-    private val onClickListener: (Wallpaper) -> Unit) :
+class GridWallpaperAdapter() :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var onAllImagesLoaded: (() -> Unit)? = null
-    private val allCategories: MutableList<Wallpaper> = mutableListOf()
+    private val allWallpapers: MutableList<Wallpaper> = mutableListOf()
     private lateinit var context: Context
 
     private var isPremium: Boolean = false
@@ -39,7 +37,7 @@ class GridWallpaperAdapter(
 
     override fun getItemCount(): Int {
 //        val extra = allCategories.size / INTERVAL
-        return allCategories.size
+        return allWallpapers.size
     }
 
 //    override fun getItemViewType(position: Int): Int {
@@ -80,8 +78,8 @@ class GridWallpaperAdapter(
         isPremium = premium
         isLive = live
 
-        allCategories.clear()
-        allCategories.addAll(list)
+        allWallpapers.clear()
+        allWallpapers.addAll(list)
 
         imagesToLoadInBatch = INTERVAL
         imagesLoadedInBatch = 0
@@ -92,7 +90,7 @@ class GridWallpaperAdapter(
     inner class GridWallpaperViewHolder(private val binding: ItemGridWallpaperBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            val wallpaper = allCategories.getOrNull(position) ?: return
+            val wallpaper = allWallpapers.getOrNull(position) ?: return
 
             binding.apply {
                 liveIcon.visibility = if (isLive) View.VISIBLE else View.GONE
@@ -108,7 +106,9 @@ class GridWallpaperAdapter(
                 }
 
                 root.setOnClickListener {
-                    onClickListener(wallpaper)
+                    RingtonePlayerRemote.setCurrentWallpaper(wallpaper)
+                    RingtonePlayerRemote.setWallpaperQueue(allWallpapers)
+                    context.startActivity(Intent(context, WallpaperActivity::class.java))
                 }
             }
         }

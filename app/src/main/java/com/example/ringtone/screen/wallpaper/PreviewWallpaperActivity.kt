@@ -10,7 +10,9 @@ import com.example.ringtone.remote.viewmodel.WallpaperViewModel
 import com.example.ringtone.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.example.ringtone.R
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
+import com.example.ringtone.screen.ringtone.player.RingtoneActivity
 import com.example.ringtone.screen.wallpaper.adapter.GridWallpaperAdapter.Companion.VIEW_TYPE_LOADING
+import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,8 +20,7 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
-        GridWallpaperAdapter {
-        }.apply {
+        GridWallpaperAdapter ().apply {
             onAllImagesLoaded = {
                 // Safely post notifyDataSetChanged on RecyclerView's message queue
                 binding.allCategories.post {

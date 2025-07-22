@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.databinding.ItemRingtoneBinding
 import com.example.ringtone.remote.model.Ringtone
-import com.example.ringtone.screen.player.PlayerActivity
+import com.example.ringtone.screen.ringtone.player.RingtoneActivity
 import com.example.ringtone.utils.RingtonePlayerRemote
 import com.example.ringtone.R
 import com.example.ringtone.utils.Common.gone
@@ -74,7 +74,7 @@ class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adap
                     if(!isPopular) {
                         RingtonePlayerRemote.setRingtoneQueue(allRingtones)
                     }
-                    context.startActivity(Intent(context, PlayerActivity::class.java))
+                    context.startActivity(Intent(context, RingtoneActivity::class.java))
                 }
             }
         }

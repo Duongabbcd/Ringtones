@@ -1,26 +1,23 @@
-package com.example.ringtone.screen.player.adapter
+package com.example.ringtone.screen.ringtone.player.adapter
 
 import alirezat775.lib.carouselview.CarouselAdapter
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Rect
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.activity.contextaware.ContextAware
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemMusicBinding
 import com.example.ringtone.remote.model.Ringtone
-import com.example.ringtone.screen.player.dialog.CreditDialog
+import com.example.ringtone.screen.ringtone.player.dialog.CreditDialog
 import com.example.ringtone.utils.RingtonePlayerRemote
 import com.example.ringtone.utils.Utils
 import kotlin.math.round
 
 
-class PlayerAdapter(private val onRequestScrollToPosition: (Int) -> Unit, private val onClickListener: (Boolean, Int) -> Unit) : CarouselAdapter() {
+class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, private val onClickListener: (Boolean, Int) -> Unit) : CarouselAdapter() {
 
     private val items = mutableListOf<Ringtone>()
     private var currentPos = RecyclerView.NO_POSITION

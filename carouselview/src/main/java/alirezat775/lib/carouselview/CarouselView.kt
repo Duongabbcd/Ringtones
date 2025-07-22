@@ -223,9 +223,20 @@ class CarouselView
      * @param position scrolling to specific position
      */
     override fun scrollToPosition(position: Int) {
-        super.scrollToPosition(position)
-        post { smoothScrollToPosition(position) }
+        post {
+            try {
+                smoothScrollToPosition(position)
+            } catch (e: IllegalStateException) {
+                // Layout not ready, try again shortly
+                postDelayed({
+                    try {
+                        smoothScrollToPosition(position)
+                    } catch (ignored: Exception) { }
+                }, 50)
+            }
+        }
     }
+
 
     /**
      * @param state called when the scroll state of this RecyclerView changes

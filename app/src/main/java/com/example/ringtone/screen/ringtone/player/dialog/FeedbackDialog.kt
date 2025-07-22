@@ -1,5 +1,6 @@
-package com.example.ringtone.screen.player.dialog
+package com.example.ringtone.screen.ringtone.player.dialog
 
+import android.R
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -14,7 +15,7 @@ class FeedbackDialog(
 
     init {
         setContentView(binding.root)
-        window?.setBackgroundDrawableResource(android.R.color.transparent)
+        window?.setBackgroundDrawableResource(R.color.transparent)
     }
 
     fun setRingtoneFeedback(ringtone: Ringtone) {

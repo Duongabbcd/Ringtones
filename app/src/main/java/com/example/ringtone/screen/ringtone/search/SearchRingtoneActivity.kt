@@ -19,7 +19,7 @@ import com.example.ringtone.databinding.ActivitySearchRingtoneBinding
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
 import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
-import com.example.ringtone.screen.player.PlayerActivity
+import com.example.ringtone.screen.ringtone.player.RingtoneActivity
 import com.example.ringtone.utils.Common.gone
 import com.example.ringtone.utils.Common.visible
 import com.example.ringtone.utils.RingtonePlayerRemote
@@ -176,7 +176,7 @@ class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TrendingViewHolde
         val ringTone = items[position]
         holder.tagText.text = ringTone.name
         holder.itemView.setOnClickListener {
-            context.startActivity(Intent(context, PlayerActivity::class.java).apply {
+            context.startActivity(Intent(context, RingtoneActivity::class.java).apply {
                 RingtonePlayerRemote.setRingtoneQueue(listOf(ringTone))
                 RingtonePlayerRemote.setCurrentRingtone(ringTone)
             })

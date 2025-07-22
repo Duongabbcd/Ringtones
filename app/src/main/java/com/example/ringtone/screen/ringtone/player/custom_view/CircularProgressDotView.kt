@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.player.custom_view
+package com.example.ringtone.screen.ringtone.player.custom_view
 
 import android.content.Context
 import android.graphics.Canvas

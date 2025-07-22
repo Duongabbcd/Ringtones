@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.player.bottomsheet
+package com.example.ringtone.screen.ringtone.player.bottomsheet
 
 import android.animation.ObjectAnimator
 import android.content.Context

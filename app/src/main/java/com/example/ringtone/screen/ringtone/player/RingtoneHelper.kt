@@ -1,5 +1,6 @@
-package com.example.ringtone.screen.player
+package com.example.ringtone.screen.ringtone.player
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentUris
 import android.content.ContentValues
@@ -24,13 +25,13 @@ object RingtoneHelper {
         val permissions = mutableListOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions.add(android.Manifest.permission.READ_MEDIA_AUDIO)
+            permissions.add(Manifest.permission.READ_MEDIA_AUDIO)
         } else {
-            permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
         return permissions.filter {

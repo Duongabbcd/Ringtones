@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_180sdp"
+    android:layout_height="@dimen/_280sdp"
+    android:backgroundTint="#F2EBFD"
+    app:cardCornerRadius="@dimen/_16sdp"
+    app:cardElevation="@dimen/_4sdp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/wallpaper"
+            android:scaleType="centerCrop"
+            android:background="@drawable/item_wallpaper_default"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/leftView"
+            android:visibility="gone"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/rightView"
+            android:visibility="gone"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <!-- Top Time and Icon -->
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginHorizontal="@dimen/_14sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:contentDescription="@string/imageview"
+                android:id="@+id/premiumIcon"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_toStartOf="@+id/ccIcon"
+                android:src="@drawable/icon_premium" />
+
+            <ImageView
+                android:contentDescription="@string/imageview"
+                android:id="@+id/liveIcon"
+                android:visibility="gone"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_toStartOf="@+id/ccIcon"
+                android:src="@drawable/icon_live_wallpaper" />
+
+            <ImageView
+                android:contentDescription="@string/imageview"
+                android:id="@+id/ccIcon"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/icon_white_subtitle" />
+        </RelativeLayout>
+
+        <!-- Control Icons -->
+        <LinearLayout
+            android:id="@+id/bottom"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/_20sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_26sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/previous"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_weight="1"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_prev" />
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_weight="2"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_play" />
+
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_weight="1"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_next_ring" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
