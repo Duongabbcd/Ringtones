@@ -19,8 +19,11 @@ class FavouriteWallpaperViewModel @Inject constructor(
     private val repository: FavouriteRepository,
     private val ringtoneRepository : RingtoneRepository,
 ) : ViewModel() {
-    private val _wallpaper = MutableLiveData<Wallpaper>()
+    private var _wallpaper = MutableLiveData<Wallpaper>()
     val wallpaper: LiveData<Wallpaper> get() = _wallpaper
+
+    private var _allWallpapers = MutableLiveData<List<Wallpaper>>()
+    val allWallpapers: LiveData<List<Wallpaper>> get() = _allWallpapers
 
     fun loadWallpaperById(id: Int) {
         println("loadRingtoneById 0: $id")
@@ -30,10 +33,18 @@ class FavouriteWallpaperViewModel @Inject constructor(
         }
     }
 
+    fun loadAllWallpapers() {
+        viewModelScope.launch {
+            _allWallpapers.value = repository.getAllWallpapers()
+            println("loadRingtoneById: ${_wallpaper.value}")
+        }
+    }
+
 
     fun insertWallpaper(wallpaper: Wallpaper) = viewModelScope.launch(Dispatchers.IO) {
+        println("insertWallpaper: $wallpaper")
         repository.insertWallpaper(wallpaper).also {
-            println("insertRingtone: ${wallpaper.id}")
+
             ringtoneRepository.updateStatus(InteractionRequest(
                 3, 3 , wallpaper.id
             ))

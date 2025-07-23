@@ -75,8 +75,13 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         checkDownloadPermissions()
         binding.apply {
             index = allRingtones.indexOf(currentWallpaper)
+            observeRingtoneFromDb()
             backBtn.setOnClickListener {
                 finish()
+            }
+
+            favourite.setOnClickListener {
+                displayFavouriteIcon(true)
             }
 
             initViewPager()

@@ -35,7 +35,7 @@ interface ApiService {
     @GET("api/v1/categories?page=2&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?page=1&with=author+name,id&where=type+2")
+    @GET("api/v1/categories?with=author+name,id&where=type+2")
     suspend fun getRingtoneCategory(): CategoriesResponse
 
     @GET("api/v1/ringtones")

@@ -4,12 +4,10 @@ import com.example.ringtone.local.RingtoneEntity
 import com.example.ringtone.local.WallpaperEntity
 import com.example.ringtone.local.dao.RingtoneDao
 import com.example.ringtone.local.dao.WallpaperDao
-import com.example.ringtone.local.database.FavouriteDatabase
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.model.Wallpaper
-import com.mbridge.msdk.mbsignalcommon.communication.c
+import com.example.ringtone.remote.model.WallpaperContent.Companion.OBJECT_EMPTY
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class FavouriteRepository @Inject constructor(
     private val ringtoneDao: RingtoneDao,
@@ -19,14 +17,20 @@ class FavouriteRepository @Inject constructor(
     suspend fun getRingtoneById(id: Int): Ringtone =
         ringtoneDao.getById(id)?.toDomain() ?: Ringtone.EMPTY_RINGTONE
 
+    suspend fun getAllRingtones(): List<Ringtone> =
+        ringtoneDao.getAllRingtones()?.map { it.toDomain() } ?: listOf()
+
     suspend fun insertRingtone(ringtone: Ringtone)  {
         println("insertRingtone: $ringtone")
         ringtoneDao.insert(ringtone.toEntity())
     }
 
-
     suspend fun deleteRingtone(ringtone: Ringtone) =
         ringtoneDao.delete(ringtone.toEntity())
+
+
+    suspend fun getAllWallpapers(): List<Wallpaper> =
+        wallpaperDao.getAllWallpaper()?.map { it.toDomain() } ?: listOf()
 
     suspend fun getWallpaperById(id: Int): Wallpaper =
         wallpaperDao.getById(id)?.toDomain() ?: Wallpaper.EMPTY_WALLPAPER
@@ -63,13 +67,13 @@ fun RingtoneEntity.toDomain() : Ringtone =
 
 
 fun Wallpaper.toEntity() : WallpaperEntity =
-    WallpaperEntity( id = id, name = name, thumbnail = thumbnail,
+    WallpaperEntity( id = id, name = name, thumbnail = thumbnail ?: OBJECT_EMPTY,
         contents = contents, originalId = originalId, type, active, orderIndex, isPrivate, trend, popular, dailyRating, weeklyRating, monthlyRating,
         like, set, download, country, updatedAt,createdAt
 )
 
 fun WallpaperEntity.toDomain() : Wallpaper =
-    Wallpaper( id = id, name = name, thumbnail = thumbnail,
+    Wallpaper( id = id, name = name, thumbnail = if(thumbnail == OBJECT_EMPTY) null else thumbnail,
         contents = contents, originalId = originalId, type, active, orderIndex, isPrivate, trend, popular, dailyRating, weeklyRating, monthlyRating,
         like, set, download, country, updatedAt,createdAt
 )

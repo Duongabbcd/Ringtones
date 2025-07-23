@@ -12,6 +12,9 @@ interface RingtoneDao {
     @Query("SELECT * FROM ringtone WHERE id = :id")
     suspend fun getById(id: Int): RingtoneEntity?
 
+    @Query("SELECT * FROM ringtone")
+    suspend fun getAllRingtones(): List<RingtoneEntity>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(ringtone: RingtoneEntity)
 

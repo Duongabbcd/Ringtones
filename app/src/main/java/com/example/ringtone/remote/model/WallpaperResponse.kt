@@ -22,7 +22,7 @@ data class WallpaperPaging(
 data class Wallpaper(
     val id: Int,
     val name: String,
-    val thumbnail: WallpaperContent,
+    val thumbnail: WallpaperContent? = null,
     val contents: List<ImageContent>,
     @SerializedName("original_id") val originalId: Long,
     val type: Int,
@@ -54,7 +54,13 @@ data class WallpaperContent(
     val path: String,
     val size: WallpaperSize,
     val url: WallpaperUrls
-)
+) {
+    companion object {
+        val OBJECT_EMPTY = WallpaperContent(
+            path = "", size = WallpaperSize(0,0), url = WallpaperUrls("","","","")
+        )
+    }
+}
 
 data class WallpaperSize(
     val width: Int,
