@@ -2,26 +2,31 @@ package com.example.ringtone.screen.ringtone.player
 
 import android.Manifest
 import android.app.Activity
+import android.app.WallpaperManager
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
-import androidx.core.app.ActivityCompat
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
 
 object RingtoneHelper {
 
-    fun getMissingMediaPermissions(context: Context): List<String> {
+    fun getMissingAudioPermissions(context: Context): List<String> {
         val permissions = mutableListOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -34,6 +39,17 @@ object RingtoneHelper {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
+        return permissions.filter {
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    fun getMissingPhotoPermissions(context: Context) : List<String> {
+        val permissions = mutableListOf<String>()
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
         return permissions.filter {
             ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
@@ -120,6 +136,70 @@ object RingtoneHelper {
             }
         }
 
+    suspend fun downloadImage(context: Context, imageUrl: String): Uri? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val resolver = context.contentResolver
+                val fileName = "image_${System.currentTimeMillis()}.jpg"
+
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+
+                val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+                uri?.let {
+                    resolver.openOutputStream(it)?.use { outputStream ->
+                        URL(imageUrl).openStream().use { inputStream ->
+                            inputStream.copyTo(outputStream)
+                        }
+                    }
+                }
+
+                uri
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    suspend fun setWallpaperFromUrl(
+        context: Context,
+        imageUrl: String,
+        target: WallpaperTarget = WallpaperTarget.BOTH
+    ) : Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val inputStream = URL(imageUrl).openStream()
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+
+                val wallpaperManager = WallpaperManager.getInstance(context)
+
+                when (target) {
+                    WallpaperTarget.HOME -> {
+                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
+                    }
+                    WallpaperTarget.LOCK -> {
+                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK)
+                    }
+                    WallpaperTarget.BOTH -> {
+                        wallpaperManager.setBitmap(bitmap)
+                    }
+                }
+
+                true
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        }
+    }
+
+
 
     fun setAsSystemRingtone(context: Context, uri: Uri, isNotification: Boolean =  false): Boolean {
         return try {
@@ -168,4 +248,10 @@ object RingtoneHelper {
         return null
     }
 
+}
+
+enum class WallpaperTarget {
+    HOME,
+    LOCK,
+    BOTH
 }

@@ -102,6 +102,13 @@
     <string name="download_title">Your Ringtone is Download</string>
     <string name="ringtone_title">Setup ringtone processing</string>
     <string name="set_title">Setup notification processing</string>
+    <string name="download_title_2">Your Wallpaper is Download</string>
+    <string name="set_wallpaper_op1">Set as Wallpaper</string>
+    <string name="set_wallpaper_op2">Set as Home Screen</string>
+    <string name="set_wallpaper_op3">Both of them</string>
+    <string name="set_wallpaper_1">Setup wallpaper processing</string>
+    <string name="set_wallpaper_2">Setup home screen processing</string>
+    <string name="set_wallpaper_3">Setup both processing</string>
     <string name="downloading">Downloading</string>
     <string name="processing">Processing</string>
 

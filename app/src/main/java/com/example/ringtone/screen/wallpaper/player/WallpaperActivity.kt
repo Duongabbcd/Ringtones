@@ -4,13 +4,20 @@ import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.R
@@ -18,10 +25,21 @@ import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityWallpaperBinding
 import com.example.ringtone.remote.viewmodel.FavouriteWallpaperViewModel
 import com.example.ringtone.screen.ringtone.player.OneItemSnapHelper
-import com.example.ringtone.screen.ringtone.player.adapter.PlayRingtoneAdapter
+import com.example.ringtone.screen.ringtone.player.RingtoneHelper
+import com.example.ringtone.screen.ringtone.player.RingtoneHelper.setWallpaperFromUrl
+import com.example.ringtone.screen.ringtone.player.WallpaperTarget
 import com.example.ringtone.screen.wallpaper.adapter.PlayWallpaperAdapter
+import com.example.ringtone.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
+import com.example.ringtone.screen.wallpaper.dialog.SetWallpaperDialog
+import com.example.ringtone.utils.Common
 import com.example.ringtone.utils.RingtonePlayerRemote
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -30,7 +48,7 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
     private val playWallpaperAdapter: PlayWallpaperAdapter by lazy {
         PlayWallpaperAdapter(onRequestScrollToPosition = { newPosition ->
             carousel.scrollSpeed(200f)
-//            setUpNewPlayer(newPosition)
+            setUpNewPlayer(newPosition)
             handler.postDelayed(   { playWallpaperAdapter.setCurrentPlayingPosition(newPosition, false)}, 300)
         }
         ) { result, id -> }
@@ -49,11 +67,13 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
     private var lastDx: Int = 0
     private var duration = 0L
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+    private var downloadedUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
-
+        checkDownloadPermissions()
         binding.apply {
             index = allRingtones.indexOf(currentWallpaper)
             initViewPager()
@@ -63,8 +83,205 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
             println("onCreate: $index")
             setUpNewPlayer(index)
+
+            setupButtons()
         }
     }
+
+    private fun checkDownloadPermissions() {
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val allGranted = permissions.values.all { it }
+            if (allGranted) {
+                actuallyDownloadWallpaper()
+            } else {
+                // Loop through each permission
+                val permanentlyDenied = permissions.keys.any { permission ->
+                    !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+                }
+
+                if (permanentlyDenied) {
+                    // User denied and selected "Don't ask again"
+                    showGoToSettingsDialog()
+                } else {
+                    Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+    }
+
+
+    private var returnedFromSettings = false
+    private fun showGoToSettingsDialog() {
+        Common.showDialogGoToSetting(this@WallpaperActivity) { result ->
+            if (result) {
+                returnedFromSettings = true
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", packageName, null)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+    }
+
+    private fun setupButtons() {
+        val imageUrl = currentWallpaper.contents.first().url.full
+        binding.apply {
+            share.setOnClickListener {
+
+
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, imageUrl)
+                    type = "text/plain"
+                }
+                startActivity(Intent.createChooser(shareIntent, "Share image via"))
+            }
+
+            download.setOnClickListener {
+                downloadWallpaper()
+            }
+            wallpaper.setOnClickListener {
+                setUpPhotoByCondition(imageUrl)
+            }
+
+        }
+    }
+
+    private fun setUpPhotoByCondition(imageUrl: String) {
+        val dialog = SetWallpaperDialog(this@WallpaperActivity) { result ->
+            lifecycleScope.launch {
+                val bottomSheet = DownloadWallpaperBottomSheet(this@WallpaperActivity)
+                bottomSheet.apply {
+                    setCancelable(false)
+                    setCanceledOnTouchOutside(false)
+                    setOnShowListener { dialog ->
+                        val b = (dialog as BottomSheetDialog).behavior
+                        b.isDraggable = false
+                        b.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                }
+
+                val isSuccess = when(result) {
+                    1-> {
+                        bottomSheet.setType("wallpaper")
+                        bottomSheet.show()
+                        setWallpaperFromUrl(
+                            context = this@WallpaperActivity,
+                            imageUrl =imageUrl,
+                            target = WallpaperTarget.LOCK
+                        )
+                    }
+
+                    2 -> {
+                        bottomSheet.setType("home")
+                        bottomSheet.show()
+                        setWallpaperFromUrl(
+                            context = this@WallpaperActivity,
+                            imageUrl =imageUrl,
+                            target = WallpaperTarget.HOME
+                        )
+
+                    }
+
+                    else -> {
+                        bottomSheet.setType("both")
+                        bottomSheet.show()
+                        setWallpaperFromUrl(
+                            context = this@WallpaperActivity,
+                            imageUrl =imageUrl,
+                            target = WallpaperTarget.BOTH
+                        )
+                    }
+                }
+
+                if(isSuccess) {
+                    bottomSheet.showSuccess().also {
+                        enableDismiss(bottomSheet)
+                    }
+                    viewModel.increaseSet(currentWallpaper)
+                } else {
+                    bottomSheet.showFailure().also {
+                        enableDismiss(bottomSheet)
+                    }
+                }
+            }
+
+        }
+        dialog.show()
+    }
+
+    private fun downloadWallpaper() {
+
+        val missingPermissions = RingtoneHelper.getMissingPhotoPermissions(this)
+
+        if (missingPermissions.isEmpty()) {
+            // All permissions granted
+            actuallyDownloadWallpaper()
+        } else {
+            // Request the missing permissions using launcher
+            requestPermissionLauncher.launch(missingPermissions.toTypedArray())
+        }
+
+        RingtoneHelper.getMissingPhotoPermissions(this@WallpaperActivity)
+
+    }
+
+
+    private fun actuallyDownloadWallpaper(isBackground: Boolean = false) {
+
+        val bottomSheet = DownloadWallpaperBottomSheet(this)
+        bottomSheet.apply {
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+            setOnShowListener { dialog ->
+                val b = (dialog as BottomSheetDialog).behavior
+                b.isDraggable = false
+                b.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        if (!isBackground) {
+            bottomSheet.show()
+        }
+
+
+        val ringtoneUrl = currentWallpaper.contents.first().url.full
+        lifecycleScope.launch {
+            val uri = RingtoneHelper.downloadImage(this@WallpaperActivity, ringtoneUrl)
+            withContext(Dispatchers.Main) {
+                if (uri != null) {
+                    downloadedUri = uri
+                    delay(5000L)
+                    bottomSheet.showSuccess().also {
+                        enableDismiss(bottomSheet)
+                    }
+                    viewModel.increaseDownload(currentWallpaper)
+                } else {
+                    bottomSheet.showFailure().also {
+                        enableDismiss(bottomSheet)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun enableDismiss(bottomSheet: DownloadWallpaperBottomSheet) {
+        bottomSheet.apply {
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+        }
+
+        (bottomSheet as? BottomSheetDialog)?.behavior?.apply {
+            isDraggable = true
+            // Optional: let it collapse instead of staying expanded
+            state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
@@ -184,6 +401,7 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
 
     private var isFavorite: Boolean = false  // ← track this in activity
+
     private fun observeRingtoneFromDb() {
         viewModel.wallpaper.observe(this) { dbRingtone ->
             isFavorite = dbRingtone.id == currentWallpaper.id

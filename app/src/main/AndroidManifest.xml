@@ -20,7 +20,7 @@
 
     <!-- Required for setting ringtone -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
 
     <application
         android:name=".MyApplication"

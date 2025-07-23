@@ -44,18 +44,18 @@ class FavouriteWallpaperViewModel @Inject constructor(
         repository.deleteWallpaper(wallpaper)
     }
 
-    fun increaseDownload(ringtone: Ringtone) {
+    fun increaseDownload(wallpaper: Wallpaper) {
         viewModelScope.launch(Dispatchers.IO) {
             ringtoneRepository.updateStatus(InteractionRequest (
-                2,3, ringtone.id
+                2,3, wallpaper.id
             ))
         }
     }
 
-    fun increaseSet(ringtone: Ringtone) {
+    fun increaseSet(wallpaper: Wallpaper) {
         viewModelScope.launch(Dispatchers.IO) {
             ringtoneRepository.updateStatus(InteractionRequest (
-                1,3, ringtone.id
+                1,3, wallpaper.id
             ))
         }
     }

@@ -48,7 +48,7 @@
             <alirezat775.lib.carouselview.CarouselView
                 android:id="@+id/horizontalWallpapers"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp"
+                android:layout_height="@dimen/_410sdp"
                 android:paddingTop="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:paddingHorizontal="@dimen/_20sdp"
@@ -71,7 +71,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/notification"
+                    android:id="@+id/share"
                     android:orientation="vertical"
                     android:gravity="center"
                     app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +97,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ringTone"
+                    android:id="@+id/wallpaper"
                     android:orientation="vertical"
                     android:gravity="center"
                     app:layout_constraintEnd_toStartOf="@+id/notification"

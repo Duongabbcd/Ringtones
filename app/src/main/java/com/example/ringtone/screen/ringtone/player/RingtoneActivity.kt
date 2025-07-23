@@ -32,7 +32,7 @@ import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ActivityRingtoneBinding
-import com.example.ringtone.screen.ringtone.player.bottomsheet.DownloadBottomSheet
+import com.example.ringtone.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.example.ringtone.screen.ringtone.player.dialog.FeedbackDialog
 import com.example.ringtone.utils.Common
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -230,7 +230,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     private fun downloadRingtone() {
 
-        val missingPermissions = RingtoneHelper.getMissingMediaPermissions(this)
+        val missingPermissions = RingtoneHelper.getMissingAudioPermissions(this)
 
         if (missingPermissions.isEmpty()) {
             // All permissions granted
@@ -240,7 +240,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             requestPermissionLauncher.launch(missingPermissions.toTypedArray())
         }
 
-        RingtoneHelper.getMissingMediaPermissions(this@RingtoneActivity)
+        RingtoneHelper.getMissingAudioPermissions(this@RingtoneActivity)
 
     }
 
@@ -250,7 +250,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     private fun actuallyDownloadRingtone(isBackground: Boolean = false) {
 
-        val bottomSheet = DownloadBottomSheet(this)
+        val bottomSheet = DownloadRingtoneBottomSheet(this)
         bottomSheet.apply {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
@@ -292,7 +292,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         }
     }
 
-    private fun enableDismiss(bottomSheet: DownloadBottomSheet) {
+    private fun enableDismiss(bottomSheet: DownloadRingtoneBottomSheet) {
         bottomSheet.apply {
             setCancelable(true)
             setCanceledOnTouchOutside(true)
@@ -338,7 +338,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     private fun saveRingtone(isNotification: Boolean) {
-        val dialog = DownloadBottomSheet(this, if(isNotification) "notification" else "ringtone")
+        val dialog = DownloadRingtoneBottomSheet(this, if(isNotification) "notification" else "ringtone")
         dialog.apply {
             setCancelable(false)
             setCanceledOnTouchOutside(false)

@@ -1,32 +1,40 @@
-package com.example.ringtone.screen.ringtone.player.bottomsheet
+package com.example.ringtone.screen.wallpaper.bottomsheet
 
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
-import androidx.core.view.isVisible
 import com.example.ringtone.base.BaseBottomSheetDialog
-import com.example.ringtone.databinding.BottomSheetDownloadBinding
 import com.example.ringtone.R
-class DownloadBottomSheet(private val context: Context, private val type: String = "download") : BaseBottomSheetDialog<BottomSheetDownloadBinding>(context) {
-    override fun getViewBinding(): BottomSheetDownloadBinding {
-        return BottomSheetDownloadBinding.inflate(layoutInflater)
+import com.example.ringtone.databinding.BottomSheetRingtoneDownloadBinding
+import com.example.ringtone.databinding.BottomSheetWallpaperDownloadBinding
+
+class DownloadWallpaperBottomSheet(private val context: Context) : BaseBottomSheetDialog<BottomSheetWallpaperDownloadBinding>(context) {
+    override fun getViewBinding(): BottomSheetWallpaperDownloadBinding {
+        return BottomSheetWallpaperDownloadBinding.inflate(layoutInflater)
     }
 
-    private val title = when(type) {
-        "download" -> context.getString(R.string.download_title)
-        "ringtone" -> context.getString(R.string.ringtone_title)
-        "notification" -> context.getString(R.string.set_title)
-        else -> context.getString(R.string.download_title)
-    }
 
-    private val desc = when(type) {
-        "download" -> context.getString(R.string.download_title)
-        "ringtone" -> context.getString(R.string.processing)
-        "notification" -> context.getString(R.string.processing)
-        else -> context.getString(R.string.download_title)
+    fun setType(type: String = "wallpaper") {
+        title = when(type) {
+            "wallpaper" -> context.getString(R.string.set_wallpaper_op1)
+            "home" -> context.getString(R.string.set_wallpaper_op2)
+            "both" -> context.getString(R.string.set_wallpaper_op3)
+            else -> context.getString(R.string.set_wallpaper_op1)
+        }
+
+
+        desc = when(type) {
+            "wallpaper" -> context.getString(R.string.set_wallpaper_1)
+            "home" -> context.getString(R.string.set_wallpaper_2)
+            "both" -> context.getString(R.string.set_wallpaper_3)
+            else -> context.getString(R.string.set_wallpaper_1)
+        }
     }
+    private var title = ""
+
+    private var desc = ""
 
     override fun initViews() {
         setContentView(binding.root)

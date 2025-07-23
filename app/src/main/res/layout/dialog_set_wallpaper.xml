@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:layout_marginHorizontal="@dimen/_16sdp"
+    android:background="@drawable/background_radius_16"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/_17sdp"
+    android:paddingBottom="@dimen/_20sdp"
+    android:paddingTop="@dimen/_24sdp">
+
+    <TextView
+        android:text="@string/credits"
+        android:layout_marginTop="@dimen/_12sdp"
+        style="@style/CustomTextStyleSemiBold16sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLayout"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:id="@+id/wallpaperOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/firstSortIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/set_wallpaper_op1"
+                    android:layout_toEndOf="@id/firstSortIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/homeScreenOption"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/secondSortIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/set_wallpaper_op2"
+                    android:layout_toEndOf="@id/secondSortIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/bothOfThemOption"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/thirdSortIcon"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"/>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_18sdp"
+                    style="@style/CustomTextStyle14sp"
+                    android:gravity="center"
+                    android:text="@string/set_wallpaper_op3"
+                    android:layout_toEndOf="@id/thirdSortIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_24sdp">
+
+        <TextView
+            android:id="@+id/cancelBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/main_color"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:background="@drawable/background_radius_12_purple_stroke"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/okBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/ok"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/white"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:background="@drawable/background_radius_12"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

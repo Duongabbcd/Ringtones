@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="@dimen/_30sdp"
+    android:paddingBottom="@dimen/_4sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_corner_top_round"
+    android:backgroundTint="@color/white"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/songAvatar"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        style="@style/CustomTextStyleSemiBold16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/download_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/songAvatar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="#ECECEC"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLayout"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        
+        <LinearLayout
+            android:id="@+id/result"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            
+            <ImageView
+                android:id="@+id/resultIcon"
+                android:src="@drawable/icon_tick"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp" />
+
+            <TextView
+                android:text="@string/successfully"
+                style="@style/CustomTextStyleMedium16sp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/processing"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ProgressBar
+                android:id="@+id/processingBar"
+                android:indeterminate="false"
+                android:thumb="@drawable/custom_thumb"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/custom_circular_progress"
+                android:max="100"
+                android:progress="0"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp" />
+
+            <TextView
+                android:id="@+id/processTxt"
+                android:text="@string/downloading"
+                style="@style/CustomTextStyleMedium16sp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        app:layout_constraintBottom_toTopOf="@id/frBanner"
+        app:layout_constraintTop_toBottomOf="@id/bottomLayout">
+
+        <TextView
+            android:id="@+id/done"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/done"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/main_color"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:background="@drawable/background_radius_12_purple_stroke"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toTopOf="@id/frBanner" />
+
+    <FrameLayout
+        android:id="@+id/frBanner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_height="wrap_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
