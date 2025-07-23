@@ -48,7 +48,7 @@
             <alirezat775.lib.carouselview.CarouselView
                 android:id="@+id/horizontalWallpapers"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_300sdp"
+                android:layout_height="@dimen/_200sdp"
                 android:paddingTop="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:paddingHorizontal="@dimen/_20sdp"
@@ -60,13 +60,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_marginHorizontal="@dimen/_24sdp"
                 android:layout_width="match_parent"
+                android:gravity="bottom"
                 android:layout_marginTop="@dimen/_10sdp"
                 app:layout_constraintTop_toBottomOf="@id/horizontalWallpapers"
-                android:layout_height="wrap_content" >
+                android:layout_height="@dimen/_80sdp" >
 
 
                 <LinearLayout
@@ -75,11 +76,12 @@
                     android:gravity="center"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/ringTone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:layout_width="46dp"
+                        android:layout_width="@dimen/_46sdp"
                         android:layout_height="@dimen/_40sdp"
                         android:contentDescription="@string/imageview"
                         android:src="@drawable/share_button" />
@@ -87,7 +89,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/notification"
+                        android:text="@string/share"
                         android:textColor="@color/main_color"
                         style="@style/CustomTextStyleMedium14sp"
                         android:layout_marginTop="@dimen/_8sdp"/>
@@ -101,7 +103,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/notification"
                     app:layout_constraintStart_toEndOf="@+id/download"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content">
 
                     <ImageView
@@ -128,7 +131,8 @@
                     android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/ringTone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content">
 
                     <ImageView
@@ -150,7 +154,7 @@
 
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
