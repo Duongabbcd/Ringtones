@@ -23,6 +23,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/wallPaperName"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_24sdp"
+            android:contentDescription="@string/imageview"
+            android:padding="@dimen/_2sdp"
+            android:text="@string/share"
+            android:textColor="@color/main_color"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_marginStart="@dimen/_8sdp"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintTop_toTopOf="@id/backBtn" />
+
 
         <ImageView
             android:id="@+id/favourite"

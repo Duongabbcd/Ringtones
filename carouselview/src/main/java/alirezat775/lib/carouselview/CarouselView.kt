@@ -81,24 +81,29 @@ class CarouselView
      */
     override fun setAdapter(adapter: Adapter<*>?) {
         super.setAdapter(adapter)
-        if (adapter!!.itemCount >= 0)
-            initSnap()
+        if ((adapter?.itemCount ?: 0) > 0)
+            initSnap(initialPosition)  // use your desired starting index
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        initSnap()
+        initSnap(initialPosition)  // use your desired starting index
     }
+
+    var initialPosition: Int = 0
 
     /**
      * initialize
      */
-    private fun initSnap() {
+    private fun initSnap(initialPosition: Int = 0) {
         clipToPadding = false
         overScrollMode = View.OVER_SCROLL_NEVER
         anchor = CENTER
         addOnItemTouchListener(onItemTouchListener())
-        post { scrolling(0); if (isAutoScroll) getScheduler() }
+        post {
+            scrolling(initialPosition, true)
+            if (isAutoScroll) getScheduler()
+        }
     }
 
     /**
@@ -225,12 +230,12 @@ class CarouselView
     override fun scrollToPosition(position: Int) {
         post {
             try {
-                smoothScrollToPosition(position)
+                scrollToPosition(position)
             } catch (e: IllegalStateException) {
                 // Layout not ready, try again shortly
                 postDelayed({
                     try {
-                        smoothScrollToPosition(position)
+                        scrollToPosition(position)
                     } catch (ignored: Exception) { }
                 }, 50)
             }
@@ -258,20 +263,22 @@ class CarouselView
     /**
      * @param positionPlus scroll to new position from previous position
      */
-    fun scrolling(positionPlus: Int) {
-        if (calculateSnapViewPosition() > -1) {
-            var centerViewPosition = calculateSnapViewPosition() + positionPlus
-            if (centerViewPosition <= 0)
-                centerViewPosition = 0
-            else if (centerViewPosition >= adapter!!.itemCount - 1)
-                centerViewPosition = adapter!!.itemCount - 1
+    fun scrolling(positionPlus: Int, immediately: Boolean = false) {
+        val snapPosition = calculateSnapViewPosition()
+        val adapterItemCount = adapter?.itemCount ?: return
 
-            smoothScrollToPosition(centerViewPosition)
+        if (snapPosition > -1) {
+            var targetPosition = snapPosition + positionPlus
+            targetPosition = targetPosition.coerceIn(0, adapterItemCount - 1)
 
-            if (listener != null)
-                listener!!.onPositionChange(centerViewPosition)
+            if (immediately) {
+                layoutManager?.scrollToPosition(targetPosition)
+            } else {
+                smoothScrollToPosition(targetPosition)
+            }
 
-            currentPosition = centerViewPosition
+            listener?.onPositionChange(targetPosition)
+            currentPosition = targetPosition
         }
     }
 
@@ -295,27 +302,23 @@ class CarouselView
      */
     private fun calculateSnapViewPosition(): Int {
         val parentAnchor = parentAnchor
-        val lastVisibleItemPosition = manager.findLastVisibleItemPosition()
-        val firstVisibleItemPosition = manager.findFirstVisibleItemPosition()
+        val firstVisible = manager.findFirstVisibleItemPosition()
+        val lastVisible = manager.findLastVisibleItemPosition()
 
-        if (firstVisibleItemPosition > -1) {
-            val currentViewClosestToAnchor = manager.findViewByPosition(firstVisibleItemPosition)
-            var currentViewClosestToAnchorDistance =
-                parentAnchor - getViewAnchor(currentViewClosestToAnchor)
-            var currentViewClosestToAnchorPosition = firstVisibleItemPosition
+        if (firstVisible == RecyclerView.NO_POSITION || lastVisible == RecyclerView.NO_POSITION) return -1
 
-            for (i in firstVisibleItemPosition + 1..lastVisibleItemPosition) {
-                val view = manager.findViewByPosition(i)
-                val distanceToCenter = parentAnchor - getViewAnchor(view)
-                if (Math.abs(distanceToCenter) < Math.abs(currentViewClosestToAnchorDistance)) {
-                    currentViewClosestToAnchorPosition = i
-                    currentViewClosestToAnchorDistance = distanceToCenter
-                }
+        var closestPos = firstVisible
+        var minDistance = Int.MAX_VALUE
+
+        for (i in firstVisible..lastVisible) {
+            val view = manager.findViewByPosition(i) ?: continue
+            val distance = kotlin.math.abs(parentAnchor - getViewAnchor(view))
+            if (distance < minDistance) {
+                minDistance = distance
+                closestPos = i
             }
-            return currentViewClosestToAnchorPosition
-        } else {
-            return -1
         }
+        return closestPos
     }
 
     inner class Scheduler(millisInFuture: Long, countDownInterval: Long) :

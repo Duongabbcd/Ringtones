@@ -145,7 +145,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         observeRingtoneFromDb()
         // Initialize ExoPlayer
         playRingtone(false)
-        initViewPager()
 
         binding.apply {
             currentRingtoneName.isSelected = true
@@ -153,6 +152,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 finish()
             }
             index = allRingtones.indexOf(currentRingtone)
+            initViewPager()
             binding.horizontalRingtones.post {
                 (binding.horizontalRingtones.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(index, 0)
                 setUpNewPlayer(index)
@@ -421,12 +421,13 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         snapHelper.attachToRecyclerView(binding.horizontalRingtones)
 
         binding.apply {
+            horizontalRingtones.initialPosition = index
             horizontalRingtones.adapter = playRingtoneAdapter
 
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
                     currentId = -10
-                    index = position
+                    updateIndex(index, "onPositionChange")
                     setUpNewPlayer(position)
                     playRingtoneAdapter.setCurrentPlayingPosition(position, false)
                     // 🔁 force rebind to update playingHolder
@@ -468,7 +469,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
                         // 👇 Update only if actual index changes
                         if (newIndex != index) {
-                            index = newIndex
+                            updateIndex(newIndex, "onPositionChange")
                             setUpNewPlayer(index)
                             handler.postDelayed({
                                 playRingtoneAdapter.setCurrentPlayingPosition(index, false)
@@ -508,7 +509,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                                 recyclerView.stopScroll()
                             }
 
-                            index = newIndex
+                            updateIndex(newIndex, "onPositionChange")
                             setUpNewPlayer(index)
                             playRingtoneAdapter.setCurrentPlayingPosition(index, false)
                         }
@@ -540,6 +541,11 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun updateIndex(newIndex: Int, caller: String) {
+        Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
+        index = newIndex
     }
 
 }

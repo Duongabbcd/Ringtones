@@ -186,8 +186,8 @@ object RingtoneHelper {
                         wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK)
                     }
                     WallpaperTarget.BOTH -> {
-                        wallpaperManager.setBitmap(bitmap)
-                    }
+                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
+                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK)}
                 }
 
                 true

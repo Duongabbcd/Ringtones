@@ -19,12 +19,18 @@ class SetWallpaperDialog(
         window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
+    private var optionIndex = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         handler = Handler(Looper.getMainLooper())
         binding.apply {
             okBtn.setOnClickListener {
+                if(optionIndex != 0) {
+                    onClickOptionListener(optionIndex)
+                }
+
                 dismiss()
             }
 
@@ -34,26 +40,17 @@ class SetWallpaperDialog(
 
             wallpaperOption.setOnClickListener {
                 updateDisplayIcons(firstSortIcon, listOf(secondSortIcon, thirdSortIcon))
-                handler.postDelayed({
-                    onClickOptionListener(1)
-                },  300)
-                dismiss()
+                optionIndex = 1
             }
 
             homeScreenOption.setOnClickListener {
                 updateDisplayIcons(secondSortIcon, listOf(firstSortIcon, thirdSortIcon))
-                handler.postDelayed({
-                    onClickOptionListener(2)
-                },  300)
-                dismiss()
+                optionIndex = 2
             }
 
             bothOfThemOption.setOnClickListener {
                 updateDisplayIcons(thirdSortIcon, listOf(firstSortIcon, secondSortIcon))
-                handler.postDelayed({
-                    onClickOptionListener(3)
-                },  300)
-                dismiss()
+                optionIndex =3
             }
         }
     }

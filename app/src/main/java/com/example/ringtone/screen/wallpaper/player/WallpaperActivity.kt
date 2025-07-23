@@ -56,7 +56,6 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
 
-    private var currentId = -10
     private var index = 0
 
     private var currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
@@ -76,14 +75,13 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         checkDownloadPermissions()
         binding.apply {
             index = allRingtones.indexOf(currentWallpaper)
-            initViewPager()
             backBtn.setOnClickListener {
                 finish()
             }
 
+            initViewPager()
             println("onCreate: $index")
             setUpNewPlayer(index)
-
             setupButtons()
         }
     }
@@ -129,11 +127,10 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
     }
 
     private fun setupButtons() {
-        val imageUrl = currentWallpaper.contents.first().url.full
+
         binding.apply {
             share.setOnClickListener {
-
-
+                val imageUrl = currentWallpaper.contents.first().url.full
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, imageUrl)
@@ -146,6 +143,7 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
                 downloadWallpaper()
             }
             wallpaper.setOnClickListener {
+                val imageUrl = currentWallpaper.contents.first().url.full
                 setUpPhotoByCondition(imageUrl)
             }
 
@@ -168,11 +166,12 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
                 val isSuccess = when(result) {
                     1-> {
-                        bottomSheet.setType("wallpaper")
+                        bottomSheet.setType("lock")
                         bottomSheet.show()
+                        Toast.makeText(this@WallpaperActivity, "${currentWallpaper.id}", Toast.LENGTH_SHORT).show()
                         setWallpaperFromUrl(
                             context = this@WallpaperActivity,
-                            imageUrl =imageUrl,
+                            imageUrl = imageUrl,
                             target = WallpaperTarget.LOCK
                         )
                     }
@@ -180,9 +179,10 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
                     2 -> {
                         bottomSheet.setType("home")
                         bottomSheet.show()
+                        Toast.makeText(this@WallpaperActivity, "${currentWallpaper.id}", Toast.LENGTH_SHORT).show()
                         setWallpaperFromUrl(
                             context = this@WallpaperActivity,
-                            imageUrl =imageUrl,
+                            imageUrl = imageUrl,
                             target = WallpaperTarget.HOME
                         )
 
@@ -191,9 +191,10 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
                     else -> {
                         bottomSheet.setType("both")
                         bottomSheet.show()
+                        Toast.makeText(this@WallpaperActivity, "${currentWallpaper.id}", Toast.LENGTH_SHORT).show()
                         setWallpaperFromUrl(
                             context = this@WallpaperActivity,
-                            imageUrl =imageUrl,
+                            imageUrl = imageUrl,
                             target = WallpaperTarget.BOTH
                         )
                     }
@@ -282,7 +283,7 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         }
     }
 
-
+//    private var isInitialCarouselSetup = true
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
         playWallpaperAdapter.submitList(allRingtones)
@@ -295,11 +296,19 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
         binding.apply {
             horizontalWallpapers.adapter = playWallpaperAdapter
+            horizontalWallpapers.initialPosition = index
 
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
-                    currentId = -10
-                    index = position
+//                    if (isInitialCarouselSetup) {
+//                        if (position == index) {
+//
+//                            isInitialCarouselSetup = false
+//                        } else {
+//                            return
+//                        }
+//                    }
+                    updateIndex(position, "onPositionChange")
                     setUpNewPlayer(position)
                     // 🔁 force rebind to update playingHolder
                 }
@@ -339,7 +348,7 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
                         // 👇 Update only if actual index changes
                         if (newIndex != index) {
-                            index = newIndex
+                            updateIndex(newIndex, "onPositionChange")
                             handler.postDelayed({
                                 setUpNewPlayer(index)
                             }, 300)
@@ -369,6 +378,16 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
                         }
 
                         RecyclerView.SCROLL_STATE_IDLE -> {
+//                            if (isInitialScroll) {
+//                                if (newIndex == index) {
+//                                    isInitialScroll = false
+//                                    println("Initial scroll settled at index $index, listener active now")
+//                                } else {
+//                                    println("Ignoring SCROLL_STATE_IDLE because initial scroll not settled at target index $index")
+//                                    return
+//                                }
+//                            }
+
                             val distanceJumped = abs(newIndex - previousIndex)
                             println("🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)")
 
@@ -386,11 +405,14 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         }
 
     }
-
+//    private var isInitialScroll = true
 
     private fun setUpNewPlayer(position: Int) {
         binding.horizontalWallpapers.smoothScrollToPosition(position)
         currentWallpaper = allRingtones[position]
+        println("setUpNewPlayer: $position and $currentWallpaper")
+        binding.wallPaperName.text = currentWallpaper.id.toString()
+
         playWallpaperAdapter.setCurrentPlayingPosition(position)
         viewModel.loadWallpaperById(currentWallpaper.id)
     }
@@ -426,5 +448,10 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
                 isFavorite = true
             }
         }
+    }
+
+    private fun updateIndex(newIndex: Int, caller: String) {
+        Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
+        index = newIndex
     }
 }

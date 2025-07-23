@@ -18,7 +18,7 @@ class DownloadWallpaperBottomSheet(private val context: Context) : BaseBottomShe
 
     fun setType(type: String = "wallpaper") {
         title = when(type) {
-            "wallpaper" -> context.getString(R.string.set_wallpaper_op1)
+            "lock" -> context.getString(R.string.set_wallpaper_op1)
             "home" -> context.getString(R.string.set_wallpaper_op2)
             "both" -> context.getString(R.string.set_wallpaper_op3)
             else -> context.getString(R.string.set_wallpaper_op1)
@@ -26,7 +26,7 @@ class DownloadWallpaperBottomSheet(private val context: Context) : BaseBottomShe
 
 
         desc = when(type) {
-            "wallpaper" -> context.getString(R.string.set_wallpaper_1)
+            "lock" -> context.getString(R.string.set_wallpaper_1)
             "home" -> context.getString(R.string.set_wallpaper_2)
             "both" -> context.getString(R.string.set_wallpaper_3)
             else -> context.getString(R.string.set_wallpaper_1)
