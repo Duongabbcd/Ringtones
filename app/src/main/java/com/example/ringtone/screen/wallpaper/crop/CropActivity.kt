@@ -151,7 +151,13 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
 
 
     private fun setOptions() {
-        binding.cropImageView.cropRect = Rect(100, 300, 500, 1200)
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        // Use the entire screen area as crop rect
+        val rect = Rect(0, 0, screenWidth, screenHeight)
+        binding.cropImageView.cropRect = rect
     }
 
     override fun onCropImageComplete(view: CropImageView, result: CropResult) {

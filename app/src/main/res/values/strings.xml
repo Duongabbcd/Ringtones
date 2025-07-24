@@ -137,5 +137,6 @@
     <string name="default_crop_label_text">Sample crop label</string>
     <string name="reset">Reset</string>
     <string name="crop">Crop</string>
+    <string name="wallpaper_desc">Wallpaper_desc</string>
 
 </resources>

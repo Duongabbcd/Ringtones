@@ -2,13 +2,17 @@ package com.example.ringtone.screen.wallpaper.adapter
 
 import alirezat775.lib.carouselview.CarouselAdapter
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemPhotoBinding
 import com.example.ringtone.remote.model.Wallpaper
@@ -78,7 +82,10 @@ class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit,
     }
 
     inner class PlayerViewHolder(val binding: ItemPhotoBinding) : CarouselViewHolder(binding.root) {
-        private var boundId: Int = -1
+        private var slideshowHandler: Handler? = null
+        private var slideshowRunnable: Runnable? = null
+        private var currentImageIndex = 0
+
 
         @SuppressLint("ClickableViewAccessibility")
         fun bind(wallpaper: Wallpaper, pos: Int) {
@@ -89,11 +96,22 @@ class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit,
                 playingHolder = this
             }
 
-            wallpaper.contents.first().url.medium.let {
-                Glide.with(context).load(it).placeholder(R.drawable.item_wallpaper_default).error(
-                    R.drawable.item_wallpaper_default).into(binding.wallpaper)
-            }
+            stopSlideshow()
+            val images = wallpaper.contents.map { it.url.medium }
 
+            if (currentPos == position && wallpaper.contents.size > 1) {
+                startSlideshow(images)
+            } else {
+                val url = wallpaper.contents.firstOrNull()?.url?.medium
+                if (url != null) {
+                    wallpaper.contents.first().url.medium.let {
+                        Glide.with(context).load(it).placeholder(R.drawable.item_wallpaper_default)
+                            .error(
+                                R.drawable.item_wallpaper_default
+                            ).into(binding.wallpaper)
+                    }
+                }
+            }
 
             // Scroll to previous
             binding.previous.setOnClickListener {
@@ -139,9 +157,37 @@ class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit,
 //                dialog.show()
             }
         }
+
+
+        private fun startSlideshow(imageUrls: List<String>) {
+            slideshowHandler = Handler(Looper.getMainLooper())
+            currentImageIndex = 0
+            slideshowRunnable = object : Runnable {
+                override fun run() {
+                    val context = binding.wallpaper.context
+                    if (currentImageIndex >= imageUrls.size) currentImageIndex = 0
+
+                    if (context is Activity && context.isDestroyed) return
+                    Glide.with(context.applicationContext)
+                        .load(imageUrls[currentImageIndex])
+                        .error(R.drawable.icon_default_category)
+                        .into(binding.wallpaper)
+
+                    currentImageIndex++
+                    slideshowHandler?.postDelayed(this, 3000L) // Slide every 3 seconds
+                }
+            }
+
+            slideshowHandler?.post(slideshowRunnable!!)
+        }
+
+        fun stopSlideshow() {
+            slideshowRunnable?.let { slideshowHandler?.removeCallbacks(it) }
+            slideshowRunnable = null
+            slideshowHandler = null
+        }
+
     }
-
-
 }
 
 class WallpaperDiffCallback(

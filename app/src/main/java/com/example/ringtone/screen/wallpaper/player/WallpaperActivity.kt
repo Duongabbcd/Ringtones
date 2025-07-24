@@ -4,6 +4,8 @@ import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
+import android.app.WallpaperManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -23,10 +25,10 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.applovin.impl.mediation.MediationServiceImpl
 import com.example.ringtone.R
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityWallpaperBinding
+import com.example.ringtone.remote.model.ImageContent
 import com.example.ringtone.remote.viewmodel.FavouriteWallpaperViewModel
 import com.example.ringtone.screen.ringtone.player.OneItemSnapHelper
 import com.example.ringtone.screen.ringtone.player.RingtoneHelper
@@ -36,6 +38,7 @@ import com.example.ringtone.screen.wallpaper.adapter.PlayWallpaperAdapter
 import com.example.ringtone.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.example.ringtone.screen.wallpaper.crop.CropActivity
 import com.example.ringtone.screen.wallpaper.dialog.SetWallpaperDialog
+import com.example.ringtone.screen.wallpaper.service.SlideshowWallpaperService
 import com.example.ringtone.utils.Common
 import com.example.ringtone.utils.RingtonePlayerRemote
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -45,6 +48,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URL
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -164,8 +168,10 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
                 downloadWallpaper()
             }
             wallpaper.setOnClickListener {
-                val imageUrl = currentWallpaper.contents.first().url.full
+                val imageUrl = currentWallpaper.contents
+
                 setUpPhotoByCondition(imageUrl)
+
             }
 
         }
@@ -271,15 +277,76 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
     }
 
 
-    private fun setUpPhotoByCondition(imageUrl: String) {
+    private fun setUpPhotoByCondition(imageUrl: List<ImageContent>) {
         val dialog = SetWallpaperDialog(this@WallpaperActivity) { result ->
             settingOption = result
-            val intent = Intent(this@WallpaperActivity, CropActivity::class.java).apply {
-                putExtra("imageUrl", imageUrl)
+
+            if (imageUrl.size > 1) {
+                lifecycleScope.launch {
+                    setUpLiveWallpaperByCondition(result, imageUrl)
+                }
+            } else {
+                val intent = Intent(this@WallpaperActivity, CropActivity::class.java).apply {
+                    putExtra("imageUrl", imageUrl.first().url.full)
+                }
+                cropLauncher.launch(intent)
             }
-            cropLauncher.launch(intent)
+
         }
         dialog.show()
+    }
+
+    private suspend fun setUpLiveWallpaperByCondition(result: Int, imageUrls: List<ImageContent>) {
+        val bitmap = urlToBitmap(imageUrls.first().url.full) ?: return
+        lifecycleScope.launch {
+            when (result) {
+                1 -> {
+                    startLiveWallpaper(imageUrls)
+                    setWallpaperFromUrl(
+                        context = this@WallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.LOCK
+                    )
+
+                }
+
+                2 -> {
+                    startLiveWallpaper(imageUrls)
+                }
+
+                else -> {
+                    startLiveWallpaper(imageUrls)
+                    setWallpaperFromUrl(
+                        context = this@WallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.LOCK
+                    )
+
+                }
+            }
+        }
+    }
+
+    suspend fun urlToBitmap(imageUrl: String): Bitmap? = withContext(Dispatchers.IO) {
+        try {
+            val input = URL(imageUrl).openStream()
+            BitmapFactory.decodeStream(input)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun startLiveWallpaper(contents: List<ImageContent>) {
+        SlideshowWallpaperService.imageUrls = contents.map { it.url.full }
+
+        val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
+            putExtra(
+                WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
+                ComponentName(packageName, SlideshowWallpaperService::class.java.name)
+            )
+        }
+        startActivity(intent)
     }
 
 

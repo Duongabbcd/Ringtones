@@ -175,7 +175,8 @@ object RingtoneHelper {
         return withContext(Dispatchers.IO) {
             try {
                 val wallpaperManager = WallpaperManager.getInstance(context)
-                val resizeBitmap = resizeBitmapToScreen(context, bitmap)
+//                val resizeBitmap = resizeBitmapToScreen(context, bitmap)
+                val resizeBitmap = bitmap
                 when (target) {
                     WallpaperTarget.HOME -> {
                         wallpaperManager.setBitmap(
