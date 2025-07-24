@@ -60,8 +60,16 @@ class WallpaperViewModel @Inject constructor(
     private var _total5 = MutableLiveData<Int>()
     val total5: LiveData<Int> get() = _total5
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
+    private val _loading1 = MutableLiveData<Boolean>()
+    val loading1: LiveData<Boolean> = _loading1
+    private val _loading2 = MutableLiveData<Boolean>()
+    val loading2: LiveData<Boolean> = _loading2
+    private val _loading3 = MutableLiveData<Boolean>()
+    val loading3: LiveData<Boolean> = _loading3
+    private val _loading4 = MutableLiveData<Boolean>()
+    val loading4: LiveData<Boolean> = _loading4
+    private val _loading5 = MutableLiveData<Boolean>()
+    val loading5: LiveData<Boolean> = _loading5
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -69,7 +77,7 @@ class WallpaperViewModel @Inject constructor(
 
 
     fun loadTrendingWallpapers() = viewModelScope.launch {
-        _loading.value = true
+        _loading1.value = true
         try {
             val result = repository.fetchTrendingWallpapers()
             _total1.value = result.data.total
@@ -84,13 +92,13 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading1.value = false
         }
     }
 
 
     fun loadNewWallpapers() = viewModelScope.launch {
-        _loading.value = true
+        _loading2.value = true
         try {
             val result = repository.fetchNewWallpapers()
             _total2.value = result.data.total
@@ -100,12 +108,12 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading2.value = false
         }
     }
 
     fun loadSubWallpapers1(pageId: Int) = viewModelScope.launch {
-        _loading.value = true
+        _loading3.value = true
         try {
             val result = repository.fetchWallpaperByCategory(pageId)
             _total3.value = result.data.total
@@ -116,12 +124,12 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading3.value = false
         }
     }
 
     fun loadSubWallpapers2(pageId: Int) = viewModelScope.launch {
-        _loading.value = true
+        _loading4.value = true
         try {
             val result = repository.fetchWallpaperByCategory(pageId)
             _total4.value= result.data.total
@@ -131,12 +139,12 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading4.value = false
         }
     }
 
     fun loadSubWallpapers3(pageId: Int) = viewModelScope.launch {
-        _loading.value = true
+        _loading5.value = true
         try {
             val result = repository.fetchWallpaperByCategory(pageId)
             _total5.value = result.data.total
@@ -146,12 +154,12 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading5.value = false
         }
     }
 
     fun searchTag(searchText: String) = viewModelScope.launch {
-        _loading.value = true
+        _loading1.value = true
         try {
             _tags.value = null // Clear the old tag first
             val result = repository.searchTag(SearchRequest(searchText))
@@ -169,13 +177,13 @@ class WallpaperViewModel @Inject constructor(
             _tags.value = null
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading1.value = false
         }
     }
 
 
     fun searchWallpaperByTag(tagId: Int) = viewModelScope.launch {
-        _loading.value = true
+        _loading1.value = true
         try {
             val result = repository.getWallPapersByTag(tagId)
             _searchWallpapers.value = result.data.data
@@ -185,12 +193,12 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading1.value = false
         }
     }
 
     fun loadLiveWallpapers() = viewModelScope.launch {
-        _loading.value = true
+        _loading1.value = true
         try {
             val result = repository.getLiveWallpaper()
             _liveWallpapers.value = result.data.data
@@ -200,13 +208,13 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading1.value = false
         }
     }
 
 
     fun loadPremiumWallpaper() = viewModelScope.launch {
-        _loading.value = true
+        _loading1.value = true
         try {
             val result = repository.getPremiumWallpaper()
             _premiumWallpapers.value = result.data.data
@@ -216,7 +224,7 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading1.value = false
         }
     }
 }

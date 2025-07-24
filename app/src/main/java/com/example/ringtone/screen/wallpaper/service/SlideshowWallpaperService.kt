@@ -1,7 +1,6 @@
 package com.example.ringtone.screen.wallpaper.service
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
@@ -12,8 +11,6 @@ import android.view.SurfaceHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import java.net.HttpURLConnection
-import java.net.URL
 
 class SlideshowWallpaperService : WallpaperService() {
 
@@ -31,6 +28,11 @@ class SlideshowWallpaperService : WallpaperService() {
         private var running = true
         private val slideshowInterval = 5000L // 5 seconds
 
+        private var currentBitmap: Bitmap? = null
+        private var previousBitmap: Bitmap? = null
+        private val transitionDuration = 800L // 800ms fade
+        private val frameDelay = 16L // ~60 FPS
+
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
             startSlideshow()
@@ -43,6 +45,9 @@ class SlideshowWallpaperService : WallpaperService() {
 
                     val url = imageUrls[currentImageIndex]
 
+                    // Keep current as previous for transition
+                    previousBitmap = currentBitmap
+
                     Glide.with(applicationContext)
                         .asBitmap()
                         .load(url)
@@ -51,13 +56,16 @@ class SlideshowWallpaperService : WallpaperService() {
                                 resource: Bitmap,
                                 transition: Transition<in Bitmap>?
                             ) {
-                                drawBitmap(resource)
+                                currentBitmap = Bitmap.createScaledBitmap(
+                                    resource,
+                                    surfaceHolder.surfaceFrame.width(),
+                                    surfaceHolder.surfaceFrame.height(),
+                                    true
+                                )
+                                startFadeTransition()
                             }
 
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                                //do nothing
-                            }
-
+                            override fun onLoadCleared(placeholder: Drawable?) {}
                         })
 
                     currentImageIndex = (currentImageIndex + 1) % imageUrls.size
@@ -66,12 +74,42 @@ class SlideshowWallpaperService : WallpaperService() {
             })
         }
 
-        private fun drawBitmap(bitmap: Bitmap) {
+        private fun startFadeTransition() {
+            val startTime = System.currentTimeMillis()
+
+            fun animateFrame() {
+                val elapsed = System.currentTimeMillis() - startTime
+                val progress = (elapsed / transitionDuration.toFloat()).coerceAtMost(1f)
+                drawCrossroadFrame(progress)
+
+                if (progress < 1f) {
+                    handler.postDelayed(::animateFrame, frameDelay)
+                }
+            }
+
+            animateFrame()
+        }
+
+        private fun drawCrossroadFrame(alphaProgress: Float) {
             val canvas = surfaceHolder?.lockCanvas() ?: return
-            canvas.drawColor(Color.BLACK)
-            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, canvas.width, canvas.height, true)
-            canvas.drawBitmap(scaledBitmap, 0f, 0f, null)
-            surfaceHolder.unlockCanvasAndPost(canvas)
+
+            try {
+                canvas.drawColor(Color.BLACK)
+
+                val paint = Paint()
+
+                previousBitmap?.let {
+                    paint.alpha = ((1f - alphaProgress) * 255).toInt()
+                    canvas.drawBitmap(it, 0f, 0f, paint)
+                }
+
+                currentBitmap?.let {
+                    paint.alpha = (alphaProgress * 255).toInt()
+                    canvas.drawBitmap(it, 0f, 0f, paint)
+                }
+            } finally {
+                surfaceHolder.unlockCanvasAndPost(canvas)
+            }
         }
 
         override fun onDestroy() {

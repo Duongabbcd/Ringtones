@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemGridWallpaperBinding
@@ -89,6 +90,7 @@ class GridWallpaperAdapter() :
 
     inner class GridWallpaperViewHolder(private val binding: ItemGridWallpaperBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(position: Int) {
             val wallpaper = allWallpapers.getOrNull(position) ?: return
 
@@ -98,11 +100,28 @@ class GridWallpaperAdapter() :
 
                 val url = wallpaper.contents.firstOrNull()?.url?.medium
                 if (url != null) {
-                    Glide.with(wallPaper.context)
-                        .load(url)
-                        .placeholder(R.drawable.icon_default_category)
-                        .error(R.drawable.icon_default_category)
-                        .into(wallPaper)
+                    progressBar.visibility = View.VISIBLE
+                    loading.visibility = View.VISIBLE
+
+                    wallPaper.load(url) {
+                        crossfade(true) // Optional fade animation
+                        placeholder(R.drawable.item_wallpaper_default) // 👈 Show while loading
+                        error(R.drawable.item_wallpaper_default) // 👈 Show if failed
+                        listener(
+                            onSuccess = { _, _ ->
+                                progressBar.visibility = View.GONE
+                                loading.visibility = View.GONE
+                            },
+                            onError = { _, _ ->
+                                progressBar.visibility = View.GONE
+                                loading.visibility = View.GONE
+                            }
+                        )
+                    }
+                } else {
+                    progressBar.visibility = View.GONE
+                    loading.visibility = View.GONE
+                    wallPaper.setImageResource(R.drawable.item_wallpaper_default)
                 }
 
                 root.setOnClickListener {
@@ -120,6 +139,7 @@ class GridWallpaperAdapter() :
             }
         }
     }
+
 
     inner class LoadingViewHolder(private val binding: ItemLoadingBinding) :
         RecyclerView.ViewHolder(binding.root) {

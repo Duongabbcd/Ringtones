@@ -82,10 +82,13 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState != null) {
+
             index = savedInstanceState.getInt("wallpaper_index", 0)
+            println("savedInstanceState 0: $index")
         } else {
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
-            index = allRingtones.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
+            index = allRingtones.indexOf(currentWallpaper)
+            println("savedInstanceState 1: $index")
         }
 
 

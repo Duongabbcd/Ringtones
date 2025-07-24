@@ -4,19 +4,33 @@ import alirezat775.lib.carouselview.CarouselAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
 import com.example.ringtone.R
 import com.example.ringtone.databinding.ItemPhotoBinding
 import com.example.ringtone.remote.model.Wallpaper
+import com.example.ringtone.utils.Common.visible
 import com.example.ringtone.utils.RingtonePlayerRemote
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit, private val onClickListener: (Boolean, Int) -> Unit) : CarouselAdapter() {
@@ -111,6 +125,7 @@ class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit,
                             ).into(binding.wallpaper)
                     }
                 }
+                binding.loading.visible()
             }
 
             // Scroll to previous
@@ -158,8 +173,12 @@ class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit,
             }
         }
 
+        private var slideshowJob: Job? = null
+
 
         private fun startSlideshow(imageUrls: List<String>) {
+            if (imageUrls.isEmpty()) return
+
             slideshowHandler = Handler(Looper.getMainLooper())
             currentImageIndex = 0
             slideshowRunnable = object : Runnable {
@@ -167,19 +186,66 @@ class PlayWallpaperAdapter(private val onRequestScrollToPosition: (Int) -> Unit,
                     val context = binding.wallpaper.context
                     if (currentImageIndex >= imageUrls.size) currentImageIndex = 0
 
-                    if (context is Activity && context.isDestroyed) return
-                    Glide.with(context.applicationContext)
-                        .load(imageUrls[currentImageIndex])
+                    val activityContext = context as? Activity
+                    if (activityContext == null || activityContext.isDestroyed) return
+
+                    val imageUrl = imageUrls[currentImageIndex]
+
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.wallpaper.alpha = 0f // make image transparent before load
+
+                    Glide.with(activityContext)
+                        .load(imageUrl)
+                        .transition(DrawableTransitionOptions.withCrossFade(500)) // 500ms fade
                         .error(R.drawable.icon_default_category)
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                binding.progressBar.visibility = View.GONE
+                                binding.loading.visibility = View.GONE
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                binding.progressBar.animate()
+                                    .alpha(0f)
+                                    .setDuration(300)
+                                    .withEndAction {
+                                        binding.progressBar.visibility = View.GONE
+                                        binding.progressBar.alpha = 1f
+                                    }.start()
+
+                                binding.loading.visibility = View.GONE
+
+                                binding.wallpaper.animate()
+                                    .alpha(1f)
+                                    .setDuration(500)
+                                    .start()
+
+                                return false
+                            }
+                        })
                         .into(binding.wallpaper)
 
                     currentImageIndex++
-                    slideshowHandler?.postDelayed(this, 3000L) // Slide every 3 seconds
+                    slideshowHandler?.postDelayed(this, 3000L)
                 }
             }
 
             slideshowHandler?.post(slideshowRunnable!!)
         }
+
+
 
         fun stopSlideshow() {
             slideshowRunnable?.let { slideshowHandler?.removeCallbacks(it) }

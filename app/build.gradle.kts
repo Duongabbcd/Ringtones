@@ -95,6 +95,7 @@ dependencies {
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
     implementation("me.tankery.lib:circularSeekBar:1.4.2")
+    implementation("io.coil-kt:coil:2.4.0")
 
     implementation("androidx.room:room-runtime:2.7.1")
     implementation("androidx.room:room-ktx:2.7.1")
