@@ -39,6 +39,9 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
 
         categoryViewModel.loadWallpaperCategories()
         binding.apply {
+            backBtn.setOnClickListener {
+                finish()
+            }
             allCategories.adapter = categoryWallpaperAdapter
             categoryViewModel.wallpaperCategory.observe(this@AllWallpaperActivity) { categories ->
                 categoryWallpaperAdapter.submitList(categories)

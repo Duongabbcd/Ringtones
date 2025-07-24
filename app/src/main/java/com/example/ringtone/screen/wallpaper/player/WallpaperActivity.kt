@@ -4,7 +4,10 @@ import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -20,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.applovin.impl.mediation.MediationServiceImpl
 import com.example.ringtone.R
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityWallpaperBinding
@@ -30,6 +34,7 @@ import com.example.ringtone.screen.ringtone.player.RingtoneHelper.setWallpaperFr
 import com.example.ringtone.screen.ringtone.player.WallpaperTarget
 import com.example.ringtone.screen.wallpaper.adapter.PlayWallpaperAdapter
 import com.example.ringtone.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
+import com.example.ringtone.screen.wallpaper.crop.CropActivity
 import com.example.ringtone.screen.wallpaper.dialog.SetWallpaperDialog
 import com.example.ringtone.utils.Common
 import com.example.ringtone.utils.RingtonePlayerRemote
@@ -71,6 +76,15 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            index = savedInstanceState.getInt("wallpaper_index", 0)
+        } else {
+            currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
+            index = allRingtones.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
+        }
+
+
         handler = Handler(Looper.getMainLooper())
         checkDownloadPermissions()
         binding.apply {
@@ -78,9 +92,11 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
             backBtn.setOnClickListener {
                 finish()
             }
+            println("onCreate: $index")
+            viewModel.loadWallpaperById(currentWallpaper.id)
+            observeRingtoneFromDb()
 
             initViewPager()
-            println("onCreate: $index")
             setUpNewPlayer(index)
             setupButtons()
         }
@@ -150,71 +166,117 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         }
     }
 
-    private fun setUpPhotoByCondition(imageUrl: String) {
-        val dialog = SetWallpaperDialog(this@WallpaperActivity) { result ->
-            lifecycleScope.launch {
-                val bottomSheet = DownloadWallpaperBottomSheet(this@WallpaperActivity)
-                bottomSheet.apply {
-                    setCancelable(false)
-                    setCanceledOnTouchOutside(false)
-                    setOnShowListener { dialog ->
-                        val b = (dialog as BottomSheetDialog).behavior
-                        b.isDraggable = false
-                        b.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
+    private val cropLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val uri = result.data?.getParcelableExtra<Uri>("croppedImageUri")
+            println("cropLauncher: $uri")
+            if (uri != null) {
+                val bitmap = loadBitmapFromUri(this, uri)
+                if (bitmap != null) {
+                    continueAfterCrop(bitmap)
                 }
+            }
+        }
+    }
 
-                val isSuccess = when(result) {
-                    1-> {
-                        bottomSheet.setType("lock")
-                        bottomSheet.show()
-                        Toast.makeText(this@WallpaperActivity, "${currentWallpaper.id}", Toast.LENGTH_SHORT).show()
-                        setWallpaperFromUrl(
-                            context = this@WallpaperActivity,
-                            imageUrl = imageUrl,
-                            target = WallpaperTarget.LOCK
-                        )
-                    }
-
-                    2 -> {
-                        bottomSheet.setType("home")
-                        bottomSheet.show()
-                        Toast.makeText(this@WallpaperActivity, "${currentWallpaper.id}", Toast.LENGTH_SHORT).show()
-                        setWallpaperFromUrl(
-                            context = this@WallpaperActivity,
-                            imageUrl = imageUrl,
-                            target = WallpaperTarget.HOME
-                        )
-
-                    }
-
-                    else -> {
-                        bottomSheet.setType("both")
-                        bottomSheet.show()
-                        Toast.makeText(this@WallpaperActivity, "${currentWallpaper.id}", Toast.LENGTH_SHORT).show()
-                        setWallpaperFromUrl(
-                            context = this@WallpaperActivity,
-                            imageUrl = imageUrl,
-                            target = WallpaperTarget.BOTH
-                        )
-                    }
-                }
-
-                if(isSuccess) {
-                    bottomSheet.showSuccess().also {
-                        enableDismiss(bottomSheet)
-                    }
-                    viewModel.increaseSet(currentWallpaper)
-                } else {
-                    bottomSheet.showFailure().also {
-                        enableDismiss(bottomSheet)
-                    }
+    private fun continueAfterCrop(bitmap: Bitmap) {
+        println("continueAfterCrop: $bitmap")
+        lifecycleScope.launch {
+            val bottomSheet = DownloadWallpaperBottomSheet(this@WallpaperActivity)
+            bottomSheet.apply {
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setOnShowListener { dialog ->
+                    val b = (dialog as BottomSheetDialog).behavior
+                    b.isDraggable = false
+                    b.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }
 
+
+            val isSuccess: Boolean = when (settingOption) {
+                1 -> {
+                    bottomSheet.setType("lock")
+                    bottomSheet.show()
+                    Toast.makeText(
+                        this@WallpaperActivity,
+                        "${currentWallpaper.id}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setWallpaperFromUrl(
+                        context = this@WallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.LOCK
+                    )
+                }
+
+                2 -> {
+                    bottomSheet.setType("home")
+                    bottomSheet.show()
+                    Toast.makeText(
+                        this@WallpaperActivity,
+                        "${currentWallpaper.id}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setWallpaperFromUrl(
+                        context = this@WallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.HOME
+                    )
+
+                }
+
+                else -> {
+                    bottomSheet.setType("both")
+                    bottomSheet.show()
+                    Toast.makeText(
+                        this@WallpaperActivity,
+                        "${currentWallpaper.id}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setWallpaperFromUrl(
+                        context = this@WallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.BOTH
+                    )
+                }
+
+            }
+
+
+            if (isSuccess) {
+                bottomSheet.showSuccess().also {
+                    enableDismiss(bottomSheet)
+                }
+                viewModel.increaseSet(currentWallpaper)
+            } else {
+                bottomSheet.showFailure().also {
+                    enableDismiss(bottomSheet)
+                }
+            }
+        }
+    }
+
+    private fun loadBitmapFromUri(context: Context, uri: Uri): Bitmap? {
+        return context.contentResolver.openInputStream(uri)?.use {
+            BitmapFactory.decodeStream(it)
+        }
+    }
+
+
+    private fun setUpPhotoByCondition(imageUrl: String) {
+        val dialog = SetWallpaperDialog(this@WallpaperActivity) { result ->
+            settingOption = result
+            val intent = Intent(this@WallpaperActivity, CropActivity::class.java).apply {
+                putExtra("imageUrl", imageUrl)
+            }
+            cropLauncher.launch(intent)
         }
         dialog.show()
     }
+
 
     private fun downloadWallpaper() {
 
@@ -411,7 +473,6 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         binding.horizontalWallpapers.smoothScrollToPosition(position)
         currentWallpaper = allRingtones[position]
         println("setUpNewPlayer: $position and $currentWallpaper")
-        binding.wallPaperName.text = currentWallpaper.id.toString()
 
         playWallpaperAdapter.setCurrentPlayingPosition(position)
         viewModel.loadWallpaperById(currentWallpaper.id)
@@ -453,5 +514,16 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
     private fun updateIndex(newIndex: Int, caller: String) {
         Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
         index = newIndex
+    }
+
+    companion object {
+        var imageBitmap: Bitmap? = null
+        var settingOption = 0
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("wallpaper_index", index)
     }
 }

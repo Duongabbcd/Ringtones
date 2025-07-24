@@ -62,12 +62,23 @@
         <activity android:name=".screen.favourite.FavouriteActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <!--wallpaper-->
-        <activity android:name=".screen.wallpaper.SearchWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.wallpaper.search.SearchWallpaperActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".screen.wallpaper.PreviewWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <activity android:name=".screen.wallpaper.AllWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.wallpaper.player.WallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.wallpaper.live.LiveWallpaperActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.wallpaper.crop.CropActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -93,7 +104,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

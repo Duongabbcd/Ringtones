@@ -69,6 +69,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":carouselview"))
+    implementation(project(":cropper"))
+
     implementation ("com.auth0:java-jwt:4.4.0")
 
     implementation("com.google.dagger:hilt-android:2.55")

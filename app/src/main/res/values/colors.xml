@@ -26,4 +26,7 @@
     <color name="high_light">#347BFA</color>
     <color name="textColorHint">#939393</color>
     <color name="textTrending">#686A71</color>
+
+    <color name="purple">#993399</color>
+    <color name="purpleDark">#663399</color>
 </resources>

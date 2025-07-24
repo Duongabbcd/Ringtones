@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.wallpaper
+package com.example.ringtone.screen.wallpaper.search
 
 import android.os.Bundle
 import android.text.Editable
@@ -11,9 +11,7 @@ import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivitySearchWallpaperBinding
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
 import com.example.ringtone.remote.viewmodel.WallpaperViewModel
-import com.example.ringtone.screen.ringtone.search.SearchRingtoneActivity
 import com.example.ringtone.screen.wallpaper.adapter.GridWallpaperAdapter
-import com.example.ringtone.screen.wallpaper.adapter.WallpaperAdapter
 import com.example.ringtone.screen.wallpaper.adapter.WallpaperTrendingAdapter
 import com.example.ringtone.utils.Common.gone
 import com.example.ringtone.utils.Common.visible

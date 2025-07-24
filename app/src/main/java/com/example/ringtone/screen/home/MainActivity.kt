@@ -12,7 +12,7 @@ import com.example.ringtone.screen.home.dialog.NotificationDialog
 import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
 import com.example.ringtone.screen.ringtone.search.SearchRingtoneActivity
 import com.example.ringtone.screen.setting.SettingActivity
-import com.example.ringtone.screen.wallpaper.SearchWallpaperActivity
+import com.example.ringtone.screen.wallpaper.search.SearchWallpaperActivity
 import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 

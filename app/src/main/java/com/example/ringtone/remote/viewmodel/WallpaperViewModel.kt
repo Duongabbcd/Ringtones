@@ -43,6 +43,12 @@ class WallpaperViewModel @Inject constructor(
     private val _searchWallpapers = MutableLiveData<List<Wallpaper>>()
     val searchWallpapers: LiveData<List<Wallpaper>> = _searchWallpapers
 
+    private val _liveWallpapers = MutableLiveData<List<Wallpaper>>()
+    val liveWallpapers: LiveData<List<Wallpaper>> = _liveWallpapers
+
+    private val _premiumWallpapers = MutableLiveData<List<Wallpaper>>()
+    val premiumWallpapers: LiveData<List<Wallpaper>> = _premiumWallpapers
+
     private var _total1 = MutableLiveData<Int>()
     val total1: LiveData<Int> get() = _total1
     private var _total2 = MutableLiveData<Int>()
@@ -183,4 +189,34 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
+    fun loadLiveWallpapers() = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getLiveWallpaper()
+            _liveWallpapers.value = result.data.data
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+
+    fun loadPremiumWallpaper() = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getPremiumWallpaper()
+            _premiumWallpapers.value = result.data.data
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
 }

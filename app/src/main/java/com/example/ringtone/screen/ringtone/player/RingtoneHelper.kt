@@ -8,6 +8,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
@@ -168,26 +169,44 @@ object RingtoneHelper {
 
     suspend fun setWallpaperFromUrl(
         context: Context,
-        imageUrl: String,
+        bitmap: Bitmap,
         target: WallpaperTarget = WallpaperTarget.BOTH
     ) : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val inputStream = URL(imageUrl).openStream()
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-
                 val wallpaperManager = WallpaperManager.getInstance(context)
-
+                val resizeBitmap = resizeBitmapToScreen(context, bitmap)
                 when (target) {
                     WallpaperTarget.HOME -> {
-                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
+                        wallpaperManager.setBitmap(
+                            resizeBitmap,
+                            null,
+                            true,
+                            WallpaperManager.FLAG_SYSTEM
+                        )
                     }
                     WallpaperTarget.LOCK -> {
-                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK)
+                        wallpaperManager.setBitmap(
+                            resizeBitmap,
+                            null,
+                            true,
+                            WallpaperManager.FLAG_LOCK
+                        )
                     }
                     WallpaperTarget.BOTH -> {
-                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
-                        wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK)}
+                        wallpaperManager.setBitmap(
+                            resizeBitmap,
+                            null,
+                            true,
+                            WallpaperManager.FLAG_SYSTEM
+                        )
+                        wallpaperManager.setBitmap(
+                            resizeBitmap,
+                            null,
+                            true,
+                            WallpaperManager.FLAG_LOCK
+                        )
+                    }
                 }
 
                 true
@@ -197,6 +216,20 @@ object RingtoneHelper {
                 false
             }
         }
+    }
+
+    private fun resizeBitmapToScreen(
+        context: Context,
+        bitmap: Bitmap
+    ): Bitmap {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+        val display = wm.defaultDisplay
+        val size = android.graphics.Point()
+        display.getRealSize(size)
+        val screenWidth = size.x
+        val screenHeight = size.y
+
+        return Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, true)
     }
 
 

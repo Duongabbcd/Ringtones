@@ -2,22 +2,18 @@ package com.example.ringtone.screen.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.base.BaseFragment
-import com.example.ringtone.databinding.FragmentRingtoneBinding
-import com.example.ringtone.databinding.FragmentRingtoneBinding.inflate
 import com.example.ringtone.databinding.FragmentWallpaperBinding
 import com.example.ringtone.remote.viewmodel.WallpaperViewModel
 import com.example.ringtone.screen.wallpaper.AllWallpaperActivity
 import com.example.ringtone.screen.wallpaper.PreviewWallpaperActivity
 import com.example.ringtone.screen.wallpaper.adapter.WallpaperAdapter
-import com.example.ringtone.utils.Utils
+import com.example.ringtone.screen.wallpaper.live.LiveWallpaperActivity
 import com.example.ringtone.utils.Utils.formatWithComma
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -203,6 +199,12 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
             categories.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, AllWallpaperActivity::class.java))
+                }
+            }
+
+            live.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, LiveWallpaperActivity::class.java))
                 }
             }
         }

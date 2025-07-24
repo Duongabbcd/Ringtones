@@ -77,11 +77,21 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
                     }
                 }
 
+
                 else -> {
                     println("category: $categoryId")
                     categoryViewModel.getCategoryByName(categoryId = categoryId)
                     categoryViewModel.category.observe(this@PreviewWallpaperActivity){ category ->
                         nameScreen.text = category.name
+                    }
+
+                    if (categoryId == 75) {
+                        wallPaperViewModel.loadPremiumWallpaper()
+                        wallPaperViewModel.premiumWallpapers.observe(this@PreviewWallpaperActivity) { items ->
+                            wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                        }
+
+                        return@apply
                     }
 
                     wallPaperViewModel.loadSubWallpapers1(categoryId)

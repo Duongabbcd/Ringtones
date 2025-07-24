@@ -89,13 +89,19 @@ interface ApiService {
         @Query("tag") tagId: Int
     ): WallpaperResponse
 
+    @GET("api/v1/wallpapers?app=1&category=75&private=0&tag=3274&with=tags+id,name")
+    suspend fun getLiveWallpaper(): WallpaperResponse
+
+    @GET("api/v1/wallpapers?app=1&category=75&private=1&with=tags+id,name")
+    suspend fun getPremiumWallpaper(): WallpaperResponse
+
 
     @POST("api/v1/interactions")
     suspend fun updateStatus(
         @Body request: InteractionRequest)
 
 
-    @GET("api/v1/categories")
+    @GET("api/v1/categories?app=1")
     suspend fun getCategoryById(
         @Query("with") with: String = "author name,id",
         @Query("where") where: String

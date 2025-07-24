@@ -126,11 +126,16 @@
     <string name="categories">Categories</string>
     <string name="trending">Trending</string>
     <string name="hot_search">Hot searches</string>
-    <string name="live">Live wallpaper</string>
+    <string name="live">Live Wallpaper</string>
     <string name="favourite">Favourite</string>
     <string name="premiums">Premiums</string>
     <string name="new_wallpaper">New Wallpaper</string>
     <string name="no_internet_desc">Please connect to Wi-Fi or a mobile network to view this content</string>
     <string name="no_internet_title">No connection</string>
     <string name="try_again">Try again</string>
+    <string name="save">Save</string>
+    <string name="default_crop_label_text">Sample crop label</string>
+    <string name="reset">Reset</string>
+    <string name="crop">Crop</string>
+
 </resources>

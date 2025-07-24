@@ -2,7 +2,6 @@ package com.example.ringtone.utils
 
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.remote.model.Wallpaper
-import com.example.ringtone.screen.wallpaper.SearchWallpaperActivity
 
 object RingtonePlayerRemote {
     val allSelectedRingtones : MutableList<Ringtone> = mutableListOf()

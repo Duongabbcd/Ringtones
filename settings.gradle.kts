@@ -33,3 +33,4 @@ dependencyResolutionManagement {
 rootProject.name = "Ringtone"
 include(":app")
 include(":carouselview")
+include(":cropper")
