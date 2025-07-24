@@ -10,8 +10,11 @@ import com.example.ringtone.remote.viewmodel.WallpaperViewModel
 import com.example.ringtone.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.example.ringtone.R
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
+import com.example.ringtone.remote.viewmodel.FavouriteWallpaperViewModel
 import com.example.ringtone.screen.ringtone.player.RingtoneActivity
 import com.example.ringtone.screen.wallpaper.adapter.GridWallpaperAdapter.Companion.VIEW_TYPE_LOADING
+import com.example.ringtone.utils.Common.gone
+import com.example.ringtone.utils.Common.visible
 import com.example.ringtone.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,6 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(ActivityPreviewWallpaperBinding::inflate){
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
+
+    private val favourite: FavouriteWallpaperViewModel by viewModels()
+
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter ().apply {
             onAllImagesLoaded = {
@@ -59,8 +65,28 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
             allCategories.layoutManager = layoutManager
             allCategories.adapter = wallpaperAdapter
 
+        }
+    }
 
+
+    override fun onResume() {
+        super.onResume()
+        binding.apply {
+            allCategories.visible()
             when(categoryId) {
+                -3 -> {
+                    nameScreen.text = resources.getString(R.string.favourite)
+                    favourite.loadAllWallpapers()
+                    favourite.allWallpapers.observe(this@PreviewWallpaperActivity){ items ->
+                        if(items.isEmpty()) {
+                            allCategories.gone()
+                            noDataLayout.visible()
+                            return@observe
+                        }
+                        wallpaperAdapter.submitList(items)
+                    }
+                }
+
                 -2 -> {
                     nameScreen.text = resources.getString(R.string.trending)
                     wallPaperViewModel.loadTrendingWallpapers()
@@ -100,7 +126,7 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
                     }
                 }
             }
-
         }
+
     }
 }

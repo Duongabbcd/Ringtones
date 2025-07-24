@@ -89,12 +89,17 @@ class WallpaperActivity: BaseActivity<ActivityWallpaperBinding>(ActivityWallpape
         checkDownloadPermissions()
         binding.apply {
             index = allRingtones.indexOf(currentWallpaper)
+            observeRingtoneFromDb()
             backBtn.setOnClickListener {
                 finish()
             }
             println("onCreate: $index")
             viewModel.loadWallpaperById(currentWallpaper.id)
             observeRingtoneFromDb()
+
+            favourite.setOnClickListener {
+                displayFavouriteIcon(true)
+            }
 
             initViewPager()
             setUpNewPlayer(index)

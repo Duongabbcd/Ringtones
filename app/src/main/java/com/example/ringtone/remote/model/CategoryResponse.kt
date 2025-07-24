@@ -64,7 +64,13 @@ data class Category(
 
     @SerializedName("created_at")
     val createdAt: String
-)
+) {
+    companion object {
+        val EMPTY_CATEGORY = Category(
+            -99, "EMPTY_CATEGORY", Thumbnail("", Size(0,0), Url("","","","") ),0,0,0,0,0,0,0,0,0,0,0,"",""
+        )
+    }
+}
 
 data class Thumbnail(
     val path: String,

@@ -202,6 +202,14 @@ class WallpaperFragment: BaseFragment<FragmentWallpaperBinding>(FragmentWallpape
                 }
             }
 
+            favourite.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                        putExtra("categoryId", -3)
+                    })
+                }
+            }
+
             live.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, LiveWallpaperActivity::class.java))

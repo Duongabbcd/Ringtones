@@ -52,6 +52,35 @@
         app:layout_constraintTop_toBottomOf="@id/topController"
         app:layout_constraintBottom_toTopOf="@+id/frBanner" />
 
+
+    <LinearLayout
+        android:id="@+id/noDataLayout"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/_43sdp">
+
+
+        <ImageView
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/no_data"/>
+
+        <TextView
+            style="@style/CustomTextStyle14sp"
+            android:gravity="center"
+            android:text="@string/no_data_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"

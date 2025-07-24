@@ -9,6 +9,9 @@ import com.example.ringtone.local.WallpaperEntity
 
 @Dao
 interface WallpaperDao {
+    @Query("SELECT * FROM wallpaper")
+    suspend fun getAllWallpaper(): List<WallpaperEntity>?
+
     @Query("SELECT * FROM wallpaper WHERE id = :id")
     suspend fun getById(id: Int): WallpaperEntity?
 
