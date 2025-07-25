@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "874234165384",
+    "project_id": "ringtones2-17af4",
+    "storage_bucket": "ringtones2-17af4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874234165384:android:fecd5e8c998d657725873d",
+        "android_client_info": {
+          "package_name": "com.ezt.ringify.ringtonewallpaper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDj_D9VFrHLh4bRBNfHmsrKl-8MwxkFj3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
