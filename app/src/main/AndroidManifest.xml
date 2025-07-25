@@ -39,21 +39,26 @@
         tools:ignore="ExtraText">
 
         <activity android:name=".screen.splash.SplashActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity android:name=".screen.home.MainActivity" android:exported="true" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".screen.home.MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <activity android:name=".screen.intro.IntroActivityNew" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.language.LanguageActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.setting.SettingActivity" android:exported="false" android:screenOrientation="portrait"/>
+
+        <!--using apis-->
         <activity android:name=".screen.ringtone.search.SearchRingtoneActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.RingtoneCategoryActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".screen.ringtone.FilteredRingtonesActivity" android:exported="false" android:screenOrientation="portrait"/>
@@ -79,6 +84,8 @@
             android:name=".screen.wallpaper.crop.CropActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <!--end of all screens-->
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

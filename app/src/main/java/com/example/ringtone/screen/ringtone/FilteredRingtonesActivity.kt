@@ -5,7 +5,7 @@ import androidx.activity.viewModels
 import com.example.ringtone.base.BaseActivity
 import com.example.ringtone.databinding.ActivityFilteredCategoryBinding
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
-import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
+import com.example.ringtone.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.example.ringtone.R
 import com.example.ringtone.remote.viewmodel.FavouriteRingtoneViewModel
 import com.example.ringtone.screen.ringtone.bottomsheet.SortBottomSheet

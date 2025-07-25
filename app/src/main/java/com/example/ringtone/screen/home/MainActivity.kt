@@ -9,7 +9,9 @@ import kotlin.system.exitProcess
 import com.example.ringtone.R
 import com.example.ringtone.remote.model.Ringtone
 import com.example.ringtone.screen.home.dialog.NotificationDialog
-import com.example.ringtone.screen.home.subscreen.first_screen.RingtoneFragment
+import com.example.ringtone.screen.home.subscreen.callscreen.CallScreenFragment
+import com.example.ringtone.screen.home.subscreen.ringtone.RingtoneFragment
+import com.example.ringtone.screen.home.subscreen.wallpaper.WallpaperFragment
 import com.example.ringtone.screen.ringtone.search.SearchRingtoneActivity
 import com.example.ringtone.screen.setting.SettingActivity
 import com.example.ringtone.screen.wallpaper.search.SearchWallpaperActivity
@@ -70,7 +72,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onResume() {
         super.onResume()
 
-         internetConnected = AdmobUtils.isNetworkConnected(this@MainActivity)
+        internetConnected = AdmobUtils.isNetworkConnected(this@MainActivity)
+        println("onResume: $internetConnected")
         displayScreen()
     }
 
@@ -82,12 +85,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
             1 -> {
-                openFragment(WallpaperFragment.newInstance())
+                openFragment(WallpaperFragment.Companion.newInstance())
 
             }
 
             2 -> {
-                openFragment(CallScreenFragment.newInstance())
+                openFragment(CallScreenFragment.Companion.newInstance())
             }
 
             3 -> {

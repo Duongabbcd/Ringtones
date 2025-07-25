@@ -1,19 +1,21 @@
-package com.example.ringtone.screen.home.subscreen.first_screen
+package com.example.ringtone.screen.home.subscreen.ringtone
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ringtone.base.BaseFragment
 import com.example.ringtone.databinding.FragmentRingtoneBinding
+import com.example.ringtone.remote.connection.InternetConnectionViewModel
 import com.example.ringtone.remote.viewmodel.CategoryViewModel
 import com.example.ringtone.remote.viewmodel.RingtoneViewModel
-import com.example.ringtone.screen.home.MainActivity
 import com.example.ringtone.screen.ringtone.RingtoneCategoryActivity
-import com.example.ringtone.screen.home.subscreen.first_screen.adapter.CategoryAdapter
-import com.example.ringtone.screen.home.subscreen.first_screen.adapter.RingtoneAdapter
+import com.example.ringtone.screen.home.subscreen.ringtone.adapter.CategoryAdapter
+import com.example.ringtone.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.example.ringtone.screen.ringtone.FilteredRingtonesActivity
 import com.example.ringtone.utils.Common.gone
 import com.example.ringtone.utils.Common.visible
@@ -24,6 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBinding::inflate) {
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
+
+    private val connectionViewModel: InternetConnectionViewModel by activityViewModels()
 
     private val categoryAdapter : CategoryAdapter by lazy {
         CategoryAdapter { category ->
@@ -41,9 +45,6 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        categoryViewModel.loadRingtoneCategories()
-        ringtoneViewModel.loadPopular()
-
         binding.apply {
             allCategories.adapter = categoryAdapter
             allPopular.adapter = ringToneAdapter
@@ -77,18 +78,40 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 loading2.isVisible = it
             }
 
+            connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
 
+            binding.noInternet.tryAgain.setOnClickListener {
+                // Optionally trigger a manual refresh of data or recheck
+                val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                if (connected) {
+                    // Do something if reconnected
+                    binding.origin.visible()
+                    binding.noInternet.root.visibility = View.VISIBLE
+                    // Maybe reload your data
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Still no internet connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if(MainActivity.internetConnected) {
-            binding.origin.visible()
-            binding.noInternet.gone()
-        } else {
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
             binding.origin.gone()
-            binding.noInternet.visible()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            categoryViewModel.loadRingtoneCategories()
+            ringtoneViewModel.loadPopular()
+            binding.noInternet.root.gone()
         }
     }
 

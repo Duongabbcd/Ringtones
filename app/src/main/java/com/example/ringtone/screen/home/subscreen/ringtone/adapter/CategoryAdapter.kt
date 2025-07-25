@@ -1,4 +1,4 @@
-package com.example.ringtone.screen.home.subscreen.first_screen.adapter
+package com.example.ringtone.screen.home.subscreen.ringtone.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

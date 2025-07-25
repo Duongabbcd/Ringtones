@@ -15,30 +15,30 @@ import retrofit2.http.Query
 
 interface ApiService {
     //Ringtones
-    @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&order_by=id+desc")
+    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&order_by=id+desc")
     suspend fun getRingtones(): RingtoneResponse
 
-    @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1&order_by=name+asc")
+    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1&order_by=name+asc")
     suspend fun getPopularRingtones() : RingtoneResponse
 
-    @GET("api/v1/ringtones?with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
+    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
     suspend fun getTrendingRingtones() : RingtoneResponse
 
 
-    @GET("api/v1/call_screens")
+    @GET("api/v1/call_screens?app=1")
     suspend fun getCallScreens(): CallScreenResponse
 
-    @GET("api/v1/contents?page=2")
+    @GET("api/v1/contents?app=1&page=2")
     suspend fun getContents(): ContentResponse
 
     //Categories
-    @GET("api/v1/categories?page=2&with=author+id%2Cname%2Clink&type=2")
+    @GET("api/v1/categories?app=1&page=2&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?with=author+name,id&where=type+2")
+    @GET("api/v1/categories?app=1&with=author+name,id&where=type+2")
     suspend fun getRingtoneCategory(): CategoriesResponse
 
-    @GET("api/v1/ringtones")
+    @GET("api/v1/ringtones?app=1")
     suspend fun getRingtonesByCategory(
         @Query("category") categoryId: Int,
         @Query("with") with: String = "author+id,name,active-categories+id,name,thumbnail,active,content_count",
@@ -50,39 +50,39 @@ interface ApiService {
 //    @GET("api/v1/categories?&with=author+name,id&where=type+1")
 //    suspend fun getWallpaperCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?where=type+1")
+    @GET("api/v1/categories?app=1&where=type+1")
     suspend fun getAllWallpaperCategories(): CategoriesResponse
 
-    @GET("api/v1/wallpapers?where=trend+1")
+    @GET("api/v1/wallpapers?app=1&where=trend+1")
     suspend fun getTrendingWallpapers() : WallpaperResponse
 
-    @GET("api/v1/wallpapers?order_by=updated_at+desc")
+    @GET("api/v1/wallpapers?app=1&order_by=updated_at+desc")
     suspend fun getNewWallpapers(): WallpaperResponse
 
-    @GET("api/v1/wallpapers")
+    @GET("api/v1/wallpapers?app=1")
     suspend fun getWallpapersByCategory(
         @Query("with") with: String = "tags+id,name-apps+id,name",
         @Query("app") appId: Int = 1,
         @Query("category") categoryId: Int
     ): WallpaperResponse
 
-    @GET("api/v1/categories")
+    @GET("api/v1/categories?app=1")
     suspend fun getAllExcludingCategory(
         @Query("where") where: String = "type+1,id+!=+75"
     ): CategoriesResponse
 
     //Search
-    @POST("api/v1/ringtones/search?with=author+id,name,active-categories+id,name,thumbnail,active,content_count")
+    @POST("api/v1/ringtones/search?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count")
     suspend fun searchRingtonesByName(
         @Body request: SearchRequest
     ):  SearchResponse
 
-    @POST("api/v1/tags/search")
+    @POST("api/v1/tags/search?app=1")
     suspend fun searchTags(
         @Body request: SearchRequest
     ):  TagResponse
 
-    @GET("api/v1/wallpapers")
+    @GET("api/v1/wallpapers?app=1")
     suspend fun getWallpapersByTag(
         @Query("with") with: String = "tags+id,name-apps+id,name",
         @Query("app") app: Int = 1,
@@ -96,7 +96,7 @@ interface ApiService {
     suspend fun getPremiumWallpaper(): WallpaperResponse
 
 
-    @POST("api/v1/interactions")
+    @POST("api/v1/interactions?app=1")
     suspend fun updateStatus(
         @Body request: InteractionRequest)
 

@@ -1,16 +1,15 @@
-package com.example.ringtone.screen.home
+package com.example.ringtone.screen.home.subscreen.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.ringtone.base.BaseFragment
-import com.example.ringtone.databinding.FragmentCallscreenBinding
-import com.example.ringtone.databinding.FragmentRingtoneBinding
+import com.example.ringtone.databinding.FragmentSettingBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CallScreenFragment: BaseFragment<FragmentCallscreenBinding>(FragmentCallscreenBinding::inflate) {
+class SettingFragment: BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,7 +22,7 @@ class CallScreenFragment: BaseFragment<FragmentCallscreenBinding>(FragmentCallsc
 
     companion object {
         @JvmStatic
-        fun newInstance() = CallScreenFragment().apply { }
+        fun newInstance() = SettingFragment().apply { }
 
     }
 

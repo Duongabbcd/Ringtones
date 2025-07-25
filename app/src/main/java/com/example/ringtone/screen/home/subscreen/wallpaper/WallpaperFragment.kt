@@ -1,27 +1,34 @@
-package com.example.ringtone.screen.home
+package com.example.ringtone.screen.home.subscreen.wallpaper
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ringtone.base.BaseFragment
 import com.example.ringtone.databinding.FragmentWallpaperBinding
+import com.example.ringtone.remote.connection.InternetConnectionViewModel
 import com.example.ringtone.remote.viewmodel.WallpaperViewModel
 import com.example.ringtone.screen.wallpaper.AllWallpaperActivity
 import com.example.ringtone.screen.wallpaper.PreviewWallpaperActivity
 import com.example.ringtone.screen.wallpaper.adapter.WallpaperAdapter
 import com.example.ringtone.screen.wallpaper.live.LiveWallpaperActivity
+import com.example.ringtone.utils.Common.gone
+import com.example.ringtone.utils.Common.visible
 import com.example.ringtone.utils.Utils.formatWithComma
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
 @AndroidEntryPoint
 class WallpaperFragment :
     BaseFragment<FragmentWallpaperBinding>(FragmentWallpaperBinding::inflate) {
 
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
+    private val connectionViewModel: InternetConnectionViewModel by activityViewModels()
 
     private val wallPaperAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
@@ -77,11 +84,6 @@ class WallpaperFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        wallPaperViewModel.loadTrendingWallpapers()
-        wallPaperViewModel.loadNewWallpapers()
-        wallPaperViewModel.loadSubWallpapers1(30)
-        wallPaperViewModel.loadSubWallpapers2(31)
-        wallPaperViewModel.loadSubWallpapers3(32)
 
         binding.apply {
             allTrending.adapter = wallPaperAdapter
@@ -102,8 +104,6 @@ class WallpaperFragment :
             wallPaperViewModel.total1.observe(viewLifecycleOwner) { number ->
                 trendingCount.text = number.formatWithComma()
             }
-
-            trendingCount.text = wallPaperViewModel.total1.toString()
 
             wallPaperViewModel.newWallpaper.observe(viewLifecycleOwner) { items ->
                 newWallpaperAdapter.submitList(items.take(10))
@@ -231,8 +231,45 @@ class WallpaperFragment :
                     startActivity(Intent(ctx, LiveWallpaperActivity::class.java))
                 }
             }
+
+            connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
+            binding.noInternet.tryAgain.setOnClickListener {
+                // Optionally trigger a manual refresh of data or recheck
+                val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                if (connected) {
+                    // Do something if reconnected
+                    binding.origin.visible()
+                    binding.noInternet.root.visibility = View.VISIBLE
+                    // Maybe reload your data
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Still no internet connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
+    }
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            wallPaperViewModel.loadTrendingWallpapers()
+            wallPaperViewModel.loadNewWallpapers()
+            wallPaperViewModel.loadSubWallpapers1(30)
+            wallPaperViewModel.loadSubWallpapers2(31)
+            wallPaperViewModel.loadSubWallpapers3(32)
+            binding.noInternet.root.gone()
+        }
     }
 
 

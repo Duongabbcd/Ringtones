@@ -188,6 +188,7 @@ object Utils {
 //        }
 //    }
 
+    const val NO_INTERNET = "No address associated with hostname"
 }
 
 class SwipeGestureListener(val activity: Activity) : GestureDetector.SimpleOnGestureListener() {
