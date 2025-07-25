@@ -4,17 +4,17 @@ plugins {
 
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
-//    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 
 }
 
 android {
-    namespace = "com.example.ringtone"
+    namespace = "com.ezt.ringify.ringtonewallpaper"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.ringtone"
+        applicationId = "com.ezt.ringify.ringtonewallpaper"
         minSdk = 28
         targetSdk = 35
         versionCode = 1
@@ -86,7 +86,11 @@ dependencies {
     implementation ("com.airbnb.android:lottie:3.4.0")
 
     implementation("androidx.media3:media3-exoplayer:1.7.1")
+    implementation("androidx.media3:media3-ui:1.7.1")
     implementation("androidx.media3:media3-ui:1.4.1")
+    implementation("androidx.media3:media3-datasource-okhttp:1.7.1")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
     implementation("com.google.android.exoplayer:exoplayer:2.19.1")
     implementation("androidx.fragment:fragment-ktx:1.8.6")
 

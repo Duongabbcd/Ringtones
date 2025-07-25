@@ -23,27 +23,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/feedback"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:contentDescription="@string/imageview"
-            android:src="@drawable/icon_feedback"
-            android:text="@string/categories"
-            android:textColor="@color/main_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/favourite"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginEnd="@dimen/_18sdp"
             android:contentDescription="@string/imageview"
             android:src="@drawable/icon_unfavourite"
             android:text="@string/categories"
             android:textColor="@color/main_color"
-            app:layout_constraintEnd_toStartOf="@+id/feedback"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -57,9 +46,9 @@
         android:layout_height="0dp" >
 
             <alirezat775.lib.carouselview.CarouselView
-                android:id="@+id/horizontalRingtones"
+                android:id="@+id/horizontalWallpapers"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_300sdp"
+                android:layout_height="@dimen/_410sdp"
                 android:paddingTop="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:paddingHorizontal="@dimen/_20sdp"
@@ -70,46 +59,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/currentRingtoneName"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:ellipsize="marquee"
-                style="@style/CustomTextStyleSemiBold18sp"
-                android:layout_marginHorizontal="@dimen/_60sdp"
-                android:text="If You Ask Me What Love Is"
-                android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalRingtones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/currentRingtoneAuthor"
-                style="@style/CustomTextStyle14sp"
-                android:layout_marginHorizontal="@dimen/_60sdp"
-                android:text="Roy Kim"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@+id/currentRingtoneName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:orientation="horizontal"
-
                 android:layout_width="match_parent"
                 android:gravity="bottom"
                 android:layout_marginTop="@dimen/_10sdp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/currentRingtoneAuthor"
-                android:layout_height="@dimen/_80sdp"  >
+                app:layout_constraintTop_toBottomOf="@id/horizontalWallpapers"
+                android:layout_height="@dimen/_80sdp" >
 
 
                 <LinearLayout
-                    android:id="@+id/notification"
+                    android:id="@+id/share"
                     android:orientation="vertical"
                     android:gravity="center"
                     app:layout_constraintStart_toStartOf="parent"
@@ -119,15 +80,15 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:contentDescription="@string/imageview"
-                        android:layout_width="@dimen/_40sdp"
+                        android:layout_width="@dimen/_46sdp"
                         android:layout_height="@dimen/_40sdp"
-                        android:src="@drawable/notification_button"/>
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/share_button" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/notification"
+                        android:text="@string/share"
                         android:textColor="@color/main_color"
                         style="@style/CustomTextStyleMedium14sp"
                         android:layout_marginTop="@dimen/_8sdp"/>
@@ -135,26 +96,26 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ringTone"
+                    android:id="@+id/wallpaper"
                     android:orientation="vertical"
                     android:gravity="center"
                     app:layout_constraintEnd_toStartOf="@+id/notification"
                     app:layout_constraintStart_toEndOf="@+id/download"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:contentDescription="@string/imageview"
                         android:layout_width="@dimen/_54sdp"
                         android:layout_height="@dimen/_54sdp"
-                        android:src="@drawable/ringtone_button"/>
+                        android:src="@drawable/wallpaper_button"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/set_ringotne"
+                        android:text="@string/set_wallpaper"
                         android:gravity="center"
                         android:textColor="@color/main_color"
                         style="@style/CustomTextStyleMedium14sp"
@@ -188,6 +149,7 @@
                         android:layout_marginTop="@dimen/_8sdp"/>
 
                 </LinearLayout>
+
 
 
 

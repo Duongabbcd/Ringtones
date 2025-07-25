@@ -21,6 +21,9 @@
     <!-- Required for setting ringtone -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission
+        android:name="android.permission.BIND_WALLPAPER"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".MyApplication"
@@ -75,7 +78,15 @@
         <activity android:name=".screen.wallpaper.PreviewWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <activity android:name=".screen.wallpaper.AllWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.wallpaper.player.WallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.wallpaper.player.SlideWallpaperActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.wallpaper.live.PreviewLiveWallpaperActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".screen.wallpaper.live.LiveWallpaperActivity"
             android:exported="false"
@@ -102,6 +113,19 @@
 
         <service
             android:name=".screen.wallpaper.service.SlideshowWallpaperService"
+            android:exported="true"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/wallpaper" />
+        </service>
+
+        <service
+            android:name=".screen.wallpaper.service.VideoWallpaperService"
             android:exported="true"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>

@@ -1,0 +1,73 @@
+package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.databinding.ItemBigCategoryBinding
+import com.ezt.ringify.ringtonewallpaper.databinding.ItemWallpaperBinding
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
+import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
+
+
+class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): RecyclerView.Adapter<WallpaperAdapter.WallpaperViewHolder>() {
+    private val allWallpapers : MutableList<Wallpaper> = mutableListOf()
+    private val limitedWallpapers: MutableList<Wallpaper> = mutableListOf()
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): WallpaperViewHolder {
+        context = parent.context
+        return WallpaperViewHolder(
+            ItemWallpaperBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+    }
+
+    private lateinit var context: Context
+
+    override fun onBindViewHolder(
+        holder: WallpaperViewHolder,
+        position: Int
+    ) {
+        holder.bind(position)
+    }
+
+    fun submitList(list: List<Wallpaper>) {
+        allWallpapers.clear()
+        allWallpapers.addAll(list)
+        limitedWallpapers.clear()
+        limitedWallpapers.addAll(list.take(10))
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int = limitedWallpapers.size
+
+    inner class WallpaperViewHolder(private val binding: ItemWallpaperBinding )  : RecyclerView.ViewHolder(binding.root){
+        fun bind(position: Int) {
+            val wallpaper = limitedWallpapers[position]
+            binding.apply {
+                println("ringTone: ${wallpaper.contents.first().url.full}")
+                if(wallpaper.contents.first() == null) {
+                    return@apply
+                }
+                wallpaper.contents.first().url.medium.let {
+                    Glide.with(wallPaper).load(it).placeholder(R.drawable.icon_default_category).error(
+                        R.drawable.icon_default_category).into(binding.wallPaper)
+                }
+
+                root.setOnClickListener {
+                    RingtonePlayerRemote.setCurrentWallpaper(wallpaper)
+                    RingtonePlayerRemote.setWallpaperQueue(allWallpapers)
+                    onClickListener(wallpaper)
+                }
+            }
+        }
+    }
+}
