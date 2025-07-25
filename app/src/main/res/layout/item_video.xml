@@ -32,26 +32,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:resize_mode="zoom"
                 app:use_controller="false" />
         </FrameLayout>
-
-        <View
-            android:id="@+id/leftView"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/rightView"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
 
         <!-- Top Time and Icon -->
@@ -148,6 +132,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/loading"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/defaultBackground_0_5" />

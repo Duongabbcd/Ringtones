@@ -11,6 +11,7 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
@@ -31,6 +32,7 @@ class PlayLiveWallpaperAdapter(
 
 
     fun submitList(newList: List<Wallpaper>) {
+        println("submitList: ${newList.size}")
         items.clear()
         items.addAll(newList)
         notifyDataSetChanged()
@@ -49,6 +51,7 @@ class PlayLiveWallpaperAdapter(
     }
 
     override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
+        Log.d("Adapter", "onBindViewHolder called for position $position")
         val wallpaper = items[position]
         val isCurrent = position == currentPos
 
@@ -88,21 +91,27 @@ class PlayLiveWallpaperAdapter(
                 // TODO: Show credit info if needed
             }
 
+            println("isCurrent: $isCurrent and $videoUrl")
             if (isCurrent && !videoUrl.isNullOrEmpty()) {
                 attachPlayer(videoUrl)
             } else {
                 detachPlayer()
                 showThumbnail(videoUrl)
+                binding.videoThumbnail.visibility = View.VISIBLE
             }
         }
 
         fun attachPlayer(videoUrl: String) {
+            Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
+
             if (exoPlayer == null) {
                 exoPlayer = ExoPlayer.Builder(context).build()
             }
 
             binding.playerView.player = exoPlayer
-            binding.playerView.visibility = View.VISIBLE
+
+            // Initial state — show thumbnail while preparing
+            binding.playerView.visibility = View.GONE
             binding.progressBar.visibility = View.VISIBLE
             binding.loading.visibility = View.GONE
             binding.videoThumbnail.visibility = View.VISIBLE
@@ -118,21 +127,51 @@ class PlayLiveWallpaperAdapter(
                 playWhenReady = true
                 prepare()
 
-                // Remove old listener if present
                 currentListener?.let { removeListener(it) }
 
-                // Create and save new listener
                 currentListener = object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
-                        if (state == Player.STATE_READY) {
-                            binding.progressBar.visibility = View.GONE
-                            binding.videoThumbnail.visibility = View.GONE
+                        Log.d(
+                            "ExoPlayer",
+                            "onPlaybackStateChanged: state=$state, isPlaying=${exoPlayer?.isPlaying}"
+                        )
+
+                        when (state) {
+                            Player.STATE_BUFFERING -> {
+                                binding.progressBar.visibility = View.VISIBLE
+                                binding.videoThumbnail.visibility = View.VISIBLE
+                                binding.playerView.visibility = View.GONE
+                            }
+
+                            Player.STATE_READY -> {
+                                if (exoPlayer?.isPlaying == true) {
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.videoThumbnail.visibility = View.GONE
+                                    binding.playerView.visibility = View.VISIBLE
+                                    Log.d("ExoPlayer", "Playback started.")
+                                } else {
+                                    // Ready but not playing yet
+                                    binding.progressBar.visibility = View.GONE
+                                    binding.videoThumbnail.visibility = View.VISIBLE
+                                    binding.playerView.visibility = View.GONE
+                                    Log.d("ExoPlayer", "Player ready, but not playing.")
+                                }
+                            }
+
+                            Player.STATE_ENDED, Player.STATE_IDLE -> {
+                                binding.progressBar.visibility = View.GONE
+                                binding.videoThumbnail.visibility = View.VISIBLE
+                                binding.playerView.visibility = View.GONE
+                            }
                         }
                     }
 
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
+                        Log.d("ExoPlayer", "onIsPlayingChanged: $isPlaying")
                         if (isPlaying) {
                             binding.progressBar.visibility = View.GONE
+                            binding.videoThumbnail.visibility = View.GONE
+                            binding.playerView.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -141,8 +180,8 @@ class PlayLiveWallpaperAdapter(
             }
         }
 
+
         fun detachPlayer() {
-            // Remove the listener on detach to avoid callbacks on non-visible ViewHolder
             currentListener?.let {
                 exoPlayer?.removeListener(it)
                 currentListener = null
