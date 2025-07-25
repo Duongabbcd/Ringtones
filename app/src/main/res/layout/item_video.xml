@@ -37,7 +37,6 @@
                 app:use_controller="false" />
         </FrameLayout>
 
-
         <!-- Top Time and Icon -->
         <RelativeLayout
             android:id="@+id/top"
@@ -79,46 +78,6 @@
         </RelativeLayout>
 
         <!-- Control Icons -->
-        <LinearLayout
-            android:id="@+id/bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_26sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:layout_marginBottom="@dimen/_20sdp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/previous"
-                android:layout_width="@dimen/_18sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:layout_weight="1"
-                android:contentDescription="@string/imageview"
-                android:src="@drawable/icon_prev" />
-
-            <ImageView
-                android:id="@+id/play"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginHorizontal="@dimen/_24sdp"
-                android:layout_weight="2"
-                android:contentDescription="@string/imageview"
-                android:src="@drawable/icon_play" />
-
-            <ImageView
-                android:id="@+id/next"
-                android:layout_width="@dimen/_18sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:layout_weight="1"
-                android:contentDescription="@string/imageview"
-                android:src="@drawable/icon_next_ring" />
-        </LinearLayout>
-
-
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="@dimen/_40sdp"
@@ -132,7 +91,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/loading"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/defaultBackground_0_5" />

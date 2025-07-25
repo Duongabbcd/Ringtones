@@ -26,17 +26,17 @@ class FavouriteWallpaperViewModel @Inject constructor(
     val allWallpapers: LiveData<List<Wallpaper>> get() = _allWallpapers
 
     fun loadWallpaperById(id: Int) {
-        println("loadRingtoneById 0: $id")
+        println("loadWallpaperById 0: $id")
         viewModelScope.launch {
             _wallpaper.value = repository.getWallpaperById(id)
-            println("loadRingtoneById: ${_wallpaper.value}")
+            println("loadWallpaperById: ${_wallpaper.value}")
         }
     }
 
     fun loadAllWallpapers() {
         viewModelScope.launch {
             _allWallpapers.value = repository.getAllWallpapers()
-            println("loadRingtoneById: ${_wallpaper.value}")
+            println("loadWallpaperById: ${_wallpaper.value}")
         }
     }
 

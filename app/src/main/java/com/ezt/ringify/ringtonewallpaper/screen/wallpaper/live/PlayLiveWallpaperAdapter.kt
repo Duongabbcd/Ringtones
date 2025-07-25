@@ -2,34 +2,28 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live
 
 import alirezat775.lib.carouselview.CarouselAdapter
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.DefaultDataSource
 import com.bumptech.glide.Glide
+import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 
 @OptIn(UnstableApi::class)
-class PlayLiveWallpaperAdapter(
-    private val onRequestScrollToPosition: (Int) -> Unit,
-    private val onClickListener: (Boolean, Int) -> Unit
-) : CarouselAdapter() {
+class PlayLiveWallpaperAdapter() : CarouselAdapter() {
     private val items = mutableListOf<Wallpaper>()
     private var currentPos = RecyclerView.NO_POSITION
     private var playingHolder: PlayerViewHolder? = null
-
-    // ✅ Shared ExoPlayer instance
-    private var exoPlayer: ExoPlayer? = null
-
 
     fun submitList(newList: List<Wallpaper>) {
         println("submitList: ${newList.size}")
@@ -69,11 +63,10 @@ class PlayLiveWallpaperAdapter(
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        exoPlayer?.release()
-        exoPlayer = null
+        PlayerManager.release()
+        CacheUtil.release()
         super.onDetachedFromRecyclerView(recyclerView)
     }
-
 
     inner class PlayerViewHolder(
         private val binding: ItemVideoBinding,
@@ -85,43 +78,64 @@ class PlayLiveWallpaperAdapter(
 
         fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
+
+            // If URL hasn't changed and current state matches, skip re-attaching player
+            println("Before test 0 : $isCurrent")
+            println("Before test 1 : $videoUrl")
+            println("Before test 2 : $currentUrl")
+            if (isCurrent && videoUrl != null && videoUrl == currentUrl) {
+                Log.d("PlayerViewHolder", "bind: Already playing URL, skipping attach $videoUrl")
+                return
+            }
+
             currentUrl = videoUrl
 
             binding.ccIcon.setOnClickListener {
                 // TODO: Show credit info if needed
             }
 
-            println("isCurrent: $isCurrent and $videoUrl")
+            println("bind() - isCurrent: $isCurrent and videoUrl: $videoUrl")
+
             if (isCurrent && !videoUrl.isNullOrEmpty()) {
+                // Show thumbnail first
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                binding.playerView.visibility = View.GONE
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
+                binding.loading.visibility = View.GONE
+
+                // Attach player with the URL
                 attachPlayer(videoUrl)
             } else {
                 detachPlayer()
-                showThumbnail(videoUrl)
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
                 binding.videoThumbnail.visibility = View.VISIBLE
+                binding.playerView.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                binding.loading.visibility = View.GONE
+
+                // Remove click listener for non-current items
             }
         }
 
         fun attachPlayer(videoUrl: String) {
             Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
+            val player = PlayerManager.getPlayer(context.applicationContext)
+            val simpleCache = CacheUtil.getSimpleCache(context.applicationContext)
 
-            if (exoPlayer == null) {
-                exoPlayer = ExoPlayer.Builder(context).build()
-            }
+            val dataSourceFactory = DefaultDataSource.Factory(context)
+            val cacheDataSourceFactory = CacheDataSource.Factory()
+                .setCache(simpleCache)
+                .setUpstreamDataSourceFactory(dataSourceFactory)
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
 
-            binding.playerView.player = exoPlayer
+            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+            val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+                .createMediaSource(mediaItem)
 
-            // Initial state — show thumbnail while preparing
-            binding.playerView.visibility = View.GONE
-            binding.progressBar.visibility = View.VISIBLE
-            binding.loading.visibility = View.GONE
-            binding.videoThumbnail.visibility = View.VISIBLE
-
-            val mediaItem = MediaItem.fromUri(videoUrl)
-            val cacheFactory = ExoPlayerCache.buildCacheDataSourceFactory(context)
-            val mediaSource =
-                ProgressiveMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
-
-            exoPlayer?.apply {
+            player.apply {
+                stop()
+                clearMediaItems()
                 setMediaSource(mediaSource)
                 repeatMode = Player.REPEAT_MODE_ONE
                 playWhenReady = true
@@ -131,78 +145,53 @@ class PlayLiveWallpaperAdapter(
 
                 currentListener = object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
-                        Log.d(
-                            "ExoPlayer",
-                            "onPlaybackStateChanged: state=$state, isPlaying=${exoPlayer?.isPlaying}"
-                        )
-
+                        Log.d("ExoPlayer", "player state = $state")
                         when (state) {
-                            Player.STATE_BUFFERING -> {
-                                binding.progressBar.visibility = View.VISIBLE
-                                binding.videoThumbnail.visibility = View.VISIBLE
-                                binding.playerView.visibility = View.GONE
-                            }
-
                             Player.STATE_READY -> {
-                                if (exoPlayer?.isPlaying == true) {
-                                    binding.progressBar.visibility = View.GONE
-                                    binding.videoThumbnail.visibility = View.GONE
-                                    binding.playerView.visibility = View.VISIBLE
-                                    Log.d("ExoPlayer", "Playback started.")
-                                } else {
-                                    // Ready but not playing yet
-                                    binding.progressBar.visibility = View.GONE
-                                    binding.videoThumbnail.visibility = View.VISIBLE
-                                    binding.playerView.visibility = View.GONE
-                                    Log.d("ExoPlayer", "Player ready, but not playing.")
-                                }
-                            }
-
-                            Player.STATE_ENDED, Player.STATE_IDLE -> {
                                 binding.progressBar.visibility = View.GONE
-                                binding.videoThumbnail.visibility = View.VISIBLE
-                                binding.playerView.visibility = View.GONE
+                                binding.videoThumbnail.visibility = View.GONE
+                                binding.playerView.visibility = View.VISIBLE
+                                binding.loading.visibility = View.GONE
+                                Log.d("ExoPlayer", "Playback is ready and playing: $isPlaying")
                             }
                         }
                     }
 
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
-                        Log.d("ExoPlayer", "onIsPlayingChanged: $isPlaying")
                         if (isPlaying) {
                             binding.progressBar.visibility = View.GONE
-                            binding.videoThumbnail.visibility = View.GONE
-                            binding.playerView.visibility = View.VISIBLE
                         }
                     }
                 }
 
+
                 addListener(currentListener!!)
+                binding.playerView.player = this
             }
         }
 
-
         fun detachPlayer() {
             currentListener?.let {
-                exoPlayer?.removeListener(it)
+                PlayerManager.getPlayer(context).removeListener(it)
                 currentListener = null
             }
             binding.playerView.player = null
             binding.playerView.visibility = View.GONE
             binding.progressBar.visibility = View.GONE
-        }
+            binding.loading.visibility = View.GONE
+            currentUrl = null
 
+            Glide.with(context).clear(binding.videoThumbnail) // <- clear thumbnail to prevent leak
+        }
         private fun showThumbnail(videoUrl: String?) {
             binding.videoThumbnail.visibility = View.VISIBLE
             videoUrl?.let {
                 Glide.with(context)
                     .asBitmap()
                     .load(it)
-                    .frame(0)
-                    .override(400, 400)
                     .centerCrop()
                     .into(binding.videoThumbnail)
             }
         }
     }
-
 }

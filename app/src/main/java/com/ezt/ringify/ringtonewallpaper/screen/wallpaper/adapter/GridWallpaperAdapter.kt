@@ -78,8 +78,6 @@ class GridWallpaperAdapter() :
         isPremium = premium
         isLive = live
 
-        println("submitList: $list")
-
         allWallpapers.clear()
         allWallpapers.addAll(list)
 
