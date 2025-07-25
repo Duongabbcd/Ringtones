@@ -151,25 +151,30 @@ class PreviewLiveWallpaperActivity :
 
     private fun setUpVideoByCondition(videoUrl: String) {
         val dialog = SetWallpaperDialog(this) { result ->
-            PreviewLiveWallpaperActivity.settingOption = result
+            println("setUpVideoByCondition: $result")
+            settingOption = result
             launchLiveWallpaper(this, videoUrl)
         }
         dialog.show()
     }
 
     fun launchLiveWallpaper(context: Context, videoUrl: String) {
-        val prefs = context.getSharedPreferences("video_wallpaper", MODE_PRIVATE)
+        // Save the video URL to SharedPreferences
+        val prefs = context.getSharedPreferences("video_wallpaper", Context.MODE_PRIVATE)
         prefs.edit().putString("video_url", videoUrl).apply()
         Log.d("LivePreview", "Saved wallpaper URL: $videoUrl")
 
+        // Force user to re-apply the same live wallpaper
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
                 ComponentName(context, VideoWallpaperService::class.java)
             )
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
     }
+
 
     private fun downloadWallpaper() {
         val missingPermissions = RingtoneHelper.getMissingPhotoPermissions(this)

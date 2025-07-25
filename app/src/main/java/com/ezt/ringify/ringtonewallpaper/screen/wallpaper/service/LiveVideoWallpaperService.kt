@@ -21,11 +21,14 @@ class VideoWallpaperService : WallpaperService() {
     inner class VideoEngine : Engine() {
         private var exoPlayer: ExoPlayer? = null
         private lateinit var surfaceHolder: SurfaceHolder
+        private var currentUrl: String? = null
 
         override fun onSurfaceCreated(holder: SurfaceHolder) {
             super.onSurfaceCreated(holder)
             surfaceHolder = holder
             Log.d("VideoEngine", "Surface created")
+            // Always restart player with fresh setup
+            stopVideo()
             startVideo()
         }
 
@@ -36,7 +39,7 @@ class VideoWallpaperService : WallpaperService() {
             Log.d("VideoWallpaperService", "Retrieved wallpaper URL: $videoUrl")
 
             if (videoUrl.isNullOrEmpty()) return
-
+            currentUrl = videoUrl
             // Create a DataSource.Factory for HTTP requests
             val dataSourceFactory = DefaultHttpDataSource.Factory()
 
@@ -78,12 +81,21 @@ class VideoWallpaperService : WallpaperService() {
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
             Log.d("VideoEngine", "onVisibilityChanged = $visible")
+
             if (visible) {
-                exoPlayer?.play()
+                val prefs = getSharedPreferences("video_wallpaper", MODE_PRIVATE)
+                val newUrl = prefs.getString("video_url", null)
+                if (exoPlayer == null || currentUrl != newUrl) {
+                    stopVideo()
+                    startVideo()
+                } else {
+                    exoPlayer?.play()
+                }
             } else {
                 exoPlayer?.pause()
             }
         }
+
 
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             super.onSurfaceDestroyed(holder)
@@ -91,13 +103,29 @@ class VideoWallpaperService : WallpaperService() {
         }
 
         private fun stopVideo() {
-            exoPlayer?.release()
+            exoPlayer?.apply {
+                stop()
+                release()
+            }
             exoPlayer = null
         }
 
         override fun onDestroy() {
             super.onDestroy()
             stopVideo()
+        }
+
+        override fun onSurfaceChanged(
+            holder: SurfaceHolder?,
+            format: Int,
+            width: Int,
+            height: Int
+        ) {
+            super.onSurfaceChanged(holder, format, width, height)
+            Log.d("VideoEngine", "Surface changed")
+
+            surfaceHolder = holder ?: return
+            exoPlayer?.setVideoSurfaceHolder(surfaceHolder)  // 🛠 Re-attach surface
         }
     }
 
