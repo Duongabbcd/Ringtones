@@ -35,6 +35,9 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     private val categoryId by lazy {
         intent.getIntExtra("categoryId", -1)
     }
+ private val isPremium by lazy {
+        intent.getBooleanExtra("isPremium", false)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,20 +104,28 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
 
 
                 else -> {
+                    if (categoryId == 75) {
+                        if(isPremium) {
+                            wallPaperViewModel.loadSlideWallpaper()
+                            wallPaperViewModel.slideWallpaper.observe(this@PreviewWallpaperActivity) { items ->
+                                wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                            }
+                        } else {
+                            wallPaperViewModel.loadSingleWallpaper()
+                            wallPaperViewModel.singleWallpapers.observe(this@PreviewWallpaperActivity) { items ->
+                                wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                            }
+                        }
+                        return@apply
+                    }
+
                     println("category: $categoryId")
                     categoryViewModel.getCategoryByName(categoryId = categoryId)
                     categoryViewModel.category.observe(this@PreviewWallpaperActivity){ category ->
                         nameScreen.text = category.name
                     }
 
-                    if (categoryId == 75) {
-                        wallPaperViewModel.loadPremiumWallpaper()
-                        wallPaperViewModel.premiumWallpapers.observe(this@PreviewWallpaperActivity) { items ->
-                            wallpaperAdapter.submitList(items, premium = categoryId == 75)
-                        }
 
-                        return@apply
-                    }
 
                     wallPaperViewModel.loadSubWallpapers1(categoryId)
                     wallPaperViewModel.subWallpaper1.observe(this@PreviewWallpaperActivity){ items ->

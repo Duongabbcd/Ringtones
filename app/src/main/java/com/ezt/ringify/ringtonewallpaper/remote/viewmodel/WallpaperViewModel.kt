@@ -46,6 +46,12 @@ class WallpaperViewModel @Inject constructor(
     private val _liveWallpapers = MutableLiveData<List<Wallpaper>>()
     val liveWallpapers: LiveData<List<Wallpaper>> = _liveWallpapers
 
+    private val _singleWallpapers = MutableLiveData<List<Wallpaper>>()
+    val singleWallpapers: LiveData<List<Wallpaper>> = _singleWallpapers
+
+    private val _slideWallpaper = MutableLiveData<List<Wallpaper>>()
+    val slideWallpaper: LiveData<List<Wallpaper>> = _slideWallpaper
+
     private val _premiumWallpapers = MutableLiveData<List<Wallpaper>>()
     val premiumWallpapers: LiveData<List<Wallpaper>> = _premiumWallpapers
 
@@ -197,6 +203,21 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
+    fun loadPremiumWallpaper() = viewModelScope.launch {
+        _loading1.value = true
+        try {
+            val result = repository.getPremiumWallpaper()
+            _premiumWallpapers.value = result.data.data
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
     fun loadLiveWallpapers() = viewModelScope.launch {
         _loading1.value = true
         try {
@@ -212,12 +233,11 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-
-    fun loadPremiumWallpaper() = viewModelScope.launch {
+    fun loadSlideWallpaper() = viewModelScope.launch {
         _loading1.value = true
         try {
-            val result = repository.getPremiumWallpaper()
-            _premiumWallpapers.value = result.data.data
+            val result = repository.getSlideWallpaper()
+            _slideWallpaper.value = result.data.data
 
             _error.value = null
         } catch (e: Exception) {
@@ -227,4 +247,20 @@ class WallpaperViewModel @Inject constructor(
             _loading1.value = false
         }
     }
+
+    fun loadSingleWallpaper() = viewModelScope.launch {
+        _loading1.value = true
+        try {
+            val result = repository.getSingleWallpaper()
+            _singleWallpapers.value = result.data.data
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
 }

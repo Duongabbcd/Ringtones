@@ -18,6 +18,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.AllWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
@@ -197,9 +198,7 @@ class WallpaperFragment :
 
             premium.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", 75)
-                    })
+                    startActivity(Intent(ctx, PremiumWallpaperActivity::class.java))
                 }
             }
 

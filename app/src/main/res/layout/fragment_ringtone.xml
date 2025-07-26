@@ -211,6 +211,7 @@
 
     <include
         android:id="@+id/noInternet"
+        android:visibility="gone"
         layout="@layout/no_internet_connection"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

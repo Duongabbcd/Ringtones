@@ -78,6 +78,7 @@
         <activity android:name=".screen.wallpaper.PreviewWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
 
         <activity android:name=".screen.wallpaper.AllWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity android:name=".screen.wallpaper.premium.PremiumWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.wallpaper.player.SlideWallpaperActivity"
             android:exported="false"

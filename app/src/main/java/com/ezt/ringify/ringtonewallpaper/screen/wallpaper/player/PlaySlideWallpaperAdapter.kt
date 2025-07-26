@@ -111,12 +111,13 @@ class PlaySlideWallpaperAdapter(
             stopSlideshow()
             val images = wallpaper.contents.map { it.url.medium }
 
+
             if (currentPos == position && wallpaper.contents.size > 1) {
                 startSlideshow(images)
             } else {
                 binding.progressBar.gone()
                 binding.loading.gone()
-
+                println("images 123: ${wallpaper.id}")
                 val url = wallpaper.contents.firstOrNull()?.url?.medium
                 if (url != null) {
                     wallpaper.contents.first().url.medium.let {
@@ -263,21 +264,5 @@ class PlaySlideWallpaperAdapter(
             slideshowHandler = null
         }
 
-    }
-}
-
-class WallpaperDiffCallback(
-    private val oldList: List<Wallpaper>,
-    private val newList: List<Wallpaper>
-) : DiffUtil.Callback() {
-    override fun getOldListSize() = oldList.size
-    override fun getNewListSize() = newList.size
-
-    override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean {
-        return oldList[oldPos].id == newList[newPos].id
-    }
-
-    override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean {
-        return oldList[oldPos] == newList[newPos]
     }
 }

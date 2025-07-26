@@ -30,6 +30,7 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
         )
     }
 
+    private var premium = false
     private lateinit var context: Context
 
     override fun onBindViewHolder(
@@ -39,11 +40,13 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
         holder.bind(position)
     }
 
-    fun submitList(list: List<Wallpaper>) {
+    fun submitList(list: List<Wallpaper>, isPremium: Boolean = false) {
         allWallpapers.clear()
         allWallpapers.addAll(list)
         limitedWallpapers.clear()
         limitedWallpapers.addAll(list.take(10))
+
+        premium = isPremium
         notifyDataSetChanged()
     }
 
@@ -57,8 +60,10 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
                 if(wallpaper.contents.first() == null) {
                     return@apply
                 }
-                wallpaper.contents.first().url.medium.let {
-                    Glide.with(wallPaper).load(it).placeholder(R.drawable.icon_default_category).error(
+               val url =  wallpaper.thumbnail?.url?.medium
+                    ?: wallpaper.contents.firstOrNull()?.url?.medium
+                url.let {
+                    Glide.with(context).load(it).placeholder(R.drawable.icon_default_category).error(
                         R.drawable.icon_default_category).into(binding.wallPaper)
                 }
 
