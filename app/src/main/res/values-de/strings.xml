@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appDesc">#1 Hochwertige Klingeltöne</string>
+    <string name="next_title">Los geht\'s</string>
+    <string name="next">Weiter</string>
+    <string name="skip">Überspringen</string>
+    <string name="intro_1">Lass uns anfangen…</string>
+    <string name="intro_2">Noch eins…</string>
+    <string name="intro_3">Und wir sind fertig.</string>
+    <string name="intro_title_1">Willkommen bei</string>
+    <string name="intro_title_2">Erhalte alles</string>
+    <string name="intro_title_3">Farbtelefon</string>
+    <string name="desc_1">Klingeltöne &amp; Hintergrundbilder – Ringify</string>
+    <string name="high_light_1">Ringify</string>
+    <string name="desc_2">3D-Parallax und 4K-Hintergründe</string>
+    <string name="high_light_2">Hintergründe</string>
+    <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
+    <string name="high_light_3">Anrufbildschirm</string>
+
+    <string name="fav_1">Wähle mindestens 3 Musikrichtungen, die du magst</string>
+    <string name="fav_light_1">Musikrichtungen</string>
+    <string name="fav_2">Wähle dein Lieblingshintergrundbild</string>
+    <string name="fav_light_2">Lieblingshintergrund</string>
+
+    <string name="english">Englisch</string>
+    <string name="hindi">Hindi</string>
+    <string name="spanish">Spanisch</string>
+    <string name="french">Französisch</string>
+    <string name="arabic">Arabisch</string>
+    <string name="bengali">Bengalisch</string>
+    <string name="russian">Russisch</string>
+    <string name="portuguese">Portugiesisch</string>
+    <string name="indonesian">Indonesisch</string>
+    <string name="german">Deutsch</string>
+    <string name="italian">Italienisch</string>
+    <string name="korean">Koreanisch</string>
+    <string name="language">Sprache</string>
+    <string name="ok">OK</string>
+    <string name="done">Fertig</string>
+    <string name="retry">Wiederholen</string>
+    <string name="send">Senden</string>
+
+    <string name="ringTone">Klingelton</string>
+    <string name="ringTones">Klingeltöne</string>
+    <string name="wallPaper">Hintergrundbild</string>
+    <string name="callScreen">Anrufbildschirm</string>
+    <string name="setting">Einstellung</string>
+    <string name="search">Suche</string>
+    <string name="searching">Suche läuft…</string>
+    <string name="topic">Gesuchtes Thema</string>
+    <string name="see_all">Alle ansehen</string>
+
+    <string name="unknown_cat">Unbekannte Kategorie</string>
+    <string name="popular">Beliebt</string>
+    <string name="explore">Entdecken</string>
+    <string name="new_ringtones">Neue Klingeltöne</string>
+    <string name="weekly_trending">Wöchentliche Trends</string>
+    <string name="editor_s_choices">Empfehlungen der Redaktion</string>
+    <string name="find_ringtone">Klingelton finden</string>
+    <string name="find_wallpaper">Hintergrundbild finden</string>
+    <string name="notification">Benachrichtigung</string>
+    <string name="download">Herunterladen</string>
+    <string name="set_ringotne">Als Klingelton festlegen</string>
+    <string name="set_wallpaper">Als Hintergrund festlegen</string>
+    <string name="no_data_desc">Kannst du die gesuchte Musik nicht finden?</string>
+
+    <string name="phone_settings">Telefoneinstellungen</string>
+    <string name="rate_us">Bewerte uns</string>
+    <string name="rate_desc">Unterstütze uns hier</string>
+    <string name="setting_desc">Verlauf, Cache, Benachrichtigungen und mehr</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_desc">Teile uns deine Erfahrungen mit</string>
+    <string name="share">Teilen</string>
+    <string name="share_desc">Empfehle die App deinen Freunden</string>
+    <string name="privacy_policy">Datenschutzrichtlinie</string>
+    <string name="policy_desc">Informationen zum Datenschutz der App</string>
+
+    <string name="welcome_back">Willkommen zurück!</string>
+
+    <string name="first_sort">Erstellungsdatum: Neu zu Alt</string>
+    <string name="second_sort">Erstellungsdatum: Alt zu Neu</string>
+    <string name="third_sort">Name: A bis Z</string>
+    <string name="forth_song">Name: Z bis A</string>
+    <string name="sort_by">Sortieren nach</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="hot_title">Top</string>
+    <string name="new_title">Neu</string>
+    <string name="favourite_desc">Wofür interessierst du dich?</string>
+
+    <string name="title_grant_Permission">Berechtigung erteilen</string>
+    <string name="message_grant_Permission">Bitte erteile alle Berechtigungen, um zusätzliche Funktionen zu nutzen.</string>
+    <string name="goto_setting">Zu den Einstellungen</string>
+    <string name="download_title">Dein Klingelton wurde heruntergeladen</string>
+    <string name="ringtone_title">Klingelton wird eingerichtet</string>
+    <string name="set_title">Benachrichtigung wird eingerichtet</string>
+    <string name="download_title_2">Dein Hintergrund wurde heruntergeladen</string>
+    <string name="set_wallpaper_op1">Als Sperrbildschirm festlegen</string>
+    <string name="set_wallpaper_op2">Als Startbildschirm festlegen</string>
+    <string name="set_wallpaper_op3">Beides</string>
+    <string name="set_wallpaper_1">Sperrbildschirm wird eingerichtet</string>
+    <string name="set_wallpaper_2">Startbildschirm wird eingerichtet</string>
+    <string name="set_wallpaper_3">Beides wird eingerichtet</string>
+    <string name="downloading">Herunterladen</string>
+    <string name="processing">Wird verarbeitet</string>
+
+    <string name="successfully">Erfolgreich!</string>
+    <string name="failed">Fehlgeschlagen!</string>
+    <string name="notif_title">Verpasse keine Updates</string>
+    <string name="notif_desc">Aktiviere Benachrichtigungen, um Infos zu neuen Klingeltönen, Hintergründen und Funktionen zu erhalten…</string>
+    <string name="feedback_1">Möchtest du mehr Klingeltöne wie diesen?</string>
+    <string name="feedback_2">Dieser Klingelton kann nicht abgespielt werden</string>
+    <string name="feedback_3">Klingelton funktioniert nach dem Setzen nicht</string>
+    <string name="credits">Credits</string>
+    <string name="credits_desc">Dieser Klingelton wurde von [%1$s] unter der Lizenz [%2$s] erstellt</string>
+
+    <string name="categories">Kategorien</string>
+    <string name="trending">Im Trend</string>
+    <string name="hot_search">Beliebte Suchen</string>
+    <string name="live">Live-Hintergrund</string>
+    <string name="favourite">Favoriten</string>
+    <string name="premiums">Premium</string>
+    <string name="new_wallpaper">Neuer Hintergrund</string>
+    <string name="no_internet_desc">Bitte verbinde dich mit WLAN oder mobilen Daten, um diesen Inhalt anzuzeigen</string>
+    <string name="no_internet_title">Keine Verbindung</string>
+    <string name="try_again">Erneut versuchen</string>
+    <string name="save">Speichern</string>
+    <string name="default_crop_label_text">Beispiel-Beschriftung für Zuschneiden</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="crop">Zuschneiden</string>
+    <string name="wallpaper_desc">Hintergrundbeschreibung</string>
+
+</resources>

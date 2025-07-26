@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="appDesc">نغمات رنين عالية الجودة رقم 1</string>
+    <string name="next_title">هيا بنا</string>
+    <string name="next">التالي</string>
+    <string name="skip">تخطي</string>
+    <string name="intro_1">لنبدأ...</string>
+    <string name="intro_2">واحد آخر...</string>
+    <string name="intro_3">وانتهينا.</string>
+    <string name="intro_title_1">مرحبا بكم في</string>
+    <string name="intro_title_2">احصل على كامل</string>
+    <string name="intro_title_3">هاتف ملون</string>
+    <string name="desc_1">نغمات الرنين وخلفيات الشاشة - Ringify</string>
+    <string name="high_light_1">رينجيفاي</string>
+    <string name="desc_2">خلفيات ثلاثية الأبعاد بدقة 4K</string>
+    <string name="high_light_2">خلفيات</string>
+    <string name="desc_3">موضوعات شاشة الاتصال الديناميكية</string>
+    <string name="high_light_3">فحص المكالمات</string>
+
+    <string name="fav_1">حدد 3 أنواع موسيقية على الأقل تحبها</string>
+    <string name="fav_light_1">أنواع الموسيقى</string>
+    <string name="fav_2">اختر الخلفية المفضلة لديك</string>
+    <string name="fav_light_2">خلفية الشاشة المفضلة</string>
+
+    <string name="english">الإنجليزية</string>
+    <string name="hindi">الهندية</string>
+    <string name="spanish">الإسبانية</string>
+    <string name="french">الفرنسية</string>
+    <string name="arabic">العربية</string>
+    <string name="bengali">البنغالية</string>
+    <string name="russian">روسي</string>
+    <string name="portuguese">البرتغالية</string>
+    <string name="indonesian">إندونيسي</string>
+    <string name="german">الألمانية</string>
+    <string name="italian">إيطالي</string>
+    <string name="korean">كوري</string>
+    <string name="language">اللغة</string>
+    <string name="ok">موافق</string>
+    <string name="done">تم</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="send">إرسال</string>
+
+
+    <string name="ringTone">نغمة الرنين</string>
+    <string name="ringTones">نغمات الرنين</string>
+    <string name="wallPaper">ورق جدران</string>
+    <string name="callScreen">شاشة المكالمات</string>
+    <string name="setting">الإعداد</string>
+    <string name="search">بحث</string>
+    <string name="searching">جاري البحث...</string>
+    <string name="topic">الموضوع الذي تريده</string>
+    <string name="see_all">عرض الكل</string>
+
+    <string name="unknown_cat">فئة غير معروفة</string>
+    <string name="popular">شائع</string>
+    <string name="explore">استكشاف</string>
+    <string name="new_ringtones">نغمات رنين جديدة</string>
+    <string name="weekly_trending">الاتجاهات الأسبوعية</string>
+    <string name="editor_s_choices">اختيارات المحرر</string>
+    <string name="find_ringtone">البحث عن نغمة الرنين</string>
+    <string name="find_wallpaper">البحث عن خلفية الشاشة</string>
+    <string name="notification">إشعار</string>
+    <string name="download">تنزيل</string>
+    <string name="set_ringotne">تعيين كـ Ringotne</string>
+    <string name="set_wallpaper">تعيين كخلفية</string>
+    <string name="no_data_desc">هل لا تستطيع العثور على الموسيقى التي تبحث عنها؟</string>
+
+    <string name="phone_settings">إعدادات الهاتف</string>
+    <string name="rate_us">قيّمنا</string>
+    <string name="rate_desc">ادعمنا هنا</string>
+    <string name="setting_desc">السجل، والذاكرة المؤقتة، والإشعارات والمزيد</string>
+    <string name="feedback">التعليقات</string>
+    <string name="feedback_desc">أخبرنا عن تجاربك</string>
+    <string name="share">مشاركة</string>
+    <string name="share_desc">أوصي بالتطبيق لأصدقائك</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="policy_desc">حول خصوصية التطبيق</string>
+
+    <string name="welcome_back">مرحبا بكم من جديد!</string>
+
+    <string name="first_sort">تاريخ الإنشاء: من الجديد إلى القديم</string>
+    <string name="second_sort">تاريخ الإنشاء: من القديم إلى الجديد</string>
+    <string name="third_sort">الاسم: من الألف إلى الياء</string>
+    <string name="forth_song">الاسم: من Z إلى A</string>
+    <string name="sort_by">الفرز حسب</string>
+    <string name="cancel">إلغاء</string>
+    <string name="hot_title">ساخن</string>
+    <string name="new_title">جديد</string>
+    <string name="favourite_desc">ما الذي يثير اهتمامك؟</string>
+
+    <string name="title_grant_Permission">منح الإذن</string>
+    <string name="message_grant_Permission">يرجى منح جميع الأذونات للوصول إلى الوظائف الإضافية.</string>
+    <string name="goto_setting">انتقل إلى الإعدادات</string>
+    <string name="download_title">تم تنزيل نغمة الرنين الخاصة بك</string>
+    <string name="ringtone_title">إعداد معالجة نغمة الرنين</string>
+    <string name="set_title">إعداد معالجة الإشعارات</string>
+    <string name="download_title_2">تم تنزيل خلفية الشاشة الخاصة بك</string>
+    <string name="set_wallpaper_op1">تعيين كشاشة قفل</string>
+    <string name="set_wallpaper_op2">تعيين كشاشة رئيسية</string>
+    <string name="set_wallpaper_op3">كلاهما</string>
+    <string name="set_wallpaper_1">إعداد معالجة شاشة القفل</string>
+    <string name="set_wallpaper_2">إعداد معالجة الشاشة الرئيسية</string>
+    <string name="set_wallpaper_3">إعداد كلا النوعين من المعالجة</string>
+    <string name="downloading">جاري التنزيل</string>
+    <string name="processing">جاري المعالجة</string>
+
+    <string name="successfully">بنجاح!</string>
+    <string name="failed">فشل!</string>
+    <string name="notif_title">لا تفوت التحديثات الأخيرة</string>
+    <string name="notif_desc">قم بتشغيل الإشعارات للحصول على معلومات حول نغمة الرنين الجديدة وخلفية الشاشة والميزات...</string>
+    <string name="feedback_1">هل تريد المزيد من النغمات مثل هذه</string>
+    <string name="feedback_2">لا يمكن تشغيل نغمة الرنين هذه</string>
+    <string name="feedback_3">نغمة الرنين لا تعمل بعد ضبط نغمة الرنين</string>
+    <string name="credits">الاعتمادات</string>
+    <string name="credits_desc">تم إنشاء نغمة الرنين هذه بواسطة [%1$s] بموجب ترخيص [%2$s]</string>
+
+
+    <string name="categories">الفئات</string>
+    <string name="trending">رائج</string>
+    <string name="hot_search">عمليات البحث الساخنة</string>
+    <string name="live">خلفية حية</string>
+    <string name="favourite">المفضلة</string>
+    <string name="premiums">الأقساط</string>
+    <string name="new_wallpaper">خلفية جديدة</string>
+    <string name="no_internet_desc">يرجى الاتصال بشبكة Wi-Fi أو شبكة الهاتف المحمول لعرض هذا المحتوى</string>
+    <string name="no_internet_title">لا يوجد اتصال</string>
+    <string name="try_again">حاول مرة أخرى</string>
+    <string name="save">حفظ</string>
+    <string name="default_crop_label_text">عينة تسمية المحصول</string>
+    <string name="reset">إعادة تعيين</string>
+    <string name="crop">قص</string>
+    <string name="wallpaper_desc">وصف ورق الجدران</string>
+</resources>

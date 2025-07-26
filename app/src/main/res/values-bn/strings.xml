@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appDesc">#১ উচ্চ মানের রিংটোন</string>
+    <string name="next_title">চল শুরু করি</string>
+    <string name="next">পরবর্তী</string>
+    <string name="skip">এড়িয়ে যান</string>
+    <string name="intro_1">চলুন শুরু করি…</string>
+    <string name="intro_2">আরো একটি…</string>
+    <string name="intro_3">এবং আমরা শেষ করলাম।</string>
+    <string name="intro_title_1">স্বাগতম</string>
+    <string name="intro_title_2">সম্পূর্ণ পান</string>
+    <string name="intro_title_3">রঙিন ফোন</string>
+    <string name="desc_1">রিংটোন ও ওয়ালপেপার - রিংিফাই</string>
+    <string name="high_light_1">রিংিফাই</string>
+    <string name="desc_2">৩ডি প্যারালাক্স ও ৪কে ওয়ালপেপার</string>
+    <string name="high_light_2">ওয়ালপেপার</string>
+    <string name="desc_3">ডায়নামিক কল স্ক্রিন থিম</string>
+    <string name="high_light_3">কল স্ক্রিন</string>
+
+    <string name="fav_1">আপনার পছন্দের অন্তত ৩টি সঙ্গীত ঘরানা নির্বাচন করুন</string>
+    <string name="fav_light_1">সঙ্গীত ঘরানা</string>
+    <string name="fav_2">আপনার প্রিয় ওয়ালপেপার বেছে নিন</string>
+    <string name="fav_light_2">প্রিয় ওয়ালপেপার</string>
+
+    <string name="english">ইংরেজি</string>
+    <string name="hindi">হিন্দি</string>
+    <string name="spanish">স্প্যানিশ</string>
+    <string name="french">ফরাসি</string>
+    <string name="arabic">আরবি</string>
+    <string name="bengali">বাংলা</string>
+    <string name="russian">রাশিয়ান</string>
+    <string name="portuguese">পর্তুগিজ</string>
+    <string name="indonesian">ইন্দোনেশিয়ান</string>
+    <string name="german">জার্মান</string>
+    <string name="italian">ইতালিয়ান</string>
+    <string name="korean">কোরিয়ান</string>
+    <string name="language">ভাষা</string>
+    <string name="ok">ঠিক আছে</string>
+    <string name="done">সম্পন্ন</string>
+    <string name="retry">পুনরায় চেষ্টা করুন</string>
+    <string name="send">পাঠান</string>
+
+    <string name="ringTone">রিংটোন</string>
+    <string name="ringTones">রিংটোনসমূহ</string>
+    <string name="wallPaper">ওয়ালপেপার</string>
+    <string name="callScreen">কল স্ক্রিন</string>
+    <string name="setting">সেটিং</string>
+    <string name="search">অনুসন্ধান</string>
+    <string name="searching">অনুসন্ধান চলছে…</string>
+    <string name="topic">আপনি যা খুঁজছেন</string>
+    <string name="see_all">সব দেখুন</string>
+
+    <string name="unknown_cat">অজানা বিভাগ</string>
+    <string name="popular">জনপ্রিয়</string>
+    <string name="explore">এক্সপ্লোর করুন</string>
+    <string name="new_ringtones">নতুন রিংটোন</string>
+    <string name="weekly_trending">সাপ্তাহিক ট্রেন্ডিং</string>
+    <string name="editor_s_choices">সম্পাদকদের পছন্দ</string>
+    <string name="find_ringtone">রিংটোন খুঁজুন</string>
+    <string name="find_wallpaper">ওয়ালপেপার খুঁজুন</string>
+    <string name="notification">বিজ্ঞপ্তি</string>
+    <string name="download">ডাউনলোড</string>
+    <string name="set_ringotne">রিংটোন হিসেবে সেট করুন</string>
+    <string name="set_wallpaper">ওয়ালপেপার হিসেবে সেট করুন</string>
+    <string name="no_data_desc">আপনি যা খুঁজছেন তা কি পাচ্ছেন না?</string>
+
+    <string name="phone_settings">ফোন সেটিংস</string>
+    <string name="rate_us">আমাদের রেট করুন</string>
+    <string name="rate_desc">এখানে আমাদের সমর্থন করুন</string>
+    <string name="setting_desc">ইতিহাস, ক্যাশ, বিজ্ঞপ্তি এবং আরও অনেক কিছু</string>
+    <string name="feedback">মতামত</string>
+    <string name="feedback_desc">আপনার অভিজ্ঞতা আমাদের জানান</string>
+    <string name="share">শেয়ার করুন</string>
+    <string name="share_desc">আপনার বন্ধুদের অ্যাপটি সুপারিশ করুন</string>
+    <string name="privacy_policy">গোপনীয়তা নীতি</string>
+    <string name="policy_desc">অ্যাপের গোপনীয়তা সম্পর্কে</string>
+
+    <string name="welcome_back">আবার স্বাগতম!</string>
+
+    <string name="first_sort">তারিখ অনুসারে: নতুন থেকে পুরাতন</string>
+    <string name="second_sort">তারিখ অনুসারে: পুরাতন থেকে নতুন</string>
+    <string name="third_sort">নাম: A থেকে Z</string>
+    <string name="forth_song">নাম: Z থেকে A</string>
+    <string name="sort_by">সর্ট করুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="hot_title">হট</string>
+    <string name="new_title">নতুন</string>
+    <string name="favourite_desc">আপনি কী পছন্দ করেন?</string>
+
+    <string name="title_grant_Permission">অনুমতি দিন</string>
+    <string name="message_grant_Permission">অতিরিক্ত ফিচার ব্যবহারের জন্য দয়া করে সব অনুমতি দিন।</string>
+    <string name="goto_setting">সেটিংসে যান</string>
+    <string name="download_title">আপনার রিংটোন ডাউনলোড হয়েছে</string>
+    <string name="ringtone_title">রিংটোন সেটআপ প্রক্রিয়াধীন</string>
+    <string name="set_title">বিজ্ঞপ্তি সেটআপ প্রক্রিয়াধীন</string>
+    <string name="download_title_2">আপনার ওয়ালপেপার ডাউনলোড হয়েছে</string>
+    <string name="set_wallpaper_op1">লক স্ক্রিন হিসেবে সেট করুন</string>
+    <string name="set_wallpaper_op2">হোম স্ক্রিন হিসেবে সেট করুন</string>
+    <string name="set_wallpaper_op3">উভয় হিসেবে সেট করুন</string>
+    <string name="set_wallpaper_1">লক স্ক্রিন সেটআপ প্রক্রিয়াধীন</string>
+    <string name="set_wallpaper_2">হোম স্ক্রিন সেটআপ প্রক্রিয়াধীন</string>
+    <string name="set_wallpaper_3">উভয় প্রকারের সেটআপ প্রক্রিয়াধীন</string>
+    <string name="downloading">ডাউনলোড হচ্ছে</string>
+    <string name="processing">প্রক্রিয়াধীন</string>
+
+    <string name="successfully">সফলভাবে!</string>
+    <string name="failed">ব্যর্থ!</string>
+    <string name="notif_title">শেষ আপডেটগুলো মিস করবেন না</string>
+    <string name="notif_desc">নতুন রিংটোন, ওয়ালপেপার, ফিচার সম্পর্কে জানতে নোটিফিকেশন চালু করুন…</string>
+    <string name="feedback_1">এই ধরণের আরও রিংটোন চান</string>
+    <string name="feedback_2">এই রিংটোন বাজানো যায় না</string>
+    <string name="feedback_3">রিংটোন সেট করার পর কাজ করছে না</string>
+    <string name="credits">ক্রেডিট</string>
+    <string name="credits_desc">এই রিংটোন [%1$s] দ্বারা [%2$s] লাইসেন্সের অধীনে তৈরি করা হয়েছে</string>
+
+    <string name="categories">বিভাগসমূহ</string>
+    <string name="trending">ট্রেন্ডিং</string>
+    <string name="hot_search">জনপ্রিয় অনুসন্ধান</string>
+    <string name="live">লাইভ ওয়ালপেপার</string>
+    <string name="favourite">প্রিয়</string>
+    <string name="premiums">প্রিমিয়াম</string>
+    <string name="new_wallpaper">নতুন ওয়ালপেপার</string>
+    <string name="no_internet_desc">এই কনটেন্ট দেখতে Wi-Fi বা মোবাইল নেটওয়ার্কে সংযুক্ত হন</string>
+    <string name="no_internet_title">কোন সংযোগ নেই</string>
+    <string name="try_again">আবার চেষ্টা করুন</string>
+    <string name="save">সংরক্ষণ করুন</string>
+    <string name="default_crop_label_text">উদাহরণ ক্রপ লেবেল</string>
+    <string name="reset">রিসেট করুন</string>
+    <string name="crop">ক্রপ করুন</string>
+    <string name="wallpaper_desc">ওয়ালপেপার বিবরণ</string>
+
+</resources>

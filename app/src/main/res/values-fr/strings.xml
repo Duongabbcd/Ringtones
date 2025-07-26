@@ -1,34 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Ringtones &amp; Wallpapers - Ringify</string>
-
-    <string name="admob_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="adjust_token_key" translatable="false"> </string>
-    <string name="facebook_id" translatable="false"> </string>
-    <string name="facebook_client_token" translatable="false"> </string>
-
-    <string name="imageview" translatable="false">imageView</string>
-
     <string name="appDesc">#1 Sonneries de haute qualité</string>
-    <string name="next_title">Allons-y</string>
+    <string name="next_title">C’est parti</string>
     <string name="next">Suivant</string>
-    <string name="skip">Passer</string>
+    <string name="skip">Ignorer</string>
     <string name="intro_1">Commençons…</string>
-    <string name="intro_2">Encore un…</string>
-    <string name="intro_3">Et c'est terminé.</string>
+    <string name="intro_2">Encore un peu…</string>
+    <string name="intro_3">Et c\'est terminé.</string>
     <string name="intro_title_1">Bienvenue sur</string>
-    <string name="intro_title_2">Obtenez tout</string>
-    <string name="intro_title_3">Téléphone en couleur</string>
-    <string name="desc_1">Sonneries &amp; Fonds d’écran - Ringify</string>
+    <string name="intro_title_2">Accédez à toutes les</string>
+    <string name="intro_title_3">Couleurs du téléphone</string>
+    <string name="desc_1">Sonneries et Fonds d\'écran - Ringify</string>
     <string name="high_light_1">Ringify</string>
-    <string name="desc_2">Parallaxe 3D et fonds d’écran 4K</string>
+    <string name="desc_2">Fonds d’écran 3D Parallax et 4K</string>
     <string name="high_light_2">fonds d’écran</string>
     <string name="desc_3">Thèmes d’écran d’appel dynamiques</string>
-    <string name="high_light_3">Écran d’appel</string>
+    <string name="high_light_3">Écran d\'appel</string>
 
     <string name="fav_1">Sélectionnez au moins 3 genres musicaux que vous aimez</string>
     <string name="fav_light_1">genres musicaux</string>
-    <string name="fav_2">Choisissez votre fond d’écran préféré</string>
-    <string name="fav_light_2">fond d’écran préféré</string>
+    <string name="fav_2">Choisissez votre fond d\'écran préféré</string>
+    <string name="fav_light_2">fond d\'écran préféré</string>
 
     <string name="english">Anglais</string>
     <string name="hindi">Hindi</string>
@@ -50,90 +42,91 @@
 
     <string name="ringTone">Sonnerie</string>
     <string name="ringTones">Sonneries</string>
-    <string name="wallPaper">Fond d’écran</string>
-    <string name="callScreen">Écran d’appel</string>
-    <string name="setting">Paramètre</string>
+    <string name="wallPaper">Fond d\'écran</string>
+    <string name="callScreen">Écran d\'appel</string>
+    <string name="setting">Paramètres</string>
     <string name="search">Rechercher</string>
     <string name="searching">Recherche…</string>
-    <string name="topic">Sujet que vous voulez</string>
-    <string name="see_all">Voir tout</string>
+    <string name="topic">Sujet souhaité</string>
+    <string name="see_all">Tout voir</string>
 
     <string name="unknown_cat">Catégorie inconnue</string>
     <string name="popular">Populaire</string>
     <string name="explore">Explorer</string>
     <string name="new_ringtones">Nouvelles sonneries</string>
     <string name="weekly_trending">Tendance hebdomadaire</string>
-    <string name="editor_s_choices">Choix de l’éditeur</string>
+    <string name="editor_s_choices">Choix de l\'éditeur</string>
     <string name="find_ringtone">Trouver une sonnerie</string>
     <string name="find_wallpaper">Trouver un fond d’écran</string>
     <string name="notification">Notification</string>
     <string name="download">Télécharger</string>
     <string name="set_ringotne">Définir comme sonnerie</string>
     <string name="set_wallpaper">Définir comme fond d’écran</string>
-    <string name="no_data_desc">Vous ne trouvez pas la musique que vous cherchez ?</string>
+    <string name="no_data_desc">Vous ne trouvez pas la musique recherchée ?</string>
 
     <string name="phone_settings">Paramètres du téléphone</string>
-    <string name="rate_us">Notez-nous</string>
+    <string name="rate_us">Évaluez-nous</string>
     <string name="rate_desc">Soutenez-nous ici</string>
-    <string name="setting_desc">Historique, cache, notification et plus</string>
+    <string name="setting_desc">Historique, cache, notifications et plus</string>
     <string name="feedback">Retour</string>
     <string name="feedback_desc">Faites-nous part de votre expérience</string>
     <string name="share">Partager</string>
     <string name="share_desc">Recommandez l’application à vos amis</string>
     <string name="privacy_policy">Politique de confidentialité</string>
-    <string name="policy_desc">À propos de la confidentialité de l’application</string>
+    <string name="policy_desc">Concernant la confidentialité de l’application</string>
 
     <string name="welcome_back">Bon retour !</string>
 
     <string name="first_sort">Date de création : du plus récent au plus ancien</string>
     <string name="second_sort">Date de création : du plus ancien au plus récent</string>
-    <string name="third_sort">Nom : de A à Z</string>
-    <string name="forth_song">Nom : de Z à A</string>
+    <string name="third_sort">Nom : A à Z</string>
+    <string name="forth_song">Nom : Z à A</string>
     <string name="sort_by">Trier par</string>
     <string name="cancel">Annuler</string>
     <string name="hot_title">Tendance</string>
     <string name="new_title">Nouveau</string>
-    <string name="favourite_desc">Qu’est-ce qui vous intéresse ?</string>
+    <string name="favourite_desc">Qu\'est-ce qui vous intéresse ?</string>
 
-    <string name="title_grant_Permission">Accorder la permission</string>
-    <string name="message_grant_Permission">Veuillez accorder toutes les autorisations pour accéder à des fonctionnalités supplémentaires.</string>
+    <string name="title_grant_Permission">Autoriser les permissions</string>
+    <string name="message_grant_Permission">Veuillez accorder toutes les permissions pour accéder aux fonctionnalités supplémentaires.</string>
     <string name="goto_setting">Aller aux paramètres</string>
-    <string name="download_title">Votre sonnerie est téléchargée</string>
-    <string name="ringtone_title">Traitement de la configuration de la sonnerie</string>
-    <string name="set_title">Traitement de la configuration des notifications</string>
-    <string name="download_title_2">Votre fond d’écran est téléchargé</string>
+    <string name="download_title">Votre sonnerie a été téléchargée</string>
+    <string name="ringtone_title">Configuration de la sonnerie en cours</string>
+    <string name="set_title">Configuration de la notification en cours</string>
+    <string name="download_title_2">Votre fond d’écran a été téléchargé</string>
     <string name="set_wallpaper_op1">Définir comme écran de verrouillage</string>
     <string name="set_wallpaper_op2">Définir comme écran d’accueil</string>
     <string name="set_wallpaper_op3">Les deux</string>
-    <string name="set_wallpaper_1">Traitement de l’écran de verrouillage</string>
-    <string name="set_wallpaper_2">Traitement de l’écran d’accueil</string>
-    <string name="set_wallpaper_3">Traitement des deux types</string>
+    <string name="set_wallpaper_1">Configuration de l’écran de verrouillage en cours</string>
+    <string name="set_wallpaper_2">Configuration de l’écran d’accueil en cours</string>
+    <string name="set_wallpaper_3">Configuration des deux types en cours</string>
     <string name="downloading">Téléchargement</string>
     <string name="processing">Traitement</string>
 
-    <string name="successfully">Succès !</string>
+    <string name="successfully">Réussi !</string>
     <string name="failed">Échec !</string>
     <string name="notif_title">Ne manquez pas les dernières mises à jour</string>
-    <string name="notif_desc">Activez les notifications pour recevoir des infos sur les nouvelles sonneries, fonds d’écran, fonctionnalités…</string>
+    <string name="notif_desc">Activez les notifications pour recevoir des informations sur les nouvelles sonneries, fonds d’écran, fonctionnalités…</string>
     <string name="feedback_1">Vous voulez plus de sonneries comme celle-ci</string>
     <string name="feedback_2">Impossible de lire cette sonnerie</string>
-    <string name="feedback_3">La sonnerie ne fonctionne pas après configuration</string>
+    <string name="feedback_3">La sonnerie ne fonctionne pas après la configuration</string>
     <string name="credits">Crédits</string>
     <string name="credits_desc">Cette sonnerie a été créée par [%1$s] sous licence [%2$s]</string>
 
     <string name="categories">Catégories</string>
     <string name="trending">Tendance</string>
     <string name="hot_search">Recherches populaires</string>
-    <string name="live">Fond d’écran animé</string>
-    <string name="favourite">Favoris</string>
+    <string name="live">Fond d\'écran animé</string>
+    <string name="favourite">Favori</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Nouveau fond d’écran</string>
-    <string name="no_internet_desc">Veuillez vous connecter au Wi-Fi ou au réseau mobile pour voir ce contenu</string>
+    <string name="no_internet_desc">Veuillez vous connecter à un réseau Wi-Fi ou mobile pour afficher ce contenu</string>
     <string name="no_internet_title">Pas de connexion</string>
     <string name="try_again">Réessayer</string>
     <string name="save">Enregistrer</string>
-    <string name="default_crop_label_text">Exemple d’étiquette de rognage</string>
+    <string name="default_crop_label_text">Étiquette de recadrage d’exemple</string>
     <string name="reset">Réinitialiser</string>
-    <string name="crop">Rogner</string>
+    <string name="crop">Recadrer</string>
     <string name="wallpaper_desc">Description du fond d’écran</string>
+
 </resources>
