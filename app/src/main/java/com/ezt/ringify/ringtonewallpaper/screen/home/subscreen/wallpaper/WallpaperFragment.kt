@@ -78,6 +78,12 @@ class WallpaperFragment :
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
+            connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
             allTrending.adapter = wallPaperAdapter
             allNewWallpaper.adapter = newWallpaperAdapter
             allSub1.adapter = subWallpaperAdapter1
@@ -222,10 +228,7 @@ class WallpaperFragment :
                 }
             }
 
-            connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
-                println("isConnected: $isConnected")
-                checkInternetConnected(isConnected)
-            }
+
 
             binding.noInternet.tryAgain.setOnClickListener {
                 // Optionally trigger a manual refresh of data or recheck

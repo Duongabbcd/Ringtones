@@ -7,7 +7,9 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFilteredCategoryBin
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.RingtoneCategoryActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -34,7 +36,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
     private lateinit var sortOrder: String
 
-
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,13 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             backBtn.setOnClickListener {
                 finish()
             }
+
+            connectionViewModel.isConnectedLiveData.observe(this@FilteredRingtonesActivity) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
+
             println("category: $categoryId")
             allCategories.adapter = ringtoneAdapter
 
@@ -57,9 +66,16 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        displayItems()
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            displayItems()
+            binding.noInternet.root.gone()
+        }
     }
 
     private fun displayItems() {

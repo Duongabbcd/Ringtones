@@ -32,9 +32,13 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewM
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.FilteredRingtonesActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +52,9 @@ import kotlin.math.abs
 class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneBinding::inflate) {
     private val viewModel: FavouriteRingtoneViewModel by viewModels()
     private var downloadedUri: Uri? = null
+
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
+
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
     private val playRingtoneAdapter: PlayRingtoneAdapter by lazy {
@@ -140,11 +147,11 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
         checkDownloadPermissions()
 
+        connectionViewModel.isConnectedLiveData.observe(this@RingtoneActivity) { isConnected ->
+            println("isConnected: $isConnected")
+            checkInternetConnected(isConnected)
+        }
 
-        viewModel.loadRingtoneById(currentRingtone.id)
-        observeRingtoneFromDb()
-        // Initialize ExoPlayer
-        playRingtone(false)
 
         binding.apply {
             currentRingtoneName.isSelected = true
@@ -172,6 +179,19 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         }
     }
 
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            viewModel.loadRingtoneById(currentRingtone.id)
+            observeRingtoneFromDb()
+            // Initialize ExoPlayer
+            playRingtone(false)
+            binding.noInternet.root.gone()
+        }
+    }
 
     private fun checkDownloadPermissions() {
         requestPermissionLauncher = registerForActivityResult(

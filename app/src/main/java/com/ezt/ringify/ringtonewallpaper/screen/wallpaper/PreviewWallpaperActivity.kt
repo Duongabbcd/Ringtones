@@ -8,8 +8,10 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBin
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +22,7 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     private val categoryViewModel: CategoryViewModel by viewModels()
 
     private val favourite: FavouriteWallpaperViewModel by viewModels()
-
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter ().apply {
             onAllImagesLoaded = {
@@ -49,6 +51,11 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
                 finish()
             }
 
+            connectionViewModel.isConnectedLiveData.observe(this@PreviewWallpaperActivity) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
             val layoutManager = GridLayoutManager(this@PreviewWallpaperActivity, 3)
 
 //            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -68,8 +75,19 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     }
 
 
-    override fun onResume() {
-        super.onResume()
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            displayItems()
+            binding.noInternet.root.gone()
+        }
+    }
+
+
+    private fun displayItems() {
         binding.apply {
             allCategories.visible()
             when(categoryId) {
@@ -134,6 +152,5 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
                 }
             }
         }
-
     }
 }

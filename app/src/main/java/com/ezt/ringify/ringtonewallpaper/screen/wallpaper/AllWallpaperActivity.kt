@@ -12,19 +12,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityAllWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemCategoryWallpaperBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
 
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAllWallpaperBinding::inflate) {
-
     private val categoryViewModel: CategoryViewModel by viewModels()
-
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val categoryWallpaperAdapter: CategoryWallpaperAdapter by lazy {
         CategoryWallpaperAdapter { category->
             startActivity(Intent(this, PreviewWallpaperActivity::class.java).apply {
@@ -37,11 +40,17 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        categoryViewModel.loadWallpaperCategories()
+
         binding.apply {
             backBtn.setOnClickListener {
                 finish()
             }
+
+            connectionViewModel.isConnectedLiveData.observe(this@AllWallpaperActivity) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
             allCategories.adapter = categoryWallpaperAdapter
             categoryViewModel.wallpaperCategory.observe(this@AllWallpaperActivity) { categories ->
                 categoryWallpaperAdapter.submitList(categories)
@@ -56,6 +65,17 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
             }
         }
 
+    }
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            categoryViewModel.loadWallpaperCategories()
+            binding.noInternet.root.gone()
+        }
     }
 }
 

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySlideWallpaperBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
@@ -37,8 +38,11 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.WallpaperTarget
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.crop.CropActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.SlideshowWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -54,6 +58,7 @@ import kotlin.math.abs
 class SlideWallpaperActivity :
     BaseActivity<ActivitySlideWallpaperBinding>(ActivitySlideWallpaperBinding::inflate) {
     private val viewModel: FavouriteWallpaperViewModel by viewModels()
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val playSlideWallpaperAdapter: PlaySlideWallpaperAdapter by lazy {
         PlaySlideWallpaperAdapter(onRequestScrollToPosition = { newPosition ->
             carousel.scrollSpeed(200f)
@@ -85,6 +90,10 @@ class SlideWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        connectionViewModel.isConnectedLiveData.observe(this@SlideWallpaperActivity) { isConnected ->
+            println("isConnected: $isConnected")
+            checkInternetConnected(isConnected)
+        }
 
         if (savedInstanceState != null) {
 
@@ -96,27 +105,6 @@ class SlideWallpaperActivity :
             println("savedInstanceState 1: $index")
         }
 
-
-        handler = Handler(Looper.getMainLooper())
-        checkDownloadPermissions()
-        binding.apply {
-            index = allRingtones.indexOf(currentWallpaper)
-            observeRingtoneFromDb()
-            backBtn.setOnClickListener {
-                finish()
-            }
-            println("onCreate: $index")
-            viewModel.loadWallpaperById(currentWallpaper.id)
-            observeRingtoneFromDb()
-
-            favourite.setOnClickListener {
-                displayFavouriteIcon(true)
-            }
-
-            initViewPager()
-            setUpNewPlayer(index)
-            setupButtons()
-        }
     }
 
     private fun checkDownloadPermissions() {
@@ -593,6 +581,37 @@ class SlideWallpaperActivity :
     private fun updateIndex(newIndex: Int, caller: String) {
         Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
         index = newIndex
+    }
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+
+            handler = Handler(Looper.getMainLooper())
+            checkDownloadPermissions()
+            binding.apply {
+                index = allRingtones.indexOf(currentWallpaper)
+                observeRingtoneFromDb()
+                backBtn.setOnClickListener {
+                    finish()
+                }
+                println("onCreate: $index")
+                viewModel.loadWallpaperById(currentWallpaper.id)
+                observeRingtoneFromDb()
+
+                favourite.setOnClickListener {
+                    displayFavouriteIcon(true)
+                }
+
+                initViewPager()
+                setUpNewPlayer(index)
+                setupButtons()
+            }
+            binding.noInternet.root.gone()
+        }
     }
 
     companion object {

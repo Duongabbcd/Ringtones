@@ -6,60 +6,77 @@
     android:paddingTop="@dimen/_40sdp">
 
 
-    <com.canhub.cropper.CropImageView
-        android:id="@+id/cropImageView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/origin"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_8sdp"
-        android:elevation="@dimen/_1sdp"
-        app:cropBorderCornerColor="@color/cardview_shadow_start_color"
-        app:cropShowLabel="true"
-        app:cropperLabelText="@string/app_name"
-        app:layout_constraintBottom_toTopOf="@+id/controller"
+        android:layout_height="match_parent">
+
+        <com.canhub.cropper.CropImageView
+            android:id="@+id/cropImageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:elevation="@dimen/_1sdp"
+            app:cropBorderCornerColor="@color/cardview_shadow_start_color"
+            app:cropShowLabel="true"
+            app:cropperLabelText="@string/app_name"
+            app:layout_constraintBottom_toTopOf="@+id/controller"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:id="@+id/controller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_8sdp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/btnCrop"
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_radius_12"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_10sdp"
+                android:text="@string/crop"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/btnReset"
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_radius_12_purple_stroke"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_10sdp"
+                android:text="@string/reset"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/noInternet"
+        layout="@layout/no_internet_connection"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <LinearLayout
-        android:id="@+id/controller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_8sdp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TextView
-            android:id="@+id/btnCrop"
-            style="@style/CustomTextStyleMedium14sp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_weight="1"
-            android:background="@drawable/background_radius_12"
-            android:gravity="center"
-            android:paddingVertical="@dimen/_10sdp"
-            android:text="@string/crop"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <TextView
-            android:id="@+id/btnReset"
-            style="@style/CustomTextStyleMedium14sp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_weight="1"
-            android:background="@drawable/background_radius_12_purple_stroke"
-            android:gravity="center"
-            android:paddingVertical="@dimen/_10sdp"
-            android:text="@string/reset"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

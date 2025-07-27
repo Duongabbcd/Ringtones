@@ -6,92 +6,107 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topController"
-        android:background="@drawable/top_background"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingTop="@dimen/_40sdp"
-        android:paddingBottom="@dimen/_21sdp"
-        android:paddingHorizontal="@dimen/_20sdp"
+        android:id="@+id/origin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/backBtn"
-            android:contentDescription="@string/imageview"
-            android:src="@drawable/icon_back"
-            android:layout_width="@dimen/_24sdp"
-            android:padding="@dimen/_4sdp"
-            android:layout_height="@dimen/_24sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topController"
+            android:background="@drawable/top_background"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingTop="@dimen/_40sdp"
+            android:paddingBottom="@dimen/_21sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/backBtn"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_back"
+                android:layout_width="@dimen/_24sdp"
+                android:padding="@dimen/_4sdp"
+                android:layout_height="@dimen/_24sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
 
-        <TextView
-            android:id="@+id/nameScreen"
-            android:contentDescription="@string/imageview"
-            android:text="@string/categories"
-            android:layout_marginStart="@dimen/_6sdp"
-            style="@style/CustomTextStyleSemiBold18sp"
-            android:textColor="@color/main_color"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_22sdp"
-            app:layout_constraintStart_toEndOf="@id/backBtn"
-            app:layout_constraintTop_toTopOf="@id/backBtn"
-            app:layout_constraintBottom_toBottomOf="@id/backBtn"/>
+            <TextView
+                android:id="@+id/nameScreen"
+                android:contentDescription="@string/imageview"
+                android:text="@string/categories"
+                android:layout_marginStart="@dimen/_6sdp"
+                style="@style/CustomTextStyleSemiBold18sp"
+                android:textColor="@color/main_color"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_22sdp"
+                app:layout_constraintStart_toEndOf="@id/backBtn"
+                app:layout_constraintTop_toTopOf="@id/backBtn"
+                app:layout_constraintBottom_toBottomOf="@id/backBtn"/>
 
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allCategories"
+            android:layout_width="match_parent"
+            tools:listitem="@layout/item_grid_wallpaper"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/_20sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/topController"
+            app:layout_constraintBottom_toTopOf="@+id/frBanner" />
+
+
+        <LinearLayout
+            android:id="@+id/noDataLayout"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/_43sdp">
+
+
+            <ImageView
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/no_data"/>
+
+            <TextView
+                style="@style/CustomTextStyle14sp"
+                android:gravity="center"
+                android:text="@string/no_data_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/transparent"
+            app:layout_constraintBottom_toTopOf="@id/frBanner" />
+
+        <FrameLayout
+            android:id="@+id/frBanner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            android:background="@color/black"
+            android:layout_height="wrap_content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/allCategories"
-        android:layout_width="match_parent"
-        tools:listitem="@layout/item_grid_wallpaper"
-        android:layout_height="0dp"
-        android:layout_marginVertical="@dimen/_20sdp"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/topController"
-        app:layout_constraintBottom_toTopOf="@+id/frBanner" />
-
-
-    <LinearLayout
-        android:id="@+id/noDataLayout"
-        android:orientation="vertical"
-        android:gravity="center"
+    <include
+        android:id="@+id/noInternet"
         android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        layout="@layout/no_internet_connection"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/_43sdp">
-
-
-        <ImageView
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="@dimen/_120sdp"
-            android:contentDescription="@string/imageview"
-            android:src="@drawable/no_data"/>
-
-        <TextView
-            style="@style/CustomTextStyle14sp"
-            android:gravity="center"
-            android:text="@string/no_data_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/transparent"
-        app:layout_constraintBottom_toTopOf="@id/frBanner" />
-
-    <FrameLayout
-        android:id="@+id/frBanner"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:background="@color/black"
-        android:layout_height="wrap_content" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchWallpaperBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperTrendingAdapter
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -29,6 +31,8 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
         WallpaperTrendingAdapter()
     }
 
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
+
     private val searchWallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter ().apply {
             onAllImagesLoaded = {
@@ -43,11 +47,18 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        categoryViewModel.loadWallpaperCategories()
+
         binding.apply {
             backBtn.setOnClickListener {
                 finish()
             }
+
+            connectionViewModel.isConnectedLiveData.observe(this@SearchWallpaperActivity) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
+
             trendingRecyclerView.adapter = wallpaperAdapter
             trendingRecyclerView.layoutManager = GridLayoutManager(this@SearchWallpaperActivity, 2)
 
@@ -113,13 +124,23 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             })
 
 
-
-
             closeButton.setOnClickListener {
                 searchText.setText("")
                 displayByCondition("")
             }
 
+        }
+    }
+
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            categoryViewModel.loadWallpaperCategories()
+            binding.noInternet.root.gone()
         }
     }
 

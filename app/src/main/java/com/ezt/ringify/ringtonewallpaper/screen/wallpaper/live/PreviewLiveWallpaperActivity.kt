@@ -10,6 +10,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
@@ -26,13 +28,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewLiveWallpaperBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -45,8 +51,8 @@ import kotlinx.coroutines.withContext
 @AndroidEntryPoint
 class PreviewLiveWallpaperActivity :
     BaseActivity<ActivityPreviewLiveWallpaperBinding>(ActivityPreviewLiveWallpaperBinding::inflate) {
-
     private val viewModel: FavouriteWallpaperViewModel by viewModels()
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
     private val playSlideWallpaperAdapter: PlayLiveWallpaperAdapter by lazy {
         PlayLiveWallpaperAdapter()
@@ -74,22 +80,14 @@ class PreviewLiveWallpaperActivity :
             index = allRingtones.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
             Log.d("PreviewLive", "Initial index: $index")
         }
+        connectionViewModel.isConnectedLiveData.observe(this@PreviewLiveWallpaperActivity) { isConnected ->
+            println("isConnected: $isConnected")
+            checkInternetConnected(isConnected)
+        }
+
 
         checkDownloadPermissions()
 
-        binding.apply {
-            observeRingtoneFromDb()
-
-            backBtn.setOnClickListener { finish() }
-
-            viewModel.loadWallpaperById(currentWallpaper.id)
-
-            favourite.setOnClickListener { displayFavouriteIcon(true) }
-
-            initViewPager()
-            setUpNewPlayer(index)
-            setupButtons()
-        }
     }
 
     private fun checkDownloadPermissions() {
@@ -338,6 +336,29 @@ class PreviewLiveWallpaperActivity :
         index = newIndex
     }
 
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            binding.apply {
+                observeRingtoneFromDb()
+
+                backBtn.setOnClickListener { finish() }
+
+                viewModel.loadWallpaperById(currentWallpaper.id)
+
+                favourite.setOnClickListener { displayFavouriteIcon(true) }
+
+                initViewPager()
+                setUpNewPlayer(index)
+                setupButtons()
+            }
+            binding.noInternet.root.gone()
+        }
+    }
+
     companion object {
         var settingOption = 0
     }
@@ -349,3 +370,4 @@ class PreviewLiveWallpaperActivity :
         CacheUtil.release()
     }
 }
+

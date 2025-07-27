@@ -16,6 +16,7 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchRingtoneBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
@@ -29,6 +30,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import kotlin.toString
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.hideKeyBoard
+import kotlin.getValue
 
 @AndroidEntryPoint
 class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(ActivitySearchRingtoneBinding::inflate){
@@ -41,13 +43,19 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
     private val ringToneAdapter : RingtoneAdapter by lazy {
         RingtoneAdapter()
     }
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ringtoneViewModel.loadTrending()
+
         binding.apply{
             backBtn.setOnClickListener {
                 finish()
+            }
+            connectionViewModel.isConnectedLiveData.observe(this@SearchRingtoneActivity) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
             }
 
             trendingRecyclerView.adapter = ringtoneTrendingAdapter
@@ -98,7 +106,6 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
 
             searchText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    val query = searchText.text.toString()
                     this@SearchRingtoneActivity.hideKeyBoard(binding.searchText)
                     // Do something with the search query
                     // For example: performSearch(query)
@@ -150,6 +157,18 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
         }
 
     }
+
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            ringtoneViewModel.loadTrending()
+            binding.noInternet.root.gone()
+        }
+    }
 }
 
 class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TrendingViewHolder>() {
@@ -182,6 +201,8 @@ class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TrendingViewHolde
             })
         }
     }
+
+
 
     override fun getItemCount() = items.size
 }

@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnLayout
 import com.canhub.cropper.CropImage
@@ -19,45 +20,34 @@ import com.canhub.cropper.CropImageView.OnCropImageCompleteListener
 import com.canhub.cropper.CropImageView.OnSetImageUriCompleteListener
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCropBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.buffer
 import okio.sink
 import java.io.File
+import kotlin.getValue
 
 class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::inflate),
     OnSetImageUriCompleteListener,
     OnCropImageCompleteListener {
 
     private var options: CropImageOptions? = null
-
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val imageUrl by lazy {
         intent.getStringExtra("imageUrl")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding.apply {
-            // Attach listeners
-            cropImageView.setOnSetImageUriCompleteListener(this@CropActivity)
-            cropImageView.setOnCropImageCompleteListener(this@CropActivity)
-
-            imageUrl?.let {
-                loadRemoteImageIntoCropView(this@CropActivity, it, cropImageView)
-            }
-
-            btnReset.setOnClickListener {
-                cropImageView.resetCropRect()
-                imageUrl?.let {
-                    loadRemoteImageIntoCropView(this@CropActivity, it, cropImageView)
-                }
-            }
-
-            btnCrop.setOnClickListener {
-                cropImageView.croppedImageAsync()
-            }
+        connectionViewModel.isConnectedLiveData.observe(this@CropActivity) { isConnected ->
+            println("isConnected: $isConnected")
+            checkInternetConnected(isConnected)
         }
+
     }
 
     private fun loadRemoteImageIntoCropView(
@@ -149,6 +139,37 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
 
         } else {
             Toast.makeText(this, "Crop failed: ${result.error?.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            binding.apply {
+                // Attach listeners
+                cropImageView.setOnSetImageUriCompleteListener(this@CropActivity)
+                cropImageView.setOnCropImageCompleteListener(this@CropActivity)
+
+                imageUrl?.let {
+                    loadRemoteImageIntoCropView(this@CropActivity, it, cropImageView)
+                }
+
+                btnReset.setOnClickListener {
+                    cropImageView.resetCropRect()
+                    imageUrl?.let {
+                        loadRemoteImageIntoCropView(this@CropActivity, it, cropImageView)
+                    }
+                }
+
+                btnCrop.setOnClickListener {
+                    cropImageView.croppedImageAsync()
+                }
+            }
+            binding.noInternet.root.gone()
         }
     }
 

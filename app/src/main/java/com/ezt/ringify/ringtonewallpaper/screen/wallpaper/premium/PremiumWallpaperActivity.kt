@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPremiumWallpaperBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.AllWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -21,7 +25,7 @@ import kotlin.getValue
 class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     ActivityPremiumWallpaperBinding::inflate){
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
-
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val liveAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
             println("Wallpaper: $it")
@@ -44,14 +48,15 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        wallPaperViewModel.loadLiveWallpapers()
-        wallPaperViewModel.loadSlideWallpaper()
-        wallPaperViewModel.loadSingleWallpaper()
+
         binding.apply {
             backBtn.setOnClickListener {
                 finish()
             }
-
+            connectionViewModel.isConnectedLiveData.observe(this@PremiumWallpaperActivity) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
             allTrending.adapter = liveAdapter
             allNewWallpaper.adapter = slideAdapter
             allSub1.adapter = singleAdapter
@@ -90,6 +95,20 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
                 })
             }
 
+        }
+    }
+
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+            wallPaperViewModel.loadLiveWallpapers()
+            wallPaperViewModel.loadSlideWallpaper()
+            wallPaperViewModel.loadSingleWallpaper()
+            binding.noInternet.root.gone()
         }
     }
 }

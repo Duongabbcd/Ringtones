@@ -46,6 +46,13 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
+
+            connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
+                println("isConnected: $isConnected")
+                checkInternetConnected(isConnected)
+            }
+
+
             allCategories.adapter = categoryAdapter
             allPopular.adapter = ringToneAdapter
             withSafeContext { ctx ->
@@ -78,10 +85,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 loading2.isVisible = it
             }
 
-            connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
-                println("isConnected: $isConnected")
-                checkInternetConnected(isConnected)
-            }
+
 
             binding.noInternet.tryAgain.setOnClickListener {
                 // Optionally trigger a manual refresh of data or recheck
@@ -114,6 +118,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             binding.noInternet.root.gone()
         }
     }
+
 
     companion object {
         @JvmStatic
