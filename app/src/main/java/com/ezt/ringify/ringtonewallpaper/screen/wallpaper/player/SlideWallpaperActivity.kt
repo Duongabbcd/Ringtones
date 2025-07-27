@@ -90,6 +90,7 @@ class SlideWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkDownloadPermissions()
         connectionViewModel.isConnectedLiveData.observe(this@SlideWallpaperActivity) { isConnected ->
             println("isConnected: $isConnected")
             checkInternetConnected(isConnected)
@@ -591,7 +592,6 @@ class SlideWallpaperActivity :
             binding.origin.visible()
 
             handler = Handler(Looper.getMainLooper())
-            checkDownloadPermissions()
             binding.apply {
                 index = allRingtones.indexOf(currentWallpaper)
                 observeRingtoneFromDb()

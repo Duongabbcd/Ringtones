@@ -71,7 +71,7 @@ class PreviewLiveWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        checkDownloadPermissions()
         if (savedInstanceState != null) {
             index = savedInstanceState.getInt("wallpaper_index", 0)
             Log.d("PreviewLive", "Restored index: $index")
@@ -84,9 +84,6 @@ class PreviewLiveWallpaperActivity :
             println("isConnected: $isConnected")
             checkInternetConnected(isConnected)
         }
-
-
-        checkDownloadPermissions()
 
     }
 
