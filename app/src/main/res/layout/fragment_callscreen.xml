@@ -4,13 +4,113 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:text="CallScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/origin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/quickTheme"
+                android:text="Quick Theme"
+                style="@style/CustomTextStyleSemiBold16sp"
+                android:gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/allQuickThemes"
+                android:layout_marginStart="@dimen/_14sdp"
+                app:layout_constraintTop_toBottomOf="@id/quickTheme"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:id="@+id/customize"
+                android:text="Customize"
+                style="@style/CustomTextStyleSemiBold16sp"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@+id/allQuickThemes"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/currentFrame"
+                app:layout_constraintTop_toBottomOf="@id/customize"
+                android:background="@drawable/call_screen_frame"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_288sdp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/currentCallScreen"
+                    android:src="@drawable/default_callscreen"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/setupCallScreen"
+                android:background="@drawable/background_radius_12"
+                android:layout_marginHorizontal="@dimen/_32sdp"
+                app:layout_constraintTop_toBottomOf="@id/currentFrame"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_10sdp"
+                android:paddingHorizontal="@dimen/_16sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/icon_next_cs"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_weight="1"
+                    android:layout_height="@dimen/_18sdp"/>
+
+                <TextView
+                    android:text="Set as Call Screen"
+                    android:textColor="@color/white"
+                    style="@style/CustomTextStyleSemiBold16sp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <ImageView
+                    android:src="@drawable/icon_back_cs"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_weight="1"
+                    android:layout_height="@dimen/_18sdp"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/noInternet"
+        android:visibility="gone"
+        layout="@layout/no_internet_connection"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

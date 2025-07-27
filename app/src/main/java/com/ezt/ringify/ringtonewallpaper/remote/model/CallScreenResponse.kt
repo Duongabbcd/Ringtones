@@ -21,6 +21,7 @@ data class CallScreenPaging(
 data class CallScreenItem(
     val id: Int,
     val name: String,
+    val thumbnail: Thumbnail,
     val contents: CallScreenContents,
     @SerializedName("author_id") val authorId: Int,
     val active: Int,

@@ -14,6 +14,7 @@
     <color name="defaultBackground_0_5">#7F292929</color>
     <color name="customBlack">#323232</color>
     <color name="customGray">#616161</color>
+    <color name="defaultGray">#ECECEC</color>
     <color name="unselected">#BCBCBC</color>
     <color name="customText">#2C2C2C</color>
     <color name="button_language">#8246FF</color>

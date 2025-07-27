@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenResponse
-import com.ezt.ringify.ringtonewallpaper.remote.model.RingtoneResponse
+import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,8 +15,8 @@ class CallScreenViewModel @Inject constructor(
     private val repository: RingtoneRepository
 ) : ViewModel() {
 
-    private val _callScreens = MutableLiveData<CallScreenResponse>()
-    val callScreens: LiveData<CallScreenResponse> = _callScreens
+    private val _callScreens = MutableLiveData<List<CallScreenItem>>()
+    val callScreens: LiveData<List<CallScreenItem>> = _callScreens
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
@@ -29,7 +28,8 @@ class CallScreenViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchCallScreens()
-            _callScreens.value = result
+            _callScreens.value = result.data.data
+
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")
