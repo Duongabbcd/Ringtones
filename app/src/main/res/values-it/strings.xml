@@ -119,4 +119,12 @@
     <string name="crop">Ritaglia</string>
     <string name="wallpaper_desc">Descrizione del wallpaper</string>
 
+    <string name="callscreen_setting">Imposta come Schermata di Chiamata</string>
+    <string name="no_connection">Ancora nessuna connessione Internet</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Sfondo</string>
+    <string name="alert">Avviso</string>
+    <string name="icon">Icona</string>
+    <string name="quick_theme">Tema Rapido</string>
+    <string name="customize">Personalizza</string>
 </resources>

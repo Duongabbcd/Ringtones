@@ -15,6 +15,8 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.Wallpap
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,6 +41,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            binding.topFeedback.gone()
+            binding.searchButton.visible()
             when (menuItem.itemId) {
                 R.id.ringTone -> {
                     selectedTab = 0
@@ -52,6 +56,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
                 R.id.callScreen -> {
                     selectedTab = 2
+                    binding.topFeedback.visible()
+                    binding.searchButton.gone()
                     displayScreen()
                 }
 

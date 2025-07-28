@@ -22,6 +22,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpap
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
+import com.ezt.ringify.ringtonewallpaper.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -228,23 +229,22 @@ class WallpaperFragment :
                 }
             }
 
-
-
             binding.noInternet.tryAgain.setOnClickListener {
-                // Optionally trigger a manual refresh of data or recheck
-                val connected = connectionViewModel.isConnectedLiveData.value ?: false
-                if (connected) {
-                    // Do something if reconnected
-                    binding.origin.visible()
-                    binding.noInternet.root.visibility = View.VISIBLE
-                    // Maybe reload your data
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Still no internet connection",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                withSafeContext { ctx ->
+                    val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                    if (connected) {
+                        binding.origin.visible()
+                        binding.noInternet.root.visibility = View.VISIBLE
+                        // Maybe reload your data
+                    } else {
+                        Toast.makeText(
+                            ctx,
+                            R.string.no_connection,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
+
             }
         }
 

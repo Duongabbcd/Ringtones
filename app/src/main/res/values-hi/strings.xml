@@ -119,4 +119,12 @@
     <string name="crop">क्रॉप करें</string>
     <string name="wallpaper_desc">वॉलपेपर विवरण</string>
 
+    <string name="callscreen_setting">कॉल स्क्रीन के रूप में सेट करें</string>
+    <string name="no_connection">अभी भी इंटरनेट कनेक्शन नहीं है</string>
+    <string name="avatar">अवतार</string>
+    <string name="background">पृष्ठभूमि</string>
+    <string name="alert">अलर्ट</string>
+    <string name="icon">आइकन</string>
+    <string name="quick_theme">त्वरित थीम</string>
+    <string name="customize">अनुकूलित करें</string>
 </resources>

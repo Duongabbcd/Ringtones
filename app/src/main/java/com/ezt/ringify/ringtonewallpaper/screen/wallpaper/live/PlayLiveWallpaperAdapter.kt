@@ -1,6 +1,7 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live
 
 import alirezat775.lib.carouselview.CarouselAdapter
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
@@ -20,7 +21,7 @@ import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 
 @OptIn(UnstableApi::class)
-class PlayLiveWallpaperAdapter() : CarouselAdapter() {
+class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter() {
     private val items = mutableListOf<Wallpaper>()
     private var currentPos = RecyclerView.NO_POSITION
     private var playingHolder: PlayerViewHolder? = null
@@ -64,7 +65,7 @@ class PlayLiveWallpaperAdapter() : CarouselAdapter() {
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         PlayerManager.release()
-        CacheUtil.release()
+        CacheUtil.release(context)
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
@@ -180,9 +181,11 @@ class PlayLiveWallpaperAdapter() : CarouselAdapter() {
             binding.progressBar.visibility = View.GONE
             binding.loading.visibility = View.GONE
             currentUrl = null
-
-            Glide.with(context).clear(binding.videoThumbnail) // <- clear thumbnail to prevent leak
+            if (context is Activity && context.isDestroyed) return
+            Glide.with(binding.videoThumbnail)
+                .clear(binding.videoThumbnail) // <- clear thumbnail to prevent leak
         }
+
         private fun showThumbnail(videoUrl: String?) {
             binding.videoThumbnail.visibility = View.VISIBLE
             videoUrl?.let {

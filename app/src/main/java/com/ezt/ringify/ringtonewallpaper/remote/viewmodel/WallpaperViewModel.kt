@@ -234,7 +234,7 @@ class WallpaperViewModel @Inject constructor(
     }
 
     fun loadSlideWallpaper() = viewModelScope.launch {
-        _loading1.value = true
+        _loading2.value = true
         try {
             val result = repository.getSlideWallpaper()
             _slideWallpaper.value = result.data.data
@@ -244,12 +244,12 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading1.value = false
+            _loading2.value = false
         }
     }
 
     fun loadSingleWallpaper() = viewModelScope.launch {
-        _loading1.value = true
+        _loading3.value = true
         try {
             val result = repository.getSingleWallpaper()
             _singleWallpapers.value = result.data.data
@@ -259,7 +259,7 @@ class WallpaperViewModel @Inject constructor(
             println("loadWallpapers: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading1.value = false
+            _loading3.value = false
         }
     }
 

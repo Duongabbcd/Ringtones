@@ -87,9 +87,10 @@ dependencies {
 
     implementation("androidx.media3:media3-exoplayer:1.7.1")
     implementation("androidx.media3:media3-ui:1.7.1")
-    implementation("androidx.media3:media3-ui:1.4.1")
+    implementation("androidx.media3:media3-datasource:1.7.1")
     implementation("androidx.media3:media3-datasource-okhttp:1.7.1")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("androidx.media3:media3-exoplayer-dash:1.7.1")
 
     implementation("com.google.android.exoplayer:exoplayer:2.19.1")
     implementation("androidx.fragment:fragment-ktx:1.8.6")
@@ -99,6 +100,8 @@ dependencies {
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
     implementation("me.tankery.lib:circularSeekBar:1.4.2")
+    implementation("me.angrybyte.slider:slider:1.4.2")
+    implementation("com.seosh817:circularseekbar:1.0.2")
     implementation("io.coil-kt:coil:2.4.0")
 
     implementation("androidx.room:room-runtime:2.7.1")

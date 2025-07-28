@@ -53,6 +53,16 @@
                 android:layout_height="@dimen/_20sdp" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/topFeedback"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_app_name"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout

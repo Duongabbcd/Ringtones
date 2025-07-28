@@ -6,15 +6,22 @@ import android.view.SurfaceHolder
 import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 
 class VideoWallpaperService : WallpaperService() {
+    override fun onCreate() {
+        super.onCreate()
+        Log.d("VideoWallpaperService", "onCreate")
+    }
     override fun onCreateEngine(): Engine {
-        Log.d("VideoWallpaperService", "Engine created")
+        Log.d("VideoWallpaperService", "onCreateEngine")
         return VideoEngine()
     }
 
@@ -23,11 +30,16 @@ class VideoWallpaperService : WallpaperService() {
         private lateinit var surfaceHolder: SurfaceHolder
         private var currentUrl: String? = null
 
+        override fun onCreate(surfaceHolder: SurfaceHolder?) {
+            super.onCreate(surfaceHolder)
+            Log.d("VideoEngine", "onCreate")
+        }
+
         override fun onSurfaceCreated(holder: SurfaceHolder) {
             super.onSurfaceCreated(holder)
             surfaceHolder = holder
-            Log.d("VideoEngine", "Surface created")
-            // Always restart player with fresh setup
+            Log.d("VideoEngine", "onSurfaceCreated")
+
             stopVideo()
             startVideo()
         }
@@ -40,34 +52,23 @@ class VideoWallpaperService : WallpaperService() {
 
             if (videoUrl.isNullOrEmpty()) return
             currentUrl = videoUrl
-            // Create a DataSource.Factory for HTTP requests
             val dataSourceFactory = DefaultHttpDataSource.Factory()
 
-            // Create a ProgressiveMediaSource.Factory using the DataSource.Factory
             val mediaSourceFactory = ProgressiveMediaSource.Factory(dataSourceFactory)
 
-            // Create a MediaSource for the video
             val mediaSource = mediaSourceFactory.createMediaSource(MediaItem.fromUri(videoUrl))
 
-            // Initialize ExoPlayer
             exoPlayer = ExoPlayer.Builder(applicationContext).build().apply {
-                // Set the media source
-                setMediaSource(mediaSource)
+                setMediaSource(mediaSource, true)
 
-                // Set repeat mode to loop the video indefinitely
                 repeatMode = Player.REPEAT_MODE_ONE
 
-                // Set the video surface holder for rendering
                 setVideoSurfaceHolder(surfaceHolder)
-
-                // Set the video scaling mode to fit the screen while maintaining aspect ratio
                 videoScalingMode = C.VIDEO_SCALING_MODE_DEFAULT
 
-                // Prepare and start playback
                 prepare()
                 playWhenReady = true
 
-                // Add a listener to monitor playback state changes
                 addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
                         if (state == Player.STATE_READY) {
@@ -78,9 +79,10 @@ class VideoWallpaperService : WallpaperService() {
             }
         }
 
+
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
-            Log.d("VideoEngine", "onVisibilityChanged = $visible")
+            Log.d("VideoEngine", "onVisibilityChanged: $visible")
 
             if (visible) {
                 val prefs = getSharedPreferences("video_wallpaper", MODE_PRIVATE)
@@ -96,9 +98,9 @@ class VideoWallpaperService : WallpaperService() {
             }
         }
 
-
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             super.onSurfaceDestroyed(holder)
+            Log.d("VideoEngine", "onSurfaceDestroyed")
             stopVideo()
         }
 
@@ -112,6 +114,7 @@ class VideoWallpaperService : WallpaperService() {
 
         override fun onDestroy() {
             super.onDestroy()
+            Log.d("VideoEngine", "onDestroy")
             stopVideo()
         }
 
@@ -122,11 +125,12 @@ class VideoWallpaperService : WallpaperService() {
             height: Int
         ) {
             super.onSurfaceChanged(holder, format, width, height)
-            Log.d("VideoEngine", "Surface changed")
+            Log.d("VideoEngine", "onSurfaceChanged: $width x $height")
 
-            surfaceHolder = holder ?: return
-            exoPlayer?.setVideoSurfaceHolder(surfaceHolder)  // 🛠 Re-attach surface
+            holder?.let {
+                surfaceHolder = it
+                exoPlayer?.setVideoSurfaceHolder(surfaceHolder)
+            }
         }
     }
-
 }

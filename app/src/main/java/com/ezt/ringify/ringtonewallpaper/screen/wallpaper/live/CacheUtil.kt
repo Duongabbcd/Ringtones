@@ -15,23 +15,42 @@ import java.io.File
 
 @UnstableApi
 object CacheUtil {
+    @Volatile
     private var simpleCache: SimpleCache? = null
 
-    fun getSimpleCache(context: Context): SimpleCache {
-        if (simpleCache == null) {
-            val cacheDir = File(context.cacheDir, "exo_cache")
-            val cacheSize: Long = 100 * 1024 * 1024 // 100MB
-            val evictor = LeastRecentlyUsedCacheEvictor(cacheSize)
-            val databaseProvider = StandaloneDatabaseProvider(context)
 
-            simpleCache = SimpleCache(cacheDir, evictor, databaseProvider)
+    fun getSimpleCache(context: Context): SimpleCache {
+        return simpleCache ?: synchronized(this) {
+            simpleCache ?: run {
+                val cacheDir = File(context.cacheDir, "exo_cache")
+
+                // Clear cache dir if corrupted (optional, you can call this manually before playback if preferred)
+                if (cacheDir.exists()) {
+                    try {
+                        cacheDir.deleteRecursively()
+                    } catch (e: Exception) {
+                        Log.e("CacheUtil", "Failed to clear cache dir", e)
+                    }
+                }
+
+                val cacheSize: Long = 100L * 1024 * 1024 // 100 MB
+                val evictor = LeastRecentlyUsedCacheEvictor(cacheSize)
+                val databaseProvider = StandaloneDatabaseProvider(context)
+
+                SimpleCache(cacheDir, evictor, databaseProvider).also {
+                    simpleCache = it
+                }
+            }
         }
-        return simpleCache!!
     }
 
-    fun release() {
+    fun release(context: Context) {
         simpleCache?.release()
         simpleCache = null
+        val cacheDir = File(context.cacheDir, "exo_cache")
+        if (cacheDir.exists()) {
+            cacheDir.deleteRecursively()
+        }
     }
 }
 

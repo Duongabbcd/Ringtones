@@ -121,9 +121,9 @@ class PlaySlideWallpaperAdapter(
                 val url = wallpaper.contents.firstOrNull()?.url?.medium
                 if (url != null) {
                     wallpaper.contents.first().url.medium.let {
-                        Glide.with(context).load(it).placeholder(R.drawable.item_wallpaper_default)
+                        Glide.with(context).load(it).placeholder(R.color.white)
                             .error(
-                                R.drawable.item_wallpaper_default
+                                R.color.white
                             ).into(binding.wallpaper)
                     }
                 }

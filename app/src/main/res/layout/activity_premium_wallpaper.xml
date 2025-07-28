@@ -194,6 +194,40 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintTop_toBottomOf="@id/sub1Count" />
 
+                    <ProgressBar
+                        android:id="@+id/loading1"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:progressTint="@color/main_color"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/allTrending"
+                        app:layout_constraintEnd_toEndOf="@+id/allTrending"
+                        app:layout_constraintStart_toStartOf="@+id/allTrending"
+                        app:layout_constraintTop_toTopOf="@+id/allTrending" />
+
+                    <ProgressBar
+                        android:id="@+id/loading2"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:progressTint="@color/main_color"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/allNewWallpaper"
+                        app:layout_constraintEnd_toEndOf="@+id/allNewWallpaper"
+                        app:layout_constraintStart_toStartOf="@+id/allNewWallpaper"
+                        app:layout_constraintTop_toTopOf="@+id/allNewWallpaper" />
+
+                    <ProgressBar
+                        android:id="@+id/loading3"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:progressTint="@color/main_color"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/allSub1"
+                        app:layout_constraintEnd_toEndOf="@+id/allSub1"
+                        app:layout_constraintStart_toStartOf="@+id/allSub1"
+                        app:layout_constraintTop_toTopOf="@+id/allSub1" />
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

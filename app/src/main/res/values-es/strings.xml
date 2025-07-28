@@ -131,4 +131,14 @@
     <string name="reset">Zurücksetzen</string>
     <string name = "crop">Ernte</string>
     <string name="wallpaper_desc">Alles Gute zum Thema</string>
+
+    <string name="callscreen_setting">Establecer como pantalla de llamada</string>
+    <string name="no_connection">Todavía no hay conexión a Internet</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Fondo</string>
+    <string name="alert">Alerta</string>
+    <string name="icon">Icono</string>
+    <string name="quick_theme">Tema rápido</string>
+    <string name="customize">Personalizar</string>
+
 </resources>

@@ -119,4 +119,12 @@
     <string name="crop">Recortar</string>
     <string name="wallpaper_desc">Descrição do papel de parede</string>
 
+    <string name="callscreen_setting">Definir como tela de chamada</string>
+    <string name="no_connection">Ainda sem conexão com a internet</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Fundo</string>
+    <string name="alert">Alerta</string>
+    <string name="icon">Ícone</string>
+    <string name="quick_theme">Tema rápido</string>
+    <string name="customize">Personalizar</string>
 </resources>

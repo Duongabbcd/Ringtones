@@ -17,6 +17,16 @@
     <string name="desc_3">Thèmes d’écran d’appel dynamiques</string>
     <string name="high_light_3">Écran d\'appel</string>
 
+    <string name="callscreen_setting">Définir comme écran d\'appel</string>
+    <string name="no_connection">Toujours pas de connexion Internet</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Arrière‑plan</string>
+    <string name="alert">Alerte</string>
+    <string name="icon">Icône</string>
+    <string name="quick_theme">Thème rapide</string>
+    <string name="customize">Personnaliser</string>
+
+
     <string name="fav_1">Sélectionnez au moins 3 genres musicaux que vous aimez</string>
     <string name="fav_light_1">genres musicaux</string>
     <string name="fav_2">Choisissez votre fond d\'écran préféré</string>

@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/wallpaper"
             android:scaleType="centerCrop"
-            android:background="@drawable/item_wallpaper_default"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

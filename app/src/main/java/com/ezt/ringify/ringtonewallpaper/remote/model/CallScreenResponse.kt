@@ -39,7 +39,14 @@ data class CallScreenItem(
     val country: Int,
     @SerializedName("updated_at") val updatedAt: String,
     @SerializedName("created_at") val createdAt: String
-)
+) {
+    companion object {
+        val CALLSCREEN_EMPTY = CallScreenItem(
+            -1, "CALLSCREEN_EMPTY", Thumbnail("", Size(0, 0), Url("", "", "", "")),
+            CallScreenContents("", "", ""), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", ""
+        )
+    }
+}
 
 data class CallScreenContents(
     val disk: String?,

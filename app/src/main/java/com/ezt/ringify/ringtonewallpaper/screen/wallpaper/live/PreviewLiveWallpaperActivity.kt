@@ -55,7 +55,7 @@ class PreviewLiveWallpaperActivity :
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
     private val playSlideWallpaperAdapter: PlayLiveWallpaperAdapter by lazy {
-        PlayLiveWallpaperAdapter()
+        PlayLiveWallpaperAdapter(this)
     }
 
     private lateinit var carousel: Carousel
@@ -364,7 +364,7 @@ class PreviewLiveWallpaperActivity :
     override fun onDestroy() {
         super.onDestroy()
         PlayerManager.release()
-        CacheUtil.release()
+        CacheUtil.release(this)
     }
 }
 

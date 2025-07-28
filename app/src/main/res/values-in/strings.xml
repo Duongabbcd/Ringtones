@@ -119,4 +119,12 @@
     <string name="crop">Potong</string>
     <string name="wallpaper_desc">Deskripsi wallpaper</string>
 
+    <string name="callscreen_setting">Tetapkan sebagai Layar Panggilan</string>
+    <string name="no_connection">Masih belum ada koneksi internet</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Latar Belakang</string>
+    <string name="alert">Peringatan</string>
+    <string name="icon">Ikon</string>
+    <string name="quick_theme">Tema Cepat</string>
+    <string name="customize">Kustomisasi</string>
 </resources>

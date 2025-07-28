@@ -119,4 +119,13 @@
     <string name="crop">Обрезать</string>
     <string name="wallpaper_desc">Описание обоев</string>
 
+    <string name="callscreen_setting">Установить как экран вызова</string>
+    <string name="no_connection">Все еще нет подключения к интернету</string>
+    <string name="avatar">Аватар</string>
+    <string name="background">Фон</string>
+    <string name="alert">Оповещение</string>
+    <string name="icon">Иконка</string>
+    <string name="quick_theme">Быстрая тема</string>
+    <string name="customize">Настроить</string>
+
 </resources>

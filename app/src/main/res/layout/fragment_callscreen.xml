@@ -15,7 +15,7 @@
 
             <TextView
                 android:id="@+id/quickTheme"
-                android:text="Quick Theme"
+                android:text="@string/quick_theme"
                 style="@style/CustomTextStyleSemiBold16sp"
                 android:gravity="center"
                 app:layout_constraintTop_toTopOf="parent"
@@ -31,10 +31,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                app:layout_constraintBottom_toBottomOf="@id/allQuickThemes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/allQuickThemes" />
+
 
             <TextView
                 android:id="@+id/customize"
-                android:text="Customize"
+                android:text="@string/customize"
                 style="@style/CustomTextStyleSemiBold16sp"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@+id/allQuickThemes"
@@ -55,13 +64,132 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/currentCallScreen"
                     android:src="@drawable/default_callscreen"
-                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_margin="@dimen/_7sdp"
                     android:scaleType="centerCrop"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape10dp"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape8dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/currentFrame"
+                app:layout_constraintEnd_toStartOf="@+id/currentFrame"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/currentFrame">
+
+                <LinearLayout
+                    android:id="@+id/backgroundCs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_36sdp"
+                        android:layout_height="@dimen/_36sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/icon_cs_bg" />
+
+                    <TextView
+                        style="@style/CustomTextStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/background"
+                        android:textColor="@color/main_color"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/alertCs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_36sdp"
+                        android:layout_height="@dimen/_36sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/icon_cs_alert" />
+
+                    <TextView
+                        style="@style/CustomTextStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/alert"
+                        android:textColor="@color/main_color"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/currentFrame"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/currentFrame"
+                app:layout_constraintTop_toTopOf="@id/currentFrame">
+
+                <LinearLayout
+                    android:id="@+id/avatarCs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_36sdp"
+                        android:layout_height="@dimen/_36sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/icon_cs_avt" />
+
+                    <TextView
+                        style="@style/CustomTextStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/avatar"
+                        android:textColor="@color/main_color"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/iconCs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_36sdp"
+                        android:layout_height="@dimen/_36sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/icon_cs_call" />
+
+                    <TextView
+                        style="@style/CustomTextStyleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/icon"
+                        android:textColor="@color/main_color"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -82,7 +210,7 @@
                     android:layout_height="@dimen/_18sdp"/>
 
                 <TextView
-                    android:text="Set as Call Screen"
+                    android:text="@string/callscreen_setting"
                     android:textColor="@color/white"
                     style="@style/CustomTextStyleSemiBold16sp"
                     android:layout_weight="2"
@@ -93,6 +221,7 @@
 
                 <ImageView
                     android:src="@drawable/icon_back_cs"
+                    android:contentDescription="@string/imageview"
                     android:layout_width="@dimen/_18sdp"
                     android:layout_weight="1"
                     android:layout_height="@dimen/_18sdp"/>

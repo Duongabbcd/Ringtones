@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
@@ -93,6 +94,22 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
                     putExtra("categoryId", 75)
                     putExtra("isPremium", false)
                 })
+            }
+
+            wallPaperViewModel.loading1.observe(this@PremiumWallpaperActivity) {
+                loading1.isVisible = it
+                newWallpaperCount.isVisible = !it
+
+            }
+
+            wallPaperViewModel.loading2.observe(this@PremiumWallpaperActivity) {
+                loading2.isVisible = it
+                trendingCount.isVisible = !it
+            }
+
+            wallPaperViewModel.loading3.observe(this@PremiumWallpaperActivity) {
+                loading3.isVisible = it
+                sub1Count.isVisible = !it
             }
 
         }

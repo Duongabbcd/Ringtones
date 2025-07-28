@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/_220sdp"
     android:layout_height="@dimen/_280sdp"
+    xmlns:circular="http://schemas.android.com/tools"
     android:backgroundTint="#F2EBFD"
     app:cardCornerRadius="@dimen/_20sdp"
     app:cardElevation="@dimen/_4sdp">
@@ -22,30 +23,32 @@
             android:layout_gravity="center">
 
             <!-- Your CircularSeekBar -->
-            <me.tankery.lib.circularseekbar.CircularSeekBar
+            <com.ezt.ringify.ringtonewallpaper.custom_view.RingtoneCircularSeekbar
                 android:id="@+id/csb"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:cs_circle_color="@color/transparent"
                 app:cs_circle_progress_color="#FF6586"
-                app:cs_circle_stroke_width="@dimen/_3sdp"
+                app:cs_circle_stroke_width="@dimen/_2sdp"
                 app:cs_circle_style="round"
                 app:cs_disable_pointer="false"
                 app:cs_disable_progress_glow="true"
                 app:cs_end_angle="180"
                 app:cs_max="100"
+                app:cs_pointer_halo_border_width="@dimen/_6sdp"
                 app:cs_move_outside_circle="true"
                 app:cs_pointer_color="#FF6586"
-                app:cs_pointer_halo_border_width="@dimen/_2sdp"
-                app:cs_pointer_halo_color="@color/transparent"
-                app:cs_pointer_halo_width="@dimen/_8sdp"
+                app:cs_pointer_halo_color="#FF6586"
+                app:cs_pointer_halo_width="@dimen/_10sdp"
+                app:cs_progress="10"
                 app:cs_negative_enabled="true"
-                app:cs_progress="0"
+                app:cs_thumb_drawable="@drawable/icon_ringtone_pointer"
                 app:cs_start_angle="180" />
 
             <!-- Your center image -->
             <ImageView
                 android:id="@+id/imageRecord"
+                android:contentDescription="@string/imageview"
                 android:layout_width="@dimen/_140sdp"
                 android:layout_height="@dimen/_140sdp"
                 android:layout_margin="@dimen/_10sdp"
@@ -85,6 +88,7 @@
 
             <TextView
                 android:id="@+id/tvTime"
+                android:contentDescription="@string/imageview"
                 style="@style/CustomTextStyleMedium14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

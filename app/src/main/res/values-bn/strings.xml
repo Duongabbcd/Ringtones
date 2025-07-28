@@ -129,4 +129,13 @@
     <string name="crop">ক্রপ করুন</string>
     <string name="wallpaper_desc">ওয়ালপেপার বিবরণ</string>
 
+    <string name="callscreen_setting">কল স্ক্রিন হিসেবে সেট করুন</string>
+    <string name="no_connection">এখনও ইন্টারনেট সংযোগ নেই</string>
+    <string name="avatar">অবতার</string>
+    <string name="background">পটভূমি</string>
+    <string name="alert">সতর্কতা</string>
+    <string name="icon">আইকন</string>
+    <string name="quick_theme">দ্রুত থিম</string>
+    <string name="customize">কাস্টমাইজ করুন</string>
+
 </resources>

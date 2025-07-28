@@ -119,4 +119,13 @@
     <string name="crop">자르기</string>
     <string name="wallpaper_desc">배경화면 설명</string>
 
+    <string name="callscreen_setting">통화 화면으로 설정</string>
+    <string name="no_connection">여전히 인터넷 연결 없음</string>
+    <string name="avatar">아바타</string>
+    <string name="background">배경</string>
+    <string name="alert">알림</string>
+    <string name="icon">아이콘</string>
+    <string name="quick_theme">빠른 테마</string>
+    <string name="customize">사용자 설정</string>
+
 </resources>

@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentCallscreenBinding
@@ -28,10 +31,20 @@ class CallScreenFragment :
     private val connectionViewModel: InternetConnectionViewModel by activityViewModels()
 
     private val callScreenAdapter: CallScreenAdapter by lazy {
-        CallScreenAdapter {
-
+        CallScreenAdapter { result ->
+            currentCallScreen = result
+            displayCallScreen()
         }
     }
+
+    private fun displayCallScreen() {
+        val ctx = context ?: return
+        val url = currentCallScreen.thumbnail.url.medium
+        Glide.with(ctx).load(url).placeholder(R.drawable.default_callscreen)
+            .error(R.drawable.default_callscreen).into(binding.currentCallScreen)
+    }
+
+    private var currentCallScreen: CallScreenItem = CallScreenItem.CALLSCREEN_EMPTY
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,6 +62,27 @@ class CallScreenFragment :
 
             callScreenViewModel.callScreens.observe(viewLifecycleOwner) { items ->
                 callScreenAdapter.submitList(items)
+            }
+
+            noInternet.tryAgain.setOnClickListener {
+                withSafeContext { ctx ->
+                    val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                    if (connected) {
+                        binding.origin.visible()
+                        binding.noInternet.root.visibility = View.VISIBLE
+                        // Maybe reload your data
+                    } else {
+                        Toast.makeText(
+                            ctx,
+                            R.string.no_connection,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+            callScreenViewModel.loading.observe(viewLifecycleOwner) { result ->
+                progressBar.isVisible = result
             }
         }
     }
@@ -115,9 +149,20 @@ class CallScreenAdapter(private val onClickListener: (CallScreenItem) -> Unit) :
         fun bind(position: Int) {
             val callScreen = allCallScreens[position]
             binding.apply {
-                Glide.with(context).load(callScreen.thumbnail.url.medium)
-                    .placeholder(R.drawable.default_callscreen)
-                    .error(R.drawable.default_callscreen).into(binding.callScreenImage)
+                binding.callScreenImage.load(callScreen.thumbnail.url.medium) {
+                    crossfade(true) // Optional fade animation
+                    placeholder(R.drawable.default_callscreen)
+                    error(R.drawable.default_callscreen)
+                    listener(
+                        onSuccess = { _, _ ->
+                            progressBar.visibility = View.GONE
+                        },
+                        onError = { _, _ ->
+                            progressBar.visibility = View.GONE
+                        }
+                    )
+                }
+
 
                 root.setOnClickListener {
                     onClickListener(callScreen)

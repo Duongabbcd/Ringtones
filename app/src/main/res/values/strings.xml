@@ -140,4 +140,13 @@
     <string name="wallpaper_desc">Wallpaper_desc</string>
     <string name="slide">Slide</string>
 
+    <string name="callscreen_setting">Set as Call Screen</string>
+    <string name="no_connection">Still no internet connection</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Background</string>
+    <string name="alert">Alert</string>
+    <string name="icon">Icon</string>
+    <string name="quick_theme">Quick Theme</string>
+    <string name="customize">Customize</string>
+
 </resources>

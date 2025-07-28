@@ -17,6 +17,15 @@
     <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
     <string name="high_light_3">Anrufbildschirm</string>
 
+    <string name="callscreen_setting">Als Anrufbildschirm festlegen</string>
+    <string name="no_connection">Immer noch keine Internetverbindung</string>
+    <string name="avatar">Avatar</string>
+    <string name="background">Hintergrund</string>
+    <string name="alert">Alarm</string>
+    <string name="icon">Symbol</string>
+    <string name="quick_theme">Schnelles Thema</string>
+    <string name="customize">Anpassen</string>
+
     <string name="fav_1">Wähle mindestens 3 Musikrichtungen, die du magst</string>
     <string name="fav_light_1">Musikrichtungen</string>
     <string name="fav_2">Wähle dein Lieblingshintergrundbild</string>

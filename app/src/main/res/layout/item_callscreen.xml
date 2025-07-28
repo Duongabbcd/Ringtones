@@ -15,4 +15,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/main_color"
+        app:layout_constraintBottom_toBottomOf="@id/callScreenImage"
+        app:layout_constraintEnd_toEndOf="@id/callScreenImage"
+        app:layout_constraintStart_toStartOf="@id/callScreenImage"
+        app:layout_constraintTop_toTopOf="@id/callScreenImage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

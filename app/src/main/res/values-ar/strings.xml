@@ -131,4 +131,13 @@
     <string name="reset">إعادة تعيين</string>
     <string name="crop">قص</string>
     <string name="wallpaper_desc">وصف ورق الجدران</string>
+
+    <string name="callscreen_setting">تعيين كشاشة مكالمة</string>
+    <string name="no_connection">لا توجد بعد اتصال بالإنترنت</string>
+    <string name="avatar">الصورة الرمزية</string>
+    <string name="background">الخلفية</string>
+    <string name="alert">تنبيه</string>
+    <string name="icon">أيقونة</string>
+    <string name="quick_theme">السمة السريعة</string>
+    <string name="customize">تخصيص</string>
 </resources>
