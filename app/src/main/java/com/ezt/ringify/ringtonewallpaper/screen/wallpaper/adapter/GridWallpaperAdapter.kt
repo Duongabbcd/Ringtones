@@ -36,13 +36,8 @@ class GridWallpaperAdapter() :
     }
 
     override fun getItemCount(): Int {
-//        val extra = allCategories.size / INTERVAL
         return allWallpapers.size
     }
-
-//    override fun getItemViewType(position: Int): Int {
-//        return if ((position + 1) % (INTERVAL + 1) == 0) VIEW_TYPE_LOADING else VIEW_TYPE_CATEGORY
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
@@ -67,8 +62,7 @@ class GridWallpaperAdapter() :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is GridWallpaperViewHolder) {
-            val dataIndex = position - (position / (INTERVAL + 1))
-            holder.bind(dataIndex)
+            holder.bind(position)
         } else if (holder is LoadingViewHolder) {
             holder.bind()
         }
@@ -78,13 +72,14 @@ class GridWallpaperAdapter() :
         isPremium = premium
         isLive = live
 
+        val start = allWallpapers.size
         allWallpapers.clear()
         allWallpapers.addAll(list)
 
         imagesToLoadInBatch = INTERVAL
         imagesLoadedInBatch = 0
 
-        notifyDataSetChanged()
+        notifyItemRangeInserted(start, allWallpapers.size)
     }
 
     inner class GridWallpaperViewHolder(private val binding: ItemGridWallpaperBinding) :
@@ -100,8 +95,7 @@ class GridWallpaperAdapter() :
                 val url = wallpaper.thumbnail?.url?.medium
                     ?: wallpaper.contents.firstOrNull()?.url?.full
 
-                println("GridWallpaperViewHolder: ${wallpaper.thumbnail?.url?.full}")
-                println("GridWallpaperViewHolder: ${wallpaper.contents.firstOrNull()?.url?.full}")
+                println("GridWallpaperViewHolder: ${wallpaper.id} and ${wallpaper.contents.first().url.full}")
                 if (url != null) {
                     progressBar.visibility = View.VISIBLE
                     loading.visibility = View.VISIBLE

@@ -37,9 +37,10 @@ class CategoryDetailAdapter(private val onClickListener: (Category) -> Unit): Re
 
     fun submitList(list: List<Category>) {
         println("list: $list")
-        allCategories.clear()
+        val start = allCategories.size
         allCategories.addAll(list)
-        notifyDataSetChanged()
+
+        notifyItemRangeInserted(start, list.size)
     }
 
     override fun getItemCount(): Int =allCategories.size

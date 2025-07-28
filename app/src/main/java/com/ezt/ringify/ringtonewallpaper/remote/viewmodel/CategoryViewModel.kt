@@ -33,12 +33,15 @@ class CategoryViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private var currentPage1 = 1
+    private var hasMorePages1 = true
+    val allWallpapers1 = mutableListOf<Wallpaper>()
 
     // Store wallpapers per category id
     private val _wallpapersMap = MutableLiveData<Map<Int, List<Wallpaper>>>()
     val wallpapersMap: LiveData<Map<Int, List<Wallpaper>>> get() = _wallpapersMap
 
-    private val wallpaperCache = mutableMapOf<Int, List<Wallpaper>>() // prevent duplicate calls
+    private val wallpaperCache = mutableMapOf<Int, MutableList<Wallpaper>>() // prevent duplicate calls
 
     fun loadRingtoneCategories() = viewModelScope.launch {
         _loading.value = true
@@ -96,12 +99,20 @@ class CategoryViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val result = repository.fetchWallpaperByCategory(categoryId = categoryId)
-                wallpaperCache[categoryId] = result.data.data
+                if (!hasMorePages1 || _loading.value ==  true ) return@launch
+                _loading.value = true
+                val result = repository.fetchWallpaperByCategory(categoryId = categoryId, page = currentPage1)
+                hasMorePages1 = result.data.nextPageUrl != null
+                currentPage1++
+
+                wallpaperCache[categoryId]?.addAll(result.data.data)
                 _wallpapersMap.value = wallpaperCache.toMap()
+
+                _error.value = null
             } catch (e: Exception) {
                 Log.e("ViewModel", "Failed: ${e.message}")
             } finally {
+                _loading.value = false
                 adapter.setCategoryLoading(categoryId, false)
             }
         }

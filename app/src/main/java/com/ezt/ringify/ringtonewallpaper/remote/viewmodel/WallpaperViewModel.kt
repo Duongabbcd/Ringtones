@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ezt.ringify.ringtonewallpaper.remote.api.SearchRequest
+import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.model.Tag
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.model.WallpaperResponse
@@ -80,19 +81,35 @@ class WallpaperViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private var currentPage1 = 1
+    private var hasMorePages1 = true
+    private var currentPage2 = 1
+    private var hasMorePages2 = true
+    private var currentPage3 = 1
+    private var hasMorePages3 = true
+    private var currentPage4 = 1
+    private var hasMorePages4 = true
+    private var currentPage5 = 1
+    private var hasMorePages5 = true
+
+    val allWallpapers1 = mutableListOf<Wallpaper>()
+    val allWallpapers2 = mutableListOf<Wallpaper>()
+    val allWallpapers3 = mutableListOf<Wallpaper>()
+    val allWallpapers4 = mutableListOf<Wallpaper>()
+    val allWallpapers5 = mutableListOf<Wallpaper>()
 
 
     fun loadTrendingWallpapers() = viewModelScope.launch {
+        if (!hasMorePages1 || _loading1.value ==  true ) return@launch
         _loading1.value = true
         try {
-            val result = repository.fetchTrendingWallpapers()
+            val result = repository.fetchTrendingWallpapers(currentPage1)
             _total1.value = result.data.total
-            _trendingWallpaper.value = result.data.data
-            result.data.data.apply {
-                this.onEach {
-               println("loadTrendingWallpapers: $it")
-                }
-            }
+
+            hasMorePages1 = result.data.nextPageUrl != null
+            currentPage1++
+            allWallpapers1.addAll(result.data.data)
+            _trendingWallpaper.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
@@ -102,13 +119,16 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-
     fun loadNewWallpapers() = viewModelScope.launch {
+        if (!hasMorePages2 || _loading2.value ==  true ) return@launch
         _loading2.value = true
         try {
-            val result = repository.fetchNewWallpapers()
+            val result = repository.fetchNewWallpapers(currentPage2)
             _total2.value = result.data.total
-            _newWallpaper.value = result.data.data
+            hasMorePages2 = result.data.nextPageUrl != null
+            currentPage2++
+            allWallpapers2.addAll(result.data.data)
+            _newWallpaper.value = allWallpapers2
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
@@ -118,12 +138,16 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadSubWallpapers1(pageId: Int) = viewModelScope.launch {
+    fun loadSubWallpapers1(categoryId: Int) = viewModelScope.launch {
+        if (!hasMorePages3 || _loading3.value ==  true ) return@launch
         _loading3.value = true
         try {
-            val result = repository.fetchWallpaperByCategory(pageId)
+            val result = repository.fetchWallpaperByCategory(categoryId, currentPage3)
             _total3.value = result.data.total
-            _subWallpaper1.value = result.data.data
+            hasMorePages3 = result.data.nextPageUrl != null
+            currentPage3++
+            allWallpapers3.addAll(result.data.data)
+            _subWallpaper1.value = allWallpapers3
             println("loadSubWallpapers1: ${result.data.total}")
             _error.value = null
         } catch (e: Exception) {
@@ -135,11 +159,15 @@ class WallpaperViewModel @Inject constructor(
     }
 
     fun loadSubWallpapers2(pageId: Int) = viewModelScope.launch {
+        if (!hasMorePages4 || _loading4.value ==  true ) return@launch
         _loading4.value = true
         try {
-            val result = repository.fetchWallpaperByCategory(pageId)
+            val result = repository.fetchWallpaperByCategory(pageId, page = currentPage4)
             _total4.value= result.data.total
-            _subWallpaper2.value = result.data.data
+            hasMorePages4 = result.data.nextPageUrl != null
+            currentPage4++
+            allWallpapers4.addAll(result.data.data)
+            _subWallpaper2.value = allWallpapers4
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
@@ -150,11 +178,15 @@ class WallpaperViewModel @Inject constructor(
     }
 
     fun loadSubWallpapers3(pageId: Int) = viewModelScope.launch {
+        if (!hasMorePages5 || _loading5.value ==  true ) return@launch
         _loading5.value = true
         try {
-            val result = repository.fetchWallpaperByCategory(pageId)
+            val result = repository.fetchWallpaperByCategory(pageId, page=currentPage5)
             _total5.value = result.data.total
-            _subWallpaper3.value = result.data.data
+            hasMorePages5 = result.data.nextPageUrl != null
+            currentPage5++
+            allWallpapers5.addAll(result.data.data)
+            _subWallpaper3.value = allWallpapers5
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
@@ -164,6 +196,67 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
+    fun loadLiveWallpapers() = viewModelScope.launch {
+        if (!hasMorePages1 || _loading1.value ==  true ) return@launch
+        _loading1.value = true
+        try {
+            val result = repository.getLiveWallpaper(currentPage1)
+            _total1.value = result.data.total
+            hasMorePages1 = result.data.nextPageUrl != null
+            currentPage1++
+            allWallpapers1.addAll(result.data.data)
+            _liveWallpapers.value = allWallpapers1
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
+    fun loadSlideWallpaper() = viewModelScope.launch {
+        if (!hasMorePages2 || _loading2.value ==  true ) return@launch
+        _loading2.value = true
+        try {
+            val result = repository.getSlideWallpaper(currentPage2)
+            _total2.value = result.data.total
+            hasMorePages2 = result.data.nextPageUrl != null
+            currentPage2++
+
+            allWallpapers2.addAll(result.data.data)
+            _slideWallpaper.value = allWallpapers2
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading2.value = false
+        }
+    }
+
+    fun loadSingleWallpaper() = viewModelScope.launch {
+        if (!hasMorePages3 || _loading3.value ==  true ) return@launch
+        _loading3.value = true
+        try {
+            val result = repository.getSingleWallpaper(currentPage3)
+            _total3.value = result.data.total
+            hasMorePages3 = result.data.nextPageUrl != null
+            currentPage3++
+
+            allWallpapers3.addAll(result.data.data)
+            _singleWallpapers.value = allWallpapers3
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading3.value = false
+        }
+    }
+
+
+    //Later
     fun searchTag(searchText: String) = viewModelScope.launch {
         _loading1.value = true
         try {
@@ -186,7 +279,6 @@ class WallpaperViewModel @Inject constructor(
             _loading1.value = false
         }
     }
-
 
     fun searchWallpaperByTag(tagId: Int) = viewModelScope.launch {
         _loading1.value = true
@@ -215,51 +307,6 @@ class WallpaperViewModel @Inject constructor(
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
-        }
-    }
-
-    fun loadLiveWallpapers() = viewModelScope.launch {
-        _loading1.value = true
-        try {
-            val result = repository.getLiveWallpaper()
-            _liveWallpapers.value = result.data.data
-
-            _error.value = null
-        } catch (e: Exception) {
-            println("loadWallpapers: ${e.message}")
-            _error.value = e.localizedMessage
-        } finally {
-            _loading1.value = false
-        }
-    }
-
-    fun loadSlideWallpaper() = viewModelScope.launch {
-        _loading2.value = true
-        try {
-            val result = repository.getSlideWallpaper()
-            _slideWallpaper.value = result.data.data
-
-            _error.value = null
-        } catch (e: Exception) {
-            println("loadWallpapers: ${e.message}")
-            _error.value = e.localizedMessage
-        } finally {
-            _loading2.value = false
-        }
-    }
-
-    fun loadSingleWallpaper() = viewModelScope.launch {
-        _loading3.value = true
-        try {
-            val result = repository.getSingleWallpaper()
-            _singleWallpapers.value = result.data.data
-
-            _error.value = null
-        } catch (e: Exception) {
-            println("loadWallpapers: ${e.message}")
-            _error.value = e.localizedMessage
-        } finally {
-            _loading3.value = false
         }
     }
 

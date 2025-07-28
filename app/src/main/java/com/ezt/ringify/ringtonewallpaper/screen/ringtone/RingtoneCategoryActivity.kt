@@ -3,6 +3,8 @@ package com.ezt.ringify.ringtonewallpaper.screen.ringtone
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -69,7 +71,27 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
             binding.origin.visible()
             categoryViewModel.loadRingtoneCategories()
             viewModel.loadAllRingtones()
+            loadMoreData()
             binding.noInternet.root.gone()
         }
+    }
+
+
+    private fun loadMoreData() {
+        binding.allCategories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                val isAtBottom = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
+                if (isAtBottom) {
+                    categoryViewModel.loadRingtoneCategories()
+                }
+            }
+        })
+
     }
 }

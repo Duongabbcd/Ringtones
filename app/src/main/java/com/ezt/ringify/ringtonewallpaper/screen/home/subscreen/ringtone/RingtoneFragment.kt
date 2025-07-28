@@ -8,6 +8,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -56,6 +58,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
 
             allCategories.adapter = categoryAdapter
             allPopular.adapter = ringToneAdapter
+
             withSafeContext { ctx ->
                 allCategories.layoutManager = GridLayoutManager(ctx, 2)
             }

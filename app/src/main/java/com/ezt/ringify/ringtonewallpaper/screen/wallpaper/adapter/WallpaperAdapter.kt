@@ -43,6 +43,8 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
     fun submitList(list: List<Wallpaper>, isPremium: Boolean = false) {
         allWallpapers.clear()
         allWallpapers.addAll(list)
+
+
         limitedWallpapers.clear()
         limitedWallpapers.addAll(list.take(10))
 

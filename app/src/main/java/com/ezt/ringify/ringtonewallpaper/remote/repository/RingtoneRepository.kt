@@ -17,21 +17,21 @@ class RingtoneRepository @Inject constructor(
     private val apiService: ApiService
 ) {
     suspend fun fetchRingtones(): RingtoneResponse = apiService.getRingtones()
-    suspend fun fetchPopularRingtones(orderBy: String): RingtoneResponse = apiService.getPopularRingtones()
-    suspend fun fetchTrendingRingtones(): RingtoneResponse = apiService.getTrendingRingtones()
+    suspend fun fetchPopularRingtones(page: Int): RingtoneResponse = apiService.getPopularRingtones(page)
+    suspend fun fetchTrendingRingtones(currentPage2: Int): RingtoneResponse = apiService.getTrendingRingtones(currentPage2)
 
     suspend fun fetchCallScreens(): CallScreenResponse = apiService.getCallScreens()
     suspend fun fetchContents(): ContentResponse = apiService.getContents()
     suspend fun fetchRingtoneCategories(): CategoriesResponse = apiService.getRingtoneCategory()
 
-    suspend fun fetchNewWallpapers(): WallpaperResponse = apiService.getNewWallpapers()
+    suspend fun fetchNewWallpapers(page: Int): WallpaperResponse = apiService.getNewWallpapers(page = page)
 //    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
     suspend fun fetchAllWallpaperCategories(): CategoriesResponse = apiService.getAllWallpaperCategories()
-    suspend fun fetchTrendingWallpapers(): WallpaperResponse = apiService.getTrendingWallpapers()
-    suspend fun fetchWallpaperByCategory(categoryId: Int): WallpaperResponse = apiService.getWallpapersByCategory(categoryId = categoryId)
+    suspend fun fetchTrendingWallpapers(page: Int): WallpaperResponse = apiService.getTrendingWallpapers(page)
+    suspend fun fetchWallpaperByCategory(categoryId: Int, page: Int): WallpaperResponse = apiService.getWallpapersByCategory(categoryId = categoryId,page= page)
     suspend fun getAllExcludingCategory(): CategoriesResponse = apiService.getAllExcludingCategory()
 
-    suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy)
+    suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String, page: Int): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy, page = page)
     suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
         SearchRequest(name))
 
@@ -43,10 +43,10 @@ class RingtoneRepository @Inject constructor(
    suspend fun getCategoryById(categoryId: Int) = apiService.getCategoryById(where = "type 1,id $categoryId")
 
     //live wallpaper
-    suspend fun getLiveWallpaper() = apiService.getLiveWallpaper()
+    suspend fun getLiveWallpaper(page: Int) = apiService.getLiveWallpaper(page)
     suspend fun getPremiumVideoWallpaper() = apiService.getPremiumVideoWallpaper()
-    suspend fun getSlideWallpaper() = apiService.getSlideWallpaper()
-    suspend fun getSingleWallpaper() = apiService.getSingleWallpaper()
+    suspend fun getSlideWallpaper(page: Int) = apiService.getSlideWallpaper(page)
+    suspend fun getSingleWallpaper(page: Int) = apiService.getSingleWallpaper(page)
 
     companion object {
         var TOKEN: String = ""

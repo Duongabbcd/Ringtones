@@ -3,6 +3,8 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
@@ -58,16 +60,6 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
 
             val layoutManager = GridLayoutManager(this@PreviewWallpaperActivity, 3)
 
-//            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-//                override fun getSpanSize(position: Int): Int {
-//                    return if (wallpaperAdapter.getItemViewType(position) == VIEW_TYPE_LOADING) {
-//                        3 // full-width for progress bar
-//                    } else {
-//                        1 // normal items take 1 span
-//                    }
-//                }
-//            }
-
             allCategories.layoutManager = layoutManager
             allCategories.adapter = wallpaperAdapter
 
@@ -82,8 +74,70 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
         } else {
             binding.origin.visible()
             displayItems()
+            loadMoreData()
             binding.noInternet.root.gone()
         }
+    }
+
+    private fun loadMoreData() {
+       binding.apply {
+           allCategories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+               override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                   super.onScrolled(recyclerView, dx, dy)
+                   val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+
+                   val visibleItemCount = layoutManager.childCount
+                   val totalItemCount = layoutManager.itemCount
+                   val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                   val isAtBottom = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
+
+                   if(isAtBottom) {
+                       when(categoryId) {
+                           -3 -> {
+                               nameScreen.text = resources.getString(R.string.favourite)
+                               favourite.loadAllWallpapers()
+                           }
+
+                           -2 -> {
+                               nameScreen.text = resources.getString(R.string.trending)
+                               wallPaperViewModel.loadTrendingWallpapers()
+                           }
+
+                           -1 -> {
+                               nameScreen.text = resources.getString(R.string.new_wallpaper)
+                               wallPaperViewModel.loadNewWallpapers()
+                           }
+
+                           else -> {
+                               if (categoryId == 75) {
+                                   when (type) {
+                                       2 -> {
+                                           wallPaperViewModel.loadSlideWallpaper()
+                                       }
+
+                                       3 -> {
+                                           wallPaperViewModel.loadSingleWallpaper()
+
+                                       }
+
+                                       else -> {
+                                           wallPaperViewModel.loadLiveWallpapers()
+                                       }
+                                   }
+
+                               }
+
+                               println("category: $categoryId")
+                               categoryViewModel.getCategoryByName(categoryId = categoryId)
+                               wallPaperViewModel.loadSubWallpapers1(categoryId)
+
+                           }
+                       }
+                   }
+               }
+           })
+       }
     }
 
 

@@ -43,9 +43,9 @@ class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adap
     }
 
     fun submitList(list: List<Ringtone>) {
-        allRingtones.clear()
+        val start = allRingtones.size
         allRingtones.addAll(list)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(start, list.size)
     }
 
     override fun getItemCount(): Int = allRingtones.size

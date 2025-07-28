@@ -19,20 +19,24 @@ interface ApiService {
     suspend fun getRingtones(): RingtoneResponse
 
     @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1&order_by=name+asc")
-    suspend fun getPopularRingtones() : RingtoneResponse
+    suspend fun getPopularRingtones(
+        @Query("page")page: Int = 1
+    ): RingtoneResponse
 
     @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
-    suspend fun getTrendingRingtones() : RingtoneResponse
+    suspend fun getTrendingRingtones(
+        @Query("page")page: Int = 1
+    ): RingtoneResponse
 
 
     @GET("api/v1/call_screens?app=1")
     suspend fun getCallScreens(): CallScreenResponse
 
-    @GET("api/v1/contents?app=1&page=2")
+    @GET("api/v1/contents?app=1")
     suspend fun getContents(): ContentResponse
 
     //Categories
-    @GET("api/v1/categories?app=1&page=2&with=author+id%2Cname%2Clink&type=2")
+    @GET("api/v1/categories?app=1&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
 
     @GET("api/v1/categories?app=1&with=author+name,id&where=type+2")
@@ -54,16 +58,22 @@ interface ApiService {
     suspend fun getAllWallpaperCategories(): CategoriesResponse
 
     @GET("api/v1/wallpapers?app=1&where=trend+1")
-    suspend fun getTrendingWallpapers() : WallpaperResponse
+    suspend fun getTrendingWallpapers(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
 
     @GET("api/v1/wallpapers?app=1&order_by=updated_at+desc")
-    suspend fun getNewWallpapers(): WallpaperResponse
+    suspend fun getNewWallpapers(
+        @Query("whereIn") whereIn: String? ="type:1,2",
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
 
     @GET("api/v1/wallpapers?app=1")
     suspend fun getWallpapersByCategory(
         @Query("with") with: String = "tags+id,name-apps+id,name",
         @Query("app") appId: Int = 1,
-        @Query("category") categoryId: Int
+        @Query("category") categoryId: Int,
+        @Query("page") page: Int = 1
     ): WallpaperResponse
 
     @GET("api/v1/categories?app=1")
@@ -90,16 +100,22 @@ interface ApiService {
     ): WallpaperResponse
 
     @GET("api/v1/wallpapers?where=type+2")
-    suspend fun getLiveWallpaper(): WallpaperResponse
+    suspend fun getLiveWallpaper(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
 
     @GET("api/v1/wallpapers?where=type+4")
     suspend fun getPremiumVideoWallpaper(): WallpaperResponse
 
     @GET("/api/v1/wallpapers?where=type+3,private+0")
-    suspend fun getSlideWallpaper(): WallpaperResponse
+    suspend fun getSlideWallpaper(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
 
     @GET("/api/v1/wallpapers?where=type+3,private+1")
-    suspend fun getSingleWallpaper(): WallpaperResponse
+    suspend fun getSingleWallpaper(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
 
     @GET("api/v1/wallpapers?app=1&category=75&private=1&with=tags+id,name")
     suspend fun getPremiumWallpaper(): WallpaperResponse
