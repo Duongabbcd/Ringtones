@@ -98,7 +98,10 @@ class GridWallpaperAdapter() :
                 premiumIcon.visibility = if (isPremium) View.VISIBLE else View.GONE
 
                 val url = wallpaper.thumbnail?.url?.medium
-                    ?: wallpaper.contents.firstOrNull()?.url?.medium
+                    ?: wallpaper.contents.firstOrNull()?.url?.full
+
+                println("GridWallpaperViewHolder: ${wallpaper.thumbnail?.url?.full}")
+                println("GridWallpaperViewHolder: ${wallpaper.contents.firstOrNull()?.url?.full}")
                 if (url != null) {
                     progressBar.visibility = View.VISIBLE
                     loading.visibility = View.VISIBLE

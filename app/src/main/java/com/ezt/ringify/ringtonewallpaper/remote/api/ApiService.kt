@@ -92,6 +92,9 @@ interface ApiService {
     @GET("api/v1/wallpapers?where=type+2")
     suspend fun getLiveWallpaper(): WallpaperResponse
 
+    @GET("api/v1/wallpapers?where=type+4")
+    suspend fun getPremiumVideoWallpaper(): WallpaperResponse
+
     @GET("/api/v1/wallpapers?where=type+3,private+0")
     suspend fun getSlideWallpaper(): WallpaperResponse
 

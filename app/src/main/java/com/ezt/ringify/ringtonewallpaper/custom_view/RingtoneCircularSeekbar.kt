@@ -1,6 +1,5 @@
 package com.ezt.ringify.ringtonewallpaper.custom_view
 
-import android.R.attr.strokeWidth
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Paint

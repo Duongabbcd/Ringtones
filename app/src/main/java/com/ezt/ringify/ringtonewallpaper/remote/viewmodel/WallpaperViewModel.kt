@@ -203,10 +203,10 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadPremiumWallpaper() = viewModelScope.launch {
+    fun loadPremiumVideoWallpaper() = viewModelScope.launch {
         _loading1.value = true
         try {
-            val result = repository.getPremiumWallpaper()
+            val result = repository.getPremiumVideoWallpaper()
             _premiumWallpapers.value = result.data.data
 
             _error.value = null

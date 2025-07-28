@@ -79,20 +79,27 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             }
 
             openAll1.setOnClickListener {
-                startActivity(Intent(this@PremiumWallpaperActivity, LiveWallpaperActivity::class.java))
+                startActivity(
+                    Intent(
+                        this@PremiumWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("categoryId", 75)
+                        putExtra("type", 1)
+                    })
             }
 
             openAll2.setOnClickListener {
                 startActivity(Intent(this@PremiumWallpaperActivity, PreviewWallpaperActivity::class.java).apply {
                     putExtra("categoryId", 75)
-                    putExtra("isPremium", true)
+                    putExtra("type", 2)
                 })
             }
 
             openAll3.setOnClickListener {
                 startActivity(Intent(this@PremiumWallpaperActivity, PreviewWallpaperActivity::class.java).apply {
                     putExtra("categoryId", 75)
-                    putExtra("isPremium", false)
+                    putExtra("type", 3)
                 })
             }
 

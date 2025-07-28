@@ -45,6 +45,8 @@ class VideoWallpaperService : WallpaperService() {
         }
 
         @OptIn(UnstableApi::class)
+
+
         private fun startVideo() {
             val prefs = getSharedPreferences("video_wallpaper", MODE_PRIVATE)
             val videoUrl = prefs.getString("video_url", null)
@@ -64,7 +66,7 @@ class VideoWallpaperService : WallpaperService() {
                 repeatMode = Player.REPEAT_MODE_ONE
 
                 setVideoSurfaceHolder(surfaceHolder)
-                videoScalingMode = C.VIDEO_SCALING_MODE_DEFAULT
+                videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
 
                 prepare()
                 playWhenReady = true

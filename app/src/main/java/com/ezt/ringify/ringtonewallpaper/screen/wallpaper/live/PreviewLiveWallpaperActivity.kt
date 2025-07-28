@@ -366,5 +366,10 @@ class PreviewLiveWallpaperActivity :
         PlayerManager.release()
         CacheUtil.release(this)
     }
+
+    override fun onStop() {
+        super.onStop()
+        PlayerManager.release()
+    }
 }
 

@@ -37,8 +37,8 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     private val categoryId by lazy {
         intent.getIntExtra("categoryId", -1)
     }
- private val isPremium by lazy {
-        intent.getBooleanExtra("isPremium", false)
+    private val type by lazy {
+        intent.getIntExtra("type", 1)
     }
 
 
@@ -123,18 +123,30 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
 
                 else -> {
                     if (categoryId == 75) {
-                        if(isPremium) {
-                            wallPaperViewModel.loadSlideWallpaper()
-                            wallPaperViewModel.slideWallpaper.observe(this@PreviewWallpaperActivity) { items ->
-                                wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                        when (type) {
+                            2 -> {
+                                wallPaperViewModel.loadSlideWallpaper()
+                                wallPaperViewModel.slideWallpaper.observe(this@PreviewWallpaperActivity) { items ->
+                                    wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                                }
                             }
-                        } else {
-                            wallPaperViewModel.loadSingleWallpaper()
-                            wallPaperViewModel.singleWallpapers.observe(this@PreviewWallpaperActivity) { items ->
-                                wallpaperAdapter.submitList(items, premium = categoryId == 75)
+
+                            3 -> {
+                                wallPaperViewModel.loadSingleWallpaper()
+                                wallPaperViewModel.singleWallpapers.observe(this@PreviewWallpaperActivity) { items ->
+                                    wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                                }
+                            }
+
+                            else -> {
+                                wallPaperViewModel.loadLiveWallpapers()
+                                wallPaperViewModel.liveWallpapers.observe(this@PreviewWallpaperActivity) { items ->
+                                    wallpaperAdapter.submitList(items, premium = categoryId == 75)
+                                }
+                                return@apply
                             }
                         }
-                        return@apply
+
                     }
 
                     println("category: $categoryId")

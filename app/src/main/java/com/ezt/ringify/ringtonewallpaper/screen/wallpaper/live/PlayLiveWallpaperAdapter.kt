@@ -76,46 +76,79 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
 
         private var currentUrl: String? = null
         private var currentListener: Player.Listener? = null
+        private var hasRenderedFirstFrame = false
 
         fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
 
-            // If URL hasn't changed and current state matches, skip re-attaching player
-            println("Before test 0 : $isCurrent")
-            println("Before test 1 : $videoUrl")
-            println("Before test 2 : $currentUrl")
-            if (isCurrent && videoUrl != null && videoUrl == currentUrl) {
-                Log.d("PlayerViewHolder", "bind: Already playing URL, skipping attach $videoUrl")
+            if (!isCurrent) {
+                // Not current item — reset state and show thumbnail only
+                hasRenderedFirstFrame = false
+                detachPlayer()
+                currentUrl = null
+
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.videoThumbnail.alpha = 1f
+
+                binding.progressBar.visibility = View.GONE
+
+                binding.playerView.visibility = View.GONE
+                binding.playerView.alpha = 0f
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
                 return
             }
 
-            currentUrl = videoUrl
-
-            binding.ccIcon.setOnClickListener {
-                // TODO: Show credit info if needed
+            // Current item
+            if (videoUrl == null) {
+                // No video URL — treat as non-current
+                hasRenderedFirstFrame = false
+                detachPlayer()
+                currentUrl = null
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.videoThumbnail.alpha = 1f
+                binding.progressBar.visibility = View.GONE
+                binding.playerView.visibility = View.GONE
+                binding.playerView.alpha = 0f
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                return
             }
 
-            println("bind() - isCurrent: $isCurrent and videoUrl: $videoUrl")
+            if (videoUrl != currentUrl) {
+                // New video URL — reset state and attach new player
+                hasRenderedFirstFrame = false
+                currentUrl = videoUrl
 
-            if (isCurrent && !videoUrl.isNullOrEmpty()) {
-                // Show thumbnail first
-                showThumbnail(wallpaper.thumbnail?.url?.medium)
-                binding.playerView.visibility = View.GONE
                 binding.videoThumbnail.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
-                binding.loading.visibility = View.GONE
+                binding.videoThumbnail.alpha = 1f
 
-                // Attach player with the URL
+                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.alpha = 1f
+
+
+                binding.playerView.visibility = View.VISIBLE
+                binding.playerView.alpha = 0f
+
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
                 attachPlayer(videoUrl)
             } else {
-                detachPlayer()
-                showThumbnail(wallpaper.thumbnail?.url?.medium)
-                binding.videoThumbnail.visibility = View.VISIBLE
-                binding.playerView.visibility = View.GONE
-                binding.progressBar.visibility = View.GONE
-                binding.loading.visibility = View.GONE
+                // Same video URL, restore visibility & alpha based on first frame rendered
+                if (hasRenderedFirstFrame) {
+                    binding.playerView.visibility = View.VISIBLE
+                    binding.playerView.alpha = 1f
 
-                // Remove click listener for non-current items
+                    binding.videoThumbnail.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                } else {
+                    binding.playerView.visibility = View.VISIBLE
+                    binding.playerView.alpha = 0f
+
+                    binding.videoThumbnail.visibility = View.VISIBLE
+                    binding.videoThumbnail.alpha = 1f
+
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.progressBar.alpha = 1f
+
+                }
             }
         }
 
@@ -145,16 +178,31 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                 currentListener?.let { removeListener(it) }
 
                 currentListener = object : Player.Listener {
+
                     override fun onPlaybackStateChanged(state: Int) {
                         Log.d("ExoPlayer", "player state = $state")
-                        when (state) {
-                            Player.STATE_READY -> {
-                                binding.progressBar.visibility = View.GONE
-                                binding.videoThumbnail.visibility = View.GONE
-                                binding.playerView.visibility = View.VISIBLE
-                                binding.loading.visibility = View.GONE
-                                Log.d("ExoPlayer", "Playback is ready and playing: $isPlaying")
-                            }
+                        if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
+                            // Keep showing thumbnail, progressBar, loading visible
+                            binding.videoThumbnail.visibility = View.VISIBLE
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.playerView.alpha = 0f
+                            binding.playerView.visibility = View.VISIBLE
+                        }
+                    }
+
+                    override fun onRenderedFirstFrame() {
+                        if (!hasRenderedFirstFrame) {
+                            hasRenderedFirstFrame = true
+
+                            // Instant switch — no fade animation
+                            binding.videoThumbnail.visibility = View.GONE
+                            binding.videoThumbnail.alpha = 1f
+
+                            binding.progressBar.visibility = View.GONE
+                            binding.progressBar.alpha = 1f
+
+                            binding.playerView.visibility = View.VISIBLE
+                            binding.playerView.alpha = 1f
                         }
                     }
 
@@ -164,7 +212,6 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                         }
                     }
                 }
-
 
                 addListener(currentListener!!)
                 binding.playerView.player = this
@@ -178,12 +225,13 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
             }
             binding.playerView.player = null
             binding.playerView.visibility = View.GONE
+            binding.playerView.alpha = 0f
             binding.progressBar.visibility = View.GONE
-            binding.loading.visibility = View.GONE
             currentUrl = null
+            hasRenderedFirstFrame = false
             if (context is Activity && context.isDestroyed) return
             Glide.with(binding.videoThumbnail)
-                .clear(binding.videoThumbnail) // <- clear thumbnail to prevent leak
+                .clear(binding.videoThumbnail)
         }
 
         private fun showThumbnail(videoUrl: String?) {

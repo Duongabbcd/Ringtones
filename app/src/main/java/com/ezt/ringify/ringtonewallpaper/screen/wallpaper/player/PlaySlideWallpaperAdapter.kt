@@ -23,6 +23,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemPhotoBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import kotlinx.coroutines.Job
 
@@ -113,10 +114,12 @@ class PlaySlideWallpaperAdapter(
 
 
             if (currentPos == position && wallpaper.contents.size > 1) {
-                startSlideshow(images)
+
+                startSlideshowCrossfade(images)
             } else {
-                binding.progressBar.gone()
-                binding.loading.gone()
+                binding.progressBar.visible()
+                binding.loading.visible()
+                binding.wallpaper3.visible()
                 println("images 123: ${wallpaper.id}")
                 val url = wallpaper.contents.firstOrNull()?.url?.medium
                 if (url != null) {
@@ -124,8 +127,10 @@ class PlaySlideWallpaperAdapter(
                         Glide.with(context).load(it).placeholder(R.color.white)
                             .error(
                                 R.color.white
-                            ).into(binding.wallpaper)
+                            ).into(binding.wallpaper3)
                     }
+                    binding.progressBar.gone()
+                    binding.loading.gone()
                 }
             }
 
@@ -174,79 +179,56 @@ class PlaySlideWallpaperAdapter(
             }
         }
 
-        private var slideshowJob: Job? = null
-
-
-        private fun startSlideshow(imageUrls: List<String>) {
+        private var isImageView1Visible = true
+        private fun startSlideshowCrossfade(imageUrls: List<String>) {
             if (imageUrls.isEmpty()) return
+            binding.progressBar.gone()
+            binding.loading.gone()
+            binding.wallpaper3.gone()
 
             slideshowHandler = Handler(Looper.getMainLooper())
             currentImageIndex = 0
-            isFirstImage = true // reset the flag when slideshow starts
 
             slideshowRunnable = object : Runnable {
                 override fun run() {
-                    val context = binding.wallpaper.context
                     if (currentImageIndex >= imageUrls.size) currentImageIndex = 0
 
-                    val activityContext = context as? Activity
-                    if (activityContext == null || activityContext.isDestroyed) return
+                    val context = binding.wallpaper.context
+                    val activityContext = context as? Activity ?: return
+                    if (activityContext.isDestroyed) return
 
-                    val imageUrl = imageUrls[currentImageIndex]
+                    val nextImageUrl = imageUrls[currentImageIndex]
 
-                    // 👇 Only show progressBar on first load
-                    if (isFirstImage) {
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.loading.visibility = View.VISIBLE
-                    }
+                    val visibleImageView =
+                        if (isImageView1Visible) binding.wallpaper else binding.wallpaper2
+                    val hiddenImageView =
+                        if (isImageView1Visible) binding.wallpaper2 else binding.wallpaper
 
-                    binding.wallpaper.alpha = 0f // fade in image
-
+                    // Load next image into hidden ImageView
                     Glide.with(activityContext)
-                        .load(imageUrl)
-                        .transition(DrawableTransitionOptions.withCrossFade(500))
+                        .load(nextImageUrl)
                         .error(R.drawable.icon_default_category)
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable?>?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                binding.progressBar.visibility = View.GONE
-                                binding.loading.visibility = View.GONE
-                                return false
-                            }
+                        .into(hiddenImageView)
 
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable?>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                if (isFirstImage) {
-                                    binding.progressBar.animate()
-                                        .alpha(0f)
-                                        .setDuration(300)
-                                        .withEndAction {
-                                            binding.progressBar.visibility = View.GONE
-                                            binding.progressBar.alpha = 1f
-                                        }.start()
-                                    binding.loading.visibility = View.GONE
+                    // Animate crossfade
+                    hiddenImageView.alpha = 0f
+                    hiddenImageView.visibility = View.VISIBLE
 
-                                    isFirstImage = false // ✅ Only do this once
-                                }
+                    hiddenImageView.animate()
+                        .alpha(1f)
+                        .setDuration(500)
+                        .start()
 
-                                binding.wallpaper.animate()
-                                    .alpha(1f)
-                                    .setDuration(500)
-                                    .start()
+                    visibleImageView.animate()
+                        .alpha(0f)
+                        .setDuration(500)
+                        .withEndAction {
+                            visibleImageView.visibility = View.GONE
+                        }
+                        .start()
 
-                                return false
-                            }
-                        })
-                        .into(binding.wallpaper)
+                    // Swap visible ImageView flag
+                    isImageView1Visible = !isImageView1Visible
 
                     currentImageIndex++
                     slideshowHandler?.postDelayed(this, 3000L)

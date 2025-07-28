@@ -44,6 +44,7 @@ class RingtoneRepository @Inject constructor(
 
     //live wallpaper
     suspend fun getLiveWallpaper() = apiService.getLiveWallpaper()
+    suspend fun getPremiumVideoWallpaper() = apiService.getPremiumVideoWallpaper()
     suspend fun getSlideWallpaper() = apiService.getSlideWallpaper()
     suspend fun getSingleWallpaper() = apiService.getSingleWallpaper()
 
