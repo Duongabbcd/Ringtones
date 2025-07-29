@@ -33,6 +33,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.FilteredRingtonesActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
@@ -84,6 +86,9 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     private var index = 0
 
+    private val categoryId by lazy {
+        intent.getIntExtra("categoryId", -100)
+    }
 
     lateinit var exoPlayer: ExoPlayer
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
@@ -144,7 +149,8 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handler = Handler(Looper.getMainLooper())
-
+        println("onCreate: $categoryId")
+        sortOrder = Common.getSortOrder(this)
         checkDownloadPermissions()
 
         connectionViewModel.isConnectedLiveData.observe(this@RingtoneActivity) { isConnected ->
@@ -159,6 +165,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 finish()
             }
             index = allRingtones.indexOf(currentRingtone)
+            addedRingtoneIds.addAll(allRingtones.map { it.id })
             initViewPager()
             binding.horizontalRingtones.post {
                 (binding.horizontalRingtones.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(index, 0)
@@ -176,6 +183,27 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 dialog.show()
             }
             setupButtons()
+            when (categoryId) {
+                -100 -> {
+                    favouriteViewModel.allRingtones.observe(this@RingtoneActivity) { items ->
+                        appendNewRingtones(items)
+                    }
+
+                }
+
+                -99 -> {
+                    ringtoneViewModel.popular.observe(this@RingtoneActivity) { items ->
+                        appendNewRingtones(items)
+                    }
+                }
+
+                else -> {
+                    ringtoneViewModel.selectedRingtone.observe(this@RingtoneActivity) { items ->
+                        appendNewRingtones(items)
+                    }
+                }
+            }
+
         }
     }
 
@@ -187,10 +215,86 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             binding.origin.visible()
             viewModel.loadRingtoneById(currentRingtone.id)
             observeRingtoneFromDb()
-            // Initialize ExoPlayer
+            displayItems()
             playRingtone(false)
+            loadMoreData()
             binding.noInternet.root.gone()
         }
+    }
+
+    private fun displayItems() {
+        when (categoryId) {
+            -100 -> {
+                ringtoneViewModel.loadPopular(sortOrder)
+
+            }
+
+            -99 -> {
+                favouriteViewModel.loadAllRingtones()
+            }
+
+            else -> {
+                ringtoneViewModel.loadSelectedRingtones(categoryId, sortOrder)
+            }
+        }
+    }
+
+    private fun appendNewRingtones(newItems: List<Ringtone>) {
+        val oldSize = allRingtones.size
+        println("appendNewRingtones 0: ${newItems.size}")
+        val distinctItems = newItems.filter { it.id !in addedRingtoneIds }
+
+        if (distinctItems.isNotEmpty()) {
+            allRingtones.addAll(distinctItems)
+            distinctItems.forEach { addedRingtoneIds.add(it.id) }
+            println("appendNewRingtones 1: ${allRingtones.size}")
+            playRingtoneAdapter.submitList(allRingtones.toList())
+            playRingtoneAdapter.notifyItemRangeInserted(oldSize, distinctItems.size)
+        }
+
+        isLoadingMore = false
+    }
+
+    private lateinit var sortOrder: String
+    private val ringtoneViewModel: RingtoneViewModel by viewModels()
+    private val favouriteViewModel: FavouriteRingtoneViewModel by viewModels()
+
+    private var isLoadingMore = false
+    private val addedRingtoneIds = mutableSetOf<Int>() // Track already added
+
+    private fun loadMoreData() {
+        binding.horizontalRingtones.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dx <= 0) return  // Only when scrolling right
+
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                val isAtEnd = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 2
+
+                if (isAtEnd && !isLoadingMore) {
+                    isLoadingMore = true
+                    when (categoryId) {
+                        -100 -> {
+                            ringtoneViewModel.loadPopular(sortOrder)
+
+                        }
+
+                        -99 -> {
+                            favouriteViewModel.loadAllRingtones()
+                        }
+
+                        else -> {
+                            ringtoneViewModel.loadSelectedRingtones(categoryId, sortOrder)
+                        }
+                    }
+
+                }
+            }
+        })
     }
 
     private fun checkDownloadPermissions() {

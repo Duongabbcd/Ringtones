@@ -36,6 +36,9 @@ class RingtoneViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private val _total = MutableLiveData<Int>()
+    val total: LiveData<Int> = _total
+
     private var currentPage1 = 1
     private var hasMorePages1 = true
     private var currentPage2 = 1
@@ -75,7 +78,6 @@ class RingtoneViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchTrendingRingtones(currentPage2)
-            _trending.value = result.data.data
 
             hasMorePages2 = result.data.nextPageUrl != null
             currentPage2++
@@ -95,13 +97,13 @@ class RingtoneViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.fetchRingtoneByCategory(categoryId, orderBy, currentPage3)
-            println("loadSelectedRingtones: ${ result.data.firstPageUrl}")
+            println("loadSelectedRingtones: $categoryId ${result.data.firstPageUrl}")
             println("loadSelectedRingtones: ${ result.data.nextPageUrl}")
             hasMorePages3 = result.data.nextPageUrl != null
             currentPage3++
             allWallpapers3.addAll(result.data.data)
             _selectedRingtone.value = allWallpapers3
-
+            _total.value = _selectedRingtone.value?.size ?: 0
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")

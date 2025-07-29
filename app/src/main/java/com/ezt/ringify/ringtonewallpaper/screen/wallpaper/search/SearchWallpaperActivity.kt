@@ -13,8 +13,6 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchWallpaperBind
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperTrendingAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity

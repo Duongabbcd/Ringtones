@@ -38,12 +38,11 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
     override fun getItemCount() = items.size
 
     fun submitList(new: List<Ringtone>) {
-        val diffCallback = RingtoneDiffCallback(items, new)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        val start = items.size
 
         items.clear()
         items.addAll(new)
-        diffResult.dispatchUpdatesTo(this)
+        notifyItemRangeInserted(start, items.size)
     }
 
     fun setCurrentPlayingPosition(position: Int, playingSong : Boolean = false) {

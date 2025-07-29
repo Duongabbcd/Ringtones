@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.applovin.impl.sdk.AppLovinBroadcastManager
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
@@ -41,10 +43,13 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
     }
 
     private val ringToneAdapter : RingtoneAdapter by lazy {
-        RingtoneAdapter()
+        RingtoneAdapter { ringTone ->
+            RingtonePlayerRemote.setCurrentRingtone(ringTone)
+            startActivity(Intent(this, RingtoneActivity::class.java))
+        }
     }
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
-
+    private var inputText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,12 +87,14 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     // Text is changing
                     val searchText = s.toString()
-                    ringtoneViewModel.searchRingtonesByName(searchText)
+                    inputText = searchText
+                    ringtoneViewModel.searchRingtonesByName(inputText)
                     ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
                         if(result.isEmpty()) {
                             noDataLayout.visible()
                             allResults.gone()
                         } else {
+
                             noDataLayout.gone()
                             allResults.visible()
                             ringToneAdapter.submitList(result)

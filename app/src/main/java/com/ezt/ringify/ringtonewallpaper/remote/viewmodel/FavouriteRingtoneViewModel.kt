@@ -27,7 +27,7 @@ class FavouriteRingtoneViewModel @Inject constructor(
     fun loadAllRingtones() {
         viewModelScope.launch {
             _allRingtones.value = repository.getAllRingtones()
-            println("loadRingtoneById: ${_ringtone.value}")
+            println("loadRingtoneById: ${_allRingtones.value}")
         }
     }
 

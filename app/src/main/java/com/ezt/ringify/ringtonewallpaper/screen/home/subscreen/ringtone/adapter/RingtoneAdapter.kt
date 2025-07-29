@@ -17,7 +17,8 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
-class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
+class RingtoneAdapter(private val onClickListener: (Ringtone) -> Unit) :
+    RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
     private val allRingtones : MutableList<Ringtone> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -44,6 +45,7 @@ class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adap
 
     fun submitList(list: List<Ringtone>) {
         val start = allRingtones.size
+        allRingtones.clear()
         allRingtones.addAll(list)
         notifyItemRangeInserted(start, list.size)
     }
@@ -70,11 +72,8 @@ class RingtoneAdapter(private val isPopular: Boolean = false): RecyclerView.Adap
                 }
 
                 root.setOnClickListener {
-                    RingtonePlayerRemote.setCurrentRingtone(ringTone)
-                    if(!isPopular) {
-                        RingtonePlayerRemote.setRingtoneQueue(allRingtones)
-                    }
-                    context.startActivity(Intent(context, RingtoneActivity::class.java))
+                    onClickListener(ringTone)
+                    RingtonePlayerRemote.setRingtoneQueue(allRingtones)
                 }
             }
         }

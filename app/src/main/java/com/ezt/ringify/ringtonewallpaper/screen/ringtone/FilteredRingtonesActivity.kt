@@ -1,5 +1,6 @@
 package com.ezt.ringify.ringtonewallpaper.screen.ringtone
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,9 +14,11 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.RingtoneCategoryActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +28,12 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val favourite: FavouriteRingtoneViewModel by viewModels()
     private val ringtoneAdapter : RingtoneAdapter by lazy {
-        RingtoneAdapter()
+        RingtoneAdapter { ringTone ->
+            RingtonePlayerRemote.setCurrentRingtone(ringTone)
+            startActivity(Intent(this, RingtoneActivity::class.java).apply {
+                putExtra("categoryId", categoryId)
+            })
+        }
     }
 
     private val categoryId by lazy {
@@ -64,6 +72,10 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                     displayItems()
                 }
                 dialog.show()
+            }
+
+            ringtoneViewModel.total.observe(this@FilteredRingtonesActivity) { number ->
+                binding.nameScreen.text = number.toString()
             }
         }
     }

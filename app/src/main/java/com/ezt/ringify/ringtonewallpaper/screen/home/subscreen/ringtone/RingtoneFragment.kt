@@ -21,6 +21,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,7 +42,11 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
     }
 
     private val ringToneAdapter : RingtoneAdapter by lazy {
-        RingtoneAdapter(true)
+        RingtoneAdapter { ringTone ->
+            RingtonePlayerRemote.setCurrentRingtone(ringTone)
+            val ctx = context ?: return@RingtoneAdapter
+            ctx.startActivity(Intent(ctx, RingtoneActivity::class.java))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
