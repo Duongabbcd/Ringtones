@@ -4,13 +4,13 @@ import alirezat775.lib.carouselview.CarouselAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -18,27 +18,20 @@ import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemPhotoBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayLiveWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
-import kotlinx.coroutines.Job
 
 @OptIn(UnstableApi::class)
 class PlaySlideWallpaperAdapter(
@@ -68,7 +61,7 @@ class PlaySlideWallpaperAdapter(
         notifyDataSetChanged()
     }
 
-    fun setCurrentPlayingPosition(position: Int, playingSong : Boolean = false) {
+    fun setCurrentPlayingPosition(position: Int, playingSong: Boolean = false) {
         val previous = currentPos
         currentPos = position
         isPlaying = playingSong
@@ -293,13 +286,14 @@ class PlaySlideWallpaperAdapter(
         private val binding: ItemVideoBinding,
         private val context: Context
     ) : CarouselViewHolder(binding.root) {
-
         private var currentUrl: String? = null
         private var currentListener: Player.Listener? = null
         private var hasRenderedFirstFrame = false
 
         fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
+
+            println("LivePlayerViewHolder: $videoUrl and $isCurrent")
 
             if (!isCurrent) {
                 // Not current item — reset state and show thumbnail only
@@ -373,66 +367,72 @@ class PlaySlideWallpaperAdapter(
         }
 
         fun attachPlayer(videoUrl: String) {
-            Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
-            val player = PlayerManager.getPlayer(context.applicationContext)
-            val simpleCache = CacheUtil.getSimpleCache(context.applicationContext)
+            val player = PlayerManager.getPlayer(context)
 
+            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+
+            val simpleCache = CacheUtil.getSimpleCache(context.applicationContext)
             val dataSourceFactory = DefaultDataSource.Factory(context)
-            val cacheDataSourceFactory = CacheDataSource.Factory()
+            val cacheFactory = CacheDataSource.Factory()
                 .setCache(simpleCache)
                 .setUpstreamDataSourceFactory(dataSourceFactory)
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
 
-            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
-            val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
-                .createMediaSource(mediaItem)
+            val mediaSource = ProgressiveMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
 
             player.apply {
                 stop()
                 clearMediaItems()
                 setMediaSource(mediaSource)
-                repeatMode = Player.REPEAT_MODE_ONE
+                clearVideoSurface()
                 playWhenReady = true
-
-                // 👇 Delay prepare() to ensure playerView is ready
-                binding.playerView.player = this
-                binding.playerView.post {
-                    Log.d("PlayerViewHolder", "Calling prepare() after post")
-                    prepare()
-                }
+                repeatMode = Player.REPEAT_MODE_ONE
+                volume = 1f
 
                 currentListener?.let { removeListener(it) }
                 currentListener = object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
-                        Log.d("ExoPlayer", "player state = $state")
-                        if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
-                            binding.videoThumbnail.visibility = View.VISIBLE
-                            binding.progressBar.visibility = View.VISIBLE
-                            binding.playerView.alpha = 0f
-                            binding.playerView.visibility = View.VISIBLE
-                        }
+                        Log.d("ExoPlayer", "State: $state")
                     }
 
                     override fun onRenderedFirstFrame() {
-                        if (!hasRenderedFirstFrame) {
-                            hasRenderedFirstFrame = true
-                            binding.videoThumbnail.visibility = View.GONE
-                            binding.progressBar.visibility = View.GONE
-                            binding.playerView.visibility = View.VISIBLE
-                            binding.playerView.alpha = 1f
-                        }
-                    }
-
-                    override fun onIsPlayingChanged(isPlaying: Boolean) {
-                        if (isPlaying) {
-                            binding.progressBar.visibility = View.GONE
-                        }
+                        Log.d("ExoPlayer", "Rendered First Frame")
+                        hasRenderedFirstFrame = true
+                        binding.videoThumbnail.visibility = View.GONE
+                        binding.progressBar.visibility = View.GONE
+                        binding.playerView.alpha = 1f
                     }
                 }
-
                 addListener(currentListener!!)
             }
+
+            binding.playerView.player = null
+            binding.playerView.player = player
+            binding.playerView.alpha = 0f
+            binding.playerView.visibility = View.VISIBLE
+
+            waitForPlayerViewAndPrepare(player)
         }
+
+        private fun waitForPlayerViewAndPrepare(player: ExoPlayer) {
+            if (binding.playerView.width > 0 && binding.playerView.height > 0 && binding.playerView.isAttachedToWindow) {
+                Log.d("PlayerDebug", "View is ready: ${binding.playerView.width}x${binding.playerView.height}, preparing player")
+                player.prepare()
+            } else {
+                binding.playerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (binding.playerView.width > 0 && binding.playerView.height > 0 && binding.playerView.isAttachedToWindow) {
+                            binding.playerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            Log.d("PlayerDebug", "Delayed prepare after full layout: ${binding.playerView.width}x${binding.playerView.height}")
+                            player.prepare()
+                        }
+                    }
+                })
+            }
+        }
+
+
+
 
         fun detachPlayer() {
             currentListener?.let {

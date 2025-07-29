@@ -323,6 +323,7 @@ class SlideWallpaperActivity :
     }
 
     fun launchLiveWallpaper(context: Context, videoUrl: String) {
+        println("launchLiveWallpaper: $videoUrl")
         val prefs = context.getSharedPreferences("video_wallpaper", Context.MODE_PRIVATE)
         prefs.edit().putString("video_url", videoUrl).apply()
 
@@ -416,27 +417,41 @@ class SlideWallpaperActivity :
     }
 
     private fun initViewPager() {
+        // Submit the list first
         playSlideWallpaperAdapter.submitList(allWallpapers)
+
+        // Setup carousel with RecyclerView and adapter
         carousel = Carousel(this, binding.horizontalWallpapers, playSlideWallpaperAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
         carousel.scaleView(true)
 
+        // Set adapter BEFORE attaching snapHelper or adding listeners
+        binding.horizontalWallpapers.adapter = playSlideWallpaperAdapter
+
         snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
 
+        // Post a runnable to set the current playing position and scroll after RecyclerView is laid out
+        binding.horizontalWallpapers.post {
+            binding.horizontalWallpapers.smoothScrollToPosition(index)
+            handler.postDelayed({
+                playSlideWallpaperAdapter.setCurrentPlayingPosition(index)
+            }, 300) // Adjust delay as needed
+        }
+
+        // Setup carousel listener to update current index and player on scroll change
+        carousel.addCarouselListener(object : CarouselListener {
+            override fun onPositionChange(position: Int) {
+                updateIndex(position, "onPositionChange")
+                setUpNewPlayer(position)
+            }
+
+            override fun onScroll(dx: Int, dy: Int) {
+                lastDx = dx
+            }
+        })
+
         binding.horizontalWallpapers.apply {
-            adapter = playSlideWallpaperAdapter
             initialPosition = index
-
-            carousel.addCarouselListener(object : CarouselListener {
-                override fun onPositionChange(position: Int) {
-                    updateIndex(position, "onPositionChange")
-                    setUpNewPlayer(position)
-                }
-
-                override fun onScroll(dx: Int, dy: Int) {
-                    lastDx = dx
-                }
-            })
 
             setOnTouchListener { _, event ->
                 duration = event.eventTime - event.downTime
@@ -469,13 +484,16 @@ class SlideWallpaperActivity :
         }
     }
 
+
     private fun updateIndex(newIndex: Int, caller: String) {
         Log.d("SlideWallpaper", "Index changed from $index to $newIndex by $caller")
         index = newIndex
     }
 
     private fun setUpNewPlayer(position: Int) {
-        binding.horizontalWallpapers.smoothScrollToPosition(position)
+        if (index != position) {
+            binding.horizontalWallpapers.smoothScrollToPosition(position)
+        }
         currentWallpaper = allWallpapers[position]
         favouriteViewModel.loadWallpaperById(currentWallpaper.id)
         playSlideWallpaperAdapter.setCurrentPlayingPosition(position)
