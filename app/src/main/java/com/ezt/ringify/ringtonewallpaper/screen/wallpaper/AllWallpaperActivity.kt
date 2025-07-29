@@ -32,7 +32,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
         CategoryWallpaperAdapter { category->
             startActivity(Intent(this, PreviewWallpaperActivity::class.java).apply {
                 println("AllWallpaperActivity: $category")
-                putExtra("categoryId", category.id)
+                putExtra("wallpaperCategoryId", category.id)
             })
         }
     }
@@ -132,7 +132,7 @@ class CategoryWallpaperAdapter(
 
     fun submitList(categories: List<Category>) {
         allCategories.clear()
-        allCategories.addAll(categories)
+        allCategories.addAll(categories.filter { it.id != 75 })
         notifyDataSetChanged()
     }
 
@@ -188,6 +188,8 @@ class CategoryWallpaperAdapter(
                 trending.text = category.name
                 trendingCount.text = category.contentCount.formatWithComma()
 
+
+
                 if (isLoading) {
                     allTrending.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
@@ -197,7 +199,7 @@ class CategoryWallpaperAdapter(
                     wallpaperAdapter.submitList(wallpapers)
                 }
 
-                root.setOnClickListener {
+                seeAll.setOnClickListener {
                     onClickListener(category)
                 }
             }

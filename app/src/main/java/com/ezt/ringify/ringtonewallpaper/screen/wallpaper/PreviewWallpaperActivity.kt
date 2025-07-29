@@ -14,10 +14,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +29,17 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter({
             println("Wallpaper: $it")
-            startActivity(Intent(this@PreviewWallpaperActivity, SlideWallpaperActivity::class.java))
+            startActivity(
+                Intent(
+                    this@PreviewWallpaperActivity,
+                    SlideWallpaperActivity::class.java
+                ).apply {
+                    putExtra("wallpaperCategoryId", -1)
+                    if (categoryId == 75) {
+                        putExtra("type", type)
+                    }
+
+                })
         }).apply {
             onAllImagesLoaded = {
                 // Safely post notifyDataSetChanged on RecyclerView's message queue
@@ -44,7 +51,7 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     }
 
     private val categoryId by lazy {
-        intent.getIntExtra("categoryId", -1)
+        intent.getIntExtra("wallpaperCategoryId", -1)
     }
     private val type by lazy {
         intent.getIntExtra("type", 1)

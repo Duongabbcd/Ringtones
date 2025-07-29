@@ -30,7 +30,9 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
                 Intent(
                     this@LiveWallpaperActivity,
                     PreviewLiveWallpaperActivity::class.java
-                )
+                ).apply {
+                    putExtra("type", 2)
+                }
             )
         }).apply {
             onAllImagesLoaded = {

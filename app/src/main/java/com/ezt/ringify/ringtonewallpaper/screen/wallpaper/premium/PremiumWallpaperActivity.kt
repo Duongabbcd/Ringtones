@@ -28,20 +28,32 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     private val liveAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
             println("Wallpaper: $it")
-            startActivity(Intent(this@PremiumWallpaperActivity, PreviewLiveWallpaperActivity::class.java))
+            startActivity(
+                Intent(
+                    this@PremiumWallpaperActivity,
+                    PreviewLiveWallpaperActivity::class.java
+                ).apply {
+                    putExtra("type", 4)
+                })
         }
     }
 
     private val singleAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
             println("Wallpaper: $it")
-            startActivity(Intent(this, SlideWallpaperActivity::class.java))
+            startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
+                putExtra("wallpaperCategoryId", 75)
+                putExtra("type", 3)
+            })
         }
     }
     private val slideAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
             println("Wallpaper: $it")
-            startActivity(Intent(this, SlideWallpaperActivity::class.java))
+            startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
+                putExtra("wallpaperCategoryId", 75)
+                putExtra("type", 2)
+            })
         }
     }
 

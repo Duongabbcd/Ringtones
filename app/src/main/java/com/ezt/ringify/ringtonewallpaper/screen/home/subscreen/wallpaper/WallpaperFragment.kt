@@ -37,7 +37,9 @@ class WallpaperFragment :
         WallpaperAdapter {
             println("Wallpaper: $it")
             withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java))
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", -2)
+                })
             }
         }
     }
@@ -45,7 +47,9 @@ class WallpaperFragment :
         WallpaperAdapter {
             println("Wallpaper: $it")
             withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java))
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", -1)
+                })
             }
         }
     }
@@ -53,7 +57,9 @@ class WallpaperFragment :
         WallpaperAdapter {
             println("Wallpaper: $it")
             withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java))
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", 30)
+                })
             }
         }
     }
@@ -61,7 +67,9 @@ class WallpaperFragment :
         WallpaperAdapter {
             println("Wallpaper: $it")
             withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java))
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", 31)
+                })
             }
         }
     }
@@ -70,7 +78,9 @@ class WallpaperFragment :
         WallpaperAdapter {
             println("Wallpaper: $it")
             withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java))
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", 32)
+                })
             }
         }
     }
@@ -144,14 +154,14 @@ class WallpaperFragment :
             openAll1.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", -2)
+                        putExtra("wallpaperCategoryId", -2)
                     })
                 }
             }
             openAll2.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", -1)
+                        putExtra("wallpaperCategoryId", -1)
                     })
                 }
             }
@@ -159,14 +169,14 @@ class WallpaperFragment :
             openAll3.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", 30)
+                        putExtra("wallpaperCategoryId", 30)
                     })
                 }
             }
             openAll4.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", 31)
+                        putExtra("wallpaperCategoryId", 31)
                     })
                 }
             }
@@ -174,7 +184,7 @@ class WallpaperFragment :
             openAll5.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", 32)
+                        putExtra("wallpaperCategoryId", 32)
                     })
                 }
             }
@@ -218,7 +228,7 @@ class WallpaperFragment :
             favourite.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("categoryId", -3)
+                        putExtra("wallpaperCategoryId", -3)
                     })
                 }
             }

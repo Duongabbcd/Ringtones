@@ -68,7 +68,6 @@ interface ApiService {
 
     @GET("api/v1/wallpapers?app=1&order_by=updated_at+desc")
     suspend fun getNewWallpapers(
-        @Query("whereIn") whereIn: String? ="type:1,2",
         @Query("page") page: Int = 1
     ): WallpaperResponse
 
