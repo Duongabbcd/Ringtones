@@ -28,9 +28,11 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
 
     fun submitList(newList: List<Wallpaper>) {
         println("submitList: ${newList.size}")
+        val start = items.size
         items.clear()
         items.addAll(newList)
-        notifyDataSetChanged()
+
+        notifyItemRangeInserted(start, newList.size)
     }
 
     fun setCurrentPlayingPosition(position: Int) {
@@ -173,16 +175,19 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                 setMediaSource(mediaSource)
                 repeatMode = Player.REPEAT_MODE_ONE
                 playWhenReady = true
-                prepare()
+
+                // 👇 Delay prepare() to ensure playerView is ready
+                binding.playerView.player = this
+                binding.playerView.post {
+                    Log.d("PlayerViewHolder", "Calling prepare() after post")
+                    prepare()
+                }
 
                 currentListener?.let { removeListener(it) }
-
                 currentListener = object : Player.Listener {
-
                     override fun onPlaybackStateChanged(state: Int) {
                         Log.d("ExoPlayer", "player state = $state")
                         if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
-                            // Keep showing thumbnail, progressBar, loading visible
                             binding.videoThumbnail.visibility = View.VISIBLE
                             binding.progressBar.visibility = View.VISIBLE
                             binding.playerView.alpha = 0f
@@ -193,14 +198,8 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                     override fun onRenderedFirstFrame() {
                         if (!hasRenderedFirstFrame) {
                             hasRenderedFirstFrame = true
-
-                            // Instant switch — no fade animation
                             binding.videoThumbnail.visibility = View.GONE
-                            binding.videoThumbnail.alpha = 1f
-
                             binding.progressBar.visibility = View.GONE
-                            binding.progressBar.alpha = 1f
-
                             binding.playerView.visibility = View.VISIBLE
                             binding.playerView.alpha = 1f
                         }
@@ -214,7 +213,6 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                 }
 
                 addListener(currentListener!!)
-                binding.playerView.player = this
             }
         }
 

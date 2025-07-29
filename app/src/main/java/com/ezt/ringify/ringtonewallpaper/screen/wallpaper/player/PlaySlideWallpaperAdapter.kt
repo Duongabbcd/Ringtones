@@ -5,11 +5,20 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.OptIn
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,14 +30,19 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemPhotoBinding
+import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayLiveWallpaperAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import kotlinx.coroutines.Job
 
-
+@OptIn(UnstableApi::class)
 class PlaySlideWallpaperAdapter(
+    private val context: Context,
     private val onRequestScrollToPosition: (Int) -> Unit,
     private val onClickListener: (Boolean, Int) -> Unit
 ) : CarouselAdapter() {
@@ -36,11 +50,11 @@ class PlaySlideWallpaperAdapter(
     private val items = mutableListOf<Wallpaper>()
     private var currentPos = RecyclerView.NO_POSITION
     private var playingHolder: PlayerViewHolder? = null
+    private var livePlayingHolder: LivePlayerViewHolder? = null
 
     private  var isPlaying = false
     private  var isEnded = false
 
-    private lateinit var context: Context
 
 
     override fun getItemCount() = items.size
@@ -66,23 +80,42 @@ class PlaySlideWallpaperAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
-        context = parent.context
-        val binding = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PlayerViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
-        (holder as PlayerViewHolder).bind(items[position], position)
-        if (position == currentPos) {
-            playingHolder = holder
-            println("✅ playingHolder set at position $position")
+        if (viewType == ITEM_PHOTO) {
+            val binding =
+                ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return PlayerViewHolder(binding)
+        } else {
+            val binding =
+                ItemVideoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return LivePlayerViewHolder(binding, context)
         }
     }
 
-    fun onSongEnded() {
-        isPlaying = false
-        isEnded = true
-        notifyItemChanged(currentPos)
+    override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
+        if (holder is LivePlayerViewHolder) {
+            Log.d("Adapter", "onBindViewHolder called for position $position")
+            val wallpaper = items[position]
+            val isCurrent = position == currentPos
+
+            holder.bind(wallpaper, isCurrent)
+
+            if (isCurrent) {
+                livePlayingHolder = holder
+            }
+        } else {
+            (holder as PlayerViewHolder).bind(items[position], position)
+            if (position == currentPos) {
+                playingHolder = holder
+                println("✅ playingHolder set at position $position")
+            }
+        }
+
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        PlayerManager.release()
+        CacheUtil.release(context)
+        super.onDetachedFromRecyclerView(recyclerView)
     }
 
     fun isItemFullyVisible(recyclerView: RecyclerView, position: Int): Boolean {
@@ -90,6 +123,14 @@ class PlaySlideWallpaperAdapter(
         return( layoutManager.findFirstCompletelyVisibleItemPosition() == position ||
                 layoutManager.findLastCompletelyVisibleItemPosition() == position).also {
                     println("isItemFullyVisible: $it")
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val type = items[position].type
+        return when (type) {
+            2, 4 -> ITEM_VIDEO
+            else -> ITEM_PHOTO
         }
     }
 
@@ -246,5 +287,183 @@ class PlaySlideWallpaperAdapter(
             slideshowHandler = null
         }
 
+    }
+
+    inner class LivePlayerViewHolder(
+        private val binding: ItemVideoBinding,
+        private val context: Context
+    ) : CarouselViewHolder(binding.root) {
+
+        private var currentUrl: String? = null
+        private var currentListener: Player.Listener? = null
+        private var hasRenderedFirstFrame = false
+
+        fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
+            val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
+
+            if (!isCurrent) {
+                // Not current item — reset state and show thumbnail only
+                hasRenderedFirstFrame = false
+                detachPlayer()
+                currentUrl = null
+
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.videoThumbnail.alpha = 1f
+
+                binding.progressBar.visibility = View.GONE
+
+                binding.playerView.visibility = View.GONE
+                binding.playerView.alpha = 0f
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                return
+            }
+
+            // Current item
+            if (videoUrl == null) {
+                // No video URL — treat as non-current
+                hasRenderedFirstFrame = false
+                detachPlayer()
+                currentUrl = null
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.videoThumbnail.alpha = 1f
+                binding.progressBar.visibility = View.GONE
+                binding.playerView.visibility = View.GONE
+                binding.playerView.alpha = 0f
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                return
+            }
+
+            if (videoUrl != currentUrl) {
+                // New video URL — reset state and attach new player
+                hasRenderedFirstFrame = false
+                currentUrl = videoUrl
+
+                binding.videoThumbnail.visibility = View.VISIBLE
+                binding.videoThumbnail.alpha = 1f
+
+                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.alpha = 1f
+
+
+                binding.playerView.visibility = View.VISIBLE
+                binding.playerView.alpha = 0f
+
+                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                attachPlayer(videoUrl)
+            } else {
+                // Same video URL, restore visibility & alpha based on first frame rendered
+                if (hasRenderedFirstFrame) {
+                    binding.playerView.visibility = View.VISIBLE
+                    binding.playerView.alpha = 1f
+
+                    binding.videoThumbnail.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                } else {
+                    binding.playerView.visibility = View.VISIBLE
+                    binding.playerView.alpha = 0f
+
+                    binding.videoThumbnail.visibility = View.VISIBLE
+                    binding.videoThumbnail.alpha = 1f
+
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.progressBar.alpha = 1f
+
+                }
+            }
+        }
+
+        fun attachPlayer(videoUrl: String) {
+            Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
+            val player = PlayerManager.getPlayer(context.applicationContext)
+            val simpleCache = CacheUtil.getSimpleCache(context.applicationContext)
+
+            val dataSourceFactory = DefaultDataSource.Factory(context)
+            val cacheDataSourceFactory = CacheDataSource.Factory()
+                .setCache(simpleCache)
+                .setUpstreamDataSourceFactory(dataSourceFactory)
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+
+            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+            val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+                .createMediaSource(mediaItem)
+
+            player.apply {
+                stop()
+                clearMediaItems()
+                setMediaSource(mediaSource)
+                repeatMode = Player.REPEAT_MODE_ONE
+                playWhenReady = true
+
+                // 👇 Delay prepare() to ensure playerView is ready
+                binding.playerView.player = this
+                binding.playerView.post {
+                    Log.d("PlayerViewHolder", "Calling prepare() after post")
+                    prepare()
+                }
+
+                currentListener?.let { removeListener(it) }
+                currentListener = object : Player.Listener {
+                    override fun onPlaybackStateChanged(state: Int) {
+                        Log.d("ExoPlayer", "player state = $state")
+                        if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
+                            binding.videoThumbnail.visibility = View.VISIBLE
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.playerView.alpha = 0f
+                            binding.playerView.visibility = View.VISIBLE
+                        }
+                    }
+
+                    override fun onRenderedFirstFrame() {
+                        if (!hasRenderedFirstFrame) {
+                            hasRenderedFirstFrame = true
+                            binding.videoThumbnail.visibility = View.GONE
+                            binding.progressBar.visibility = View.GONE
+                            binding.playerView.visibility = View.VISIBLE
+                            binding.playerView.alpha = 1f
+                        }
+                    }
+
+                    override fun onIsPlayingChanged(isPlaying: Boolean) {
+                        if (isPlaying) {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    }
+                }
+
+                addListener(currentListener!!)
+            }
+        }
+
+        fun detachPlayer() {
+            currentListener?.let {
+                PlayerManager.getPlayer(context).removeListener(it)
+                currentListener = null
+            }
+            binding.playerView.player = null
+            binding.playerView.visibility = View.GONE
+            binding.playerView.alpha = 0f
+            binding.progressBar.visibility = View.GONE
+            currentUrl = null
+            hasRenderedFirstFrame = false
+            if (context is Activity && context.isDestroyed) return
+            Glide.with(binding.videoThumbnail)
+                .clear(binding.videoThumbnail)
+        }
+
+        private fun showThumbnail(videoUrl: String?) {
+            binding.videoThumbnail.visibility = View.VISIBLE
+            videoUrl?.let {
+                Glide.with(context)
+                    .asBitmap()
+                    .load(it)
+                    .centerCrop()
+                    .into(binding.videoThumbnail)
+            }
+        }
+    }
+
+    companion object {
+        const val ITEM_VIDEO = 1
+        const val ITEM_PHOTO = 0
     }
 }

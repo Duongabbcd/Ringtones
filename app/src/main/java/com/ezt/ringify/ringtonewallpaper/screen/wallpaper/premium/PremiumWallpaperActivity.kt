@@ -10,10 +10,8 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPremiumWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.AllWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -66,7 +64,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             allNewWallpaper.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
             allSub1.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
-            wallPaperViewModel.liveWallpapers.observe(this@PremiumWallpaperActivity) { items ->
+            wallPaperViewModel.premiumWallpapers.observe(this@PremiumWallpaperActivity) { items ->
                 liveAdapter.submitList(items)
             }
 
@@ -129,7 +127,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            wallPaperViewModel.loadLiveWallpapers()
+            wallPaperViewModel.loadPremiumVideoWallpaper()
             wallPaperViewModel.loadSlideWallpaper()
             wallPaperViewModel.loadSingleWallpaper()
             binding.noInternet.root.gone()

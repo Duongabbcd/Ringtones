@@ -1,5 +1,6 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,8 +14,10 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperTrendingAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.hideKeyBoard
@@ -34,7 +37,9 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
     private val searchWallpaperAdapter: GridWallpaperAdapter by lazy {
-        GridWallpaperAdapter ().apply {
+        GridWallpaperAdapter({
+            startActivity(Intent(this@SearchWallpaperActivity, SlideWallpaperActivity::class.java))
+        }).apply {
             onAllImagesLoaded = {
                 // Safely post notifyDataSetChanged on RecyclerView's message queue
                 binding.allResults.post {

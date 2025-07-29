@@ -1,8 +1,11 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLiveWallpaperBinding
@@ -10,7 +13,6 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter.Companion.VIEW_TYPE_LOADING
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +24,15 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val wallpaperViewModel: WallpaperViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
-        GridWallpaperAdapter().apply {
+        GridWallpaperAdapter({
+            println("Wallpaper: $it")
+            startActivity(
+                Intent(
+                    this@LiveWallpaperActivity,
+                    PreviewLiveWallpaperActivity::class.java
+                )
+            )
+        }).apply {
             onAllImagesLoaded = {
                 // Safely post notifyDataSetChanged on RecyclerView's message queue
                 binding.allCategories.post {
@@ -61,7 +71,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
 
             nameScreen.text = resources.getString(R.string.live)
             wallpaperViewModel.liveWallpapers.observe(this@LiveWallpaperActivity) { items ->
-                wallpaperAdapter.submitList(items, true, false)
+                wallpaperAdapter.submitList(items, false)
             }
 
         }
@@ -74,7 +84,28 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         } else {
             binding.origin.visible()
             wallpaperViewModel.loadLiveWallpapers()
+            loadMoreData()
             binding.noInternet.root.gone()
+        }
+    }
+
+    private fun loadMoreData() {
+        binding.apply {
+            allCategories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    val isAtBottom =
+                        firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
+                    if (isAtBottom) {
+                        wallpaperViewModel.loadLiveWallpapers()
+                    }
+                }
+            })
         }
     }
 }

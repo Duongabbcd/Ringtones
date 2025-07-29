@@ -39,8 +39,10 @@ interface ApiService {
     @GET("api/v1/categories?app=1&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
 
-    @GET("api/v1/categories?app=1&with=author+name,id&where=type+2")
-    suspend fun getRingtoneCategory(): CategoriesResponse
+    @GET("api/v1/categories?app=1&where=type+2")
+    suspend fun getRingtoneCategory(
+        @Query("page") page: Int = 1
+    ): CategoriesResponse
 
     @GET("api/v1/ringtones?app=1")
     suspend fun getRingtonesByCategory(
@@ -55,7 +57,9 @@ interface ApiService {
 //    suspend fun getWallpaperCategory(): CategoriesResponse
 
     @GET("api/v1/categories?app=1&where=type+1")
-    suspend fun getAllWallpaperCategories(): CategoriesResponse
+    suspend fun getAllWallpaperCategories(
+        @Query("page") page: Int = 1
+    ): CategoriesResponse
 
     @GET("api/v1/wallpapers?app=1&where=trend+1")
     suspend fun getTrendingWallpapers(
@@ -105,7 +109,9 @@ interface ApiService {
     ): WallpaperResponse
 
     @GET("api/v1/wallpapers?where=type+4")
-    suspend fun getPremiumVideoWallpaper(): WallpaperResponse
+    suspend fun getPremiumVideoWallpaper(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
 
     @GET("/api/v1/wallpapers?where=type+3,private+0")
     suspend fun getSlideWallpaper(

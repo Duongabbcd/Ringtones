@@ -61,7 +61,7 @@ class CallScreenFragment :
                 LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
 
             callScreenViewModel.callScreens.observe(viewLifecycleOwner) { items ->
-                callScreenAdapter.submitList(items)
+                callScreenAdapter.submitList(items.take(10))
             }
 
             noInternet.tryAgain.setOnClickListener {

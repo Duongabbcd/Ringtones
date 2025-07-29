@@ -22,11 +22,13 @@ class RingtoneRepository @Inject constructor(
 
     suspend fun fetchCallScreens(): CallScreenResponse = apiService.getCallScreens()
     suspend fun fetchContents(): ContentResponse = apiService.getContents()
-    suspend fun fetchRingtoneCategories(): CategoriesResponse = apiService.getRingtoneCategory()
+    suspend fun fetchRingtoneCategories(page: Int): CategoriesResponse =
+        apiService.getRingtoneCategory(page)
 
     suspend fun fetchNewWallpapers(page: Int): WallpaperResponse = apiService.getNewWallpapers(page = page)
 //    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
-    suspend fun fetchAllWallpaperCategories(): CategoriesResponse = apiService.getAllWallpaperCategories()
+suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
+    apiService.getAllWallpaperCategories(page)
     suspend fun fetchTrendingWallpapers(page: Int): WallpaperResponse = apiService.getTrendingWallpapers(page)
     suspend fun fetchWallpaperByCategory(categoryId: Int, page: Int): WallpaperResponse = apiService.getWallpapersByCategory(categoryId = categoryId,page= page)
     suspend fun getAllExcludingCategory(): CategoriesResponse = apiService.getAllExcludingCategory()
@@ -44,7 +46,7 @@ class RingtoneRepository @Inject constructor(
 
     //live wallpaper
     suspend fun getLiveWallpaper(page: Int) = apiService.getLiveWallpaper(page)
-    suspend fun getPremiumVideoWallpaper() = apiService.getPremiumVideoWallpaper()
+    suspend fun getPremiumVideoWallpaper(page: Int) = apiService.getPremiumVideoWallpaper(page)
     suspend fun getSlideWallpaper(page: Int) = apiService.getSlideWallpaper(page)
     suspend fun getSingleWallpaper(page: Int) = apiService.getSingleWallpaper(page)
 

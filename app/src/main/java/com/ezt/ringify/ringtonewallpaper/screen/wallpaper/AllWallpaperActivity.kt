@@ -55,7 +55,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
             categoryViewModel.wallpaperCategory.observe(this@AllWallpaperActivity) { categories ->
                 categoryWallpaperAdapter.submitList(categories)
                 // trigger wallpaper loading for each category
-                categories.forEach {
+                categories.filter { it.id != 75 }.forEach {
                     categoryViewModel.loadWallpapersByCategory(it.id, categoryWallpaperAdapter)
                 }
             }
@@ -74,78 +74,114 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
         } else {
             binding.origin.visible()
             categoryViewModel.loadWallpaperCategories()
+            loadMoreData()
             binding.noInternet.root.gone()
         }
     }
+
+    private fun loadMoreData() {
+        binding.apply {
+            allCategories.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    val isAtBottom =
+                        firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
+                    if (isAtBottom) {
+                        categoryViewModel.loadWallpaperCategories()
+                    }
+                }
+            })
+        }
+    }
+
+
 }
 
+class CategoryWallpaperAdapter(
+    private val onClickListener: (Category) -> Unit
+) : RecyclerView.Adapter<CategoryWallpaperAdapter.CategoryWallpaperViewHolder>() {
 
+    private val allCategories: MutableList<Category> = mutableListOf()
+    private val wallpapersMap = mutableMapOf<Int, List<Wallpaper>>()
+    private val loadingCategoryIds = mutableSetOf<Int>()
+    private lateinit var context: Context
 
-
-class CategoryWallpaperAdapter(private val onClickListener: (Category) -> Unit): RecyclerView.Adapter<CategoryWallpaperAdapter.CategoryWallpaperViewHolder>()
-{
-
-    private val allCategories : MutableList<Category> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): CategoryWallpaperViewHolder {
         context = parent.context
-        return CategoryWallpaperViewHolder(
-            ItemCategoryWallpaperBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+        val binding = ItemCategoryWallpaperBinding.inflate(
+            LayoutInflater.from(context),
+            parent,
+            false
         )
+        return CategoryWallpaperViewHolder(binding)
     }
 
-
-    private lateinit var context: Context
-
-    override fun onBindViewHolder(
-        holder: CategoryWallpaperViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: CategoryWallpaperViewHolder, position: Int) {
         holder.bind(position)
     }
 
+    override fun getItemCount(): Int = allCategories.size
 
-    private val loadingCategoryIds = mutableSetOf<Int>()
+    fun submitList(categories: List<Category>) {
+        allCategories.clear()
+        allCategories.addAll(categories)
+        notifyDataSetChanged()
+    }
+
+    fun submitWallpapersMap(map: Map<Int, List<Wallpaper>>) {
+        wallpapersMap.clear()
+        wallpapersMap.putAll(map)
+
+        map.keys.forEach { item ->
+            println("submitWallpapersMap: $item and ${map[item]?.firstOrNull()}")
+        }
+        // Notify only updated categories to redraw their wallpaper lists
+        map.keys.forEach { categoryId ->
+            val pos = allCategories.indexOfFirst { it.id == categoryId }
+            if (pos != -1) notifyItemChanged(pos)
+        }
+    }
 
     fun setCategoryLoading(categoryId: Int, isLoading: Boolean) {
         if (isLoading) loadingCategoryIds.add(categoryId)
         else loadingCategoryIds.remove(categoryId)
-        notifyItemChanged(allCategories.indexOfFirst { it.id == categoryId })
+
+        val pos = allCategories.indexOfFirst { it.id == categoryId }
+        if (pos != -1) notifyItemChanged(pos)
     }
-
-    fun submitWallpapersMap(map: Map<Int, List<Wallpaper>>) {
-        map.onEach {
-            println("submitWallpapersMap : ${it.key} and ${it.value}")
-        }
-        wallpapersMap.clear()
-       wallpapersMap.putAll(map)
-        notifyDataSetChanged()
-    }
-
-    fun submitList(list:  List<Category>) {
-        println("submitList: ${list.size}")
-        allCategories.clear()
-        allCategories.addAll(list)
-        notifyDataSetChanged()
-    }
-
-
-    private val wallpapersMap = mutableMapOf<Int, List<Wallpaper>>()
-    override fun getItemCount(): Int =allCategories.size
 
     inner class CategoryWallpaperViewHolder(
         private val binding: ItemCategoryWallpaperBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        // Create wallpaper adapter once per ViewHolder to prevent recycling issues
+        private val wallpaperAdapter = WallpaperAdapter {
+            val category = allCategories.getOrNull(adapterPosition) ?: return@WallpaperAdapter
+            onClickListener(category)
+        }
+
+        init {
+            binding.allTrending.apply {
+                adapter = wallpaperAdapter
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                setHasFixedSize(true)
+            }
+        }
+
         fun bind(position: Int) {
             val category = allCategories[position]
-            val wallpapers = wallpapersMap[category.id]?.take(10) ?: emptyList()
+            val data = wallpapersMap[category.id]?.take(5)
+            println("CategoryWallpaperViewHolder: ${category.name} and ${data?.first()}")
+
+            val wallpapers = data ?: emptyList()
             val isLoading = loadingCategoryIds.contains(category.id)
 
             binding.apply {
@@ -158,14 +194,6 @@ class CategoryWallpaperAdapter(private val onClickListener: (Category) -> Unit):
                 } else {
                     allTrending.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
-
-                    val wallpaperAdapter = WallpaperAdapter {
-                        onClickListener(category)
-                    }
-                    allTrending.adapter = wallpaperAdapter
-                    allTrending.layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
                     wallpaperAdapter.submitList(wallpapers)
                 }
 

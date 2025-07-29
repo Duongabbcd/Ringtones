@@ -1,5 +1,6 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,6 +14,9 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -26,7 +30,10 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
     private val favourite: FavouriteWallpaperViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
-        GridWallpaperAdapter ().apply {
+        GridWallpaperAdapter({
+            println("Wallpaper: $it")
+            startActivity(Intent(this@PreviewWallpaperActivity, SlideWallpaperActivity::class.java))
+        }).apply {
             onAllImagesLoaded = {
                 // Safely post notifyDataSetChanged on RecyclerView's message queue
                 binding.allCategories.post {
@@ -122,7 +129,7 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
                                        }
 
                                        else -> {
-                                           wallPaperViewModel.loadLiveWallpapers()
+                                           wallPaperViewModel.loadPremiumVideoWallpaper()
                                        }
                                    }
 
@@ -193,8 +200,8 @@ class PreviewWallpaperActivity : BaseActivity<ActivityPreviewWallpaperBinding>(A
                             }
 
                             else -> {
-                                wallPaperViewModel.loadLiveWallpapers()
-                                wallPaperViewModel.liveWallpapers.observe(this@PreviewWallpaperActivity) { items ->
+                                wallPaperViewModel.loadPremiumVideoWallpaper()
+                                wallPaperViewModel.premiumWallpapers.observe(this@PreviewWallpaperActivity) { items ->
                                     wallpaperAdapter.submitList(items, premium = categoryId == 75)
                                 }
                                 return@apply

@@ -263,7 +263,6 @@ class WallpaperViewModel @Inject constructor(
             _tags.value = null // Clear the old tag first
             val result = repository.searchTag(SearchRequest(searchText))
             println("searchTag: $searchText and $result")
-
             if (result.data.isEmpty()) {
                 _error.value = "No matching tags found"
                 _tags.value = null // explicitly notify observers there's no tag
@@ -296,11 +295,15 @@ class WallpaperViewModel @Inject constructor(
     }
 
     fun loadPremiumVideoWallpaper() = viewModelScope.launch {
+        if (!hasMorePages1 || _loading1.value == true) return@launch
         _loading1.value = true
         try {
-            val result = repository.getPremiumVideoWallpaper()
-            _premiumWallpapers.value = result.data.data
+            val result = repository.getPremiumVideoWallpaper(currentPage1)
+            hasMorePages1 = result.data.nextPageUrl != null
+            currentPage1++
 
+            allWallpapers1.addAll(result.data.data)
+            _premiumWallpapers.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")

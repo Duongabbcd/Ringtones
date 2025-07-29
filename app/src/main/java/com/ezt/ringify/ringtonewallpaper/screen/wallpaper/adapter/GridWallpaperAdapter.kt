@@ -1,7 +1,6 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,9 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemGridWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemLoadingBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 
-
-class GridWallpaperAdapter() :
+class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var onAllImagesLoaded: (() -> Unit)? = null
@@ -124,16 +120,7 @@ class GridWallpaperAdapter() :
                 root.setOnClickListener {
                     RingtonePlayerRemote.setCurrentWallpaper(wallpaper)
                     RingtonePlayerRemote.setWallpaperQueue(allWallpapers)
-                    if (wallpaper.type in listOf<Int>(2, 4)) {
-                        context.startActivity(
-                            Intent(
-                                context,
-                                PreviewLiveWallpaperActivity::class.java
-                            )
-                        )
-                    } else {
-                        context.startActivity(Intent(context, SlideWallpaperActivity::class.java))
-                    }
+                    onClickListener(wallpaper)
 
                 }
             }

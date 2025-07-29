@@ -49,6 +49,7 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
         limitedWallpapers.addAll(list.take(10))
 
         premium = isPremium
+        println("WallpaperAdapter: ${list.firstOrNull()}")
         notifyDataSetChanged()
     }
 
@@ -58,16 +59,19 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
         fun bind(position: Int) {
             val wallpaper = limitedWallpapers[position]
             binding.apply {
-                println("ringTone: ${wallpaper.contents.first().url.full}")
-                if(wallpaper.contents.first() == null) {
+                val content = wallpaper.contents.firstOrNull()
+                if (content == null) {
+                    wallPaper.setImageResource(R.drawable.icon_default_category)
                     return@apply
                 }
-               val url =  wallpaper.thumbnail?.url?.medium
-                    ?: wallpaper.contents.firstOrNull()?.url?.medium
-                url.let {
-                    Glide.with(context).load(it).placeholder(R.drawable.icon_default_category).error(
-                        R.drawable.icon_default_category).into(binding.wallPaper)
-                }
+                val url = wallpaper.thumbnail?.url?.medium ?: content.url.medium
+                url?.let {
+                    Glide.with(context)
+                        .load(it)
+                        .placeholder(R.drawable.icon_default_category)
+                        .error(R.drawable.icon_default_category)
+                        .into(wallPaper)
+                } ?: wallPaper.setImageResource(R.drawable.icon_default_category)
 
                 root.setOnClickListener {
                     RingtonePlayerRemote.setCurrentWallpaper(wallpaper)
@@ -76,5 +80,6 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
                 }
             }
         }
+
     }
 }

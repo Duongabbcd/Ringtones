@@ -33,9 +33,6 @@ class RingtoneViewModel @Inject constructor(
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _total = MutableLiveData<Int>()
-    val total: LiveData<Int> = _total
-
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
@@ -104,7 +101,7 @@ class RingtoneViewModel @Inject constructor(
             currentPage3++
             allWallpapers3.addAll(result.data.data)
             _selectedRingtone.value = allWallpapers3
-            _total.value = _selectedRingtone.value?.size ?: 0
+
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")

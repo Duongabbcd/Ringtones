@@ -12,7 +12,14 @@ data class DataPage(
     val currentPage: Int,
 
     @SerializedName("data")
-    val categories: List<Category>
+    val categories: List<Category>,
+    @SerializedName("first_page_url") val firstPageUrl: String,
+    val from: Int,
+    @SerializedName("next_page_url") val nextPageUrl: String?,
+    val path: String,
+    @SerializedName("per_page") val perPage: Int,
+    @SerializedName("prev_page_url") val prevPageUrl: String?,
+    val to: Int
 )
 
 
