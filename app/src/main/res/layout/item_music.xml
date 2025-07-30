@@ -42,7 +42,6 @@
                 app:cs_pointer_halo_width="@dimen/_10sdp"
                 app:cs_progress="10"
                 app:cs_negative_enabled="true"
-                app:cs_thumb_drawable="@drawable/icon_ringtone_pointer"
                 app:cs_start_angle="180" />
 
             <!-- Your center image -->
