@@ -366,6 +366,7 @@ class SlideWallpaperActivity :
 
         val bottomSheet = DownloadWallpaperBottomSheet(this)
         bottomSheet.apply {
+            setType("download")
             setCancelable(false)
             setCanceledOnTouchOutside(false)
             setOnShowListener { dialog ->

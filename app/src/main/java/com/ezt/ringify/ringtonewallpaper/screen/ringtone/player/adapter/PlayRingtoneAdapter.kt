@@ -148,7 +148,8 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
                 println("setCurrentPlayingPosition 123: ${ringtone.name} $isPlaying")
                 binding.play.setImageResource(R.drawable.icon_play)
                 updateProgress(0f)
-
+            } else {
+                binding.play.setImageResource(R.drawable.icon_pause)
             }
 
             binding.play.setOnClickListener {
@@ -156,6 +157,7 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
                 binding.play.setImageResource(
                     if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
                 )
+                println("Adapter play clicked, isPlaying=$isPlaying, ringtoneId=${ringtone.id}")
                 onClickListener(isPlaying, ringtone.id)
             }
 

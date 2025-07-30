@@ -4,7 +4,10 @@ import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -19,13 +22,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.adapter.PlayRingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
@@ -35,9 +37,9 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.FilteredRingtonesActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.service.RingtonePlayerService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -59,30 +61,28 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
+    // Modify your adapter initialization callback:
     private val playRingtoneAdapter: PlayRingtoneAdapter by lazy {
-        PlayRingtoneAdapter(onRequestScrollToPosition = { newPosition ->
-            carousel.scrollSpeed(200f)
-            setUpNewPlayer(newPosition)
-            handler.postDelayed(   {playRingtoneAdapter.setCurrentPlayingPosition(newPosition, false)}, 300)
-        }
-        ) { result, id ->
-            if (result) {
-                if (id != currentId) {
-                    playRingtone(true)
-                    currentId = id
-                } else {
-                    if (exoPlayer.currentPosition >= exoPlayer.duration) {
-                        exoPlayer.seekTo(0)
-                    }
-                    exoPlayer.play()
+        PlayRingtoneAdapter(
+            onRequestScrollToPosition = { newPosition ->
+                carousel.scrollSpeed(200f)
+                // Stop player via service if bound
+                if (serviceBound) {
+                    playerService?.stop()
                 }
-            } else {
-                exoPlayer.pause()
+
+                setUpNewPlayer(newPosition)
+                handler.postDelayed({ playRingtoneAdapter.setCurrentPlayingPosition(newPosition, false) }, 300)
+            },
+            onClickListener = { isPlaying, id ->
+                println("Activity onClickListener: isPlaying=$isPlaying, id=$id")
+                playRingtone(isPlaying, id)
             }
-        }
+        )
     }
 
     private var currentId = -10
+    private var isPlaying = false
 
     private var index = 0
 
@@ -95,34 +95,32 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     private var returnedFromSettings = false
 
-    private fun playRingtone(isPlaying: Boolean = false) {
-        exoPlayer = ExoPlayer.Builder(this).build()
-        // Prepare the media item
-        if (!isPlaying) return
-        val mediaItem = MediaItem.fromUri(currentRingtone.contents.url)
-        exoPlayer.setMediaItem(mediaItem)
-        // Prepare and start playback
-        exoPlayer.prepare()
-        exoPlayer.play()
-        println("▶️ Starting playback & posting progressUpdater")
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                println("🎧 onIsPlayingChanged: $isPlaying")
-                if (isPlaying) {
-                    handler.post(progressUpdater)
-                } else {
-                    handler.removeCallbacks(progressUpdater)
+    // Update play/pause click to use service instead of ExoPlayer directly
+    private fun playRingtone(isPlaying: Boolean = false, ringtoneId: Int? = null) {
+        println("playRingtone called, serviceBound=$serviceBound, isPlaying=$isPlaying, id=$ringtoneId and ${playerService?.currentPlayingId}")
+        if (!serviceBound) return
+
+        if (isPlaying) {
+            if (ringtoneId != null && ringtoneId != playerService?.currentPlayingId) {
+                val ringtone = allRingtones.find { it.id == ringtoneId } ?: return
+                currentRingtone = ringtone
+                println("Calling service.playUri(${currentRingtone.contents.url})")
+                playerService?.playUri(currentRingtone.contents.url, ringtoneId)
+                currentId = ringtoneId
+            } else {
+                // SAME ringtone, check if it needs restarting
+                if (playerService?.isAtEnd() == true) {
+                    println("Player at end — restarting same ringtone")
+                    playerService?.playUri(currentRingtone.contents.url, ringtoneId!!)
+                } else{
+                    println("Calling service.resume()")
+                    playerService?.resume()
                 }
             }
-
-            override fun onPlaybackStateChanged(state: Int) {
-                if (state == Player.STATE_ENDED) {
-                    println("🎵 Song ended")
-                    handler.postDelayed(  {playRingtoneAdapter.onSongEnded()} , 300)
-
-                }
-            }
-        })
+        } else  {
+            println("Calling service.pause()")
+            playerService?.pause()
+        }
     }
 
     private val progressUpdater = object : Runnable {
@@ -146,8 +144,79 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         RingtonePlayerRemote.allSelectedRingtones
     }
 
+    private var playerService: RingtonePlayerService? = null
+    private var serviceBound = false
+
+    private val serviceConnection = object : android.content.ServiceConnection {
+        override fun onServiceConnected(name: android.content.ComponentName?, service: android.os.IBinder?) {
+            val binder = service as RingtonePlayerService.LocalBinder
+            playerService = binder.getService()
+            serviceBound = true
+            syncUiWithService()
+        }
+
+        override fun onServiceDisconnected(name: android.content.ComponentName?) {
+            serviceBound = false
+            playerService = null
+        }
+    }
+
+    private val progressReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context?, intent: android.content.Intent?) {
+            val progress = intent?.getLongExtra("progress", 0L) ?: 0L
+            playRingtoneAdapter.updateProgress(progress.toFloat())
+        }
+    }
+
+    private val endedReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context?, intent: android.content.Intent?) {
+            playRingtoneAdapter.onSongEnded()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (serviceBound) {
+            unbindService(serviceConnection)
+            serviceBound = false
+        }
+        LocalBroadcastManager.getInstance(this)
+            .unregisterReceiver(progressReceiver)
+        LocalBroadcastManager.getInstance(this)
+            .unregisterReceiver(endedReceiver)
+    }
+
+    private fun syncUiWithService() {
+        // Update adapter to reflect current play status and progress when bound
+        playerService?.let {
+            val isPlaying = it.isPlaying()
+            val currentPosition = it.getCurrentPosition()
+            // Update UI in adapter
+            val playingPos = allRingtones.indexOf(currentRingtone)
+            if (playingPos != -1) {
+                playRingtoneAdapter.setCurrentPlayingPosition(playingPos, isPlaying)
+                playRingtoneAdapter.updateProgress(currentPosition.toFloat())
+            }
+        }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("currentId: ${savedInstanceState?.getInt("currentId")}")
+        currentId = savedInstanceState?.getInt("currentId") ?: -1
+        isPlaying = savedInstanceState?.getBoolean("isPlaying", false) ?: false
+        // Bind service
+        val intent = Intent(this, RingtonePlayerService::class.java)
+        bindService(intent, serviceConnection, android.content.Context.BIND_AUTO_CREATE)
+
+        // Register progress and ended receivers
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+            .registerReceiver(progressReceiver, android.content.IntentFilter("ringtone_progress"))
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+            .registerReceiver(endedReceiver, android.content.IntentFilter("ringtone_ended"))
+
         handler = Handler(Looper.getMainLooper())
         println("onCreate: $categoryId")
         sortOrder = Common.getSortOrder(this)
@@ -216,7 +285,19 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             viewModel.loadRingtoneById(currentRingtone.id)
             observeRingtoneFromDb()
             displayItems()
-            playRingtone(false)
+
+            // 🔥 NEW: query service state before acting
+            val isPlaying = playerService?.isPlaying() ?: false
+            val currentServiceId = playerService?.currentPlayingId
+
+            if (currentServiceId == currentRingtone.id) {
+                // Resume if it was playing before
+                playRingtone(isPlaying, currentServiceId)
+            } else {
+                // Otherwise stop it (or no action)
+                playRingtone(false)
+            }
+
             loadMoreData()
             binding.noInternet.root.gone()
         }
@@ -520,16 +601,17 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         }
     }
 
+    // When user scrolls or selects ringtone, also notify service
     private fun setUpNewPlayer(position: Int) {
         binding.horizontalRingtones.smoothScrollToPosition(position)
         currentRingtone = allRingtones[position]
+        RingtonePlayerRemote.setCurrentRingtone(currentRingtone)
         playRingtoneAdapter.setCurrentPlayingPosition(position)
+        currentId = currentRingtone.id
         viewModel.loadRingtoneById(currentRingtone.id)
         binding.currentRingtoneName.text = currentRingtone.name
         binding.currentRingtoneAuthor.text = currentRingtone.author.name
-        exoPlayer.release()
-        exoPlayer = ExoPlayer.Builder(this).build()
-        handler.removeCallbacks(progressUpdater)
+        syncUiWithService()
     }
 
     private var lastDx: Int = 0
@@ -552,6 +634,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 override fun onPositionChange(position: Int) {
                     currentId = -10
                     updateIndex(index, "onPositionChange")
+                    playerService?.stop()
                     setUpNewPlayer(position)
                     playRingtoneAdapter.setCurrentPlayingPosition(position, false)
                     // 🔁 force rebind to update playingHolder
@@ -648,8 +731,39 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     override fun onPause() {
         super.onPause()
         handler.removeCallbacks(progressUpdater)
-        exoPlayer.release()
+        // Don't release player here! Service manages it.
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!serviceBound) return
+
+        val servicePlaying = playerService?.isPlaying() ?: false
+        val serviceId = playerService?.currentPlayingId ?: -1
+
+        // Convert ringtone ID to adapter position
+        val position = allRingtones.indexOfFirst { it.id == serviceId }.takeIf { it != -1 } ?: 0
+
+        currentId = serviceId
+        isPlaying = servicePlaying
+
+        println("onResume - servicePlaying: $servicePlaying, serviceId: $serviceId, position: $position")
+
+        // If player is NOT playing, try to resume
+        if (!servicePlaying) {
+            playerService?.resume()
+            isPlaying = true
+            println("Activity onResume: called resume()")
+        }
+
+        // Update adapter and UI based on final state
+        playRingtoneAdapter.setCurrentPlayingPosition(position, isPlaying)
+        syncUiWithService()
+    }
+
+
+
 
     // ✅ Handle permission result
     override fun onRequestPermissionsResult(
@@ -672,6 +786,20 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         index = newIndex
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("currentId", currentId)
+        outState.putBoolean("isPlaying", isPlaying)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (serviceBound) {
+            playerService?.pause()
+            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
+            println("Activity onStop: pause playback")
+        }
+    }
 }
 
 class OneItemSnapHelper(private val maxFlingDistance: Int = 1) : PagerSnapHelper() {
