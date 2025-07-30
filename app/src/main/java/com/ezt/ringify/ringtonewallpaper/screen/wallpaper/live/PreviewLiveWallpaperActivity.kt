@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
@@ -34,7 +35,6 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelpe
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity.Companion.currentIndex
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -82,7 +82,9 @@ class PreviewLiveWallpaperActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkDownloadPermissions()
+        Log.d("PreviewLive", "savedInstanceState: $savedInstanceState")
         if (savedInstanceState != null) {
+            currentIndex = savedInstanceState.getInt("current_index", 0)
             index = currentIndex
             Log.d("PreviewLive", "Restored index: $index")
         } else {
@@ -98,6 +100,12 @@ class PreviewLiveWallpaperActivity :
             checkInternetConnected(isConnected)
         }
         when (type) {
+            1 -> {
+                favouriteViewModel.allLiveWallpapers.observe(this@PreviewLiveWallpaperActivity) { items ->
+                    appendNewRingtones(items)
+                }
+            }
+
             2 -> wallpaperViewModel.liveWallpapers.observe(this@PreviewLiveWallpaperActivity) { items ->
                 appendNewRingtones(items)
             }
@@ -336,7 +344,7 @@ class PreviewLiveWallpaperActivity :
         binding.horizontalWallpapers.smoothScrollToPosition(position)
         currentWallpaper = allWallpapers[position]
         Log.d("PreviewLive", "setUpNewPlayer: position=$position wallpaper=$currentWallpaper")
-        favouriteViewModel.loadWallpaperById(currentWallpaper.id)
+        favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
         index = position
         currentIndex = position
     }
@@ -348,7 +356,7 @@ class PreviewLiveWallpaperActivity :
     private var isFavorite: Boolean = false
 
     private fun observeRingtoneFromDb() {
-        favouriteViewModel.wallpaper.observe(this) { dbRingtone ->
+        favouriteViewModel.liveWallpaper.observe(this) { dbRingtone ->
             isFavorite = dbRingtone.id == currentWallpaper.id
             binding.favourite.setImageResource(
                 if (isFavorite) R.drawable.icon_favourite else R.drawable.icon_unfavourite
@@ -359,13 +367,13 @@ class PreviewLiveWallpaperActivity :
     private fun displayFavouriteIcon(isManualChange: Boolean = false) {
         if (isFavorite) {
             if (isManualChange) {
-                favouriteViewModel.deleteWallpaper(currentWallpaper)
+                favouriteViewModel.deleteLiveWallpaper(currentWallpaper)
                 binding.favourite.setImageResource(R.drawable.icon_unfavourite)
                 isFavorite = false
             }
         } else {
             if (isManualChange) {
-                favouriteViewModel.insertWallpaper(currentWallpaper)
+                favouriteViewModel.insertLiveWallpaper(currentWallpaper)
                 binding.favourite.setImageResource(R.drawable.icon_favourite)
                 isFavorite = true
             }
@@ -388,7 +396,8 @@ class PreviewLiveWallpaperActivity :
 
                 backBtn.setOnClickListener { finish() }
 
-                favouriteViewModel.loadWallpaperById(currentWallpaper.id)
+                favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
+                favouriteViewModel.loadLiveAllWallpapers()
 
                 favourite.setOnClickListener { displayFavouriteIcon(true) }
                 loadMoreData()
@@ -413,7 +422,7 @@ class PreviewLiveWallpaperActivity :
 
                 val isAtEnd = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 2
 
-                if (isAtEnd && !isLoadingMore) {
+                if (isAtEnd && !isLoadingMore && type != 1) {
                     isLoadingMore = true
                     when (type) {
                         2 -> wallpaperViewModel.loadLiveWallpapers()
@@ -442,6 +451,12 @@ class PreviewLiveWallpaperActivity :
     override fun onStop() {
         super.onStop()
         PlayerManager.release()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putInt("current_index", currentIndex)
+        Log.d("PreviewLive", "Saving currentIndex: $currentIndex")
     }
 }
 

@@ -138,5 +138,6 @@
     <string name="reset">Réinitialiser</string>
     <string name="crop">Recadrer</string>
     <string name="wallpaper_desc">Description du fond d’écran</string>
-
+    <string name="video">Vidéo</string>
+    <string name="single">Image</string>
 </resources>

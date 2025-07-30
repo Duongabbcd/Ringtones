@@ -2,6 +2,7 @@ package com.ezt.ringify.ringtonewallpaper.local
 
 import android.app.Application
 import androidx.room.Room
+import com.ezt.ringify.ringtonewallpaper.local.dao.LiveWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.RingtoneDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.WallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.database.FavouriteDatabase
@@ -29,4 +30,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideWallpaperDao(db: FavouriteDatabase): WallpaperDao = db.wallPaperDao()
+
+
+    @Provides
+    @Singleton
+    fun provideLiveWallpaperDao(db: FavouriteDatabase): LiveWallpaperDao = db.liveWallpaperDao()
 }

@@ -29,12 +29,6 @@ interface ApiService {
     ): RingtoneResponse
 
 
-    @GET("api/v1/call_screens?app=1")
-    suspend fun getCallScreens(): CallScreenResponse
-
-    @GET("api/v1/contents?app=1")
-    suspend fun getContents(): ContentResponse
-
     //Categories
     @GET("api/v1/categories?app=1&with=author+id%2Cname%2Clink&type=2")
     suspend fun getCategory(): CategoriesResponse
@@ -61,12 +55,12 @@ interface ApiService {
         @Query("page") page: Int = 1
     ): CategoriesResponse
 
-    @GET("api/v1/wallpapers?app=1&where=trend+1")
+    @GET("api/v1/wallpapers?app=1&where=trend+1,type+1")
     suspend fun getTrendingWallpapers(
         @Query("page") page: Int = 1
     ): WallpaperResponse
 
-    @GET("api/v1/wallpapers?app=1&order_by=updated_at+desc")
+    @GET("api/v1/wallpapers?app=1&where=type+1&order_by=updated_at+desc")
     suspend fun getNewWallpapers(
         @Query("page") page: Int = 1
     ): WallpaperResponse
@@ -136,6 +130,15 @@ interface ApiService {
         @Query("with") with: String = "author name,id",
         @Query("where") where: String
     ): CategoriesResponse
+
+    //Callscreen
+    @GET("api/v1/call_screens?app=1")
+    suspend fun getCallScreens(): CallScreenResponse
+
+    @GET("api/v1/contents?app=1&where=type+3&call_screen=1")
+    suspend fun getCallScreenContent(
+        @Query("call_screen") callScreen: Int
+    ): ContentResponse
 }
 
 data class InteractionRequest(

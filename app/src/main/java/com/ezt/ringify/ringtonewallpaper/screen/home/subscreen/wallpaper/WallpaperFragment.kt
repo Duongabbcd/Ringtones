@@ -23,6 +23,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -227,7 +228,7 @@ class WallpaperFragment :
 
             favourite.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
+                    startActivity(Intent(ctx, FavouriteWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", -3)
                     })
                 }

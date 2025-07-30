@@ -127,5 +127,6 @@
     <string name="icon">Иконка</string>
     <string name="quick_theme">Быстрая тема</string>
     <string name="customize">Настроить</string>
-
+    <string name="video">Видео</string>
+    <string name="single">Изображение</string>
 </resources>

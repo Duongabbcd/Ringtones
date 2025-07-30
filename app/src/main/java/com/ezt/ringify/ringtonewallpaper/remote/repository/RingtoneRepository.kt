@@ -20,8 +20,6 @@ class RingtoneRepository @Inject constructor(
     suspend fun fetchPopularRingtones(page: Int): RingtoneResponse = apiService.getPopularRingtones(page)
     suspend fun fetchTrendingRingtones(currentPage2: Int): RingtoneResponse = apiService.getTrendingRingtones(currentPage2)
 
-    suspend fun fetchCallScreens(): CallScreenResponse = apiService.getCallScreens()
-    suspend fun fetchContents(): ContentResponse = apiService.getContents()
     suspend fun fetchRingtoneCategories(page: Int): CategoriesResponse =
         apiService.getRingtoneCategory(page)
 
@@ -49,6 +47,11 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
     suspend fun getPremiumVideoWallpaper(page: Int) = apiService.getPremiumVideoWallpaper(page)
     suspend fun getSlideWallpaper(page: Int) = apiService.getSlideWallpaper(page)
     suspend fun getSingleWallpaper(page: Int) = apiService.getSingleWallpaper(page)
+
+    //Callscreen
+    suspend fun fetchCallScreens(): CallScreenResponse = apiService.getCallScreens()
+    suspend fun getCallScreenContent(callScreenId: Int): ContentResponse =
+        apiService.getCallScreenContent(callScreenId)
 
     companion object {
         var TOKEN: String = ""

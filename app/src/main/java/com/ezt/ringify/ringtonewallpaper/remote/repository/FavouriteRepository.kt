@@ -1,7 +1,9 @@
 package com.ezt.ringify.ringtonewallpaper.remote.repository
 
+import com.ezt.ringify.ringtonewallpaper.local.LiveWallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.RingtoneEntity
 import com.ezt.ringify.ringtonewallpaper.local.WallpaperEntity
+import com.ezt.ringify.ringtonewallpaper.local.dao.LiveWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.RingtoneDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.WallpaperDao
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
@@ -11,7 +13,8 @@ import javax.inject.Inject
 
 class FavouriteRepository @Inject constructor(
     private val ringtoneDao: RingtoneDao,
-    private val wallpaperDao: WallpaperDao
+    private val wallpaperDao: WallpaperDao,
+    private val liveWallpaperDao: LiveWallpaperDao,
 ) {
 
     suspend fun getRingtoneById(id: Int): Ringtone =
@@ -32,14 +35,26 @@ class FavouriteRepository @Inject constructor(
     suspend fun getAllWallpapers(): List<Wallpaper> =
         wallpaperDao.getAllWallpaper()?.map { it.toDomain() } ?: listOf()
 
+    suspend fun getAllLiveWallpapers(): List<Wallpaper> =
+        liveWallpaperDao.getAllWallpaper()?.map { it.toDomain() } ?: listOf()
+
     suspend fun getWallpaperById(id: Int): Wallpaper =
         wallpaperDao.getById(id)?.toDomain() ?: Wallpaper.EMPTY_WALLPAPER
+
+    suspend fun getLiveWallpaperById(id: Int): Wallpaper =
+        liveWallpaperDao.getById(id)?.toDomain() ?: Wallpaper.EMPTY_WALLPAPER
 
     suspend fun insertWallpaper(wallpaper: Wallpaper) =
         wallpaperDao.insert(wallpaper.toEntity())
 
     suspend fun deleteWallpaper(wallpaper: Wallpaper) =
         wallpaperDao.delete(wallpaper.toEntity())
+
+    suspend fun insertLiveWallpaper(wallpaper: Wallpaper) =
+        liveWallpaperDao.insert(wallpaper.toLiveEntity())
+
+    suspend fun deleteLiveWallpaper(wallpaper: Wallpaper) =
+        liveWallpaperDao.delete(wallpaper.toLiveEntity())
 }
 
 
@@ -72,8 +87,56 @@ fun Wallpaper.toEntity() : WallpaperEntity =
         like, set, download, country, updatedAt,createdAt
 )
 
+fun Wallpaper.toLiveEntity(): LiveWallpaperEntity =
+    LiveWallpaperEntity(
+        id = id,
+        name = name,
+        thumbnail = thumbnail ?: OBJECT_EMPTY,
+        contents = contents,
+        originalId = originalId,
+        type,
+        active,
+        orderIndex,
+        isPrivate,
+        trend,
+        popular,
+        dailyRating,
+        weeklyRating,
+        monthlyRating,
+        like,
+        set,
+        download,
+        country,
+        updatedAt,
+        createdAt
+    )
+
 fun WallpaperEntity.toDomain() : Wallpaper =
     Wallpaper( id = id, name = name, thumbnail = if(thumbnail == OBJECT_EMPTY) null else thumbnail,
         contents = contents, originalId = originalId, type, active, orderIndex, isPrivate, trend, popular, dailyRating, weeklyRating, monthlyRating,
         like, set, download, country, updatedAt,createdAt
 )
+
+fun LiveWallpaperEntity.toDomain(): Wallpaper =
+    Wallpaper(
+        id = id,
+        name = name,
+        thumbnail = if (thumbnail == OBJECT_EMPTY) null else thumbnail,
+        contents = contents,
+        originalId = originalId,
+        type,
+        active,
+        orderIndex,
+        isPrivate,
+        trend,
+        popular,
+        dailyRating,
+        weeklyRating,
+        monthlyRating,
+        like,
+        set,
+        download,
+        country,
+        updatedAt,
+        createdAt
+    )

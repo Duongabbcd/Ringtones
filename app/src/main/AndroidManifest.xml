@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -18,12 +22,19 @@
     <!-- For Android 13+ -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
-    <!-- Required for setting ringtone -->
+    <!-- Required for setting wallpaper -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
     <uses-permission
         android:name="android.permission.BIND_WALLPAPER"
         tools:ignore="ProtectedPermissions" />
+
+    <!-- Required for setting ringtone -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
 
     <application
         android:name=".MyApplication"
@@ -96,6 +107,25 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".screen.wallpaper.crop.CropActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.wallpaper.favourite.FavouriteWallpaperActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.callscreen.CallScreenActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tel" />
+            </intent-filter>
+        </activity>
 
         <!--end of all screens-->
 
@@ -136,6 +166,30 @@
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/wallpaper" />
+        </service>
+
+        <!-- InCallService to display your custom call UI -->
+        <service
+            android:name=".screen.callscreen.MyInCallService"
+            android:exported="true"
+            android:permission="android.permission.BIND_INCALL_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.InCallService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.telecom.IN_CALL_SERVICE_UI"
+                android:value="true" />
+        </service>
+
+        <!-- ConnectionService to manage call connections -->
+        <service
+            android:name=".screen.callscreen.MyConnectionService"
+            android:exported="true"
+            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
         </service>
 
         <service

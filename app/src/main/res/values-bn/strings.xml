@@ -138,4 +138,7 @@
     <string name="quick_theme">দ্রুত থিম</string>
     <string name="customize">কাস্টমাইজ করুন</string>
 
+    <string name="video">ভিডিও</string>
+    <string name="single">ছবি</string>
+
 </resources>

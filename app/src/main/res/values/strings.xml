@@ -148,5 +148,6 @@
     <string name="icon">Icon</string>
     <string name="quick_theme">Quick Theme</string>
     <string name="customize">Customize</string>
-
+    <string name="video">Video</string>
+    <string name="single">Image</string>
 </resources>

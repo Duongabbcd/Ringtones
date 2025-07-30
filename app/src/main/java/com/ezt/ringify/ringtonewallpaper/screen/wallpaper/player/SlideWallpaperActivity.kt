@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player
 import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
+import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.content.ComponentName
 import android.content.Context
@@ -29,9 +30,7 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySlideWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
-import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper.setWallpaperFromUrl
@@ -39,9 +38,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.WallpaperTarget
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.crop.CropActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.SlideshowWallpaperService
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -54,202 +51,60 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class SlideWallpaperActivity :
     BaseActivity<ActivitySlideWallpaperBinding>(ActivitySlideWallpaperBinding::inflate) {
-
-    private val favouriteViewModel: FavouriteWallpaperViewModel by viewModels()
-    private val wallpaperViewModel: WallpaperViewModel by viewModels()
-
+    private val viewModel: FavouriteWallpaperViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
-    private var isLoadingMore = false
-    private val addedWallpaperIds = mutableSetOf<Int>() // Track already added
-
-    private val allWallpapers by lazy {
-        RingtonePlayerRemote.allSelectedWallpapers
+    private val playSlideWallpaperAdapter: PlaySlideWallpaperAdapter by lazy {
+        PlaySlideWallpaperAdapter(this, onRequestScrollToPosition = { newPosition ->
+            carousel.scrollSpeed(200f)
+            setUpNewPlayer(newPosition)
+            handler.postDelayed({
+                playSlideWallpaperAdapter.setCurrentPlayingPosition(
+                    newPosition,
+                    false
+                )
+            }, 300)
+        }
+        ) { result, id -> }
     }
-
-    private var index = 0
-    private var currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
-
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
 
+    private var index = 0
+
+    private var currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
+
+    private val allRingtones by lazy {
+        RingtonePlayerRemote.allSelectedWallpapers
+    }
+
     private var lastDx: Int = 0
     private var duration = 0L
-    private var downloadedUri: Uri? = null
-
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
-
-    private var isFavorite: Boolean = false
-
-    private val playSlideWallpaperAdapter: PlaySlideWallpaperAdapter by lazy {
-        PlaySlideWallpaperAdapter(this,
-            onRequestScrollToPosition = { newPosition ->
-                carousel.scrollSpeed(200f)
-                setUpNewPlayer(newPosition)
-                handler.postDelayed({
-                    playSlideWallpaperAdapter.setCurrentPlayingPosition(newPosition, false)
-                }, 300)
-            }
-        ) { _, _ -> }
-    }
-
-    private val snapHelper: OneItemSnapHelper by lazy { OneItemSnapHelper() }
-    private val categoryId by lazy {
-        intent.getIntExtra("wallpaperCategoryId", -1)
-    }
-
-    private val type by lazy {
-        intent.getIntExtra("type", -1)
-    }
+    private var downloadedUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        println("SlideWallpaperActivity: $categoryId and $type")
-
         checkDownloadPermissions()
-
-        connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
+        connectionViewModel.isConnectedLiveData.observe(this@SlideWallpaperActivity) { isConnected ->
+            println("isConnected: $isConnected")
             checkInternetConnected(isConnected)
         }
-        addedWallpaperIds.addAll(allWallpapers.map { it.id })
-        index = savedInstanceState?.getInt("wallpaper_index", 0)
-            ?: allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
-        when (categoryId) {
-            -3 -> {
-                favouriteViewModel.allWallpapers.observe(this@SlideWallpaperActivity) { items ->
-                    appendNewRingtones(items)
-                }
 
-            }
+        if (savedInstanceState != null) {
 
-            -2 -> {
-                wallpaperViewModel.trendingWallpaper.observe(this@SlideWallpaperActivity) { items ->
-                    appendNewRingtones(items)
-                }
-            }
-
-            -1 -> {
-                wallpaperViewModel.newWallpaper.observe(this@SlideWallpaperActivity) { items ->
-                    appendNewRingtones(items)
-                }
-            }
-
-            else -> {
-                if (categoryId == 75) {
-                    when (type) {
-                        1 -> wallpaperViewModel.premiumWallpapers.observe(this@SlideWallpaperActivity) { items ->
-                            appendNewRingtones(items)
-                        }
-
-                        2 -> wallpaperViewModel.slideWallpaper.observe(this@SlideWallpaperActivity) { items ->
-                            appendNewRingtones(items)
-                        }
-
-                        else -> wallpaperViewModel.singleWallpapers.observe(this@SlideWallpaperActivity) { items ->
-                            appendNewRingtones(items)
-                        }
-                    }
-                } else {
-                    wallpaperViewModel.subWallpaper1.observe(this@SlideWallpaperActivity) { items ->
-                        appendNewRingtones(items)
-                    }
-                }
-
-            }
-        }
-    }
-
-    private fun appendNewRingtones(newItems: List<Wallpaper>) {
-        val oldSize = allWallpapers.size
-        println("appendNewRingtones 0: ${newItems.size}")
-        val distinctItems = newItems.filter { it.id !in addedWallpaperIds }
-
-        if (distinctItems.isNotEmpty()) {
-            allWallpapers.addAll(distinctItems)
-            distinctItems.forEach { addedWallpaperIds.add(it.id) }
-            println("appendNewRingtones 1: ${allWallpapers.size}")
-            playSlideWallpaperAdapter.submitList(allWallpapers.toList())
-            playSlideWallpaperAdapter.notifyItemRangeInserted(oldSize, distinctItems.size)
-        }
-
-        isLoadingMore = false
-    }
-
-    private fun checkInternetConnected(isConnected: Boolean) {
-        if (!isConnected) {
-            binding.origin.gone()
-            binding.noInternet.root.visible()
+            index = savedInstanceState.getInt("wallpaper_index", 0)
+            println("savedInstanceState 0: $index")
         } else {
-            binding.origin.visible()
-            binding.noInternet.root.gone()
-
-            handler = Handler(Looper.getMainLooper())
-            observeRingtoneFromDb()
-
-            with(binding) {
-                backBtn.setOnClickListener { finish() }
-                favourite.setOnClickListener { displayFavouriteIcon(true) }
-                favouriteViewModel.loadWallpaperById(currentWallpaper.id)
-                loadMoreData()
-                initViewPager()
-                setUpNewPlayer(index)
-                setupButtons()
-            }
+            currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
+            index = allRingtones.indexOf(currentWallpaper)
+            println("savedInstanceState 1: $index")
         }
-    }
 
-    private fun loadMoreData() {
-        binding.horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dx <= 0) return  // Only when scrolling right
-
-                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
-
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-
-                val isAtEnd = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 2
-
-                if (isAtEnd && !isLoadingMore) {
-                    isLoadingMore = true
-                    when (categoryId) {
-                        -3 -> {
-                            favouriteViewModel.loadAllWallpapers()
-                        }
-
-                        -2 -> {
-                            wallpaperViewModel.loadTrendingWallpapers()
-                        }
-
-                        -1 -> {
-                            wallpaperViewModel.loadNewWallpapers()
-                        }
-
-                        else -> {
-                            if (categoryId == 75) {
-                                when (type) {
-                                    1 -> wallpaperViewModel.loadPremiumVideoWallpaper()
-
-                                    2 -> wallpaperViewModel.loadSlideWallpaper()
-
-                                    else -> wallpaperViewModel.loadSingleWallpaper()
-                                }
-
-                            } else {
-                                wallpaperViewModel.loadSubWallpapers1(categoryId)
-                            }
-
-                        }
-                    }
-
-                }
-            }
-        })
     }
 
     private fun checkDownloadPermissions() {
@@ -260,22 +115,30 @@ class SlideWallpaperActivity :
             if (allGranted) {
                 actuallyDownloadWallpaper()
             } else {
-                val permanentlyDenied = permissions.keys.any {
-                    !ActivityCompat.shouldShowRequestPermissionRationale(this, it)
+                // Loop through each permission
+                val permanentlyDenied = permissions.keys.any { permission ->
+                    !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
                 }
 
-                if (permanentlyDenied) showGoToSettingsDialog()
-                else Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                if (permanentlyDenied) {
+                    // User denied and selected "Don't ask again"
+                    showGoToSettingsDialog()
+                } else {
+                    Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
+
     }
 
+
+    private var returnedFromSettings = false
     private fun showGoToSettingsDialog() {
-        Common.showDialogGoToSetting(this) { goToSettings ->
-            if (goToSettings) {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", packageName, null)
-                }
+        Common.showDialogGoToSetting(this@SlideWallpaperActivity) { result ->
+            if (result) {
+                returnedFromSettings = true
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
@@ -285,99 +148,252 @@ class SlideWallpaperActivity :
     }
 
     private fun setupButtons() {
+
         binding.apply {
             share.setOnClickListener {
-                val url = currentWallpaper.contents.first().url.full
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                val imageUrl = currentWallpaper.contents.first().url.full
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, imageUrl)
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, "Check this out")
-                    putExtra(Intent.EXTRA_TEXT, url)
                 }
-                startActivity(Intent.createChooser(shareIntent, "Share via"))
+                startActivity(Intent.createChooser(shareIntent, "Share image via"))
             }
 
             download.setOnClickListener {
                 downloadWallpaper()
             }
-
             wallpaper.setOnClickListener {
-                if (isVideoWallpaper(currentWallpaper)) {
-                    setUpVideoByCondition(currentWallpaper.contents.first().url.full)
-                } else {
-                    setUpPhotoByCondition(currentWallpaper.contents)
+                val imageUrl = currentWallpaper.contents
+
+                setUpPhotoByCondition(imageUrl)
+
+            }
+
+        }
+    }
+
+    private val cropLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val uri = result.data?.getParcelableExtra<Uri>("croppedImageUri")
+            println("cropLauncher: $uri")
+            if (uri != null) {
+                val bitmap = loadBitmapFromUri(this, uri)
+                if (bitmap != null) {
+                    continueAfterCrop(bitmap)
                 }
             }
         }
     }
 
-    private fun isVideoWallpaper(wallpaper: Wallpaper): Boolean {
-        return wallpaper.type == 2 // Or another flag you use
+    private fun continueAfterCrop(bitmap: Bitmap) {
+        println("continueAfterCrop: $bitmap")
+        lifecycleScope.launch {
+            val bottomSheet = DownloadWallpaperBottomSheet(this@SlideWallpaperActivity)
+            bottomSheet.apply {
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setOnShowListener { dialog ->
+                    val b = (dialog as BottomSheetDialog).behavior
+                    b.isDraggable = false
+                    b.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+
+
+            val isSuccess: Boolean = when (settingOption) {
+                1 -> {
+                    bottomSheet.setType("lock")
+                    bottomSheet.show()
+                    Toast.makeText(
+                        this@SlideWallpaperActivity,
+                        "${currentWallpaper.id}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setWallpaperFromUrl(
+                        context = this@SlideWallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.LOCK
+                    )
+                }
+
+                2 -> {
+                    bottomSheet.setType("home")
+                    bottomSheet.show()
+                    Toast.makeText(
+                        this@SlideWallpaperActivity,
+                        "${currentWallpaper.id}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setWallpaperFromUrl(
+                        context = this@SlideWallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.HOME
+                    )
+
+                }
+
+                else -> {
+                    bottomSheet.setType("both")
+                    bottomSheet.show()
+                    Toast.makeText(
+                        this@SlideWallpaperActivity,
+                        "${currentWallpaper.id}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setWallpaperFromUrl(
+                        context = this@SlideWallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.BOTH
+                    )
+                }
+
+            }
+
+
+            if (isSuccess) {
+                bottomSheet.showSuccess().also {
+                    enableDismiss(bottomSheet)
+                }
+                viewModel.increaseSet(currentWallpaper)
+            } else {
+                bottomSheet.showFailure().also {
+                    enableDismiss(bottomSheet)
+                }
+            }
+        }
     }
 
-    private fun setUpVideoByCondition(videoUrl: String) {
-        val dialog = SetWallpaperDialog(this) { result ->
+    private fun loadBitmapFromUri(context: Context, uri: Uri): Bitmap? {
+        return context.contentResolver.openInputStream(uri)?.use {
+            BitmapFactory.decodeStream(it)
+        }
+    }
+
+
+    private fun setUpPhotoByCondition(imageUrl: List<ImageContent>) {
+        val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
             settingOption = result
-            launchLiveWallpaper(this, videoUrl)
+
+            if (imageUrl.size > 1) {
+                lifecycleScope.launch {
+                    setUpLiveWallpaperByCondition(result, imageUrl)
+                }
+            } else {
+                val intent = Intent(this@SlideWallpaperActivity, CropActivity::class.java).apply {
+                    putExtra("imageUrl", imageUrl.first().url.full)
+                }
+                cropLauncher.launch(intent)
+            }
+
         }
         dialog.show()
     }
 
-    fun launchLiveWallpaper(context: Context, videoUrl: String) {
-        println("launchLiveWallpaper: $videoUrl")
-        val prefs = context.getSharedPreferences("video_wallpaper", Context.MODE_PRIVATE)
-        prefs.edit().putString("video_url", videoUrl).apply()
+    private suspend fun setUpLiveWallpaperByCondition(result: Int, imageUrls: List<ImageContent>) {
+        val bitmap = urlToBitmap(imageUrls.first().url.full) ?: return
+        lifecycleScope.launch {
+            when (result) {
+                1 -> {
+                    startLiveWallpaper(imageUrls)
+                    setWallpaperFromUrl(
+                        context = this@SlideWallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.LOCK
+                    )
+
+                }
+
+                2 -> {
+                    startLiveWallpaper(imageUrls)
+                }
+
+                else -> {
+                    startLiveWallpaper(imageUrls)
+                    setWallpaperFromUrl(
+                        context = this@SlideWallpaperActivity,
+                        bitmap = bitmap,
+                        target = WallpaperTarget.LOCK
+                    )
+
+                }
+            }
+        }
+    }
+
+    suspend fun urlToBitmap(imageUrl: String): Bitmap? = withContext(Dispatchers.IO) {
+        try {
+            val input = URL(imageUrl).openStream()
+            BitmapFactory.decodeStream(input)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun startLiveWallpaper(contents: List<ImageContent>) {
+        SlideshowWallpaperService.imageUrls = contents.map { it.url.full }
 
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
-                ComponentName(context, VideoWallpaperService::class.java)
+                ComponentName(packageName, SlideshowWallpaperService::class.java.name)
             )
         }
         startActivity(intent)
     }
 
+
     private fun downloadWallpaper() {
-        val missing = RingtoneHelper.getMissingPhotoPermissions(this)
-        if (missing.isEmpty()) {
+
+        val missingPermissions = RingtoneHelper.getMissingPhotoPermissions(this)
+
+        if (missingPermissions.isEmpty()) {
+            // All permissions granted
             actuallyDownloadWallpaper()
         } else {
-            requestPermissionLauncher.launch(missing.toTypedArray())
+            // Request the missing permissions using launcher
+            requestPermissionLauncher.launch(missingPermissions.toTypedArray())
         }
+
+        RingtoneHelper.getMissingPhotoPermissions(this@SlideWallpaperActivity)
+
     }
 
     private fun actuallyDownloadWallpaper(isBackground: Boolean = false) {
-        val bottomSheet = DownloadWallpaperBottomSheet(this).apply {
+
+        val bottomSheet = DownloadWallpaperBottomSheet(this)
+        bottomSheet.apply {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
             setOnShowListener { dialog ->
-                (dialog as? BottomSheetDialog)?.behavior?.apply {
-                    isDraggable = false
-                    state = BottomSheetBehavior.STATE_EXPANDED
-                }
+                val b = (dialog as BottomSheetDialog).behavior
+                b.isDraggable = false
+                b.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
+        if (!isBackground) {
+            bottomSheet.show()
+        }
 
-        if (!isBackground) bottomSheet.show()
 
-        val url = currentWallpaper.contents.first().url.full
-
+        val ringtoneUrl = currentWallpaper.contents.first().url.full
         lifecycleScope.launch {
-            val uri = if (isVideoWallpaper(currentWallpaper)) {
-                RingtoneHelper.downloadVideo(this@SlideWallpaperActivity, url)
-            } else {
-                RingtoneHelper.downloadImage(this@SlideWallpaperActivity, url)
-            }
-
+            val uri = RingtoneHelper.downloadImage(this@SlideWallpaperActivity, ringtoneUrl)
             withContext(Dispatchers.Main) {
                 if (uri != null) {
                     downloadedUri = uri
                     delay(5000L)
-                    bottomSheet.showSuccess()
-                    enableDismiss(bottomSheet)
-                    favouriteViewModel.increaseDownload(currentWallpaper)
+                    bottomSheet.showSuccess().also {
+                        enableDismiss(bottomSheet)
+                    }
+                    viewModel.increaseDownload(currentWallpaper)
                 } else {
-                    bottomSheet.showFailure()
-                    enableDismiss(bottomSheet)
+                    bottomSheet.showFailure().also {
+                        enableDismiss(bottomSheet)
+                    }
                 }
             }
         }
@@ -395,227 +411,197 @@ class SlideWallpaperActivity :
         }
     }
 
-    private fun observeRingtoneFromDb() {
-        favouriteViewModel.wallpaper.observe(this) { dbRingtone ->
-            isFavorite = dbRingtone.id == currentWallpaper.id
-            binding.favourite.setImageResource(
-                if (isFavorite) R.drawable.icon_favourite else R.drawable.icon_unfavourite
-            )
-        }
-    }
-
-    private fun displayFavouriteIcon(manual: Boolean = false) {
-        if (isFavorite && manual) {
-            favouriteViewModel.deleteWallpaper(currentWallpaper)
-            binding.favourite.setImageResource(R.drawable.icon_unfavourite)
-            isFavorite = false
-        } else if (manual) {
-            favouriteViewModel.insertWallpaper(currentWallpaper)
-            binding.favourite.setImageResource(R.drawable.icon_favourite)
-            isFavorite = true
-        }
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
-        // Submit the list first
-        playSlideWallpaperAdapter.submitList(allWallpapers)
+        playSlideWallpaperAdapter.submitList(allRingtones)
 
-        // Setup carousel with RecyclerView and adapter
         carousel = Carousel(this, binding.horizontalWallpapers, playSlideWallpaperAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
         carousel.scaleView(true)
 
-        // Set adapter BEFORE attaching snapHelper or adding listeners
-        binding.horizontalWallpapers.adapter = playSlideWallpaperAdapter
-
         snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
 
-        // Post a runnable to set the current playing position and scroll after RecyclerView is laid out
-        binding.horizontalWallpapers.post {
-            binding.horizontalWallpapers.smoothScrollToPosition(index)
-            handler.postDelayed({
-                playSlideWallpaperAdapter.setCurrentPlayingPosition(index)
-            }, 300) // Adjust delay as needed
-        }
+        binding.apply {
+            horizontalWallpapers.adapter = playSlideWallpaperAdapter
+            horizontalWallpapers.initialPosition = index
 
-        // Setup carousel listener to update current index and player on scroll change
-        carousel.addCarouselListener(object : CarouselListener {
-            override fun onPositionChange(position: Int) {
-                updateIndex(position, "onPositionChange")
-                setUpNewPlayer(position)
-            }
+            carousel.addCarouselListener(object : CarouselListener {
+                override fun onPositionChange(position: Int) {
+                    updateIndex(position, "onPositionChange")
+                    setUpNewPlayer(position)
+                    // 🔁 force rebind to update playingHolder
+                }
 
-            override fun onScroll(dx: Int, dy: Int) {
-                lastDx = dx
-            }
-        })
+                override fun onScroll(dx: Int, dy: Int) {
+                    lastDx = dx // ⬅️ Save dx for later use
+                    Log.d("PlayerActivity", "Scrolling... dx = $dx")
+                }
+            })
 
-        binding.horizontalWallpapers.apply {
-            initialPosition = index
-
-            setOnTouchListener { _, event ->
+            horizontalWallpapers.setOnTouchListener { _, event ->
+                carousel.scrollSpeed(300f)
                 duration = event.eventTime - event.downTime
-                if (event.action == MotionEvent.ACTION_UP && duration <= 100) {
-                    val newIndex = when {
-                        lastDx > 0 && index < allWallpapers.size - 1 -> index + 1
-                        lastDx < 0 && index > 0 -> index - 1
-                        else -> index
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        Log.d("PlayerActivity", "Touch DOWN")
                     }
-                    if (newIndex != index) {
-                        updateIndex(newIndex, "touch")
-                        handler.postDelayed({ setUpNewPlayer(index) }, 300)
+
+                    MotionEvent.ACTION_MOVE -> {
+                        Log.d("PlayerActivity", "Touch MOVE")
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        if (duration > 100) {
+                            println("horizontalRingtones: $duration and $index")
+                            binding.horizontalWallpapers.stopScroll()
+                            setUpNewPlayer(index)
+                            return@setOnTouchListener false
+                        }
+
+                        // 👇 Decide scroll direction (and clamp to ±1)
+                        val newIndex = when {
+                            lastDx > 0 && index < allRingtones.size - 1 -> index + 1
+                            lastDx < 0 && index > 0 -> index - 1
+                            else -> index
+                        }
+
+                        // 👇 Update only if actual index changes
+                        if (newIndex != index) {
+                            updateIndex(newIndex, "onPositionChange")
+                            handler.postDelayed({
+                                setUpNewPlayer(index)
+                            }, 300)
+                        } else {
+                            // stay on current
+                            setUpNewPlayer(index)
+                        }
+
+                        Log.d("PlayerActivity", "Touch UP - Scrolled to index=$index (dx=$lastDx)")
                     }
                 }
                 false
             }
 
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    val lm = recyclerView.layoutManager as LinearLayoutManager
-                    val view = snapHelper.findSnapView(lm) ?: return
-                    val newIndex = lm.getPosition(view)
+            var previousIndex = index
 
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        index = newIndex
-                        setUpNewPlayer(index)
+            horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val view = snapHelper.findSnapView(layoutManager) ?: return
+                    val newIndex = layoutManager.getPosition(view)
+
+                    when (newState) {
+                        RecyclerView.SCROLL_STATE_DRAGGING -> {
+                            previousIndex = index
+                            println("🎯 Drag started at index $previousIndex")
+                        }
+
+                        RecyclerView.SCROLL_STATE_IDLE -> {
+
+                            val distanceJumped = abs(newIndex - previousIndex)
+                            println("🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)")
+
+                            if (distanceJumped >= 2) {
+                                Log.d("PlayerActivity", "🛑 Too fast! Jumped $distanceJumped items")
+                                recyclerView.stopScroll()
+                            }
+
+                            index = newIndex
+                            setUpNewPlayer(index)
+                        }
                     }
                 }
             })
         }
-    }
 
-
-    private fun updateIndex(newIndex: Int, caller: String) {
-        Log.d("SlideWallpaper", "Index changed from $index to $newIndex by $caller")
-        index = newIndex
     }
 
     private fun setUpNewPlayer(position: Int) {
-        if (index != position) {
-            binding.horizontalWallpapers.smoothScrollToPosition(position)
-        }
-        currentWallpaper = allWallpapers[position]
-        favouriteViewModel.loadWallpaperById(currentWallpaper.id)
+        binding.horizontalWallpapers.smoothScrollToPosition(position)
+        currentWallpaper = allRingtones[position]
+        println("setUpNewPlayer: $position and $currentWallpaper")
+
         playSlideWallpaperAdapter.setCurrentPlayingPosition(position)
+        viewModel.loadWallpaperById(currentWallpaper.id)
     }
 
-    private fun setUpPhotoByCondition(contents: List<ImageContent>) {
-        val dialog = SetWallpaperDialog(this) { result ->
-            settingOption = result
-            if (contents.size > 1) {
-                lifecycleScope.launch {
-                    setUpLiveWallpaperByCondition(result, contents)
-                }
-            } else {
-                val intent = Intent(this, CropActivity::class.java).apply {
-                    putExtra("imageUrl", contents.first().url.full)
-                }
-                cropLauncher.launch(intent)
-            }
-        }
-        dialog.show()
+    private val snapHelper: OneItemSnapHelper by lazy {
+        OneItemSnapHelper()
     }
 
-    private suspend fun setUpLiveWallpaperByCondition(result: Int, contents: List<ImageContent>) {
-        val bitmap = urlToBitmap(contents.first().url.full) ?: return
 
-        when (result) {
-            1 -> {
-                startLiveWallpaper(contents)
-                setWallpaperFromUrl(this, bitmap, WallpaperTarget.LOCK)
-            }
+    private var isFavorite: Boolean = false  // ← track this in activity
 
-            2 -> startLiveWallpaper(contents)
-            else -> {
-                startLiveWallpaper(contents)
-                setWallpaperFromUrl(this, bitmap, WallpaperTarget.BOTH)
-            }
-        }
-    }
-
-    private fun startLiveWallpaper(contents: List<ImageContent>) {
-        SlideshowWallpaperService.imageUrls = contents.map { it.url.full }
-        val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
-            putExtra(
-                WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
-                ComponentName(packageName, SlideshowWallpaperService::class.java.name)
+    private fun observeRingtoneFromDb() {
+        viewModel.wallpaper.observe(this) { dbRingtone ->
+            isFavorite = dbRingtone.id == currentWallpaper.id
+            binding.favourite.setImageResource(
+                if (isFavorite) R.drawable.icon_favourite
+                else R.drawable.icon_unfavourite
             )
         }
-        startActivity(intent)
     }
 
-    private val cropLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val uri = result.data?.getParcelableExtra<Uri>("croppedImageUri")
-            uri?.let { loadBitmapFromUri(this, it)?.let { bmp -> continueAfterCrop(bmp) } }
+    private fun displayFavouriteIcon(isManualChange: Boolean = false) {
+        if (isFavorite) {
+            if (isManualChange) {
+                viewModel.deleteWallpaper(currentWallpaper)
+                binding.favourite.setImageResource(R.drawable.icon_unfavourite)
+                isFavorite = false
+            }
+        } else {
+            if (isManualChange) {
+                viewModel.insertWallpaper(currentWallpaper)
+                binding.favourite.setImageResource(R.drawable.icon_favourite)
+                isFavorite = true
+            }
         }
     }
 
-    private fun continueAfterCrop(bitmap: Bitmap) {
-        lifecycleScope.launch {
-            val bottomSheet = DownloadWallpaperBottomSheet(this@SlideWallpaperActivity).apply {
-                setCancelable(false)
-                setCanceledOnTouchOutside(false)
-                setOnShowListener {
-                    (it as? BottomSheetDialog)?.behavior?.apply {
-                        isDraggable = false
-                        state = BottomSheetBehavior.STATE_EXPANDED
-                    }
+    private fun updateIndex(newIndex: Int, caller: String) {
+        Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
+        index = newIndex
+    }
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.origin.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.origin.visible()
+
+            handler = Handler(Looper.getMainLooper())
+            binding.apply {
+                index = allRingtones.indexOf(currentWallpaper)
+                observeRingtoneFromDb()
+                backBtn.setOnClickListener {
+                    finish()
                 }
-                when (settingOption) {
-                    1 -> setType("lock")
-                    2 -> setType("home")
-                    else -> setType("both")
+                println("onCreate: $index")
+                viewModel.loadWallpaperById(currentWallpaper.id)
+                observeRingtoneFromDb()
+
+                favourite.setOnClickListener {
+                    displayFavouriteIcon(true)
                 }
+
+                initViewPager()
+                setUpNewPlayer(index)
+                setupButtons()
             }
-
-            val success = when (settingOption) {
-                1 -> setWallpaperFromUrl(this@SlideWallpaperActivity, bitmap, WallpaperTarget.LOCK)
-                2 -> setWallpaperFromUrl(this@SlideWallpaperActivity, bitmap, WallpaperTarget.HOME)
-                else -> setWallpaperFromUrl(
-                    this@SlideWallpaperActivity,
-                    bitmap,
-                    WallpaperTarget.BOTH
-                )
-            }
-
-            if (success) {
-                bottomSheet.showSuccess()
-                enableDismiss(bottomSheet)
-                favouriteViewModel.increaseSet(currentWallpaper)
-            } else {
-                bottomSheet.showFailure()
-                enableDismiss(bottomSheet)
-            }
+            binding.noInternet.root.gone()
         }
-    }
-
-    private fun loadBitmapFromUri(context: Context, uri: Uri): Bitmap? {
-        return context.contentResolver.openInputStream(uri)?.use {
-            BitmapFactory.decodeStream(it)
-        }
-    }
-
-    suspend fun urlToBitmap(url: String): Bitmap? = withContext(Dispatchers.IO) {
-        try {
-            URL(url).openStream().use { BitmapFactory.decodeStream(it) }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("wallpaper_index", index)
     }
 
     companion object {
         var imageBitmap: Bitmap? = null
         var settingOption = 0
-
         var currentIndex = 0
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("wallpaper_index", index)
     }
 }

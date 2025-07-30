@@ -127,4 +127,7 @@
     <string name="icon">Ikon</string>
     <string name="quick_theme">Tema Cepat</string>
     <string name="customize">Kustomisasi</string>
+
+    <string name="video">Video</string>
+    <string name="single">Gambar</string>
 </resources>

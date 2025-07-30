@@ -35,6 +35,13 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
         return allWallpapers.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        // Example: show loading view every INTERVAL items
+        // For now, no loading view implemented; always return category view
+        return VIEW_TYPE_CATEGORY
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
         return if (viewType == VIEW_TYPE_LOADING) {
@@ -76,6 +83,26 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
         imagesLoadedInBatch = 0
 
         notifyItemRangeInserted(start, allWallpapers.size)
+    }
+
+
+    fun submitFavouriteList(
+        list: List<Wallpaper>,
+        live: Boolean = false,
+        premium: Boolean = false
+    ) {
+        isPremium = premium
+        isLive = live
+
+        imagesToLoadInBatch = INTERVAL
+        imagesLoadedInBatch = 0
+
+        allWallpapers.clear()
+        allWallpapers.addAll(list)
+
+        // Because you clear the list and add new items,
+        // call notifyDataSetChanged() instead of notifyItemRangeInserted()
+        notifyDataSetChanged()
     }
 
     inner class GridWallpaperViewHolder(private val binding: ItemGridWallpaperBinding) :

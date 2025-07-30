@@ -127,4 +127,7 @@
     <string name="icon">Ícone</string>
     <string name="quick_theme">Tema rápido</string>
     <string name="customize">Personalizar</string>
+
+    <string name="video">Vídeo</string>
+    <string name="single">Imagem</string>
 </resources>

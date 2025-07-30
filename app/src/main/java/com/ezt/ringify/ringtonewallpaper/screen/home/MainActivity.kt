@@ -25,6 +25,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        selectedTab = savedInstanceState?.getInt("selectedTab") ?: 0
+
         RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
         binding.searchButton.setOnClickListener {
             if(selectedTab == 0) {
@@ -107,6 +109,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 openFragment(RingtoneFragment.Companion.newInstance())
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        selectedTab = 0
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("selectedTab", selectedTab)
     }
 
 

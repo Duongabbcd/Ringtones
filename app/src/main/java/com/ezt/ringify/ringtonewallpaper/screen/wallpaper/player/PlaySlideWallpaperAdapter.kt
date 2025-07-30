@@ -73,15 +73,10 @@ class PlaySlideWallpaperAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
-        if (viewType == ITEM_PHOTO) {
             val binding =
                 ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return PlayerViewHolder(binding)
-        } else {
-            val binding =
-                ItemVideoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return LivePlayerViewHolder(binding, context)
-        }
+
     }
 
     override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
@@ -116,14 +111,6 @@ class PlaySlideWallpaperAdapter(
         return( layoutManager.findFirstCompletelyVisibleItemPosition() == position ||
                 layoutManager.findLastCompletelyVisibleItemPosition() == position).also {
                     println("isItemFullyVisible: $it")
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        val type = items[position].type
-        return when (type) {
-            2, 4 -> ITEM_VIDEO
-            else -> ITEM_PHOTO
         }
     }
 

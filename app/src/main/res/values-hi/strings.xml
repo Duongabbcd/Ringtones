@@ -127,4 +127,6 @@
     <string name="icon">आइकन</string>
     <string name="quick_theme">त्वरित थीम</string>
     <string name="customize">अनुकूलित करें</string>
+    <string name="video">वीडियो</string>
+    <string name="single">छवि</string>
 </resources>

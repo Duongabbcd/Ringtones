@@ -137,5 +137,6 @@
     <string name="reset">Zurücksetzen</string>
     <string name="crop">Zuschneiden</string>
     <string name="wallpaper_desc">Hintergrundbeschreibung</string>
-
+    <string name="video">Video</string>
+    <string name="single">Bild</string>
 </resources>

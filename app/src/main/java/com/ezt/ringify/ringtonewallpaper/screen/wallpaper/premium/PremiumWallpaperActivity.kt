@@ -94,21 +94,21 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
                         this@PremiumWallpaperActivity,
                         PreviewWallpaperActivity::class.java
                     ).apply {
-                        putExtra("categoryId", 75)
+                        putExtra("wallpaperCategoryId", 75)
                         putExtra("type", 1)
                     })
             }
 
             openAll2.setOnClickListener {
                 startActivity(Intent(this@PremiumWallpaperActivity, PreviewWallpaperActivity::class.java).apply {
-                    putExtra("categoryId", 75)
+                    putExtra("wallpaperCategoryId", 75)
                     putExtra("type", 2)
                 })
             }
 
             openAll3.setOnClickListener {
                 startActivity(Intent(this@PremiumWallpaperActivity, PreviewWallpaperActivity::class.java).apply {
-                    putExtra("categoryId", 75)
+                    putExtra("wallpaperCategoryId", 75)
                     putExtra("type", 3)
                 })
             }
