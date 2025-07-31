@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.role.RoleManager
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Context.TELECOM_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -34,10 +35,14 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CallScreenViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.background.CallScreenBackgroundActivity
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.background.CallScreenBackgroundActivity.Companion.videoUrl
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
+import kotlin.apply
+import androidx.core.content.edit
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.icon.CallScreenIconActivity
 
 @AndroidEntryPoint
 class CallScreenFragment :
@@ -79,6 +84,16 @@ class CallScreenFragment :
             }
 
         binding.apply {
+            val ctx = context ?: return@apply
+            val prefs = ctx.getSharedPreferences("callscreen_prefs",MODE_PRIVATE)
+            videoUrl = prefs.getString("BACKGROUND", "") ?: ""
+
+            Glide.with(ctx)
+                .load(videoUrl)
+                .placeholder(R.drawable.default_callscreen)
+                .error(R.drawable.default_callscreen)
+                .into(binding.currentCallScreen)
+
             connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
                 checkInternetConnected(isConnected)
             }
@@ -125,6 +140,17 @@ class CallScreenFragment :
 //                    checkAndRequestPermissions()
 //                }
                 triggerCallScreenPermission(requireActivity())
+            }
+
+            backgroundCs.setOnClickListener {
+                withSafeContext {  ctx ->
+                    startActivity(Intent(ctx, CallScreenBackgroundActivity::class.java))
+                }
+            }
+            avatarCs.setOnClickListener {
+                withSafeContext {  ctx ->
+                    startActivity(Intent(ctx, CallScreenIconActivity::class.java))
+                }
             }
         }
     }
@@ -272,7 +298,7 @@ class CallScreenFragment :
     private fun saveCallScreenPreference(tag: String, value: String) {
         println("saveCallScreenPreference: $tag and $value")
         val prefs = requireContext().getSharedPreferences("callscreen_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putString(tag, value).apply()
+        prefs.edit { putString(tag, value) }
     }
 
     private fun checkInternetConnected(isConnected: Boolean) {

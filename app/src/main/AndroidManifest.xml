@@ -137,11 +137,28 @@
             android:name=".screen.wallpaper.favourite.FavouriteWallpaperActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <!--  callscreen-->
+        <activity
+            android:name=".screen.callscreen.subscreen.background.CallScreenBackgroundActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".screen.callscreen.subscreen.icon.CallScreenIconActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".screen.callscreen.subscreen.preview.PreviewCallScreenActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+
+
         <activity
             android:name=".screen.callscreen.CallScreenActivity"
             android:exported="true"
             android:screenOrientation="portrait">
-
             <!-- Required to be recognized as a dialer -->
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
@@ -203,7 +220,7 @@
 
         <!-- InCallService to display your custom call UI -->
         <service
-            android:name=".screen.callscreen.MyInCallService"
+            android:name=".screen.callscreen.service.MyInCallService"
             android:exported="true"
             android:permission="android.permission.BIND_INCALL_SERVICE">
             <intent-filter>
@@ -217,7 +234,7 @@
 
         <!-- ConnectionService to manage call connections -->
         <service
-            android:name=".screen.callscreen.MyConnectionService"
+            android:name=".screen.callscreen.service.MyConnectionService"
             android:exported="true"
             android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
             <intent-filter>

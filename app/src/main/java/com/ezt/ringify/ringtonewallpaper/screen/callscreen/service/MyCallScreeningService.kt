@@ -1,4 +1,4 @@
-package com.ezt.ringify.ringtonewallpaper.screen.callscreen
+package com.ezt.ringify.ringtonewallpaper.screen.callscreen.service
 
 import android.os.Build
 import android.telecom.Call

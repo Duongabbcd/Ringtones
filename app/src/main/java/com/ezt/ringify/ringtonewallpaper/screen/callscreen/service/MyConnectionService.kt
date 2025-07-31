@@ -1,13 +1,15 @@
-package com.ezt.ringify.ringtonewallpaper.screen.callscreen
+package com.ezt.ringify.ringtonewallpaper.screen.callscreen.service
 
 import android.telecom.Connection
+import android.telecom.ConnectionRequest
 import android.telecom.ConnectionService
+import android.telecom.PhoneAccountHandle
 
 class MyConnectionService : ConnectionService() {
 
     override fun onCreateIncomingConnection(
-        connectionManagerPhoneAccount: android.telecom.PhoneAccountHandle,
-        request: android.telecom.ConnectionRequest
+        connectionManagerPhoneAccount: PhoneAccountHandle,
+        request: ConnectionRequest
     ): Connection {
         val connection = MyConnection()
         connection.setInitializing()
@@ -16,8 +18,8 @@ class MyConnectionService : ConnectionService() {
     }
 
     override fun onCreateOutgoingConnection(
-        connectionManagerPhoneAccount: android.telecom.PhoneAccountHandle,
-        request: android.telecom.ConnectionRequest
+        connectionManagerPhoneAccount: PhoneAccountHandle,
+        request: ConnectionRequest
     ): Connection {
         val connection = MyConnection()
         connection.setInitializing()

@@ -56,6 +56,12 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
     suspend fun getBackgroundContent(callScreenId: Int): ContentResponse =
         apiService.getBackgroundContent(callScreenId)
 
+    suspend fun getAllBackgroundContent(page: Int): ContentResponse =
+        apiService.getAllBackgroundContent(page)
+
+    suspend fun getAllIconContent(page: Int): ContentResponse =
+        apiService.getAllIconContent(page)
+
     companion object {
         var TOKEN: String = ""
     }

@@ -1,4 +1,4 @@
-package com.ezt.ringify.ringtonewallpaper.screen.callscreen
+package com.ezt.ringify.ringtonewallpaper.screen.callscreen.service
 
 import android.telecom.Call
 import android.telecom.InCallService
@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.telecom.CallAudioState
 import android.util.Log
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.CallController
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.CallScreenActivity
 
 class MyInCallService : InCallService() {
 
@@ -43,7 +45,7 @@ class MyInCallService : InCallService() {
 //                flashHelper.startFlashLight()
 //            }
 
-            startActivity(CallScreenActivity.getStartIntent(this, background, cancel, answer))
+            startActivity(CallScreenActivity.Companion.getStartIntent(this, background, cancel, answer))
         }
 
         call.registerCallback(callCallback)
@@ -55,7 +57,7 @@ class MyInCallService : InCallService() {
         if (activeCall == call) {
             activeCall = null
         }
-        CallController.onCallRemoved(call)
+        CallController.Companion.onCallRemoved(call)
         call.unregisterCallback(callCallback)
     }
 

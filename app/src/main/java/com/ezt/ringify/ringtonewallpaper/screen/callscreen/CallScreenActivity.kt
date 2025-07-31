@@ -1,6 +1,5 @@
 package com.ezt.ringify.ringtonewallpaper.screen.callscreen
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -11,15 +10,12 @@ import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.VideoProfile
 import android.util.Log
-import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.widget.TextView
-import androidx.annotation.Keep
 import com.ezt.ringify.ringtonewallpaper.R
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallScreenBinding
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.service.MyInCallService
 
 
 class CallScreenActivity :

@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -31,6 +33,12 @@ class ContentViewModel @Inject constructor(
 
     private val _backgroundContent = MutableLiveData<List<ImageContent>>()
     val backgroundContent: LiveData<List<ImageContent>> = _backgroundContent
+
+     var currentPage1 = 1
+    private var hasMorePages1 = true
+    val allWallpapers1 = mutableListOf<ImageContent>()
+
+    private var isLoadingMore = false
 
     fun getCallScreenContent(callScreenId: Int) = viewModelScope.launch {
         _loading.value = true
@@ -61,4 +69,69 @@ class ContentViewModel @Inject constructor(
             _loading.value = false
         }
     }
+
+    fun getAllCallScreenBackgrounds() = viewModelScope.launch {
+        if (!hasMorePages1 || _loading.value == true) return@launch
+        _loading.value = true
+        try {
+            println("currentPage1: $currentPage1")
+            val result = repository.getAllBackgroundContent(currentPage1)
+            hasMorePages1 = result.data.nextPageUrl != null
+            currentPage1++
+
+            val newItems = result.data.data.mapNotNull { item ->
+                // Get image preview from content
+                val imageContent = item.contents.firstOrNull { content ->
+                    content.url.full.endsWith(".jpg", ignoreCase = true) ||
+                            content.url.full.endsWith(".png", ignoreCase = true) ||
+                            content.url.full.endsWith(".webp", ignoreCase = true)
+                }
+                imageContent // Only return if found, will be added to list
+            }
+
+            allWallpapers1.addAll(newItems)
+            _backgroundContent.value = allWallpapers1
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadCallScreens: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+            isLoadingMore = false // ✅ RESET HERE
+        }
+    }
+
+
+    fun getAllCallScreenIcons() = viewModelScope.launch {
+        if (!hasMorePages1 || _loading.value == true) return@launch
+        _loading.value = true
+        try {
+            println("currentPage1: $currentPage1")
+            val result = repository.getAllIconContent(currentPage1)
+            hasMorePages1 = result.data.nextPageUrl != null
+            currentPage1++
+
+            val newItems = result.data.data.mapNotNull { item ->
+                // Get image preview from content
+                val imageContent = item.contents.firstOrNull { content ->
+                    content.url.full.endsWith(".jpg", ignoreCase = true) ||
+                            content.url.full.endsWith(".png", ignoreCase = true) ||
+                            content.url.full.endsWith(".webp", ignoreCase = true)
+                }
+                imageContent // Only return if found, will be added to list
+            }
+
+            allWallpapers1.addAll(newItems)
+            _backgroundContent.value = allWallpapers1
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadCallScreens: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+            isLoadingMore = false // ✅ RESET HERE
+        }
+    }
+
+
 }

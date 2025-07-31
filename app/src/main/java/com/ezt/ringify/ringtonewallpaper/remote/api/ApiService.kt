@@ -144,6 +144,16 @@ interface ApiService {
     suspend fun getBackgroundContent(
         @Query("call_screen") callScreen: Int
     ): ContentResponse
+
+    @GET("api/v1/contents?app=1&where=type+1")
+    suspend fun getAllBackgroundContent(
+        @Query("page") page: Int = 1
+    ): ContentResponse
+
+    @GET("api/v1/contents?app=1&where=type+2")
+    suspend fun getAllIconContent(
+        @Query("page") page: Int = 1
+    ): ContentResponse
 }
 
 data class InteractionRequest(

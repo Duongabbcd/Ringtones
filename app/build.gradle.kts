@@ -97,6 +97,7 @@ dependencies {
 
     implementation("com.google.android.material:material:1.10.0")
     implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
     implementation("me.tankery.lib:circularSeekBar:1.4.2")
