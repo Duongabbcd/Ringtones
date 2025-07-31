@@ -13,6 +13,7 @@
     <color name="defaultBackground">#292929</color>
     <color name="defaultBackground_0_5">#7F292929</color>
     <color name="customBlack">#323232</color>
+    <color name="customBlack_0_5">#80323232</color>
     <color name="customGray">#616161</color>
     <color name="defaultGray">#ECECEC</color>
     <color name="unselected">#BCBCBC</color>

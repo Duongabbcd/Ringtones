@@ -135,8 +135,13 @@ interface ApiService {
     @GET("api/v1/call_screens?app=1")
     suspend fun getCallScreens(): CallScreenResponse
 
-    @GET("api/v1/contents?app=1&where=type+3&call_screen=1")
+    @GET("api/v1/contents?app=1&where=type+3")
     suspend fun getCallScreenContent(
+        @Query("call_screen") callScreen: Int
+    ): ContentResponse
+
+    @GET("api/v1/contents?app=1&where=type+1")
+    suspend fun getBackgroundContent(
         @Query("call_screen") callScreen: Int
     ): ContentResponse
 }

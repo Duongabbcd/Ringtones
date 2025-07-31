@@ -7,9 +7,11 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import com.admob.max.dktlibrary.application.AdsApplication
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.AppPreferences
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
 class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
@@ -55,5 +57,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
         TODO("Not yet implemented")
     }
 
-
+    companion object {
+        lateinit var spManager: AppPreferences
+    }
 }

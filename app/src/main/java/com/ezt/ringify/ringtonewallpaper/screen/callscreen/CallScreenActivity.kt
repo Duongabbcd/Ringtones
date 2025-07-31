@@ -1,6 +1,8 @@
 package com.ezt.ringify.ringtonewallpaper.screen.callscreen
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -8,9 +10,12 @@ import android.os.Looper
 import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.VideoProfile
+import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import android.widget.TextView
+import androidx.annotation.Keep
 import com.ezt.ringify.ringtonewallpaper.R
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
@@ -29,123 +34,98 @@ class CallScreenActivity :
             val seconds = (elapsed / 1000) % 60
             val minutes = (elapsed / (1000 * 60)) % 60
             val timeFormatted = String.format("%02d:%02d", minutes, seconds)
-            // Show timer as contentDescription on background image (accessible and visible in logs)
-            binding.callScreenImage.contentDescription = "Call in Progress - $timeFormatted"
+
+            findViewById<TextView>(R.id.callerTime).text = timeFormatted
             callTimerHandler.postDelayed(this, 1000)
         }
     }
 
-    // Load your background image from intent extras or fallback here
-    val backgroundUrl = intent.getStringExtra("BACKGROUND")
-    val answerImage = intent.getStringExtra("ANSWER")
-    val cancelImage = intent.getStringExtra("CANCEL")
+    private var backgroundUrl: String? = null
+    private var cancelImage: String? = null
+    private var answerImage: String? = null
 
-    private var callCallback = object : Call.Callback() {
+
+    private val telecomCallback = object : Call.Callback() {
         override fun onStateChanged(call: Call, state: Int) {
             super.onStateChanged(call, state)
-            when (state) {
-                Call.STATE_ACTIVE -> {
-                    runOnUiThread {
-                        binding.btnAnswer.visibility = View.GONE
-                        Glide.with(this@CallScreenActivity).load(cancelImage)
-                            .placeholder(R.drawable.icon_red_fail).error(R.drawable.icon_red_fail)
-                            .into(binding.btnEndCall)
-                        startCallTimer()
-                    }
-                }
-
-                Call.STATE_DISCONNECTED, Call.STATE_DISCONNECTING -> {
-                    closeWithFadeOut()
-                }
+            if (state == Call.STATE_DISCONNECTED || state == Call.STATE_DISCONNECTING) {
+                finish() // close the screen
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_call_screen)
-
-        println("CallScreenActivity: is here")
         val call = MyInCallService.activeCall
-        call?.registerCallback(callCallback)
+        call?.registerCallback(telecomCallback)
 
+        backgroundUrl = intent.getStringExtra("BACKGROUND")
+        cancelImage = intent.getStringExtra("CANCEL")
+        answerImage = intent.getStringExtra("ANSWER")
 
-        val displayNameOrNumber = getDisplayNameOrNumber(call)
-        binding.txtName.text = displayNameOrNumber
+        Log.d(
+            "CallScreenActivity",
+            "Intent received -> background: $backgroundUrl, cancel: $cancelImage, answer: $answerImage"
+        )
+        countPhoneCallingTime()
+        binding.callAccept.setImageDrawable(null)
+        binding.callEnd.setImageDrawable(null)
 
-        binding.btnAnswer.setOnClickListener {
-            call?.let {
-                if (it.state == Call.STATE_RINGING) {
-                    it.answer(VideoProfile.STATE_AUDIO_ONLY)
-                    binding.btnAnswer.isEnabled = false
-                    binding.btnAnswer.alpha = 0.5f // visually indicate disabled state
+        binding.apply {
+            callerNameLabel.text = getDisplayNameOrNumber(MyInCallService.activeCall)
+            callEnd.setOnClickListener {
+                val call = MyInCallService.activeCall
+                if (call != null) {
+                    call.disconnect()
+                    finish()
+                } else {
+                    Log.e("CallScreen", "No active call to reject")
                 }
             }
-        }
 
-        binding.btnEndCall.setOnClickListener {
-            call?.let {
-                it.disconnect()
-                binding.btnEndCall.isEnabled = false
-                binding.btnEndCall.alpha = 0.5f
+            callAccept.setOnClickListener {
+                val call = MyInCallService.activeCall
+                if (call != null) {
+                    call.answer(VideoProfile.STATE_AUDIO_ONLY)
+                } else {
+                    Log.e("CallScreen", "No active call to answer")
+                }
             }
-        }
 
-
-        if (!backgroundUrl.isNullOrEmpty()) {
-            Glide.with(this)
+            Glide.with(this@CallScreenActivity)
                 .load(backgroundUrl)
                 .placeholder(R.drawable.default_callscreen)
                 .error(R.drawable.default_callscreen)
-                .into(binding.callScreenImage)
-        } else {
-            binding.callScreenImage.setImageResource(R.drawable.default_callscreen)
-        }
+                .into(callScreenImage)
 
-        if (!answerImage.isNullOrEmpty()) {
-            Glide.with(this)
+            Glide.with(this@CallScreenActivity)
                 .load(answerImage)
                 .placeholder(R.drawable.icon_tick)
                 .error(R.drawable.icon_tick)
-                .into(binding.btnAnswer)
-        } else {
-            binding.btnAnswer.setImageResource(R.drawable.icon_tick)
-        }
+                .into(callAccept)
 
-        if (!cancelImage.isNullOrEmpty()) {
-            Glide.with(this)
+            Glide.with(this@CallScreenActivity)
                 .load(cancelImage)
                 .placeholder(R.drawable.icon_red_fail)
                 .error(R.drawable.icon_red_fail)
-                .into(binding.btnEndCall)
-        } else {
-            binding.btnEndCall.setImageResource(R.drawable.icon_red_fail)
+                .into(callEnd)
         }
     }
 
-    private fun startCallTimer() {
-        callStartTime = System.currentTimeMillis()
-        callTimerHandler.post(callTimerRunnable)
-    }
-
-    private fun stopCallTimer() {
-        callTimerHandler.removeCallbacks(callTimerRunnable)
-    }
-
-    private fun closeWithFadeOut() {
-        val rootView = findViewById<View>(android.R.id.content) // root view of activity
-        val fadeOut = AlphaAnimation(1f, 0f)
-        fadeOut.duration = 500
-        fadeOut.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {}
-            override fun onAnimationRepeat(animation: Animation) {}
-            override fun onAnimationEnd(animation: Animation) {
-                finish()
-                overridePendingTransition(0, android.R.anim.fade_out)
+    private fun countPhoneCallingTime() {
+        MyInCallService.activeCall?.registerCallback(object : Call.Callback() {
+            override fun onStateChanged(call: Call, state: Int) {
+                if (state == Call.STATE_ACTIVE) {
+                    callStartTime = System.currentTimeMillis()
+                    callTimerHandler.post(callTimerRunnable)
+                } else if (state == Call.STATE_DISCONNECTED) {
+                    callTimerHandler.removeCallbacks(callTimerRunnable)
+                    finish()
+                }
             }
         })
-        rootView.startAnimation(fadeOut)
     }
+
 
     private fun getDisplayNameOrNumber(call: Call?): String {
         if (call == null) return "Unknown"
@@ -153,8 +133,9 @@ class CallScreenActivity :
         val handle: Uri? = call.details.handle
         val number = handle?.schemeSpecificPart ?: return "Unknown"
 
+        // Query contact name from Contacts
         val name = getContactNameFromNumber(this, number)
-        return name ?: number // fallback to number if no name found
+        return name ?: number // fallback to number
     }
 
     private fun getContactNameFromNumber(context: Context, phoneNumber: String): String? {
@@ -172,9 +153,38 @@ class CallScreenActivity :
         return null
     }
 
+
+    private fun stopCallTimer() {
+        callTimerHandler.removeCallbacks(callTimerRunnable)
+    }
+
+
+
     override fun onDestroy() {
         super.onDestroy()
+        MyInCallService.activeCall?.unregisterCallback(telecomCallback)
         stopCallTimer()
-        MyInCallService.activeCall?.unregisterCallback(callCallback)
     }
+
+    companion object {
+        fun getStartIntent(
+            context: Context,
+            background: String?,
+            cancel: String?,
+            answer: String?
+        ): Intent {
+            val openAppCallIntent = Intent(context, CallScreenActivity::class.java)
+            openAppCallIntent.apply {
+                putExtra("BACKGROUND", background)
+                putExtra("CANCEL", cancel)
+                putExtra("ANSWER", answer)
+            }
+            openAppCallIntent.action = Intent.ACTION_VIEW
+            openAppCallIntent.flags =
+                Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            return openAppCallIntent
+        }
+    }
+
+
 }

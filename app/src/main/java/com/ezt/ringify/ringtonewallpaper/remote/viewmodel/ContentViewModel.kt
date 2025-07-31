@@ -4,11 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenResponse
-import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
-import com.ezt.ringify.ringtonewallpaper.remote.model.RingtoneResponse
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -29,14 +26,32 @@ class ContentViewModel @Inject constructor(
     val error: LiveData<String?> = _error
 
 
-    private val _content = MutableLiveData<List<ImageContent>>()
-    val content: LiveData<List<ImageContent>> = _content
+    private val _callScreenContent = MutableLiveData<List<ImageContent>>()
+    val callScreenContent: LiveData<List<ImageContent>> = _callScreenContent
+
+    private val _backgroundContent = MutableLiveData<List<ImageContent>>()
+    val backgroundContent: LiveData<List<ImageContent>> = _backgroundContent
 
     fun getCallScreenContent(callScreenId: Int) = viewModelScope.launch {
         _loading.value = true
         try {
             val result = repository.getCallScreenContent(callScreenId)
-            _content.value = result.data.data.first().contents
+            _callScreenContent.value = result.data.data.first().contents
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadCallScreens: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+    fun getBackgroundContent(callScreenId: Int) = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getBackgroundContent(callScreenId)
+            _backgroundContent.value = result.data.data.first().contents
 
             _error.value = null
         } catch (e: Exception) {

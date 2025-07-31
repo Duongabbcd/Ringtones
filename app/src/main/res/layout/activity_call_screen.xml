@@ -9,49 +9,73 @@
         android:id="@+id/callScreenImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/item_wallpaper_default"
         android:contentDescription="@string/imageview" />
 
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="@dimen/_36sdp"
+        android:layout_marginTop="@dimen/_60sdp"
         android:src="@drawable/default_cs_avt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtName"
+        android:id="@+id/callerNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CustomTextStyleSemiBold16sp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/background_radius_12_gray"
+        android:backgroundTint="@color/customBlack_0_5"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_4sdp"
+        android:text="sadasd"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatar" />
+
+    <TextView
+        android:id="@+id/callerTime"
         style="@style/CustomTextStyleMedium14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/background_radius_12_gray"
+        android:backgroundTint="@color/customBlack_0_5"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_4sdp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/avatar" />
+        app:layout_constraintTop_toBottomOf="@+id/callerNameLabel" />
 
     <ImageView
-        android:id="@+id/btnEndCall"
+        android:id="@+id/callEnd"
         android:layout_width="@dimen/_106sdp"
         android:layout_height="@dimen/_116sdp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_36sdp"
         android:layout_marginBottom="@dimen/_72sdp"
-        android:padding="@dimen/_26sdp"
+        android:padding="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/btnAnswer"
+        android:id="@+id/callAccept"
         android:layout_width="@dimen/_106sdp"
         android:layout_height="@dimen/_116sdp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/_36sdp"
         android:layout_marginBottom="@dimen/_72sdp"
-        android:padding="@dimen/_26sdp"
+        android:padding="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
