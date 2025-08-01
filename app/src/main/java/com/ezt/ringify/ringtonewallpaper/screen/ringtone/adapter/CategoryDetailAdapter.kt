@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemBigCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 
 class CategoryDetailAdapter(private val onClickListener: (Category) -> Unit): RecyclerView.Adapter<CategoryDetailAdapter.CategoryViewHolder>() {
@@ -52,6 +53,7 @@ class CategoryDetailAdapter(private val onClickListener: (Category) -> Unit): Re
 
                 val subtitle = if(category.contentCount <= 1)context.getString(R.string.ringTone) else context.getString(R.string.ringTones)
                 categoryCount.text = "${category.contentCount}".plus(" $subtitle")
+                categoryCount.gone()
                 println("ringTone: ${category.thumbnail}")
 
                 if(category.id == -99) {

@@ -1,16 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/_76sdp"
-    android:layout_height="@dimen/_76sdp"
+    android:layout_width="@dimen/_88sdp"
+    android:layout_height="@dimen/_88sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginHorizontal="@dimen/_4sdp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/callScreenBackground"
-        android:scaleType="centerCrop"
-        android:src="@drawable/default_wallpaper"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape16dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/background_radius_16_gray"
+        android:padding="@dimen/_2sdp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/imageview"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_callscreen"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape16dp" />
+
+
+        <ImageView
+            android:id="@+id/endCall"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_end_call"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/startCall"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_start_call"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

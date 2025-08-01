@@ -2,6 +2,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.callscreen
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -10,13 +11,17 @@ import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.VideoProfile
 import android.util.Log
+import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.ezt.ringify.ringtonewallpaper.R
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallScreenBinding
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.service.MyInCallService
-
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
 
 class CallScreenActivity :
     BaseActivity<ActivityCallScreenBinding>(ActivityCallScreenBinding::inflate) {
@@ -31,6 +36,7 @@ class CallScreenActivity :
             val minutes = (elapsed / (1000 * 60)) % 60
             val timeFormatted = String.format("%02d:%02d", minutes, seconds)
 
+            findViewById<TextView>(R.id.callerTime).visibility = View.VISIBLE
             findViewById<TextView>(R.id.callerTime).text = timeFormatted
             callTimerHandler.postDelayed(this, 1000)
         }
@@ -39,6 +45,7 @@ class CallScreenActivity :
     private var backgroundUrl: String? = null
     private var cancelImage: String? = null
     private var answerImage: String? = null
+    private var avatarImage: String? = null
 
 
     private val telecomCallback = object : Call.Callback() {
@@ -58,6 +65,7 @@ class CallScreenActivity :
         backgroundUrl = intent.getStringExtra("BACKGROUND")
         cancelImage = intent.getStringExtra("CANCEL")
         answerImage = intent.getStringExtra("ANSWER")
+        avatarImage = intent.getStringExtra("AVATAR")
 
         Log.d(
             "CallScreenActivity",
@@ -88,22 +96,40 @@ class CallScreenActivity :
                 }
             }
 
+            val placeholderDrawable =
+                ContextCompat.getDrawable(this@CallScreenActivity, R.drawable.default_callscreen)
             Glide.with(this@CallScreenActivity)
-                .load(backgroundUrl)
-                .placeholder(R.drawable.default_callscreen)
-                .error(R.drawable.default_callscreen)
-                .into(callScreenImage)
+                .load(CallScreenEditorActivity.Companion.backgroundUrl)
+                .into(object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        binding.callScreenImage.background = resource
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        binding.callScreenImage.background = placeholder ?: placeholderDrawable
+                    }
+                })
+
+
+            Glide.with(this@CallScreenActivity)
+                .load(avatarImage)
+                .placeholder(R.drawable.default_cs_avt)
+                .error(R.drawable.default_cs_avt)
+                .into(avatar)
 
             Glide.with(this@CallScreenActivity)
                 .load(answerImage)
-                .placeholder(R.drawable.icon_tick)
-                .error(R.drawable.icon_tick)
+                .placeholder(R.drawable.icon_start_call)
+                .error(R.drawable.icon_start_call)
                 .into(callAccept)
 
             Glide.with(this@CallScreenActivity)
                 .load(cancelImage)
-                .placeholder(R.drawable.icon_red_fail)
-                .error(R.drawable.icon_red_fail)
+                .placeholder(R.drawable.icon_end_call)
+                .error(R.drawable.icon_end_call)
                 .into(callEnd)
         }
     }
@@ -167,13 +193,15 @@ class CallScreenActivity :
             context: Context,
             background: String?,
             cancel: String?,
-            answer: String?
+            answer: String?,
+            avatar: String?
         ): Intent {
             val openAppCallIntent = Intent(context, CallScreenActivity::class.java)
             openAppCallIntent.apply {
                 putExtra("BACKGROUND", background)
                 putExtra("CANCEL", cancel)
                 putExtra("ANSWER", answer)
+                putExtra("AVATAR", avatar)
             }
             openAppCallIntent.action = Intent.ACTION_VIEW
             openAppCallIntent.flags =

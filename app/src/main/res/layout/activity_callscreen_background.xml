@@ -28,7 +28,8 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:text="Background"
+                android:id="@+id/editorScreenName"
+                android:text="@string/background"
                 android:textColor="@color/main_color"
                 android:layout_marginStart="@dimen/_8sdp"
                 style="@style/CustomTextStyleSemiBold18sp"
@@ -68,6 +69,55 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
+                <ImageView
+                    android:id="@+id/defaultAvatar"
+                    android:layout_width="@dimen/_38sdp"
+                    android:layout_height="@dimen/_38sdp"
+                    android:layout_marginTop="@dimen/_35sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/default_cs_avt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    style="@style/CustomTextStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/background_radius_12_gray"
+                    android:backgroundTint="@color/customBlack_0_5"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:text="Unknown Number"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/defaultAvatar" />
+
+                <ImageView
+                    android:id="@+id/end"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_45sdp"
+                    android:layout_margin="@dimen/_15sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_end_call"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/start"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_45sdp"
+                    android:layout_margin="@dimen/_15sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_start_call"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -76,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:paddingStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_height="@dimen/_133sdp"/>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 app:layout_constraintTop_toBottomOf="@+id/allBackground"

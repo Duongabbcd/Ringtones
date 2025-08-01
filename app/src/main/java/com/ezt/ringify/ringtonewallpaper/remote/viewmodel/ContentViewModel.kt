@@ -1,13 +1,12 @@
 package com.ezt.ringify.ringtonewallpaper.remote.viewmodel
 
+import android.media.Image
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
-import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -34,9 +33,13 @@ class ContentViewModel @Inject constructor(
     private val _backgroundContent = MutableLiveData<List<ImageContent>>()
     val backgroundContent: LiveData<List<ImageContent>> = _backgroundContent
 
+    private val _iconContent = MutableLiveData<List<Pair<ImageContent, ImageContent>>>()
+    val iconContent: LiveData<List<Pair<ImageContent, ImageContent>>> = _iconContent
+
      var currentPage1 = 1
     private var hasMorePages1 = true
     val allWallpapers1 = mutableListOf<ImageContent>()
+    val allWallpapers2 = mutableListOf<Pair<ImageContent, ImageContent>>()
 
     private var isLoadingMore = false
 
@@ -102,12 +105,12 @@ class ContentViewModel @Inject constructor(
     }
 
 
-    fun getAllCallScreenIcons() = viewModelScope.launch {
+    fun getAllCallScreenAvatars() = viewModelScope.launch {
         if (!hasMorePages1 || _loading.value == true) return@launch
         _loading.value = true
         try {
             println("currentPage1: $currentPage1")
-            val result = repository.getAllIconContent(currentPage1)
+            val result = repository.getAllAvatarContent(currentPage1)
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 
@@ -132,6 +135,41 @@ class ContentViewModel @Inject constructor(
             isLoadingMore = false // ✅ RESET HERE
         }
     }
+
+
+    fun getAllCallScreenIcons() = viewModelScope.launch {
+        if (!hasMorePages1 || _loading.value == true) return@launch
+        _loading.value = true
+        try {
+            println("currentPage1: $currentPage1")
+            val result = repository.getAllIconContent(currentPage1)
+            hasMorePages1 = result.data.nextPageUrl != null
+            currentPage1++
+
+            // ✅ Extract ImageContent from contents
+            val imageItems = result.data.data.flatMap { item ->
+                item.contents.filterIsInstance<ImageContent>()
+            }
+
+            // ✅ Group into pairs
+            val newItems = imageItems
+                .chunked(2)
+                .filter { it.size == 2 }
+                .map { Pair(it[0], it[1]) }
+
+            allWallpapers2.addAll(newItems)
+            _iconContent.value = allWallpapers2
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadCallScreens: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+            isLoadingMore = false // ✅ RESET HERE
+        }
+    }
+
+
 
 
 }

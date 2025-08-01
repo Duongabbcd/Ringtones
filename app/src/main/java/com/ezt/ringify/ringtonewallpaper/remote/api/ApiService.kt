@@ -151,6 +151,11 @@ interface ApiService {
     ): ContentResponse
 
     @GET("api/v1/contents?app=1&where=type+2")
+    suspend fun getAllAvatarContent(
+        @Query("page") page: Int = 1
+    ): ContentResponse
+
+    @GET("api/v1/contents?app=1&where=type+3")
     suspend fun getAllIconContent(
         @Query("page") page: Int = 1
     ): ContentResponse

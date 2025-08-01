@@ -187,8 +187,7 @@ class CategoryWallpaperAdapter(
             binding.apply {
                 trending.text = category.name
                 trendingCount.text = category.contentCount.formatWithComma()
-
-
+                trendingCount.gone()
 
                 if (isLoading) {
                     allTrending.visibility = View.GONE

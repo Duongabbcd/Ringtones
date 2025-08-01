@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_76sdp"
+    android:layout_height="@dimen/_76sdp"
+    android:layout_marginHorizontal="@dimen/_4sdp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/circleImage"
+        android:layout_width="@dimen/_76sdp"
+        android:layout_height="@dimen/_76sdp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_avt_test"
+        app:contentPadding="@dimen/_2sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/CircleImageViewStyle"
+        app:strokeColor="@color/defaultGray"
+        app:strokeWidth="@dimen/_2sdp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

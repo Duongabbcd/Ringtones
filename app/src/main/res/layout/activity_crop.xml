@@ -43,7 +43,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_weight="1"
                 android:background="@drawable/background_radius_12"
                 android:gravity="center"
@@ -65,6 +64,20 @@
                 android:paddingVertical="@dimen/_10sdp"
                 android:text="@string/reset"
                 android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/btnExit"
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="@drawable/background_radius_12_gray"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_10sdp"
+                android:text="Exit"
+                android:textColor="@color/customBlack"
                 app:layout_constraintBottom_toBottomOf="parent" />
         </LinearLayout>
 

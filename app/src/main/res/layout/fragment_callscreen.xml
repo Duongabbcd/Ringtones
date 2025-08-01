@@ -70,6 +70,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
+                <ImageView
+                    android:id="@+id/defaultAvatar"
+                    android:layout_width="@dimen/_38sdp"
+                    android:layout_height="@dimen/_38sdp"
+                    android:layout_marginTop="@dimen/_35sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/default_cs_avt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    style="@style/CustomTextStyleMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:background="@drawable/background_radius_12_gray"
+                    android:backgroundTint="@color/customBlack_0_5"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:text="Unknown Number"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/defaultAvatar" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

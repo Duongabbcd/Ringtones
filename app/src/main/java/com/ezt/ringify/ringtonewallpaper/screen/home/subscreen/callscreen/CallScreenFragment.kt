@@ -35,14 +35,16 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CallScreenViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.background.CallScreenBackgroundActivity
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.background.CallScreenBackgroundActivity.Companion.videoUrl
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.backgroundUrl
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.apply
 import androidx.core.content.edit
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.icon.CallScreenIconActivity
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.startCall
 
 @AndroidEntryPoint
 class CallScreenFragment :
@@ -86,13 +88,19 @@ class CallScreenFragment :
         binding.apply {
             val ctx = context ?: return@apply
             val prefs = ctx.getSharedPreferences("callscreen_prefs",MODE_PRIVATE)
-            videoUrl = prefs.getString("BACKGROUND", "") ?: ""
+            backgroundUrl = prefs.getString("BACKGROUND", "") ?: ""
+            avatarUrl = prefs.getString("AVATAR", "") ?: ""
 
             Glide.with(ctx)
-                .load(videoUrl)
+                .load(backgroundUrl)
                 .placeholder(R.drawable.default_callscreen)
                 .error(R.drawable.default_callscreen)
                 .into(binding.currentCallScreen)
+            Glide.with(ctx)
+                .load(avatarUrl)
+                .placeholder(R.drawable.default_cs_avt)
+                .error(R.drawable.default_cs_avt)
+                .into(binding.defaultAvatar)
 
             connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
                 checkInternetConnected(isConnected)
@@ -112,8 +120,8 @@ class CallScreenFragment :
 
             contentViewModel.callScreenContent.observe(viewLifecycleOwner) { items ->
                 if (items.size >= 2) {
-                    saveCallScreenPreference("CANCEL", items.first().url.full)
-                    saveCallScreenPreference("ANSWER", items.last().url.full)
+                    endCall = items.first().url.full
+                    startCall = items.last().url.full
                 }
             }
             contentViewModel.backgroundContent.observe(viewLifecycleOwner) { items ->
@@ -136,20 +144,29 @@ class CallScreenFragment :
             }
 
             setupCallScreen.setOnClickListener {
-//                withSafeContext { ctx ->
-//                    checkAndRequestPermissions()
-//                }
                 triggerCallScreenPermission(requireActivity())
             }
 
             backgroundCs.setOnClickListener {
                 withSafeContext {  ctx ->
-                    startActivity(Intent(ctx, CallScreenBackgroundActivity::class.java))
+                    startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
+                        putExtra("editorType", 1)
+                    })
                 }
             }
             avatarCs.setOnClickListener {
                 withSafeContext {  ctx ->
-                    startActivity(Intent(ctx, CallScreenIconActivity::class.java))
+                    startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
+                        putExtra("editorType", 2)
+                    })
+                }
+            }
+
+            iconCs.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
+                        putExtra("editorType", 3)
+                    })
                 }
             }
         }
@@ -166,6 +183,9 @@ class CallScreenFragment :
                 }
             }
         } else {
+            saveCallScreenPreference("BACKGROUND", backgroundUrl)
+            saveCallScreenPreference("CANCEL", endCall)
+            saveCallScreenPreference("ANSWER", startCall)
             Toast.makeText(ctx, "Setup successfully", Toast.LENGTH_SHORT).show()
         }
     }
@@ -287,7 +307,7 @@ class CallScreenFragment :
         val ctx = context ?: return
         val url = currentCallScreen.thumbnail.url.medium
         println("displayCallScreen: $background")
-        saveCallScreenPreference("BACKGROUND", background)
+        backgroundUrl = url
         Glide.with(ctx)
             .load(url)
             .placeholder(R.drawable.default_callscreen)

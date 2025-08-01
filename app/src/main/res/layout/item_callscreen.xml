@@ -10,7 +10,7 @@
         android:id="@+id/callScreenImage"
         android:src="@drawable/default_callscreen"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape8dp"
-        android:layout_margin="@dimen/_4sdp"
+        android:layout_margin="@dimen/_2sdp"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

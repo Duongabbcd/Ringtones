@@ -59,6 +59,9 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
     suspend fun getAllBackgroundContent(page: Int): ContentResponse =
         apiService.getAllBackgroundContent(page)
 
+    suspend fun getAllAvatarContent(page: Int): ContentResponse =
+        apiService.getAllAvatarContent(page)
+
     suspend fun getAllIconContent(page: Int): ContentResponse =
         apiService.getAllIconContent(page)
 

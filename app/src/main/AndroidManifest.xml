@@ -140,14 +140,10 @@
 
         <!--  callscreen-->
         <activity
-            android:name=".screen.callscreen.subscreen.background.CallScreenBackgroundActivity"
+            android:name=".screen.callscreen.subscreen.edit.CallScreenEditorActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".screen.callscreen.subscreen.icon.CallScreenIconActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".screen.callscreen.subscreen.preview.PreviewCallScreenActivity"

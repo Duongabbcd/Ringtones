@@ -29,6 +29,7 @@ class MyInCallService : InCallService() {
         val background = prefs.getString("BACKGROUND", null)
         val cancel = prefs.getString("CANCEL", null)
         val answer = prefs.getString("ANSWER", null)
+        val avatar = prefs.getString("AVATAR", null)
 
         println("onCallAdded 0 : $background")
         println("onCallAdded 1 : $cancel")
@@ -45,7 +46,15 @@ class MyInCallService : InCallService() {
 //                flashHelper.startFlashLight()
 //            }
 
-            startActivity(CallScreenActivity.Companion.getStartIntent(this, background, cancel, answer))
+            startActivity(
+                CallScreenActivity.Companion.getStartIntent(
+                    this,
+                    background,
+                    cancel,
+                    answer,
+                    avatar
+                )
+            )
         }
 
         call.registerCallback(callCallback)

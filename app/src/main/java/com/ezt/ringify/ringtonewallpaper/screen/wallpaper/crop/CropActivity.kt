@@ -35,7 +35,6 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
     OnSetImageUriCompleteListener,
     OnCropImageCompleteListener {
 
-    private var options: CropImageOptions? = null
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val imageUrl by lazy {
         intent.getStringExtra("imageUrl")
@@ -167,6 +166,10 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
 
                 btnCrop.setOnClickListener {
                     cropImageView.croppedImageAsync()
+                }
+
+                btnExit.setOnClickListener {
+                    finish()
                 }
             }
             binding.noInternet.root.gone()

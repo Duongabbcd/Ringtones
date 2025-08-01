@@ -9,6 +9,9 @@
         android:id="@+id/callScreenBackground"
         android:scaleType="centerCrop"
         android:src="@drawable/default_wallpaper"
+        android:padding="@dimen/_2sdp"
+        app:strokeColor="@color/defaultGray"
+        app:strokeWidth="@dimen/_2sdp"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
