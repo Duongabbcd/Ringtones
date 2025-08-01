@@ -29,8 +29,6 @@ class CallScreenAlertActivity :
         flashVibrationManager = FlashVibrationManager(this)
         prefs = this.getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
         binding.apply {
-            displayByCondition(isFlashEnabled, flashSwitcher)
-            displayByCondition(isFlashEnabled, vibrationSwitcher)
 
             backBtn.setOnClickListener {
                 finish()
@@ -110,6 +108,8 @@ class CallScreenAlertActivity :
 
             vibrationTitle.text = if (vibrationValue == "") displayText1 else vibrationValue
             flashTitle.text = if (flashTypeValue == "") displayText2 else flashTypeValue
+            displayByCondition(isFlashEnabled, flashSwitcher)
+            displayByCondition(isFlashEnabled, vibrationSwitcher)
 
 
             applyBtn.setOnClickListener {
@@ -125,9 +125,19 @@ class CallScreenAlertActivity :
             player.setOnClickListener {
                 isPlayed = !isPlayed
                 println("flashTypeValue: $flashTypeValue and $vibrationValue")
+                println("flashTypeValue: $isFlashEnabled and $isVibrationEnabled")
                 val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.NONE
                 val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.NONE
-                if (flash == FlashType.NONE || vibration == VibrationType.NONE) {
+                if (!isFlashEnabled && !isVibrationEnabled) {
+                    Toast.makeText(
+                        this@CallScreenAlertActivity,
+                        "Did you enable all functions before testing?",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+
+                if (flash == FlashType.NONE && vibration == VibrationType.NONE) {
                     Toast.makeText(
                         this@CallScreenAlertActivity, "Did you select value before testing?",
                         Toast.LENGTH_SHORT
@@ -137,6 +147,7 @@ class CallScreenAlertActivity :
                 if (isPlayed) {
                     player.setImageResource(R.drawable.icon_pause_alert)
                     flashVibrationManager.startFlashAndVibration(true, flash, true, vibration)
+
                 } else {
                     player.setImageResource(R.drawable.icon_play_alert)
                     flashVibrationManager.stopFlashAndVibration()
