@@ -142,4 +142,13 @@
     <string name="customize">Personalizar</string>
     <string name="video">Vídeo</string>
     <string name="single">Imagen</string>
+
+    <string name="default_title">Predeterminado</string>
+    <string name="flash_type">Tipo de flash</string>
+    <string name="enable_vibration">Activar vibración</string>
+    <string name="enable_flash_alert">Activar alerta de flash</string>
+    <string name="flash_title"><![CDATA[Prueba de flash y vibración]]></string>
+    <string name="vibration_type">Tipo de vibración</string>
+    <string name="apply">Aplicar</string>
+
 </resources>

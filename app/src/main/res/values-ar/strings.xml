@@ -141,4 +141,13 @@
     <string name="customize">تخصيص</string>
     <string name="video">فيديو</string>
     <string name="single">صورة</string>
+
+    <string name="default_title">افتراضي</string>
+    <string name="flash_type">نوع الفلاش</string>
+    <string name="enable_vibration">تفعيل الاهتزاز</string>
+    <string name="enable_flash_alert">تفعيل تنبيه الفلاش</string>
+    <string name="flash_title"><![CDATA[اختبار الفلاش والاهتزاز]]></string>
+    <string name="vibration_type">نوع الاهتزاز</string>
+    <string name="apply">تطبيق</string>
+
 </resources>

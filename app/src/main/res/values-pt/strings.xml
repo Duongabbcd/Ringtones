@@ -130,4 +130,12 @@
 
     <string name="video">Vídeo</string>
     <string name="single">Imagem</string>
+
+    <string name="default_title">Padrão</string>
+    <string name="flash_type">Tipo de flash</string>
+    <string name="enable_vibration">Ativar vibração</string>
+    <string name="enable_flash_alert">Ativar alerta de flash</string>
+    <string name="flash_title"><![CDATA[Teste de flash e vibração]]></string>
+    <string name="vibration_type">Tipo de vibração</string>
+    <string name="apply">Aplicar</string>
 </resources>

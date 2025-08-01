@@ -139,4 +139,12 @@
     <string name="wallpaper_desc">Hintergrundbeschreibung</string>
     <string name="video">Video</string>
     <string name="single">Bild</string>
+
+    <string name="default_title">Standard</string>
+    <string name="flash_type">Blitztyp</string>
+    <string name="enable_vibration">Vibration aktivieren</string>
+    <string name="enable_flash_alert">Blitzbenachrichtigung aktivieren</string>
+    <string name="flash_title"><![CDATA[Blitz- & Vibrations-Test]]></string>
+    <string name="vibration_type">Vibrationstyp</string>
+    <string name="apply">Anwenden</string>
 </resources>

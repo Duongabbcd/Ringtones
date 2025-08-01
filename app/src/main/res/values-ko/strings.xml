@@ -129,4 +129,13 @@
     <string name="customize">사용자 설정</string>
     <string name="video">비디오</string>
     <string name="single">이미지</string>
+
+    <string name="default_title">기본값</string>
+    <string name="flash_type">플래시 유형</string>
+    <string name="enable_vibration">진동 활성화</string>
+    <string name="enable_flash_alert">플래시 알림 활성화</string>
+    <string name="flash_title"><![CDATA[플래시 및 진동 테스트]]></string>
+    <string name="vibration_type">진동 유형</string>
+    <string name="apply">적용</string>
+
 </resources>

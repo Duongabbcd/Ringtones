@@ -141,4 +141,11 @@
     <string name="video">ভিডিও</string>
     <string name="single">ছবি</string>
 
+    <string name="default_title">ডিফল্ট</string>
+    <string name="flash_type">ফ্ল্যাশের ধরন</string>
+    <string name="enable_vibration">কম্পন চালু করুন</string>
+    <string name="enable_flash_alert">ফ্ল্যাশ এলার্ট চালু করুন</string>
+    <string name="flash_title"><![CDATA[ফ্ল্যাশ এবং কম্পন পরীক্ষা]]></string>
+    <string name="vibration_type">কম্পনের ধরন</string>
+    <string name="apply">প্রয়োগ করুন</string>
 </resources>

@@ -7,6 +7,9 @@
         android:required="false" />
 
     <uses-feature android:name="android.software.connectionservice" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -150,7 +153,14 @@
             android:exported="true"
             android:screenOrientation="portrait"/>
 
-
+        <activity
+            android:name=".screen.callscreen.subscreen.alert.CallScreenAlertActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.callscreen.subscreen.type.AllTypeAlertActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screen.callscreen.CallScreenActivity"
             android:exported="true"

@@ -42,6 +42,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.apply
 import androidx.core.content.edit
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.startCall
@@ -167,6 +168,12 @@ class CallScreenFragment :
                     startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
                         putExtra("editorType", 3)
                     })
+                }
+            }
+
+            alertCs.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, CallScreenAlertActivity::class.java))
                 }
             }
         }

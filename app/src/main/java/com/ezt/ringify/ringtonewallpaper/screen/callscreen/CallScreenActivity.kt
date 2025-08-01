@@ -3,10 +3,14 @@ package com.ezt.ringify.ringtonewallpaper.screen.callscreen
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.VideoProfile
@@ -20,6 +24,9 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallScreenBinding
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.service.MyInCallService
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
 
@@ -56,7 +63,7 @@ class CallScreenActivity :
             }
         }
     }
-
+    private val prefs by lazy { getSharedPreferences("callscreen_prefs", Context.MODE_PRIVATE) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val call = MyInCallService.activeCall
@@ -67,6 +74,21 @@ class CallScreenActivity :
         answerImage = intent.getStringExtra("ANSWER")
         avatarImage = intent.getStringExtra("AVATAR")
 
+        val isFlashEnabled = prefs.getBoolean("FLASH_ENABLE", true)
+        val isVibrationEnabled = prefs.getBoolean("VIBRATION_ENABLE", true)
+
+        // Get enum types
+        val flashTypeLabel = prefs.getString("FLASH_TYPE", "None") ?: "None"
+        val vibrationTypeLabel = prefs.getString("VIBRATION_TYPE", "None") ?: "None"
+
+        val flashType = FlashType.fromLabel(flashTypeLabel) ?: FlashType.NONE
+        val vibrationType = VibrationType.fromLabel(vibrationTypeLabel) ?: VibrationType.NONE
+        flashVibrationManager.startFlashAndVibration(
+            isFlashEnabled,
+            flashType,
+            isVibrationEnabled,
+            vibrationType
+        )
         Log.d(
             "CallScreenActivity",
             "Intent received -> background: $backgroundUrl, cancel: $cancelImage, answer: $answerImage"
@@ -140,15 +162,18 @@ class CallScreenActivity :
                 if (state == Call.STATE_ACTIVE) {
                     callStartTime = System.currentTimeMillis()
                     callTimerHandler.post(callTimerRunnable)
+                    flashVibrationManager.stopFlashAndVibration() // Stop when answered or call ended
                 } else if (state == Call.STATE_DISCONNECTED) {
                     callTimerHandler.removeCallbacks(callTimerRunnable)
                     finish()
+                } else if (state == Call.STATE_DISCONNECTED) {
+                    flashVibrationManager.stopFlashAndVibration() // Stop when answered or call ended
                 }
             }
         })
     }
 
-
+    private lateinit var flashVibrationManager: FlashVibrationManager
     private fun getDisplayNameOrNumber(call: Call?): String {
         if (call == null) return "Unknown"
 
@@ -186,6 +211,7 @@ class CallScreenActivity :
         super.onDestroy()
         MyInCallService.activeCall?.unregisterCallback(telecomCallback)
         stopCallTimer()
+        flashVibrationManager.stopFlashAndVibration()
     }
 
     companion object {
@@ -209,6 +235,5 @@ class CallScreenActivity :
             return openAppCallIntent
         }
     }
-
 
 }

@@ -129,4 +129,12 @@
     <string name="customize">अनुकूलित करें</string>
     <string name="video">वीडियो</string>
     <string name="single">छवि</string>
+
+    <string name="default_title">डिफ़ॉल्ट</string>
+    <string name="flash_type">फ़्लैश प्रकार</string>
+    <string name="enable_vibration">वाइब्रेशन सक्षम करें</string>
+    <string name="enable_flash_alert">फ़्लैश अलर्ट सक्षम करें</string>
+    <string name="flash_title"><![CDATA[फ़्लैश और वाइब्रेट टेस्ट]]></string>
+    <string name="vibration_type">वाइब्रेशन प्रकार</string>
+    <string name="apply">लागू करें</string>
 </resources>

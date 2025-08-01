@@ -130,4 +130,12 @@
 
     <string name="video">Video</string>
     <string name="single">Gambar</string>
+
+    <string name="default_title">Default</string>
+    <string name="flash_type">Tipe kilatan</string>
+    <string name="enable_vibration">Aktifkan getaran</string>
+    <string name="enable_flash_alert">Aktifkan peringatan kilatan</string>
+    <string name="flash_title"><![CDATA[Test kilatan & getar]]></string>
+    <string name="vibration_type">Tipe getaran</string>
+    <string name="apply">Terapkan</string>
 </resources>

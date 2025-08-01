@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.telecom.CallAudioState
 import android.util.Log
+import com.ezt.ringify.ringtonewallpaper.MyApplication
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.CallController
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.CallScreenActivity
 

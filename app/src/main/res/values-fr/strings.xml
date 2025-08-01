@@ -140,4 +140,13 @@
     <string name="wallpaper_desc">Description du fond d’écran</string>
     <string name="video">Vidéo</string>
     <string name="single">Image</string>
+
+    <string name="default_title">Par défaut</string>
+    <string name="flash_type">Type de flash</string>
+    <string name="enable_vibration">Activer la vibration</string>
+    <string name="enable_flash_alert">Activer l’alerte flash</string>
+    <string name="flash_title"><![CDATA[Test flash et vibration]]></string>
+    <string name="vibration_type">Type de vibration</string>
+    <string name="apply">Appliquer</string>
+
 </resources>

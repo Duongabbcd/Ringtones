@@ -151,4 +151,13 @@
     <string name="customize">Customize</string>
     <string name="video">Video</string>
     <string name="single">Image</string>
+
+    <string name="default_title">Default</string>
+    <string name="flash_type">Flash type</string>
+    <string name="enable_vibration">Enable Vibration</string>
+    <string name="enable_flash_alert">Enable Flash Alert</string>
+    <string name="flash_title"><![CDATA[Flash & Vibrate test]]></string>
+    <string name="vibration_type">Vibration type</string>
+    <string name="apply">Apply</string>
+
 </resources>

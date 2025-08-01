@@ -40,3 +40,31 @@ fun Call.isOutgoing(): Boolean {
 fun isSPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 fun isQPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
+enum class FlashType(val label: String) {
+    NONE("None"),
+    ONCE("Flash Once"),
+    FAST_BLINK("Fast Blink"),
+    SLOW_BLINK("Slow Blink"),
+    SOS("SOS Signal");
+
+    companion object {
+        fun fromLabel(label: String): FlashType? {
+            return entries.find { it.label == label }
+        }
+    }
+}
+
+enum class VibrationType(val label: String) {
+    NONE("None"),
+    SHORT("Short"),
+    LONG("Long"),
+    DOUBLE("Double Pulse"),
+    HEARTBEAT("Heartbeat Pattern");
+
+    companion object {
+        fun fromLabel(label: String): VibrationType? {
+            return VibrationType.entries.find { it.label == label }
+        }
+    }
+}
+

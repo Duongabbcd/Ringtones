@@ -129,4 +129,12 @@
     <string name="customize">Настроить</string>
     <string name="video">Видео</string>
     <string name="single">Изображение</string>
+
+    <string name="default_title">По умолчанию</string>
+    <string name="flash_type">Тип вспышки</string>
+    <string name="enable_vibration">Включить вибрацию</string>
+    <string name="enable_flash_alert">Включить оповещение вспышкой</string>
+    <string name="flash_title"><![CDATA[Тест вспышки и вибрации]]></string>
+    <string name="vibration_type">Тип вибрации</string>
+    <string name="apply">Применить</string>
 </resources>
