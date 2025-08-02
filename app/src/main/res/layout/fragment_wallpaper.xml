@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/_16sdp"
     android:paddingBottom="@dimen/_8sdp">
 
     <androidx.core.widget.NestedScrollView
@@ -25,6 +24,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fillViewport="true"
+                    android:paddingTop="@dimen/_16sdp"
                     android:orientation="horizontal"
                     android:scrollbars="none"
                     app:layout_constraintTop_toTopOf="parent">

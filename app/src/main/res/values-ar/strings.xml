@@ -150,4 +150,17 @@
     <string name="vibration_type">نوع الاهتزاز</string>
     <string name="apply">تطبيق</string>
 
+    <string name="live">خلفية فيديو</string>
+    <string name="permission_denied">تم رفض الإذن</string>
+    <string name="setting_saved">تم حفظ الإعداد</string>
+    <string name="enable_function">قم بتمكين الوظائف قبل الاختبار.</string>
+    <string name="select_testing_value">حدد القيم قبل الاختبار.</string>
+    <string name="successful_setup">تم الإعداد بنجاح</string>
+    <string name="error_setup">خطأ في الإعداد</string>
+    <string name="save_failed">فشل في حفظ الصورة المقتصة</string>
+    <string name="permission_granted">تم منح الإذن</string>
+    <string name="setup_complete">اكتمل الإعداد. يمكنك الآن استخدام شاشة الاتصال.</string>
+    <string name="grant_all_permissions">يرجى منح جميع الأذونات للمتابعة.</string>
+    <string name="can_not_open_default">تعذر فتح إعدادات التطبيقات الافتراضية.</string>
+    <string name="can_not_overlay">تعذر فتح إعدادات إذن التراكب.</string>
 </resources>

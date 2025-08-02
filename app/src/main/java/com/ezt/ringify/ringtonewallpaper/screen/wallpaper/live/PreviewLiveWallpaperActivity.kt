@@ -151,7 +151,7 @@ class PreviewLiveWallpaperActivity :
                 if (permanentlyDenied) {
                     showGoToSettingsDialog()
                 } else {
-                    Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -165,7 +165,7 @@ class PreviewLiveWallpaperActivity :
                 }
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

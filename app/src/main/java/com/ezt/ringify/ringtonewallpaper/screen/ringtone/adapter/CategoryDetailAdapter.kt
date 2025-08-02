@@ -67,12 +67,6 @@ class CategoryDetailAdapter(private val onClickListener: (Category) -> Unit): Re
                     }
                 }
 
-
-                if(category.contentCount <= 0) {
-                    root.isEnabled = false
-                    return@apply
-                }
-
                 root.setOnClickListener {
                     onClickListener(category)
                 }

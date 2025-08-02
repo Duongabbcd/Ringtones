@@ -106,7 +106,6 @@
     <string name="categories">Categorie</string>
     <string name="trending">In tendenza</string>
     <string name="hot_search">Ricerche popolari</string>
-    <string name="live">Wallpaper animato</string>
     <string name="favourite">Preferiti</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Nuovo wallpaper</string>
@@ -138,4 +137,18 @@
     <string name="flash_title"><![CDATA[Test flash e vibrazione]]></string>
     <string name="vibration_type">Tipo di vibrazione</string>
     <string name="apply">Applica</string>
+
+    <string name="live">Sfondo video</string>
+    <string name="permission_denied">Autorizzazione negata</string>
+    <string name="setting_saved">Impostazione salvata</string>
+    <string name="enable_function">Abilita le funzioni prima del test.</string>
+    <string name="select_testing_value">Seleziona i valori prima del test.</string>
+    <string name="successful_setup">Configurazione riuscita</string>
+    <string name="error_setup">Errore nella configurazione</string>
+    <string name="save_failed">Impossibile salvare l\'immagine ritagliata</string>
+    <string name="permission_granted">Autorizzazione concessa</string>
+    <string name="setup_complete">Configurazione completata. Ora puoi usare la schermata di chiamata.</string>
+    <string name="grant_all_permissions">Concedi tutte le autorizzazioni per continuare.</string>
+    <string name="can_not_open_default">Impossibile aprire le impostazioni delle app predefinite.</string>
+    <string name="can_not_overlay">Impossibile aprire le impostazioni dei permessi di sovrapposizione.</string>
 </resources>

@@ -106,7 +106,6 @@
     <string name="categories">카테고리</string>
     <string name="trending">트렌딩</string>
     <string name="hot_search">인기 검색</string>
-    <string name="live">라이브 배경화면</string>
     <string name="favourite">즐겨찾기</string>
     <string name="premiums">프리미엄</string>
     <string name="new_wallpaper">새 배경화면</string>
@@ -138,4 +137,17 @@
     <string name="vibration_type">진동 유형</string>
     <string name="apply">적용</string>
 
+    <string name="live">비디오 배경화면</string>
+    <string name="permission_denied">권한이 거부되었습니다</string>
+    <string name="setting_saved">설정이 저장되었습니다</string>
+    <string name="enable_function">테스트 전에 기능을 활성화하세요.</string>
+    <string name="select_testing_value">테스트 전에 값을 선택하세요.</string>
+    <string name="successful_setup">설정 성공</string>
+    <string name="error_setup">설정 오류</string>
+    <string name="save_failed">자른 이미지를 저장하지 못했습니다</string>
+    <string name="permission_granted">권한이 부여되었습니다</string>
+    <string name="setup_complete">설정이 완료되었습니다. 이제 통화 화면을 사용할 수 있습니다.</string>
+    <string name="grant_all_permissions">계속하려면 모든 권한을 허용해 주세요.</string>
+    <string name="can_not_open_default">기본 앱 설정을 열 수 없습니다.</string>
+    <string name="can_not_overlay">오버레이 권한 설정을 열 수 없습니다.</string>
 </resources>

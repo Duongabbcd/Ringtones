@@ -125,7 +125,7 @@
     <string name="categories">Kategorien</string>
     <string name="trending">Im Trend</string>
     <string name="hot_search">Beliebte Suchen</string>
-    <string name="live">Live-Hintergrund</string>
+
     <string name="favourite">Favoriten</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Neuer Hintergrund</string>
@@ -147,4 +147,19 @@
     <string name="flash_title"><![CDATA[Blitz- & Vibrations-Test]]></string>
     <string name="vibration_type">Vibrationstyp</string>
     <string name="apply">Anwenden</string>
+
+    <string name="live">Video-Hintergrund</string>
+    <string name="permission_denied">Berechtigung verweigert</string>
+    <string name="setting_saved">Einstellung gespeichert</string>
+    <string name="enable_function">Funktionen vor dem Testen aktivieren.</string>
+    <string name="select_testing_value">Werte vor dem Testen auswählen.</string>
+    <string name="successful_setup">Einrichtung erfolgreich</string>
+    <string name="error_setup">Fehler bei der Einrichtung</string>
+    <string name="save_failed">Zuschneiden des Bildes fehlgeschlagen</string>
+    <string name="permission_granted">Berechtigung erteilt</string>
+    <string name="setup_complete">Einrichtung abgeschlossen. Du kannst jetzt den Anrufbildschirm verwenden.</string>
+    <string name="grant_all_permissions">Bitte erteile alle Berechtigungen, um fortzufahren.</string>
+    <string name="can_not_open_default">Standard-App-Einstellungen können nicht geöffnet werden.</string>
+    <string name="can_not_overlay">Overlay-Berechtigungseinstellungen können nicht geöffnet werden.</string>
+
 </resources>

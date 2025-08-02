@@ -106,7 +106,6 @@
     <string name="categories">Kategori</string>
     <string name="trending">Dalam Tren</string>
     <string name="hot_search">Pencarian Terpopuler</string>
-    <string name="live">Live Wallpaper</string>
     <string name="favourite">Favorit</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Wallpaper Baru</string>
@@ -138,4 +137,18 @@
     <string name="flash_title"><![CDATA[Test kilatan & getar]]></string>
     <string name="vibration_type">Tipe getaran</string>
     <string name="apply">Terapkan</string>
+
+    <string name="live">Wallpaper Video</string>
+    <string name="permission_denied">Izin ditolak</string>
+    <string name="setting_saved">Pengaturan disimpan</string>
+    <string name="enable_function">Aktifkan fungsi sebelum pengujian.</string>
+    <string name="select_testing_value">Pilih nilai sebelum pengujian.</string>
+    <string name="successful_setup">Pengaturan berhasil</string>
+    <string name="error_setup">Kesalahan dalam pengaturan</string>
+    <string name="save_failed">Gagal menyimpan gambar yang dipotong</string>
+    <string name="permission_granted">Izin diberikan</string>
+    <string name="setup_complete">Penyiapan selesai. Anda sekarang dapat menggunakan layar panggilan.</string>
+    <string name="grant_all_permissions">Silakan berikan semua izin untuk melanjutkan.</string>
+    <string name="can_not_open_default">Tidak dapat membuka pengaturan aplikasi default.</string>
+    <string name="can_not_overlay">Tidak dapat membuka pengaturan izin overlay.</string>
 </resources>

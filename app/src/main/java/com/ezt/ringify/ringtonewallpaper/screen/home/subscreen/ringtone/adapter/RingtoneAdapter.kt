@@ -50,6 +50,12 @@ class RingtoneAdapter(private val onClickListener: (Ringtone) -> Unit) :
         notifyItemRangeInserted(start, list.size)
     }
 
+    fun submitList1(list: List<Ringtone>) {
+        allRingtones.clear()
+        allRingtones.addAll(list)
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int = allRingtones.size
 
     inner class RingtoneViewHolder(private val binding: ItemRingtoneBinding )  : RecyclerView.ViewHolder(binding.root){

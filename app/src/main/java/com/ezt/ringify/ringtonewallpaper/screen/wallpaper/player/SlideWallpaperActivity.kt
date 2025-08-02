@@ -124,7 +124,7 @@ class SlideWallpaperActivity :
                     // User denied and selected "Don't ask again"
                     showGoToSettingsDialog()
                 } else {
-                    Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -141,7 +141,7 @@ class SlideWallpaperActivity :
                 intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -207,11 +207,6 @@ class SlideWallpaperActivity :
                 1 -> {
                     bottomSheet.setType("lock")
                     bottomSheet.show()
-                    Toast.makeText(
-                        this@SlideWallpaperActivity,
-                        "${currentWallpaper.id}",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     setWallpaperFromUrl(
                         context = this@SlideWallpaperActivity,
                         bitmap = bitmap,
@@ -222,11 +217,6 @@ class SlideWallpaperActivity :
                 2 -> {
                     bottomSheet.setType("home")
                     bottomSheet.show()
-                    Toast.makeText(
-                        this@SlideWallpaperActivity,
-                        "${currentWallpaper.id}",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     setWallpaperFromUrl(
                         context = this@SlideWallpaperActivity,
                         bitmap = bitmap,
@@ -238,11 +228,7 @@ class SlideWallpaperActivity :
                 else -> {
                     bottomSheet.setType("both")
                     bottomSheet.show()
-                    Toast.makeText(
-                        this@SlideWallpaperActivity,
-                        "${currentWallpaper.id}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                     setWallpaperFromUrl(
                         context = this@SlideWallpaperActivity,
                         bitmap = bitmap,

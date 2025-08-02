@@ -183,17 +183,17 @@ class CallScreenFragment :
         if (!ctx.isAlreadyDefaultDialer()) {
             launchSetDefaultDialerIntent(ctx) { _ ->
                 if (ctx.isAlreadyDefaultDialer()) {
-                    Toast.makeText(ctx, "Setup successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx, getString(R.string.successful_setup), Toast.LENGTH_SHORT).show()
                     checkAndRequestPermissions()
                 } else {
-                    Toast.makeText(ctx, "Setup error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx,getString(R.string.error_setup), Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
             saveCallScreenPreference("BACKGROUND", backgroundUrl)
             saveCallScreenPreference("CANCEL", endCall)
             saveCallScreenPreference("ANSWER", startCall)
-            Toast.makeText(ctx, "Setup successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, getString(R.string.successful_setup), Toast.LENGTH_SHORT).show()
         }
     }
 

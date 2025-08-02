@@ -126,7 +126,7 @@
     <string name="categories">Catégories</string>
     <string name="trending">Tendance</string>
     <string name="hot_search">Recherches populaires</string>
-    <string name="live">Fond d\'écran animé</string>
+
     <string name="favourite">Favori</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Nouveau fond d’écran</string>
@@ -149,4 +149,17 @@
     <string name="vibration_type">Type de vibration</string>
     <string name="apply">Appliquer</string>
 
+    <string name="live">Fond d\'écran vidéo</string>
+    <string name="permission_denied">Permission refusée</string>
+    <string name="setting_saved">Paramètre enregistré</string>
+    <string name="enable_function">Activez les fonctions avant de tester.</string>
+    <string name="select_testing_value">Sélectionnez les valeurs avant de tester.</string>
+    <string name="successful_setup">Configuration réussie</string>
+    <string name="error_setup">Erreur de configuration</string>
+    <string name="save_failed">Échec de l\'enregistrement de l\'image recadrée</string>
+    <string name="permission_granted">Autorisation accordée</string>
+    <string name="setup_complete">Configuration terminée. Vous pouvez maintenant utiliser l\'écran d\'appel.</string>
+    <string name="grant_all_permissions">Veuillez accorder toutes les autorisations pour continuer.</string>
+    <string name="can_not_open_default">Impossible d’ouvrir les paramètres des applications par défaut.</string>
+    <string name="can_not_overlay">Impossible d’ouvrir les paramètres d’autorisation de superposition.</string>
 </resources>

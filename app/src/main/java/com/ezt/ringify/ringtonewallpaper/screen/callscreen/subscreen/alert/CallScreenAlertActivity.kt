@@ -13,148 +13,130 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationMan
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTypeAlertActivity
 
-
 class CallScreenAlertActivity :
     BaseActivity<ActivityCallscreenAlertBinding>(ActivityCallscreenAlertBinding::inflate) {
 
-    private var isFlashEnabled = false
-    private var isVibrationEnabled = false
+    private lateinit var prefs: SharedPreferences
     private lateinit var flashVibrationManager: FlashVibrationManager
 
+    private var isFlashEnabled = false
+    private var isVibrationEnabled = false
     private var isPlayed = false
 
-    private lateinit var prefs: SharedPreferences
+    companion object {
+        var flashTypeValue: String = "None"
+        var vibrationValue: String = "None"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         flashVibrationManager = FlashVibrationManager(this)
-        prefs = this.getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
+        prefs = getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
+
+        loadInitialSettings()
+
         binding.apply {
-
-            backBtn.setOnClickListener {
-                finish()
-            }
-
-            if (isPlayed) {
-                player.setImageResource(R.drawable.icon_pause_alert)
-            } else {
-                player.setImageResource(R.drawable.icon_play_alert)
-            }
-
-            flashTitle.text =
-                if (flashTypeValue.isEmpty()) resources.getString(R.string.default_title) else flashTypeValue
-            vibrationTitle.text =
-                if (vibrationValue.isEmpty()) resources.getString(R.string.default_title) else vibrationValue
+            backBtn.setOnClickListener { finish() }
 
             flashSwitcher.setOnClickListener {
                 isFlashEnabled = !isFlashEnabled
-                displayByCondition(isFlashEnabled, flashSwitcher)
+                updateSwitchUI()
             }
 
             vibrationSwitcher.setOnClickListener {
                 isVibrationEnabled = !isVibrationEnabled
-                displayByCondition(isVibrationEnabled, vibrationSwitcher)
+                updateSwitchUI()
             }
 
-
             flashType.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@CallScreenAlertActivity,
-                        AllTypeAlertActivity::class.java
-                    ).apply {
-                        putExtra("alertType", "Flash")
-                    })
+                openTypeSelector("Flash", flashTypeValue)
             }
 
             vibrationType.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@CallScreenAlertActivity,
-                        AllTypeAlertActivity::class.java
-                    ).apply {
-                        putExtra("alertType", "Vibration")
-                    })
+                openTypeSelector("Vibration", vibrationValue)
+            }
+
+            applyBtn.setOnClickListener {
+                saveSettings()
+                Toast.makeText(this@CallScreenAlertActivity, resources.getString(R.string.setting_saved), Toast.LENGTH_SHORT).show()
+            }
+
+            player.setOnClickListener {
+                togglePlayPreview()
             }
         }
     }
 
-    private fun displayByCondition(check: Boolean, view: ImageView) {
-        val resourceImage = if (check) R.drawable.switch_enabled else R.drawable.switch_disabled
-        view.setImageResource(resourceImage)
-    }
-
-    companion object {
-        var vibrationValue = ""
-        var flashTypeValue = ""
-    }
-
     override fun onResume() {
         super.onResume()
-        binding.apply {
-            isFlashEnabled = prefs.getBoolean("FLASH_ENABLE", false)
-            isVibrationEnabled = prefs.getBoolean("VIBRATION_ENABLE", false)
+        updateUIFromValues()
+    }
 
-            val savedVibration =
-                prefs.getString("VIBRATION_TYPE", "None")
-                    ?: "None"
-            val savedFlash =
-                prefs.getString("FLASH_TYPE", "None")
-                    ?: "None"
+    private fun loadInitialSettings() {
+        isFlashEnabled = prefs.getBoolean("FLASH_ENABLE", false)
+        isVibrationEnabled = prefs.getBoolean("VIBRATION_ENABLE", false)
+        flashTypeValue = prefs.getString("FLASH_TYPE", "None") ?: "None"
+        vibrationValue = prefs.getString("VIBRATION_TYPE", "None") ?: "None"
+    }
 
-            val displayText1 =
-                if (savedVibration == "None") resources.getString(R.string.default_title) else savedVibration
-            val displayText2 =
-                if (savedVibration == "None") resources.getString(R.string.default_title) else savedFlash
+    private fun saveSettings() {
+        prefs.edit()
+            .putBoolean("FLASH_ENABLE", isFlashEnabled)
+            .putBoolean("VIBRATION_ENABLE", isVibrationEnabled)
+            .putString("FLASH_TYPE", flashTypeValue)
+            .putString("VIBRATION_TYPE", vibrationValue)
+            .apply()
+    }
 
-            vibrationTitle.text = if (vibrationValue == "") displayText1 else vibrationValue
-            flashTitle.text = if (flashTypeValue == "") displayText2 else flashTypeValue
-            displayByCondition(isFlashEnabled, flashSwitcher)
-            displayByCondition(isFlashEnabled, vibrationSwitcher)
+    private fun updateUIFromValues() {
+        val default = getString(R.string.default_title)
+        binding.flashTitle.text = if (flashTypeValue == "None") default else flashTypeValue
+        binding.vibrationTitle.text = if (vibrationValue == "None") default else vibrationValue
+        updateSwitchUI()
+    }
 
+    private fun updateSwitchUI() {
+        binding.flashSwitcher.setImageResource(if (isFlashEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled)
+        binding.vibrationSwitcher.setImageResource(if (isVibrationEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled)
+    }
 
-            applyBtn.setOnClickListener {
-                prefs.edit()
-                    .putBoolean("FLASH_ENABLE", isFlashEnabled)
-                    .putBoolean("VIBRATION_ENABLE", isVibrationEnabled)
-                    .putString("VIBRATION_TYPE", vibrationValue)
-                    .putString("FLASH_TYPE", flashTypeValue)
-                    .apply()
+    private fun openTypeSelector(alertType: String, currentValue: String) {
+        val intent = Intent(this, AllTypeAlertActivity::class.java).apply {
+            putExtra("alertType", alertType)
+            putExtra("currentValue", currentValue)
+        }
+        startActivity(intent)
+    }
+
+    private fun togglePlayPreview() {
+        val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.NONE
+        val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.NONE
+
+        if (!isFlashEnabled && !isVibrationEnabled) {
+            Toast.makeText(this, resources.getString(R.string.enable_function), Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (flash == FlashType.NONE && vibration == VibrationType.NONE) {
+            Toast.makeText(this, resources.getString(R.string.select_testing_value), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        isPlayed = !isPlayed
+        binding.player.setImageResource(
+            if (isPlayed) R.drawable.icon_pause_alert else R.drawable.icon_play_alert
+        )
+
+        if (isPlayed) {
+            flashVibrationManager.startFlashAndVibration(true, flash, true, vibration) {
+                println("onComplete: is here")
+                isPlayed = false
+                binding.player.setImageResource(R.drawable.icon_play_alert) // <- correct icon
             }
-
-
-            player.setOnClickListener {
-                isPlayed = !isPlayed
-                println("flashTypeValue: $flashTypeValue and $vibrationValue")
-                println("flashTypeValue: $isFlashEnabled and $isVibrationEnabled")
-                val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.NONE
-                val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.NONE
-                if (!isFlashEnabled && !isVibrationEnabled) {
-                    Toast.makeText(
-                        this@CallScreenAlertActivity,
-                        "Did you enable all functions before testing?",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                if (flash == FlashType.NONE && vibration == VibrationType.NONE) {
-                    Toast.makeText(
-                        this@CallScreenAlertActivity, "Did you select value before testing?",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-                if (isPlayed) {
-                    player.setImageResource(R.drawable.icon_pause_alert)
-                    flashVibrationManager.startFlashAndVibration(true, flash, true, vibration)
-
-                } else {
-                    player.setImageResource(R.drawable.icon_play_alert)
-                    flashVibrationManager.stopFlashAndVibration()
-
-                }
-            }
-
+            binding.player.setImageResource(R.drawable.icon_pause_alert) // update immediately for user feedback
+        } else {
+            flashVibrationManager.stopFlashAndVibration()
+            isPlayed = false
+            binding.player.setImageResource(R.drawable.icon_play_alert)
         }
     }
 }

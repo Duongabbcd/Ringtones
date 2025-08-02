@@ -395,7 +395,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                     // User denied and selected "Don't ask again"
                     showGoToSettingsDialog()
                 } else {
-                    Toast.makeText(this, "Permissions denied.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -411,7 +411,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -774,9 +774,9 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 101) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -73,10 +73,6 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 }
                 dialog.show()
             }
-
-            ringtoneViewModel.total.observe(this@FilteredRingtonesActivity) { number ->
-                binding.nameScreen.text = number.toString()
-            }
         }
     }
 

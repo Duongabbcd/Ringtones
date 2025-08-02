@@ -46,7 +46,7 @@
                         android:layout_height="@dimen/_22sdp"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:contentDescription="@string/imageview"
-                        android:text="@string/categories"
+                        android:text="@string/favourite"
                         android:textColor="@color/main_color"
                         app:layout_constraintBottom_toBottomOf="@id/backBtn"
                         app:layout_constraintStart_toEndOf="@id/backBtn"

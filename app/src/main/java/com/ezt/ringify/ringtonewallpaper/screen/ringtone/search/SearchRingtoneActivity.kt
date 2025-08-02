@@ -97,7 +97,7 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
 
                             noDataLayout.gone()
                             allResults.visible()
-                            ringToneAdapter.submitList(result)
+                            ringToneAdapter.submitList1(result)
                         }
 
                     }

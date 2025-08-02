@@ -106,7 +106,6 @@
     <string name="categories">Категории</string>
     <string name="trending">В тренде</string>
     <string name="hot_search">Горячие запросы</string>
-    <string name="live">Живые обои</string>
     <string name="favourite">Избранное</string>
     <string name="premiums">Премиум</string>
     <string name="new_wallpaper">Новые обои</string>
@@ -137,4 +136,18 @@
     <string name="flash_title"><![CDATA[Тест вспышки и вибрации]]></string>
     <string name="vibration_type">Тип вибрации</string>
     <string name="apply">Применить</string>
+
+    <string name="live">Видео обои</string>
+    <string name="permission_denied">Доступ запрещён</string>
+    <string name="setting_saved">Настройки сохранены</string>
+    <string name="enable_function">Включите функции перед тестированием.</string>
+    <string name="select_testing_value">Выберите значения перед тестированием.</string>
+    <string name="successful_setup">Настройка выполнена успешно</string>
+    <string name="error_setup">Ошибка настройки</string>
+    <string name="save_failed">Не удалось сохранить обрезанное изображение</string>
+    <string name="permission_granted">Разрешение предоставлено</string>
+    <string name="setup_complete">Настройка завершена. Теперь вы можете использовать экран вызова.</string>
+    <string name="grant_all_permissions">Пожалуйста, предоставьте все разрешения для продолжения.</string>
+    <string name="can_not_open_default">Не удалось открыть настройки приложений по умолчанию.</string>
+    <string name="can_not_overlay">Не удалось открыть настройки разрешений наложения.</string>
 </resources>

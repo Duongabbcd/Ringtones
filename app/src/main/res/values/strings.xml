@@ -127,7 +127,6 @@
     <string name="categories">Categories</string>
     <string name="trending">Trending</string>
     <string name="hot_search">Hot searches</string>
-    <string name="live">Live Wallpaper</string>
     <string name="favourite">Favourite</string>
     <string name="premiums">Premiums</string>
     <string name="new_wallpaper">New Wallpaper</string>
@@ -160,4 +159,17 @@
     <string name="vibration_type">Vibration type</string>
     <string name="apply">Apply</string>
 
+    <string name="live">Video Wallpaper</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="setting_saved">Setting saved</string>
+    <string name="enable_function">Enable functions before testing.</string>
+    <string name="select_testing_value">Select values before testing.</string>
+    <string name="successful_setup">Setup successfully</string>
+    <string name="error_setup">Setup error</string>
+    <string name="save_failed">Failed to save cropped image</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="setup_complete">Setup complete. You can now use call screen.</string>
+    <string name="grant_all_permissions">Please grant all permissions to continue.</string>
+    <string name="can_not_open_default">Can\'t open default apps settings.</string>
+    <string name="can_not_overlay">Can\'t open overlay permission settings.</string>
 </resources>

@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/nameScreen"
             android:contentDescription="@string/imageview"
-            android:text="Find ringtone"
+            android:text="@string/find_ringtone"
             android:layout_marginStart="@dimen/_2sdp"
             style="@style/CustomTextStyleSemiBold18sp"
             android:textColor="@color/main_color"
@@ -110,7 +110,8 @@
             android:layout_marginEnd="@dimen/_20sdp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_24sdp"
+            android:paddingTop="@dimen/_20sdp"
+            tools:listitem="@layout/item_ringtone"
             android:layout_marginBottom="@dimen/_8sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/searchText"

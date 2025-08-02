@@ -19,7 +19,8 @@ class FlashVibrationManager(private val context: Context) {
         isFlashEnabled: Boolean,
         flashType: FlashType,
         isVibrationEnabled: Boolean,
-        vibrationType: VibrationType
+        vibrationType: VibrationType,
+        onComplete: (() -> Unit)? = null
     ) {
         stopFlashAndVibration()
         println("startFlashAndVibration: isVibrationEnabled: $isFlashEnabled and isVibrationEnabled: $isVibrationEnabled")
@@ -60,6 +61,12 @@ class FlashVibrationManager(private val context: Context) {
             }
             vibrationEffect?.let {
                 vibrator?.vibrate(it)
+                if (vibrationType == VibrationType.SHORT || vibrationType == VibrationType.LONG) {
+                    val delay = if (vibrationType == VibrationType.SHORT) 200L else 600L
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        onComplete?.invoke()
+                    }, delay)
+                }
             }
         }
 
@@ -86,32 +93,33 @@ class FlashVibrationManager(private val context: Context) {
                                         cameraManager.setTorchMode(camId, true)
                                         flashlightHandler?.postDelayed({
                                             cameraManager.setTorchMode(camId, false)
+                                            onComplete?.invoke() // ✅ only here
                                         }, 1000)
                                     }
 
-                                    FlashType.FAST_BLINK -> {
+                                    FlashType.FAST_BLINK, FlashType.SLOW_BLINK, FlashType.SOS -> {
+                                        // Looping flash types — do not call onComplete
                                         cameraManager.setTorchMode(camId, flashOn)
                                         flashOn = !flashOn
-                                        flashlightHandler?.postDelayed(this, 300)
-                                    }
-
-                                    FlashType.SLOW_BLINK -> {
-                                        cameraManager.setTorchMode(camId, flashOn)
-                                        flashOn = !flashOn
-                                        flashlightHandler?.postDelayed(this, 1000)
-                                    }
-
-                                    FlashType.SOS -> {
-                                        val on = (sosState % 2 == 0)
-                                        cameraManager.setTorchMode(camId, on)
-                                        sosState = (sosState + 1) % sosPattern.size
-                                        flashlightHandler?.postDelayed(this, sosPattern[sosState])
+                                        val delay = when (flashType) {
+                                            FlashType.FAST_BLINK -> 300L
+                                            FlashType.SLOW_BLINK -> 1000L
+                                            FlashType.SOS -> sosPattern[sosState]
+                                            else -> 500L
+                                        }
+                                        if (flashType == FlashType.SOS) {
+                                            val on = sosState % 2 == 0
+                                            cameraManager.setTorchMode(camId, on)
+                                            sosState = (sosState + 1) % sosPattern.size
+                                        }
+                                        flashlightHandler?.postDelayed(this, delay)
                                     }
 
                                     else -> {
                                         cameraManager.setTorchMode(camId, false)
                                     }
                                 }
+
                             } catch (e: Exception) {
                                 Log.e("FlashVibrationManager", "Flashlight error: ${e.message}")
                             }

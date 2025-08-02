@@ -3,7 +3,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.crop
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -12,8 +11,6 @@ import androidx.activity.viewModels
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnLayout
 import com.canhub.cropper.CropImage
-import com.canhub.cropper.CropImage.toOvalBitmap
-import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.CropImageView.CropResult
 import com.canhub.cropper.CropImageView.OnCropImageCompleteListener
@@ -21,7 +18,6 @@ import com.canhub.cropper.CropImageView.OnSetImageUriCompleteListener
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCropBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import okhttp3.OkHttpClient
@@ -30,6 +26,7 @@ import okio.buffer
 import okio.sink
 import java.io.File
 import kotlin.getValue
+import com.ezt.ringify.ringtonewallpaper.R
 
 class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::inflate),
     OnSetImageUriCompleteListener,
@@ -133,7 +130,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                 finish()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this, "Failed to save cropped image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, resources.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
             }
 
         } else {
