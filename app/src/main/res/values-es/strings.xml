@@ -23,6 +23,10 @@
     <string name = "fav_2">Erweitern Sie su navegador en su cuenta</string>
     <string name = "fav_light_2">Nueva versión</string>
 
+    <string name="first_wpp_sort">Predeterminado</string>
+    <string name="second_wpp_sort">Tendencia</string>
+    <string name="third_wpp_sort">Nuevo</string>
+
     <string name="english">Alemán</string>
     <string name = "hindi">Alemán</string>
     <string name="spanish">Alemán</string>

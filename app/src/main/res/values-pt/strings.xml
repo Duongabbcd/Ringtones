@@ -151,4 +151,8 @@
     <string name="grant_all_permissions">Por favor, conceda todas as permissões para continuar.</string>
     <string name="can_not_open_default">Não foi possível abrir as configurações de aplicativos padrão.</string>
     <string name="can_not_overlay">Não foi possível abrir as configurações de permissão de sobreposição.</string>
+
+    <string name="first_wpp_sort">Padrão</string>
+    <string name="second_wpp_sort">Em alta</string>
+    <string name="third_wpp_sort">Novo</string>
 </resources>

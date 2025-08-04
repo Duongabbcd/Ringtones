@@ -150,4 +150,8 @@
     <string name="grant_all_permissions">계속하려면 모든 권한을 허용해 주세요.</string>
     <string name="can_not_open_default">기본 앱 설정을 열 수 없습니다.</string>
     <string name="can_not_overlay">오버레이 권한 설정을 열 수 없습니다.</string>
+
+    <string name="first_wpp_sort">기본</string>
+    <string name="second_wpp_sort">인기</string>
+    <string name="third_wpp_sort">새로운</string>
 </resources>

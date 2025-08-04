@@ -29,7 +29,7 @@ import com.google.android.gms.ads.nativead.NativeAd
 
 object AdsManager {
     var isDebug = true
-    var isTestDevice = true
+    var isTestDevice = false
 
     var AOA_SPLASH = ""
     var INTER_SPLASH = InterHolderAdmob("")
@@ -87,6 +87,7 @@ object AdsManager {
 //    }
 
     fun showAdBanner(activity: Activity, adsEnum: String, view: ViewGroup, line: View, isCheckTestDevice:Boolean= false, isMoveNextScreen : () -> Unit) {
+        println("showAdBanner: $isCheckTestDevice and $isTestDevice")
         if(isTestDevice  && isCheckTestDevice) {
             isMoveNextScreen()
             return

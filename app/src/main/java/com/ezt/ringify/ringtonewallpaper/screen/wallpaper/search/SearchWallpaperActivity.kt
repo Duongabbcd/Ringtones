@@ -8,6 +8,9 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -166,6 +169,24 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                 closeButton.visible()
             }
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+            AdsManager.showAdBanner(
+                this,
+                BANNER_HOME,
+                binding.frBanner,
+                binding.view,
+                isCheckTestDevice = false
+            ) {}
+        }
+    }
+
+    override fun onBackPressed() {
+        finish()
 
     }
 }

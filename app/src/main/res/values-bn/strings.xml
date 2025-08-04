@@ -161,4 +161,8 @@
     <string name="grant_all_permissions">চালিয়ে যেতে অনুগ্রহ করে সমস্ত অনুমতি দিন।</string>
     <string name="can_not_open_default">ডিফল্ট অ্যাপ সেটিংস খোলা যায়নি।</string>
     <string name="can_not_overlay">ওভারলে অনুমতি সেটিংস খোলা যায়নি।</string>
+
+    <string name="first_wpp_sort">ডিফল্ট</string>
+    <string name="second_wpp_sort">জনপ্রিয়</string>
+    <string name="third_wpp_sort">নতুন</string>
 </resources>

@@ -151,4 +151,8 @@
     <string name="grant_all_permissions">Silakan berikan semua izin untuk melanjutkan.</string>
     <string name="can_not_open_default">Tidak dapat membuka pengaturan aplikasi default.</string>
     <string name="can_not_overlay">Tidak dapat membuka pengaturan izin overlay.</string>
+
+    <string name="first_wpp_sort">Default</string>
+    <string name="second_wpp_sort">Sedang Tren</string>
+    <string name="third_wpp_sort">Baru</string>
 </resources>

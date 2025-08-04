@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingStart="@dimen/_20sdp"
     android:paddingTop="@dimen/_40sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +18,7 @@
             android:layout_width="@dimen/_24sdp"
             android:padding="@dimen/_2sdp"
             android:layout_height="@dimen/_24sdp"
+            android:layout_marginStart="@dimen/_20sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -37,6 +37,7 @@
 
         <EditText
             android:id="@+id/searchText"
+            android:layout_marginStart="@dimen/_20sdp"
             style="@style/CustomTextStyle16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,6 +76,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_24sdp"
             android:src="@drawable/icon_fire"/>
 
@@ -96,6 +98,7 @@
             android:id="@+id/trendingRecyclerView"
             android:layout_marginEnd="@dimen/_20sdp"
             android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/_20sdp"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/_120sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -108,6 +111,7 @@
             android:id="@+id/allResults"
             android:visibility="gone"
             android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_20sdp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:paddingTop="@dimen/_20sdp"
@@ -168,7 +172,6 @@
             android:id="@+id/frBanner"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
-            android:background="@color/black"
             android:layout_height="wrap_content" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

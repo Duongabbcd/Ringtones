@@ -31,6 +31,10 @@
     <string name="fav_2">Wähle dein Lieblingshintergrundbild</string>
     <string name="fav_light_2">Lieblingshintergrund</string>
 
+    <string name="first_wpp_sort">Standard</string>
+    <string name="second_wpp_sort">Trend</string>
+    <string name="third_wpp_sort">Neu</string>
+
     <string name="english">Englisch</string>
     <string name="hindi">Hindi</string>
     <string name="spanish">Spanisch</string>

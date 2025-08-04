@@ -163,4 +163,8 @@
     <string name="grant_all_permissions">يرجى منح جميع الأذونات للمتابعة.</string>
     <string name="can_not_open_default">تعذر فتح إعدادات التطبيقات الافتراضية.</string>
     <string name="can_not_overlay">تعذر فتح إعدادات إذن التراكب.</string>
+
+    <string name="first_wpp_sort">الافتراضي</string>
+    <string name="second_wpp_sort">رائج</string>
+    <string name="third_wpp_sort">جديد</string>
 </resources>

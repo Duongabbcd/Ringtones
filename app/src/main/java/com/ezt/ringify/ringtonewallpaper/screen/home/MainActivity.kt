@@ -7,6 +7,9 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
@@ -87,6 +90,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onResume() {
         super.onResume()
+        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+            AdsManager.showAdBanner(
+                this,
+                BANNER_HOME,
+                binding.frBanner,
+                binding.view,
+                isCheckTestDevice = false
+            ) {}
+        }
 
         internetConnected = AdmobUtils.isNetworkConnected(this@MainActivity)
         println("onResume: $internetConnected")

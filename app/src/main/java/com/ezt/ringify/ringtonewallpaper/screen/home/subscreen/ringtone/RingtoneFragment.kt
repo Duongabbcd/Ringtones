@@ -21,7 +21,6 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint

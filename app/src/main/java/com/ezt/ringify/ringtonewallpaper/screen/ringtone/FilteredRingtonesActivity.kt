@@ -10,6 +10,9 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFilteredCategoryBin
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
@@ -166,5 +169,22 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+            AdsManager.showAdBanner(
+                this,
+                BANNER_HOME,
+                binding.frBanner,
+                binding.view,
+                isCheckTestDevice = false
+            ) {}
+        }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }

@@ -149,5 +149,9 @@
     <string name="setup_complete">Настройка завершена. Теперь вы можете использовать экран вызова.</string>
     <string name="grant_all_permissions">Пожалуйста, предоставьте все разрешения для продолжения.</string>
     <string name="can_not_open_default">Не удалось открыть настройки приложений по умолчанию.</string>
-    <string name="can_not_overlay">Не удалось открыть настройки разрешений наложения.</string>
+    <string name="can_not_overlay">Не удалось открыть настройки разрешений наложения.</string>\
+
+    <string name="first_wpp_sort">По умолчанию</string>
+    <string name="second_wpp_sort">Популярное</string>
+    <string name="third_wpp_sort">Новое</string>
 </resources>

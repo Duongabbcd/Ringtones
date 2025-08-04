@@ -33,6 +33,9 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
@@ -737,6 +740,16 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     override fun onResume() {
         super.onResume()
 
+        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+            AdsManager.showAdBanner(
+                this,
+                BANNER_HOME,
+                binding.frBanner,
+                binding.view,
+                isCheckTestDevice = false
+            ) {}
+        }
+
         if (!serviceBound) return
 
         val servicePlaying = playerService?.isPlaying() ?: false
@@ -762,7 +775,9 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         syncUiWithService()
     }
 
-
+    override fun onBackPressed() {
+        finish()
+    }
 
 
     // ✅ Handle permission result

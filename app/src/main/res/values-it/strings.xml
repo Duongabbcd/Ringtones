@@ -151,4 +151,9 @@
     <string name="grant_all_permissions">Concedi tutte le autorizzazioni per continuare.</string>
     <string name="can_not_open_default">Impossibile aprire le impostazioni delle app predefinite.</string>
     <string name="can_not_overlay">Impossibile aprire le impostazioni dei permessi di sovrapposizione.</string>
+
+    <string name="first_wpp_sort">Predefinito</string>
+    <string name="second_wpp_sort">In tendenza</string>
+    <string name="third_wpp_sort">Nuovo</string>
+
 </resources>

@@ -69,35 +69,35 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                 R.xml.remote_config_default,
                 object : FireBaseConfig.CompleteListener {
                     override fun onComplete() {
-                        REMOTE_SPLASH_070625 =
-                            FireBaseConfig.getValue("REMOTE_SPLASH_070625")
-                        RemoteConfig.ADS_SPLASH_070625 =
-                            FireBaseConfig.getValue("ADS_SPLASH_070625")
-                        NATIVE_FULL_SPLASH_070625 =
-                            FireBaseConfig.getValue("NATIVE_FULL_SPLASH_070625")
-                        RemoteConfig.NATIVE_LANGUAGE_070625 =
-                            FireBaseConfig.getValue("NATIVE_LANGUAGE_070625")
-                        RemoteConfig.INTER_LANGUAGE_070625 =
-                            FireBaseConfig.getValue("INTER_LANGUAGE_070625")
-                        NATIVE_INTRO_070625 = FireBaseConfig.getValue("NATIVE_INTRO_070625")
-                        RemoteConfig.ADS_INTRO_070625 = FireBaseConfig.getValue("ADS_INTRO_070625")
-                        NATIVE_FULL_SCREEN_INTRO_070625 =
-                            FireBaseConfig.getValue("NATIVE_FULL_SCREEN_INTRO_070625")
-                        RemoteConfig.INTER_INTRO_070625 =
-                            FireBaseConfig.getValue("INTER_INTRO_070625")
-                        RemoteConfig.INTER_HOME_070625 =
-                            FireBaseConfig.getValue("INTER_HOME_070625")
-                        RemoteConfig.REMOTE_ADS_PLAY_SONG_070625 =
-                            FireBaseConfig.getValue("REMOTE_ADS_PLAY_SONG_070625")
-                        RemoteConfig.REMOTE_ADS_HOME_070625 =
-                            FireBaseConfig.getValue("REMOTE_ADS_HOME_070625")
-                        RemoteConfig.NATIVE_CUSTOM_HOME_070625 =
-                            FireBaseConfig.getValue("NATIVE_CUSTOM_HOME_070625")
-                        RemoteConfig.BANNER_COLLAP_ALL_070625 =
-                            FireBaseConfig.getValue("BANNER_COLLAP_ALL_070625")
-                        RemoteConfig.UPDATE_APP_VERSION =
-                            FireBaseConfig.getValue("UPDATE_APP_VERSION")
-                        RemoteConfig.ONRESUME_070625 = FireBaseConfig.getValue("ONRESUME_070625")
+//                        REMOTE_SPLASH_070625 =
+//                            FireBaseConfig.getValue("REMOTE_SPLASH_070625")
+//                        RemoteConfig.ADS_SPLASH_070625 =
+//                            FireBaseConfig.getValue("ADS_SPLASH_070625")
+//                        NATIVE_FULL_SPLASH_070625 =
+//                            FireBaseConfig.getValue("NATIVE_FULL_SPLASH_070625")
+//                        RemoteConfig.NATIVE_LANGUAGE_070625 =
+//                            FireBaseConfig.getValue("NATIVE_LANGUAGE_070625")
+//                        RemoteConfig.INTER_LANGUAGE_070625 =
+//                            FireBaseConfig.getValue("INTER_LANGUAGE_070625")
+//                        NATIVE_INTRO_070625 = FireBaseConfig.getValue("NATIVE_INTRO_070625")
+//                        RemoteConfig.ADS_INTRO_070625 = FireBaseConfig.getValue("ADS_INTRO_070625")
+//                        NATIVE_FULL_SCREEN_INTRO_070625 =
+//                            FireBaseConfig.getValue("NATIVE_FULL_SCREEN_INTRO_070625")
+//                        RemoteConfig.INTER_INTRO_070625 =
+//                            FireBaseConfig.getValue("INTER_INTRO_070625")
+//                        RemoteConfig.INTER_HOME_070625 =
+//                            FireBaseConfig.getValue("INTER_HOME_070625")
+//                        RemoteConfig.REMOTE_ADS_PLAY_SONG_070625 =
+//                            FireBaseConfig.getValue("REMOTE_ADS_PLAY_SONG_070625")
+//                        RemoteConfig.REMOTE_ADS_HOME_070625 =
+//                            FireBaseConfig.getValue("REMOTE_ADS_HOME_070625")
+//                        RemoteConfig.NATIVE_CUSTOM_HOME_070625 =
+//                            FireBaseConfig.getValue("NATIVE_CUSTOM_HOME_070625")
+//                        RemoteConfig.BANNER_COLLAP_ALL_070625 =
+//                            FireBaseConfig.getValue("BANNER_COLLAP_ALL_070625")
+//                        RemoteConfig.UPDATE_APP_VERSION =
+//                            FireBaseConfig.getValue("UPDATE_APP_VERSION")
+//                        RemoteConfig.ONRESUME_070625 = FireBaseConfig.getValue("ONRESUME_070625")
 
                         AdsManager.countClickHome = 0
                         AdsManager.countClickMessageBack = 0
@@ -151,7 +151,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
         AdmobUtils.initAdmob(this@SplashActivity,
             isDebug,
             true,
-            isCheckTestDevice = true,
+            isCheckTestDevice = false,
             mobileAdsListener = object : MobileAdsListener {
                 override fun onSuccess() {
                     showBanner()

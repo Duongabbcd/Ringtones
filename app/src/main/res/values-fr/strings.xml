@@ -26,6 +26,9 @@
     <string name="quick_theme">Thème rapide</string>
     <string name="customize">Personnaliser</string>
 
+    <string name="first_wpp_sort">Par défaut</string>
+    <string name="second_wpp_sort">Tendance</string>
+    <string name="third_wpp_sort">Nouveau</string>
 
     <string name="fav_1">Sélectionnez au moins 3 genres musicaux que vous aimez</string>
     <string name="fav_light_1">genres musicaux</string>

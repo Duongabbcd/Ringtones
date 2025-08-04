@@ -151,4 +151,9 @@
     <string name="grant_all_permissions">कृपया जारी रखने के लिए सभी अनुमतियाँ दें।</string>
     <string name="can_not_open_default">डिफ़ॉल्ट ऐप सेटिंग्स नहीं खोल सकते।</string>
     <string name="can_not_overlay">ओवरले अनुमति सेटिंग्स नहीं खोल सकते।</string>
+
+    <string name="first_wpp_sort">डिफ़ॉल्ट</string>
+    <string name="second_wpp_sort">प्रचलित</string>
+    <string name="third_wpp_sort">नया</string>
+
 </resources>
