@@ -17,6 +17,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.CallbackIntro
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.Companion.setSpannableString
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -28,13 +29,15 @@ class FavouriteRingtoneFragment : Fragment() {
     private var position = 0
 
     private val categoryViewModel: CategoryViewModel by viewModels()
-
+    private var allFavRingtones: MutableList<Int> = mutableListOf()
     private val ringtoneAdapter: SelectingFavouriteAdapter by lazy {
-        SelectingFavouriteAdapter()
-    }
+        SelectingFavouriteAdapter { list ->
+            allFavRingtones.clear()
+            allFavRingtones.addAll(list)
 
-    private val wallpaperAdapter: SelectingFavouriteAdapter by lazy {
-        SelectingFavouriteAdapter()
+            println("ringtoneAdapter: $allFavRingtones")
+
+        }
     }
 
     override fun onCreateView(
@@ -58,8 +61,10 @@ class FavouriteRingtoneFragment : Fragment() {
         }
 
         binding.nextBtn.setOnClickListener {
+            val ctx = context ?: return@setOnClickListener
+            Common.setAllFavouriteGenres(ctx, allFavRingtones)
             val nextPage = position++
-            callbackIntro.onNext(position,nextPage)
+            callbackIntro.onNext(position, nextPage)
 
         }
     }
@@ -68,7 +73,7 @@ class FavouriteRingtoneFragment : Fragment() {
     private fun setUiIntro1() {
         val first = getString(R.string.fav_1)
         val highlight1 = getString(R.string.fav_light_1)
-        setSpannableString(first,listOf(highlight1),  binding.description)
+        setSpannableString(first, listOf(highlight1), binding.description)
         binding.slideDot.setImageResource(R.drawable.first_favourite)
         binding.allFavourite.adapter = ringtoneAdapter
         categoryViewModel.loadRingtoneCategories()
@@ -91,8 +96,10 @@ class FavouriteRingtoneFragment : Fragment() {
     }
 }
 
-class SelectingFavouriteAdapter(): RecyclerView.Adapter<SelectingFavouriteAdapter.SelectingFavouriteViewHolder>() {
-    private val alLCategories : MutableList<Category> = mutableListOf()
+class SelectingFavouriteAdapter(private val onSelectionChanged: (List<Int>) -> Unit) :
+    RecyclerView.Adapter<SelectingFavouriteAdapter.SelectingFavouriteViewHolder>() {
+    private val allCategories: MutableList<Category> = mutableListOf()
+    private val selectedCategories: MutableList<Int> = mutableListOf()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -117,26 +124,62 @@ class SelectingFavouriteAdapter(): RecyclerView.Adapter<SelectingFavouriteAdapte
     }
 
     fun submitList(list: List<Category>) {
-
-        alLCategories.clear()
-        alLCategories.addAll(list)
+        allCategories.clear()
+        allCategories.addAll(list)
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = alLCategories.size
+    override fun getItemCount(): Int = allCategories.size
 
-    inner class SelectingFavouriteViewHolder(private val binding: ItemFavouriteBinding )  : RecyclerView.ViewHolder(binding.root){
+    inner class SelectingFavouriteViewHolder(private val binding: ItemFavouriteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            val category = alLCategories[position]
+            val category = allCategories[position]
             binding.apply {
                 category.thumbnail?.url?.full.let {
-                    Glide.with(context).load(it).placeholder(R.drawable.icon_default_category).error(
-                        R.drawable.icon_default_category).into(binding.categoryAvatar)
+                    Glide.with(context).load(it).placeholder(R.drawable.icon_default_category)
+                        .error(
+                            R.drawable.icon_default_category
+                        ).into(binding.categoryAvatar)
                 }
 
                 categoryName.text = category.name
+                updateUI(category.id)
+
+                root.setOnClickListener {
+                    val clickedId = category.id
+                    var removeId: Int? = null
+
+                    if (selectedCategories.contains(category.id)) {
+                        selectedCategories.remove(category.id)
+                    } else {
+                        if (selectedCategories.size >= 3) {
+                            removeId = selectedCategories.removeAt(0) // Limit to 4 items
+                        }
+                        selectedCategories.add(clickedId)
+                    }
+
+                    notifyItemChanged(position)
+                    removeId?.let { id ->
+                        val removedPosition = allCategories.indexOfFirst { it.id == id }
+                        if (removedPosition != -1) {
+                            notifyItemChanged(removedPosition)
+                        }
+                    }
+                    onSelectionChanged(selectedCategories) // Notify parent
+                }
 
             }
+        }
+
+        private fun updateUI(categoryId: Int) {
+            val isSelected = selectedCategories.contains(categoryId)
+            binding.root.setBackgroundResource(
+                if (isSelected)
+                    R.drawable.background_radius_12_purple_solid
+                else
+                    R.drawable.background_radius_12_light_gray
+            )
         }
     }
 

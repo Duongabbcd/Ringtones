@@ -23,7 +23,9 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -32,6 +34,7 @@ class WallpaperFragment :
     BaseFragment<FragmentWallpaperBinding>(FragmentWallpaperBinding::inflate) {
 
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by activityViewModels()
 
     private val wallPaperAdapter: WallpaperAdapter by lazy {
@@ -54,41 +57,15 @@ class WallpaperFragment :
             }
         }
     }
-    private val subWallpaperAdapter1: WallpaperAdapter by lazy {
-        WallpaperAdapter {
-            println("Wallpaper: $it")
-            withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
-                    putExtra("wallpaperCategoryId", 30)
-                })
-            }
-        }
-    }
-    private val subWallpaperAdapter2: WallpaperAdapter by lazy {
-        WallpaperAdapter {
-            println("Wallpaper: $it")
-            withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
-                    putExtra("wallpaperCategoryId", 31)
-                })
-            }
-        }
-    }
-
-    private val subWallpaperAdapter3: WallpaperAdapter by lazy {
-        WallpaperAdapter {
-            println("Wallpaper: $it")
-            withSafeContext { ctx ->
-                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
-                    putExtra("wallpaperCategoryId", 32)
-                })
-            }
-        }
-    }
+    private lateinit var subWallpaperAdapter1: WallpaperAdapter
+    private lateinit var subWallpaperAdapter2: WallpaperAdapter
+    private lateinit var subWallpaperAdapter3: WallpaperAdapter
+    private val initialList: MutableList<Int?> = mutableListOf()
+    private var resultList: List<Int> = mutableListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setupCustomWallpapers()
         binding.apply {
 
             connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
@@ -170,14 +147,14 @@ class WallpaperFragment :
             openAll3.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("wallpaperCategoryId", 30)
+                        putExtra("wallpaperCategoryId", resultList[0])
                     })
                 }
             }
             openAll4.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("wallpaperCategoryId", 31)
+                        putExtra("wallpaperCategoryId", resultList[1])
                     })
                 }
             }
@@ -185,7 +162,7 @@ class WallpaperFragment :
             openAll5.setOnClickListener {
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
-                        putExtra("wallpaperCategoryId", 32)
+                        putExtra("wallpaperCategoryId", resultList[2])
                     })
                 }
             }
@@ -212,6 +189,17 @@ class WallpaperFragment :
             wallPaperViewModel.loading5.observe(viewLifecycleOwner) {
                 loading5.isVisible = it
                 sub3Count.isVisible = !it
+            }
+            categoryViewModel.categoryName1.observe(viewLifecycleOwner) {
+                sub1.text = it
+            }
+
+            categoryViewModel.categoryName2.observe(viewLifecycleOwner) {
+                sub2.text = it
+            }
+
+            categoryViewModel.categoryName3.observe(viewLifecycleOwner) {
+                sub3.text = it
             }
 
             premium.setOnClickListener {
@@ -261,6 +249,50 @@ class WallpaperFragment :
 
     }
 
+    private fun setupCustomWallpapers() {
+
+        withSafeContext { ctx ->
+            initialList.addAll(Common.getAllFavouriteWallpaper(ctx))
+        }
+
+        val backupList = listOf<Int>(30, 31, 32)
+        resultList = if (initialList.isEmpty()) {
+            backupList
+        } else {
+            initialList.mapIndexed { index, value ->
+                value ?: backupList.getOrNull(index) ?: -1
+            }
+        }
+        println("setupCustomWallpapers: $resultList")
+
+        subWallpaperAdapter1 = WallpaperAdapter {
+            println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", resultList[0])
+                })
+            }
+        }
+
+        subWallpaperAdapter2 = WallpaperAdapter {
+            println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", resultList[1])
+                })
+            }
+        }
+
+        subWallpaperAdapter3 = WallpaperAdapter {
+            println("Wallpaper: $it")
+            withSafeContext { ctx ->
+                startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
+                    putExtra("wallpaperCategoryId", resultList[2])
+                })
+            }
+        }
+    }
+
     private fun checkInternetConnected(isConnected: Boolean = true) {
         if (!isConnected) {
             binding.origin.gone()
@@ -269,9 +301,13 @@ class WallpaperFragment :
             binding.origin.visible()
             wallPaperViewModel.loadTrendingWallpapers()
             wallPaperViewModel.loadNewWallpapers()
-            wallPaperViewModel.loadSubWallpapers1(30)
-            wallPaperViewModel.loadSubWallpapers2(31)
-            wallPaperViewModel.loadSubWallpapers3(32)
+            wallPaperViewModel.loadSubWallpapers1(resultList[0])
+            wallPaperViewModel.loadSubWallpapers2(resultList[1])
+            wallPaperViewModel.loadSubWallpapers3(resultList[2])
+
+            categoryViewModel.getFirstCategory(resultList[0])
+            categoryViewModel.getSecondCategory(resultList[1])
+            categoryViewModel.getThirdCategory(resultList[2])
             binding.noInternet.root.gone()
         }
     }

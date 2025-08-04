@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_corner_top_round"
+    android:backgroundTint="@color/white"
+    android:paddingHorizontal="@dimen/_20sdp"
+    android:paddingTop="@dimen/_30sdp"
+    android:paddingBottom="@dimen/_18sdp">
+
+    <TextView
+        android:id="@+id/songAvatar"
+        style="@style/CustomTextStyleSemiBold16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/sort_by"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="#ECECEC"
+        app:layout_constraintTop_toBottomOf="@id/songAvatar" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <RelativeLayout
+                android:id="@+id/firstOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_10sdp">
+
+                <ImageView
+                    android:id="@+id/firstSortIcon"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle" />
+
+                <TextView
+                    style="@style/CustomTextStyle14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    android:layout_toEndOf="@id/firstSortIcon"
+                    android:gravity="center"
+                    android:text="@string/first_wpp_sort" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/secondOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_10sdp">
+
+                <ImageView
+                    android:id="@+id/secondSortIcon"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle" />
+
+                <TextView
+                    style="@style/CustomTextStyle14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    android:layout_toEndOf="@id/secondSortIcon"
+                    android:gravity="center"
+                    android:text="@string/second_wpp_sort" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/thirdOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_10sdp">
+
+                <ImageView
+                    android:id="@+id/thirdSortIcon"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_unselect_circle" />
+
+                <TextView
+                    style="@style/CustomTextStyle14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    android:layout_toEndOf="@id/thirdSortIcon"
+                    android:gravity="center"
+                    android:text="@string/third_wpp_sort" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/bottomLayout">
+
+        <TextView
+            android:id="@+id/cancelBtn"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:background="@drawable/background_radius_12_purple_stroke"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/cancel"
+            android:textColor="@color/main_color" />
+
+        <TextView
+            android:id="@+id/okBtn"
+            style="@style/CustomTextStyleSemiBold14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:background="@drawable/background_radius_12"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/ok"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

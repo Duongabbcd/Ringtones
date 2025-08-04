@@ -37,6 +37,15 @@ class CategoryViewModel @Inject constructor(
     private var hasMorePages1 = true
     val allWallpapers1 = mutableListOf<Category>()
 
+    private var _categoryName1 = MutableLiveData<String>()
+    val categoryName1: LiveData<String> = _categoryName1
+
+    private var _categoryName2 = MutableLiveData<String>()
+    val categoryName2: LiveData<String> = _categoryName2
+
+    private var _categoryName3 = MutableLiveData<String>()
+    val categoryName3: LiveData<String> = _categoryName3
+
 
     // Store wallpapers per category id
     private val _wallpapersMap = MutableLiveData<Map<Int, List<Wallpaper>>>()
@@ -87,6 +96,51 @@ class CategoryViewModel @Inject constructor(
         try {
             val result = repository.getCategoryById(categoryId)
             _category.value = result.dataPage.categories.first()
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+    fun getFirstCategory(categoryId: Int) = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getCategoryById(categoryId)
+            _categoryName1.value = result.dataPage.categories.first().name
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+    fun getSecondCategory(categoryId: Int) = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getCategoryById(categoryId)
+            _categoryName2.value = result.dataPage.categories.first().name
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading.value = false
+        }
+    }
+
+    fun getThirdCategory(categoryId: Int) = viewModelScope.launch {
+        _loading.value = true
+        try {
+            val result = repository.getCategoryById(categoryId)
+            _categoryName3.value = result.dataPage.categories.first().name
 
             _error.value = null
         } catch (e: Exception) {

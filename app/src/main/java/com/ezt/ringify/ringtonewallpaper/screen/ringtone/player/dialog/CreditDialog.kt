@@ -19,10 +19,11 @@ class CreditDialog(
     }
 
     fun setCreditContent(ringtone: Ringtone) {
+        val creditWeb = "https://creativecommons.org/licenses/by/3.0/"
         val full =  context.getString(
             R.string.credits_desc,
             ringtone.author.name,
-            ringtone.name
+            creditWeb
         )
 
         val target = ringtone.author.name

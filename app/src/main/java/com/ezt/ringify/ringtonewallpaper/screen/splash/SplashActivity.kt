@@ -28,7 +28,6 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isTestDevice
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_INTRO_070625
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SCREEN_INTRO_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.REMOTE_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
@@ -54,6 +53,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+//        Common.setCountOpenApp(this,0)
     }
 
     override fun initView() {
@@ -64,13 +64,12 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
         Common.setPreLanguage(this, "en")
         handler.postDelayed(runnable, 20000)
-        val x = false
         if (isNetworkConnected(this)) {
             FireBaseConfig.initRemoteConfig(
                 R.xml.remote_config_default,
                 object : FireBaseConfig.CompleteListener {
                     override fun onComplete() {
-                        RemoteConfig.REMOTE_SPLASH_070625 =
+                        REMOTE_SPLASH_070625 =
                             FireBaseConfig.getValue("REMOTE_SPLASH_070625")
                         RemoteConfig.ADS_SPLASH_070625 =
                             FireBaseConfig.getValue("ADS_SPLASH_070625")

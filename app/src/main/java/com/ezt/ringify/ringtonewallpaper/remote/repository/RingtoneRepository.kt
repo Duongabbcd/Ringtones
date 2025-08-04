@@ -44,6 +44,8 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
 
     //live wallpaper
     suspend fun getLiveWallpaper(page: Int) = apiService.getLiveWallpaper(page)
+    suspend fun getNewLiveWallpaper(page: Int) = apiService.getNewLiveWallpaper(page)
+    suspend fun getTrendingLiveWallpaper(page: Int) = apiService.getTrendingLiveWallpaper(page)
     suspend fun getPremiumVideoWallpaper(page: Int) = apiService.getPremiumVideoWallpaper(page)
     suspend fun getSlideWallpaper(page: Int) = apiService.getSlideWallpaper(page)
     suspend fun getSingleWallpaper(page: Int) = apiService.getSingleWallpaper(page)

@@ -12,6 +12,8 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ViewpagerFavouriteItempageB
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.CallbackIntro
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.Companion.setSpannableString
+import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.iab.omid.library.mmadbridge.walking.async.a
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -23,9 +25,14 @@ class FavouriteWallpaperFragment : Fragment() {
 
     private val categoryViewModel: CategoryViewModel by viewModels()
 
-
+    private var allFavWallpaper: MutableList<Int> = mutableListOf()
     private val wallpaperAdapter: SelectingFavouriteAdapter by lazy {
-        SelectingFavouriteAdapter()
+        SelectingFavouriteAdapter { items ->
+            allFavWallpaper.clear()
+            allFavWallpaper.addAll(items)
+
+            println("wallpaperAdapter: $allFavWallpaper")
+        }
     }
 
     override fun onCreateView(
@@ -49,6 +56,9 @@ class FavouriteWallpaperFragment : Fragment() {
         }
 
         binding.nextBtn.setOnClickListener {
+            val ctx = context ?: return@setOnClickListener
+            Common.setAllFavouriteWallpaper(ctx, allFavWallpaper)
+
             val nextPage = position++
             callbackIntro.onNext(position,nextPage)
 

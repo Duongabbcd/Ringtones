@@ -105,13 +105,13 @@ object Common {
 
     fun setRemoteKey(context: Context, key: String, value: String) {
         val preferences =
-            context.getSharedPreferences(context.packageName, Context.MODE_MULTI_PROCESS)
+            context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
         preferences.edit().putString(key, value).apply()
     }
 
     fun getRemoteKey(context: Context, key: String, default: String): String {
         val preferences =
-            context.getSharedPreferences(context.packageName, Context.MODE_MULTI_PROCESS)
+            context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
         return preferences.getString(key, default).toString()
     }
 
@@ -144,7 +144,7 @@ object Common {
     fun getCountOpenApp(mContext: Context): Int {
         val preferences = mContext.getSharedPreferences(
             mContext.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
         return preferences.getInt("KEY_CountOpenApp", 0)
     }
@@ -152,7 +152,7 @@ object Common {
     fun setCountOpenApp(context: Context, flag: Int) {
         val preferences = context.getSharedPreferences(
             context.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
         preferences.edit().putInt("KEY_CountOpenApp", flag).apply()
     }
@@ -160,7 +160,7 @@ object Common {
     fun getCountRate(mContext: Context): Int {
         val preferences = mContext.getSharedPreferences(
             mContext.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
         return preferences.getInt("KEY_CountRate", 0)
     }
@@ -168,7 +168,7 @@ object Common {
     fun setCountRate(context: Context, flag: Int) {
         val preferences = context.getSharedPreferences(
             context.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
         preferences.edit().putInt("KEY_CountRate", flag).apply()
     }
@@ -176,26 +176,45 @@ object Common {
     fun getFirstUse2(mContext: Context): Int {
         val preferences = mContext.getSharedPreferences(
             mContext.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
         return preferences.getInt("KEY_FirstUse2", 0)
     }
 
-    fun setFirstUse2(context: Context, isFirstUse: Int = 0 ) {
+    fun setAllFavouriteWallpaper(context: Context, list: List<Int> = emptyList()) {
         val preferences = context.getSharedPreferences(
             context.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
-        preferences.edit().putInt("KEY_FirstUse2", isFirstUse).apply()
+        preferences.edit().putString("KEY_Fav_Wall", list.joinToString(",")).apply()
     }
 
 
-    fun getTheme(mContext: Context): Int {
+    fun setAllFavouriteGenres(context: Context, list: List<Int> = emptyList()) {
+        val preferences = context.getSharedPreferences(
+            context.packageName,
+            MODE_MULTI_PROCESS
+        )
+        preferences.edit().putString("KEY_Fav_Gen", list.joinToString(",")).apply()
+    }
+
+
+    fun getAllFavouriteGenres(mContext: Context): List<Int> {
         val preferences = mContext.getSharedPreferences(
             mContext.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
-        return preferences.getInt("KEY_UsedTheme", 0)
+        val savedList = preferences.getString("KEY_Fav_Gen", null)
+        return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+    }
+
+    fun getAllFavouriteWallpaper(mContext: Context): List<Int?> {
+        val preferences = mContext.getSharedPreferences(
+            mContext.packageName,
+            MODE_MULTI_PROCESS
+        )
+        val savedList = preferences.getString("KEY_Fav_Wall", null)
+        return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: listOf()
     }
 
     fun setTheme(context: Context, selectedTheme: Int) {
@@ -278,6 +297,17 @@ object Common {
     fun getSortOrder(context: Context) : String {
         val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
         return preferences.getString("KEY_SortOrder", "name+asc").toString()
+    }
+
+    fun setSortWppOrder(context: Context, sortOrder: String) {
+        val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
+        preferences.edit().putString("KEY_Wpp_SortOrder", sortOrder).apply()
+    }
+
+
+    fun getSortWppOrder(context: Context): String {
+        val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
+        return preferences.getString("KEY_Wpp_SortOrder", "Default").toString()
     }
 
 }

@@ -13,6 +13,8 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter.Companion.VIEW_TYPE_LOADING
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.SortWallpaperBottomSheet
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +26,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val wallpaperViewModel: WallpaperViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
-        GridWallpaperAdapter({
+        GridWallpaperAdapter {
             println("Wallpaper: $it")
             startActivity(
                 Intent(
@@ -34,28 +36,37 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
                     putExtra("type", 2)
                 }
             )
-        }).apply {
-            onAllImagesLoaded = {
-                // Safely post notifyDataSetChanged on RecyclerView's message queue
-                binding.allCategories.post {
-                    notifyDataSetChanged()
-                }
-            }
         }
     }
+    private lateinit var sortOrder: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sortOrder = Common.getSortWppOrder(this)
 
+        connectionViewModel.isConnectedLiveData.observe(this@LiveWallpaperActivity) { isConnected ->
+            println("isConnected: $isConnected and $sortOrder")
+            checkInternetConnected(isConnected)
+        }
+
+        wallpaperViewModel.liveWallpapers.observe(this@LiveWallpaperActivity) { items ->
+            wallpaperAdapter.submitList(items, false)
+        }
         binding.apply {
             backBtn.setOnClickListener {
                 finish()
             }
 
-            connectionViewModel.isConnectedLiveData.observe(this@LiveWallpaperActivity) { isConnected ->
-                println("isConnected: $isConnected")
-                checkInternetConnected(isConnected)
+            sort.setOnClickListener {
+                val bottomSheet = SortWallpaperBottomSheet(this@LiveWallpaperActivity) { result ->
+                    Common.setSortWppOrder(this@LiveWallpaperActivity, result)
+                    sortOrder = Common.getSortWppOrder(this@LiveWallpaperActivity)
+                    displayItems()
+                }
+                bottomSheet.show()
             }
+
+
             val layoutManager = GridLayoutManager(this@LiveWallpaperActivity, 3)
 
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -72,10 +83,16 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
             allCategories.adapter = wallpaperAdapter
 
             nameScreen.text = resources.getString(R.string.live)
-            wallpaperViewModel.liveWallpapers.observe(this@LiveWallpaperActivity) { items ->
-                wallpaperAdapter.submitList(items, false)
-            }
+        }
+    }
 
+    private fun displayItems() {
+        println("displayItems 123: $sortOrder")
+        when (sortOrder) {
+            "Default" -> wallpaperViewModel.loadLiveWallpapers(0)
+            "Trending" -> wallpaperViewModel.loadLiveWallpapers(1)
+            "New" -> wallpaperViewModel.loadLiveWallpapers(2)
+            else -> wallpaperViewModel.loadLiveWallpapers(0)
         }
     }
 
@@ -85,7 +102,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            wallpaperViewModel.loadLiveWallpapers()
+            displayItems()
             loadMoreData()
             binding.noInternet.root.gone()
         }
@@ -104,7 +121,12 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
                     val isAtBottom =
                         firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
                     if (isAtBottom) {
-                        wallpaperViewModel.loadLiveWallpapers()
+                        when (sortOrder) {
+                            "Default" -> wallpaperViewModel.loadLiveWallpapers(0)
+                            "Trending" -> wallpaperViewModel.loadLiveWallpapers(1)
+                            "New" -> wallpaperViewModel.loadLiveWallpapers(2)
+                            else -> wallpaperViewModel.loadLiveWallpapers(0)
+                        }
                     }
                 }
             })

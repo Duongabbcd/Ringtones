@@ -98,7 +98,7 @@ class WallpaperViewModel @Inject constructor(
     val allWallpapers4 = mutableListOf<Wallpaper>()
     val allWallpapers5 = mutableListOf<Wallpaper>()
 
-
+    private var currentSortOption: Int = -1
     fun loadTrendingWallpapers() = viewModelScope.launch {
         if (!hasMorePages1 || _loading1.value ==  true ) return@launch
         _loading1.value = true
@@ -196,16 +196,33 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadLiveWallpapers() = viewModelScope.launch {
+    fun loadLiveWallpapers(option: Int = 0) = viewModelScope.launch {
+        // If new sort option, reset everything
+        if (option != currentSortOption) {
+            currentSortOption = option
+            currentPage1 = 1
+            hasMorePages1 = true
+            allWallpapers1.clear()
+        }
+
         if (!hasMorePages1 || _loading1.value ==  true ) return@launch
         _loading1.value = true
         try {
-            val result = repository.getLiveWallpaper(currentPage1)
+            val result = when (option) {
+                0 -> repository.getLiveWallpaper(currentPage1)
+                1 -> repository.getTrendingLiveWallpaper(currentPage1)
+                2 -> repository.getNewLiveWallpaper(currentPage1)
+                else -> repository.getLiveWallpaper(currentPage1)
+            }
             _total1.value = result.data.total
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
+
             allWallpapers1.addAll(result.data.data)
-            _liveWallpapers.value = allWallpapers1
+
+            // ✅ Force LiveData to emit a new list instance
+            _liveWallpapers.value = allWallpapers1.toList()
+
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")

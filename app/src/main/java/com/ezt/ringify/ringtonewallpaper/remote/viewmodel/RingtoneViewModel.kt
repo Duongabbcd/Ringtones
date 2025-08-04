@@ -50,6 +50,8 @@ class RingtoneViewModel @Inject constructor(
     val allWallpapers2 = mutableListOf<Ringtone>()
     val allWallpapers3 = mutableListOf<Ringtone>()
 
+    private var currentSortOption: String = ""
+
     fun loadPopular(orderBy: String = "name+asc" ) = viewModelScope.launch {
         if (!hasMorePages1 || _loading.value ==  true ) return@launch
         _loading.value = true
@@ -92,17 +94,36 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
-    fun loadSelectedRingtones(categoryId: Int, orderBy: String  = "name+asc") = viewModelScope.launch {
-        if (!hasMorePages3 || _loading.value ==  true ) return@launch
+    fun loadSelectedRingtones(categoryId: Int, orderBy: String = "name+asc") =
+        viewModelScope.launch {
+            // Reset paging if order changed
+            if (orderBy != currentSortOption) {
+                currentSortOption = orderBy
+                currentPage3 = 1
+                hasMorePages3 = true
+                allWallpapers3.clear()
+            }
+
+            // Stop loading if already loading or no more pages
+            if (!hasMorePages3 || _loading.value == true) return@launch
+
         _loading.value = true
         try {
             val result = repository.fetchRingtoneByCategory(categoryId, orderBy, currentPage3)
             println("loadSelectedRingtones: $categoryId ${result.data.firstPageUrl}")
-            println("loadSelectedRingtones: ${ result.data.nextPageUrl}")
+            println("loadSelectedRingtones: ${result.data.nextPageUrl}")
+
             hasMorePages3 = result.data.nextPageUrl != null
             currentPage3++
-            allWallpapers3.addAll(result.data.data)
-            _selectedRingtone.value = allWallpapers3
+
+            // Avoid duplicates by filtering out items already in allWallpapers3
+            val newItems = result.data.data.filterNot { newItem ->
+                allWallpapers3.any { existing -> existing.id == newItem.id }
+            }
+            allWallpapers3.addAll(newItems)
+            println("allWallpapers3: $allWallpapers3")
+
+            _selectedRingtone.value = allWallpapers3.toList()
             _total.value = _selectedRingtone.value?.size ?: 0
             _error.value = null
         } catch (e: Exception) {
@@ -112,6 +133,7 @@ class RingtoneViewModel @Inject constructor(
             _loading.value = false
         }
     }
+
 
     fun searchRingtonesByName(input: String) = viewModelScope.launch {
         _loading.value = true

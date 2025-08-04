@@ -21,7 +21,9 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -79,7 +81,18 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             }
 
             categoryViewModel.ringtoneCategory.observe(viewLifecycleOwner) { items ->
-                categoryAdapter.submitList(items.take(6))
+                withSafeContext { ctx ->
+                    val initialFav = Common.getAllFavouriteGenres(ctx)  // List<Int>
+                    val favRingtones = initialFav.mapNotNull { id ->
+                        items.find { it.id == id }
+                    }.toMutableList()
+                    val number = 6 - favRingtones.size
+                    println("ringtoneCategory: $favRingtones")
+                    favRingtones.addAll(
+                        items.filterNot { favRingtones.contains(it) }.take(number)
+                    )
+                    categoryAdapter.submitList(favRingtones)
+                }
             }
 
             ringtoneViewModel.popular.observe(viewLifecycleOwner) { items ->

@@ -20,7 +20,7 @@ interface ApiService {
 
     @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1&order_by=name+asc")
     suspend fun getPopularRingtones(
-        @Query("page")page: Int = 1
+        @Query("page") page: Int = 1,
     ): RingtoneResponse
 
     @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
@@ -98,6 +98,16 @@ interface ApiService {
 
     @GET("api/v1/wallpapers?where=type+2")
     suspend fun getLiveWallpaper(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
+
+    @GET("api/v1/wallpapers?where=type+2&order_by=updated_at+desc")
+    suspend fun getNewLiveWallpaper(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
+
+    @GET("api/v1/wallpapers?where=type+2,trend+1")
+    suspend fun getTrendingLiveWallpaper(
         @Query("page") page: Int = 1
     ): WallpaperResponse
 

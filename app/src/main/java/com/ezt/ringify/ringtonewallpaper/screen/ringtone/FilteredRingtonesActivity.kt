@@ -11,8 +11,8 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.RingtoneCategoryActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -66,13 +66,41 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             allCategories.adapter = ringtoneAdapter
 
             sortIcon.setOnClickListener {
-                val dialog = SortBottomSheet(this@FilteredRingtonesActivity) { string ->
-                    Common.setSortOrder(this@FilteredRingtonesActivity, string)
-                    sortOrder = Common.getSortOrder(this@FilteredRingtonesActivity)
-                    displayItems()
+                val dialog = SortBottomSheet(this@FilteredRingtonesActivity) { newSort ->
+                    if (newSort != sortOrder) {
+                        Common.setSortOrder(this@FilteredRingtonesActivity, newSort)
+                        sortOrder = newSort
+                        displayItems()
+                    }
                 }
                 dialog.show()
             }
+
+            ringtoneViewModel.popular.observe(this@FilteredRingtonesActivity) { items ->
+                handleDataResult(items)
+            }
+
+            favourite.allRingtones.observe(this@FilteredRingtonesActivity) { items ->
+                handleDataResult(items)
+            }
+
+            ringtoneViewModel.selectedRingtone.observe(this@FilteredRingtonesActivity) { items ->
+                println("selectedRingtone: $items")
+                handleDataResult(items)
+            }
+
+            loadMoreData()
+        }
+    }
+
+    private fun handleDataResult(items: List<Ringtone>) {
+        if (items.isEmpty()) {
+            binding.noDataLayout.visible()
+            binding.allCategories.gone()
+        } else {
+            binding.noDataLayout.gone()
+            binding.allCategories.visible()
+            ringtoneAdapter.submitList1(items)
         }
     }
 
@@ -84,7 +112,6 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
         } else {
             binding.origin.visible()
             displayItems()
-            loadMoreData()
             binding.noInternet.root.gone()
         }
     }
@@ -126,46 +153,16 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 -100 -> {
                     ringtoneViewModel.loadPopular(sortOrder)
                     nameScreen.text = getString(R.string.popular)
-                    ringtoneViewModel.popular.observe(this@FilteredRingtonesActivity) { items ->
-                        if(items.isEmpty()) {
-                            noDataLayout.gone()
-                            allCategories.visible()
-                            return@observe
-                        }
-                        binding.allCategories.visible()
-                        binding.noDataLayout.gone()
-                        ringtoneAdapter.submitList(items)
-                    }
                 }
 
                 -99 -> {
                     favourite.loadAllRingtones()
                     nameScreen.text = getString(R.string.favourite)
-                    favourite.allRingtones.observe(this@FilteredRingtonesActivity) { items ->
-                        if(items.isEmpty()) {
-                            noDataLayout.gone()
-                            allCategories.visible()
-                            return@observe
-                        }
-                        binding.allCategories.visible()
-                        binding.noDataLayout.gone()
-                        ringtoneAdapter.submitList(items)
-                    }
                 }
 
                 else -> {
                     nameScreen.text = categoryName ?: getString(R.string.unknown_cat)
                     ringtoneViewModel.loadSelectedRingtones(categoryId, sortOrder)
-                    ringtoneViewModel.selectedRingtone.observe(this@FilteredRingtonesActivity) { items ->
-                        if(items.isEmpty()) {
-                            binding.noDataLayout.visible()
-                            binding.allCategories.gone()
-                            return@observe
-                        }
-                        binding.allCategories.visible()
-                        binding.noDataLayout.gone()
-                        ringtoneAdapter.submitList(items)
-                    }
                 }
             }
         }

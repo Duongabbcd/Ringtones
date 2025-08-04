@@ -172,4 +172,8 @@
     <string name="grant_all_permissions">Please grant all permissions to continue.</string>
     <string name="can_not_open_default">Can\'t open default apps settings.</string>
     <string name="can_not_overlay">Can\'t open overlay permission settings.</string>
+
+    <string name="first_wpp_sort">Default</string>
+    <string name="second_wpp_sort">Trending</string>
+    <string name="third_wpp_sort">New</string>
 </resources>

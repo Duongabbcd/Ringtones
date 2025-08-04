@@ -82,7 +82,7 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
         imagesToLoadInBatch = INTERVAL
         imagesLoadedInBatch = 0
 
-        notifyItemRangeInserted(start, allWallpapers.size)
+        notifyDataSetChanged()
     }
 
 

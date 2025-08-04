@@ -15,6 +15,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.Wallpap
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
@@ -25,6 +26,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var countOpen = Common.getCountOpenApp(this)
+        if (countOpen < 2) {
+            countOpen++
+            Common.setCountOpenApp(this, countOpen)
+        }
+
         selectedTab = savedInstanceState?.getInt("selectedTab") ?: 0
 
         RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
