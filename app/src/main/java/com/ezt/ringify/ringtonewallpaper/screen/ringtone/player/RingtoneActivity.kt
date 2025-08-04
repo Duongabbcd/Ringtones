@@ -39,6 +39,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.service.RingtonePlayerService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -231,7 +232,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         binding.apply {
             currentRingtoneName.isSelected = true
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(this@RingtoneActivity)
             }
             index = allRingtones.indexOf(currentRingtone)
             addedRingtoneIds.addAll(allRingtones.map { it.id })
@@ -773,7 +774,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this)
     }
 
 

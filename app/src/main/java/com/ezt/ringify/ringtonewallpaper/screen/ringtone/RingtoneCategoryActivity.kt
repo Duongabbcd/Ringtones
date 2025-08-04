@@ -17,6 +17,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.adapter.CategoryDetailAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity.Companion.backToScreen
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +46,7 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
             }
 
             backBtn.setOnClickListener {
-                finish()
+                backToScreen(this@RingtoneCategoryActivity)
             }
 
 
@@ -112,6 +113,6 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
     }
 
     override fun onBackPressed() {
-        finish()
+        backToScreen(this)
     }
 }

@@ -17,6 +17,8 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.AllWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -52,7 +54,12 @@ class PreviewWallpaperActivity :
         super.onCreate(savedInstanceState)
 
         binding.apply {
-            backBtn.setOnClickListener { finish() }
+            backBtn.setOnClickListener {
+                SearchRingtoneActivity.backToScreen(
+                    this@PreviewWallpaperActivity,
+                    "INTER_WALLPAPER"
+                )
+            }
             allCategories.layoutManager = GridLayoutManager(this@PreviewWallpaperActivity, 3)
             allCategories.adapter = wallpaperAdapter
         }
@@ -76,7 +83,7 @@ class PreviewWallpaperActivity :
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@PreviewWallpaperActivity, "INTER_WALLPAPER")
     }
 
     private fun checkInternetConnected(isConnected: Boolean = true) {

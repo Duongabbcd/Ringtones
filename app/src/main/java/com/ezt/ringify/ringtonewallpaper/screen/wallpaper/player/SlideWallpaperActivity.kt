@@ -38,9 +38,11 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelpe
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper.setWallpaperFromUrl
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.WallpaperTarget
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.crop.CropActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.SlideshowWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -565,7 +567,10 @@ class SlideWallpaperActivity :
                 index = allRingtones.indexOf(currentWallpaper)
                 observeRingtoneFromDb()
                 backBtn.setOnClickListener {
-                    finish()
+                    SearchRingtoneActivity.backToScreen(
+                        this@SlideWallpaperActivity,
+                        "INTER_WALLPAPER"
+                    )
                 }
                 println("onCreate: $index")
                 viewModel.loadWallpaperById(currentWallpaper.id)
@@ -609,7 +614,7 @@ class SlideWallpaperActivity :
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@SlideWallpaperActivity, "INTER_WALLPAPER")
 
     }
 }

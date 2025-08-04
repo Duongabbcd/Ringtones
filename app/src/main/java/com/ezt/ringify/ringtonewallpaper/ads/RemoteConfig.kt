@@ -15,6 +15,7 @@ object RemoteConfig {
     var INTER_RINGTONE = "3"
     var INTER_WALLPAPER = "3"
     var INTER_CALLSCREEN = "3"
+    var INTER_LANGUAGE = "1"
 
     var REMOTE_ADS_HOME_070625 = "1"
     var REMOTE_ADS_PLAY_SONG_070625 = "2"

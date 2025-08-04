@@ -116,6 +116,33 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintTop_toBottomOf="@id/trendingCount" />
 
+                    <LinearLayout
+                        android:id="@+id/noDataLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@id/trending">
+
+
+                        <ImageView
+                            android:layout_width="@dimen/_120sdp"
+                            android:layout_height="@dimen/_120sdp"
+                            android:contentDescription="@string/imageview"
+                            android:src="@drawable/no_data" />
+
+                        <TextView
+                            style="@style/CustomTextStyle14sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/no_data_desc" />
+
+                    </LinearLayout>
+
                     <TextView
                         android:id="@+id/newWallpaper"
                         style="@style/CustomTextStyleMedium16sp"
@@ -137,6 +164,33 @@
                         android:textColor="@color/subTitle"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/newWallpaper" />
+
+                    <LinearLayout
+                        android:id="@+id/noDataLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@id/newWallpaper">
+
+
+                        <ImageView
+                            android:layout_width="@dimen/_120sdp"
+                            android:layout_height="@dimen/_120sdp"
+                            android:contentDescription="@string/imageview"
+                            android:src="@drawable/no_data" />
+
+                        <TextView
+                            style="@style/CustomTextStyle14sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/no_data_desc" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/openAll2"

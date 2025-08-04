@@ -19,8 +19,10 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
@@ -46,7 +48,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
 
         binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(this@AllWallpaperActivity, "INTER_WALLPAPER")
             }
 
             connectionViewModel.isConnectedLiveData.observe(this@AllWallpaperActivity) { isConnected ->
@@ -116,7 +118,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@AllWallpaperActivity, "INTER_WALLPAPER")
 
     }
 }

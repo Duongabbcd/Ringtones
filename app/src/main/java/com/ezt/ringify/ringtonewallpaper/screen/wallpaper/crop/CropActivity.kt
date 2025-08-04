@@ -27,6 +27,8 @@ import okio.sink
 import java.io.File
 import kotlin.getValue
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTypeAlertActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::inflate),
     OnSetImageUriCompleteListener,
@@ -127,7 +129,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 setResult(RESULT_OK, resultIntent)
-                finish()
+                SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_RINGTONE")
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this, resources.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
@@ -166,11 +168,15 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                 }
 
                 btnExit.setOnClickListener {
-                    finish()
+                    SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_RINGTONE")
                 }
             }
             binding.noInternet.root.gone()
         }
+    }
+
+    override fun onBackPressed() {
+        SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_RINGTONE")
     }
 
     companion object {

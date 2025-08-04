@@ -13,6 +13,7 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPremiumWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
@@ -65,7 +66,10 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
 
         binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(
+                    this@PremiumWallpaperActivity,
+                    "INTER_WALLPAPER"
+                )
             }
             connectionViewModel.isConnectedLiveData.observe(this@PremiumWallpaperActivity) { isConnected ->
                 println("isConnected: $isConnected")
@@ -163,7 +167,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@PremiumWallpaperActivity, "INTER_WALLPAPER")
 
     }
 }

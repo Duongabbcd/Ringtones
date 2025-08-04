@@ -19,6 +19,8 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.flashTypeValue
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.vibrationValue
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview.PreviewCallScreenActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 class AllTypeAlertActivity :
     BaseActivity<ActivityAllTypeAlertBinding>(ActivityAllTypeAlertBinding::inflate) {
@@ -30,7 +32,7 @@ class AllTypeAlertActivity :
             } else {
                 vibrationValue = selected
             }
-            finish()
+            SearchRingtoneActivity.backToScreen(this@AllTypeAlertActivity, "INTER_CALLSCREEN")
         }
     }
 
@@ -40,7 +42,12 @@ class AllTypeAlertActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.backBtn.setOnClickListener { finish() }
+        binding.backBtn.setOnClickListener {
+            SearchRingtoneActivity.backToScreen(
+                this@AllTypeAlertActivity,
+                "INTER_CALLSCREEN"
+            )
+        }
         binding.allTypeAlerts.adapter = adapter
 
         if (alertType == "Flash") {
@@ -66,8 +73,7 @@ class AllTypeAlertActivity :
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        SearchRingtoneActivity.backToScreen(this@AllTypeAlertActivity, "INTER_CALLSCREEN")
     }
 }
 

@@ -14,9 +14,11 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLiveWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter.Companion.VIEW_TYPE_LOADING
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.SortWallpaperBottomSheet
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -57,7 +59,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         }
         binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(this@LiveWallpaperActivity, "INTER_WALLPAPER")
             }
 
             sort.setOnClickListener {
@@ -150,7 +152,6 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     }
 
     override fun onBackPressed() {
-        finish()
-
+        SearchRingtoneActivity.backToScreen(this@LiveWallpaperActivity, "INTER_WALLPAPER")
     }
 }

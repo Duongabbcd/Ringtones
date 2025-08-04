@@ -1,5 +1,6 @@
 package com.ezt.ringify.ringtonewallpaper.screen.ringtone.search
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.applovin.impl.sdk.AppLovinBroadcastManager
@@ -38,14 +40,15 @@ import com.ezt.ringify.ringtonewallpaper.utils.Utils.hideKeyBoard
 import kotlin.getValue
 
 @AndroidEntryPoint
-class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(ActivitySearchRingtoneBinding::inflate){
-//    private var ignoreTextChange = false
+class SearchRingtoneActivity :
+    BaseActivity<ActivitySearchRingtoneBinding>(ActivitySearchRingtoneBinding::inflate) {
+    //    private var ignoreTextChange = false
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
-    private val ringtoneTrendingAdapter : TrendingAdapter by lazy {
+    private val ringtoneTrendingAdapter: TrendingAdapter by lazy {
         TrendingAdapter()
     }
 
-    private val ringToneAdapter : RingtoneAdapter by lazy {
+    private val ringToneAdapter: RingtoneAdapter by lazy {
         RingtoneAdapter { ringTone ->
             RingtonePlayerRemote.setCurrentRingtone(ringTone)
             startActivity(Intent(this, RingtoneActivity::class.java))
@@ -57,9 +60,9 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.apply{
+        binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                backToScreen(this@SearchRingtoneActivity)
             }
             connectionViewModel.isConnectedLiveData.observe(this@SearchRingtoneActivity) { isConnected ->
                 println("isConnected: $isConnected")
@@ -93,7 +96,7 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
                     inputText = searchText
                     ringtoneViewModel.searchRingtonesByName(inputText)
                     ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
-                        if(result.isEmpty()) {
+                        if (result.isEmpty()) {
                             noDataLayout.visible()
                             allResults.gone()
                         } else {
@@ -139,7 +142,7 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
             }
 
         }
-        
+
         ringtoneViewModel.trending.observe(this) { items ->
             ringtoneTrendingAdapter.submitList(items)
         }
@@ -149,7 +152,7 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
 
     private fun displayByCondition(input: String) {
         binding.apply {
-            if(input.isEmpty()) {
+            if (input.isEmpty()) {
                 trendingTitle.visible()
                 trendingIcon.visible()
                 trendingRecyclerView.visible()
@@ -194,20 +197,47 @@ class SearchRingtoneActivity : BaseActivity<ActivitySearchRingtoneBinding>(Activ
     }
 
     override fun onBackPressed() {
-        finish()
+        backToScreen(this)
+    }
+
+    companion object {
+        fun backToScreen(activity: AppCompatActivity, title: String = "INTER_RINGTONE") {
+            if (RemoteConfig.INTER_RINGTONE != "0") {
+                AdsManager.loadAndShowInterSP2(
+                    activity,
+                    AdsManager.INTER_RINGTONE,
+                    title,
+                    callback = object : AdsManager.AdListenerWithNative {
+                        override fun onAdClosedOrFailed() {
+                            activity.finish()
+                        }
+
+                        override fun onAdClosedOrFailedWithNative() {
+                            activity.finish()
+                        }
+
+                    },
+                    false
+                )
+            } else {
+                activity.finish()
+            }
+        }
     }
 }
 
 class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TrendingViewHolder>() {
     private lateinit var context: Context
-    private val items : MutableList<Ringtone> = mutableListOf()
+    private val items: MutableList<Ringtone> = mutableListOf()
+
     inner class TrendingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tagText: TextView = itemView.findViewById(R.id.tagText)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrendingViewHolder {
         context = parent.context
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_trending, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_trending, parent, false)
         return TrendingViewHolder(view)
     }
 
@@ -228,7 +258,6 @@ class TrendingAdapter() : RecyclerView.Adapter<TrendingAdapter.TrendingViewHolde
             })
         }
     }
-
 
 
     override fun getItemCount() = items.size

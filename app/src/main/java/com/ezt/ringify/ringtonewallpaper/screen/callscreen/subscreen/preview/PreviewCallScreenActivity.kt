@@ -9,10 +9,12 @@ import com.bumptech.glide.request.transition.Transition
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewCallscreenBinding
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.startCall
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.backgroundUrl
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 class PreviewCallScreenActivity :
     BaseActivity<ActivityPreviewCallscreenBinding>(ActivityPreviewCallscreenBinding::inflate) {
@@ -72,7 +74,16 @@ class PreviewCallScreenActivity :
                 .placeholder(R.drawable.icon_start_call).error(R.drawable.icon_start_call)
                 .into(binding.callAccept)
 
-            closeBtn.setOnClickListener { finish() }
+            closeBtn.setOnClickListener {
+                SearchRingtoneActivity.backToScreen(
+                    this@PreviewCallScreenActivity,
+                    "INTER_CALLSCREEN"
+                )
+            }
         }
+    }
+
+    override fun onBackPressed() {
+        SearchRingtoneActivity.backToScreen(this@PreviewCallScreenActivity, "INTER_CALLSCREEN")
     }
 }

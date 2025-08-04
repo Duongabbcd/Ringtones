@@ -13,6 +13,7 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFavouriteWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
@@ -58,7 +59,10 @@ class FavouriteWallpaperActivity :
 
         binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(
+                    this@FavouriteWallpaperActivity,
+                    "INTER_WALLPAPER"
+                )
             }
             connectionViewModel.isConnectedLiveData.observe(this@FavouriteWallpaperActivity) { isConnected ->
                 println("isConnected: $isConnected")
@@ -73,10 +77,22 @@ class FavouriteWallpaperActivity :
                 LinearLayoutManager(this@FavouriteWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
             favouriteWallpaperViewModel.allLiveWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
+                allTrending.visible()
+                if (items.isNullOrEmpty()) {
+                    noDataLayout1.visible()
+                    allTrending.gone()
+                    return@observe
+                }
                 liveAdapter.submitList(items)
             }
 
             favouriteWallpaperViewModel.allWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
+                allNewWallpaper.visible()
+                if (items.isNullOrEmpty()) {
+                    noDataLayout2.visible()
+                    allNewWallpaper.gone()
+                    return@observe
+                }
                 singleAdapter.submitList(items)
             }
 
@@ -143,7 +159,7 @@ class FavouriteWallpaperActivity :
     }
 
     override fun onBackPressed() {
-        finish()
-
+        SearchRingtoneActivity.backToScreen(this)
     }
+
 }

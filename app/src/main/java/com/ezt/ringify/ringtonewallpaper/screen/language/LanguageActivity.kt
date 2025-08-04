@@ -74,7 +74,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                 if(!start) {
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
-                    if (RemoteConfig.INTER_WALLPAPER != "0") {
+                    if (RemoteConfig.INTER_LANGUAGE != "0") {
                         AdsManager.loadAndShowInterSP2(this, AdsManager.INTER_LANGUAGE, "INTER_LANGUAGE", object: AdsManager.AdListenerWithNative {
                             override fun onAdClosedOrFailed() {
                                 nextScreenByCondition()

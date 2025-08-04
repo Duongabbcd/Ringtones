@@ -3,7 +3,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.ImageView
 import android.widget.Toast
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenAlertBinding
@@ -15,6 +14,8 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTypeAlertActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 
 class CallScreenAlertActivity :
     BaseActivity<ActivityCallscreenAlertBinding>(ActivityCallscreenAlertBinding::inflate) {
@@ -39,7 +40,12 @@ class CallScreenAlertActivity :
         loadInitialSettings()
 
         binding.apply {
-            backBtn.setOnClickListener { finish() }
+            backBtn.setOnClickListener {
+                SearchRingtoneActivity.backToScreen(
+                    this@CallScreenAlertActivity,
+                    "INTER_CALLSCREEN"
+                )
+            }
 
             flashSwitcher.setOnClickListener {
                 isFlashEnabled = !isFlashEnabled
@@ -85,7 +91,7 @@ class CallScreenAlertActivity :
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@CallScreenAlertActivity, "INTER_CALLSCREEN")
     }
 
     private fun loadInitialSettings() {

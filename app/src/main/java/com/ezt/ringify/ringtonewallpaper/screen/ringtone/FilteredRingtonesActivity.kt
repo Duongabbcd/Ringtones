@@ -18,6 +18,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -56,7 +57,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
         sortOrder = Common.getSortOrder(this)
         binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(this@FilteredRingtonesActivity)
             }
 
             connectionViewModel.isConnectedLiveData.observe(this@FilteredRingtonesActivity) { isConnected ->
@@ -185,6 +186,6 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@FilteredRingtonesActivity)
     }
 }

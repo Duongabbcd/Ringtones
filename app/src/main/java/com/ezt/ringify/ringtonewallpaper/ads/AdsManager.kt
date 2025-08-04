@@ -48,8 +48,10 @@ object AdsManager {
     var NATIVE_COLLAP_HOME = NativeHolderAdmob("")
     var NATIVE_CUSTOM_HOME = NativeHolderAdmob("")
 
-    var INTER_HOME = InterHolderAdmob("")
     var INTER_LANGUAGE = InterHolderAdmob("")
+    var INTER_RINGTONE = InterHolderAdmob("")
+    var INTER_WALLPAPER = InterHolderAdmob("")
+    var INTER_CALLSCREEN = InterHolderAdmob("")
 
     var BANNER_PLAY_SONG = ""
     var BANNER_COLLAP_PLAY_SONG =BannerHolderAdmob("")
@@ -674,6 +676,13 @@ object AdsManager {
             return
         }
         when (type) {
+            "INTER_LANGUAGE" -> {
+                if (RemoteConfig.INTER_RINGTONE == "0" || isTestDevice) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+            }
+
             "INTER_RINGTONE" -> {
                 if (RemoteConfig.INTER_RINGTONE == "0" || isTestDevice) {
                     callback.onAdClosedOrFailed()

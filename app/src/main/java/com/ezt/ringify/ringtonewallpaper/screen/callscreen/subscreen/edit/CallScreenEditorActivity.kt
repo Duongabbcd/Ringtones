@@ -23,6 +23,8 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllAvatarAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackgroundAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 @AndroidEntryPoint
 class CallScreenEditorActivity :
@@ -131,7 +133,10 @@ class CallScreenEditorActivity :
         }
         binding.apply {
             backBtn.setOnClickListener {
-                finish()
+                SearchRingtoneActivity.backToScreen(
+                    this@CallScreenEditorActivity,
+                    "INTER_CALLSCREEN"
+                )
             }
 
             when (editorType) {
@@ -262,8 +267,7 @@ class CallScreenEditorActivity :
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        SearchRingtoneActivity.backToScreen(this@CallScreenEditorActivity, "INTER_CALLSCREEN")
     }
 
     companion object {

@@ -26,6 +26,10 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
             }
+
+            settingOption.setOnClickListener {
+
+            }
         }
     }
 

@@ -36,8 +36,10 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperView
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity.Companion.currentIndex
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -397,7 +399,12 @@ class PreviewLiveWallpaperActivity :
             binding.apply {
                 observeRingtoneFromDb()
 
-                backBtn.setOnClickListener { finish() }
+                backBtn.setOnClickListener {
+                    SearchRingtoneActivity.backToScreen(
+                        this@PreviewLiveWallpaperActivity,
+                        "INTER_WALLPAPER"
+                    )
+                }
 
                 favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
                 favouriteViewModel.loadLiveAllWallpapers()
@@ -476,7 +483,7 @@ class PreviewLiveWallpaperActivity :
     }
 
     override fun onBackPressed() {
-        finish()
+        SearchRingtoneActivity.backToScreen(this@PreviewLiveWallpaperActivity, "INTER_WALLPAPER")
 
     }
 }

@@ -55,6 +55,17 @@
 
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/sortIcon"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_44sdp"
+                android:contentDescription="@string/imageview"
+                android:padding="@dimen/_10sdp"
+                android:src="@drawable/icon_sort"
+                app:layout_constraintBottom_toBottomOf="@id/backBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/backBtn" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

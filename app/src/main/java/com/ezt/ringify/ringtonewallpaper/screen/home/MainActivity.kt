@@ -1,7 +1,12 @@
 package com.ezt.ringify.ringtonewallpaper.screen.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.admob.max.dktlibrary.AdmobUtils
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
@@ -35,6 +40,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             countOpen++
             Common.setCountOpenApp(this, countOpen)
         }
+
+        showNotificationDialog(countOpen)
 
         selectedTab = savedInstanceState?.getInt("selectedTab") ?: 0
 
@@ -82,6 +89,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
             true
         }
+    }
+
+    private fun showNotificationDialog(countOpen: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && countOpen == 1) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            } else {
+                val dialog = NotificationDialog(this) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        100
+                    )
+                }
+                dialog.show()
+            }
+        }
+
     }
 
     override fun onResume() {
