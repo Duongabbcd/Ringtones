@@ -57,9 +57,9 @@ object AdsManager {
 
     var ONRESUME = ""
 
-    var countClickHome = 0
-    var countClickMessageBack = 0
-    var countClickItem = 0
+    var countClickRingtone = 0
+    var countClickWallpaper = 0
+    var countClickCallscreen = 0
 
 //    fun checkAdsTest(ad: NativeAd?) {
 //        try {
@@ -674,28 +674,39 @@ object AdsManager {
             return
         }
         when (type) {
-            "INTER_INTRO" -> {
-                if (RemoteConfig.INTER_INTRO_070625 == "0" || isTestDevice) {
+            "INTER_RINGTONE" -> {
+                if (RemoteConfig.INTER_RINGTONE == "0" || isTestDevice) {
                     callback.onAdClosedOrFailed()
                     return
                 }
-            }
-            "INTER_LANGUAGE" -> {
-                if (RemoteConfig.INTER_LANGUAGE_070625 == "0") {
+                countClickRingtone++
+                if (countClickRingtone % RemoteConfig.INTER_RINGTONE.toInt() != 0) {
                     callback.onAdClosedOrFailed()
                     return
                 }
             }
 
-            "INTER_HOME" -> {
+            "INTER_WALLPAPER" -> {
+                if (RemoteConfig.INTER_WALLPAPER == "0" || isTestDevice) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+                countClickWallpaper++
+                if (countClickRingtone % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+            }
+
+            "INTER_CALLSCREEN" -> {
                 isNowTestDeviceOrNot = true
-                if (RemoteConfig.INTER_HOME_070625 == "0" || isTestDevice) {
+                if (RemoteConfig.INTER_CALLSCREEN == "0" || isTestDevice) {
                     callback.onAdClosedOrFailed()
                     return
                 }
-                countClickHome ++
+                countClickCallscreen++
 
-                if (countClickHome % RemoteConfig.INTER_HOME_070625.toInt()!=0){
+                if (countClickRingtone % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
                     callback.onAdClosedOrFailed()
                     return
                 }

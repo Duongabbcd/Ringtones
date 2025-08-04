@@ -11,6 +11,9 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBin
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
@@ -60,6 +63,20 @@ class PreviewWallpaperActivity :
         connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
             checkInternetConnected(isConnected)
         }
+
+        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+            AdsManager.showAdBanner(
+                this,
+                BANNER_HOME,
+                binding.frBanner,
+                binding.view,
+                isCheckTestDevice = false
+            ) {}
+        }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     private fun checkInternetConnected(isConnected: Boolean = true) {
@@ -197,4 +214,5 @@ class PreviewWallpaperActivity :
         wallPaperViewModel.subWallpaper1.removeObservers(this)
         categoryViewModel.category.removeObservers(this)
     }
+
 }

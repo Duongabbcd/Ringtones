@@ -145,7 +145,6 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
             }
 
             if( !isPlaying) {
-                println("setCurrentPlayingPosition 123: ${ringtone.name} $isPlaying")
                 binding.play.setImageResource(R.drawable.icon_play)
                 updateProgress(0f)
             } else {
@@ -157,14 +156,12 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
                 binding.play.setImageResource(
                     if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
                 )
-                println("Adapter play clicked, isPlaying=$isPlaying, ringtoneId=${ringtone.id}")
                 onClickListener(isPlaying, ringtone.id)
             }
 
             binding.ccIcon.setOnClickListener {
-                println("ccIcon is here!")
                 val dialog = CreditDialog(context)
-                dialog.setCreditContent(ringtone)
+                dialog.setCreditRingtone(ringtone)
                 dialog.show()
             }
         }

@@ -48,10 +48,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         }
         displayScreen()
-        binding.appName.setOnClickListener {
-            val notificationDialog = NotificationDialog(this)
-            notificationDialog.show()
-        }
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             binding.topFeedback.gone()

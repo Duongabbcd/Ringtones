@@ -16,37 +16,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/top_background"
-            android:paddingHorizontal="@dimen/_20sdp"
-            android:paddingTop="@dimen/_40sdp"
-            android:paddingBottom="@dimen/_21sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingTop="@dimen/_30sdp"
+            android:paddingBottom="@dimen/_11sdp"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <LinearLayout
                 android:id="@+id/backBtn"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:contentDescription="@string/imageview"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/icon_back"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/nameScreen"
-                style="@style/CustomTextStyleSemiBold18sp"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:contentDescription="@string/imageview"
-                android:gravity="center"
-                android:src="@drawable/icon_unfavourite"
-                android:text="@string/flash_type"
-                android:textColor="@color/main_color"
-                app:layout_constraintBottom_toBottomOf="@id/backBtn"
-                app:layout_constraintStart_toEndOf="@id/backBtn"
-                app:layout_constraintTop_toTopOf="@id/backBtn" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <ImageView
+                    android:id="@+id/previousScreen"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:contentDescription="@string/imageview"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/icon_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/nameScreen"
+                    style="@style/CustomTextStyleSemiBold18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:contentDescription="@string/imageview"
+                    android:gravity="center"
+                    android:text="@string/flash_type"
+                    android:textColor="@color/main_color"
+                    app:layout_constraintBottom_toBottomOf="@id/previousScreen"
+                    app:layout_constraintStart_toEndOf="@id/previousScreen"
+                    app:layout_constraintTop_toTopOf="@id/previousScreen" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

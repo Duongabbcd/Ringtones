@@ -13,16 +13,16 @@
             android:id="@+id/topController"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/_20sdp"
-            android:paddingTop="@dimen/_40sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingTop="@dimen/_30sdp"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/backBtn"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_44sdp"
                 android:contentDescription="@string/imageview"
-                android:padding="@dimen/_2sdp"
+                android:padding="@dimen/_10sdp"
                 android:src="@drawable/icon_back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -30,8 +30,9 @@
 
             <ImageView
                 android:id="@+id/favourite"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_44sdp"
+                android:padding="@dimen/_10sdp"
                 android:contentDescription="@string/imageview"
                 android:src="@drawable/icon_unfavourite"
                 android:text="@string/categories"

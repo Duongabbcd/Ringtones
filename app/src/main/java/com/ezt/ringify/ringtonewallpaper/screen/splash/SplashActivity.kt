@@ -27,7 +27,6 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isDebug
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isTestDevice
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SPLASH_070625
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_INTRO_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SCREEN_INTRO_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.REMOTE_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
@@ -99,9 +98,9 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 //                            FireBaseConfig.getValue("UPDATE_APP_VERSION")
 //                        RemoteConfig.ONRESUME_070625 = FireBaseConfig.getValue("ONRESUME_070625")
 
-                        AdsManager.countClickHome = 0
-                        AdsManager.countClickMessageBack = 0
-                        AdsManager.countClickItem = 0
+                        AdsManager.countClickRingtone = 0
+                        AdsManager.countClickWallpaper = 0
+                        AdsManager.countClickCallscreen = 0
 
                         if (isInitAds.get()) {
                             return
@@ -194,7 +193,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
         Log.d("ADS_SPLASH_070625", "showBanner: ${RemoteConfig.ADS_SPLASH_070625}")
         when (RemoteConfig.ADS_SPLASH_070625) {
             "1" -> {
-                binding.tvStart.visibility = View.VISIBLE
+                binding.tvStart.visibility = View.GONE
                 AdsManager.showAdBanner(
                     this,
                     AdsManager.BANNER_SPLASH,
@@ -207,7 +206,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             }
 
             "2" -> {
-                binding.tvStart.visibility = View.VISIBLE
+                binding.tvStart.visibility = View.GONE
                 AdsManager.loadAndShowNative(
                     this,
                     binding.frBanner,
@@ -219,7 +218,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             }
 
             "3" -> {
-                binding.tvStart.visibility = View.VISIBLE
+                binding.tvStart.visibility = View.GONE
                 AdsManager.loadAndShowNativeCollapsible(
                     this,
                     AdsManager.NATIVE_SPLASH,
@@ -231,14 +230,14 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             }
 
             else -> {
-                binding.tvStart.visibility = View.INVISIBLE
+                binding.tvStart.visibility = View.GONE
                 showAds()
             }
         }
     }
 
     private fun showAds() {
-        println("showAds: ${RemoteConfig.REMOTE_SPLASH_070625}")
+        println("showAds: $REMOTE_SPLASH_070625")
         when (REMOTE_SPLASH_070625) {
             "0" -> {
                 binding.tvStart.inVisible()

@@ -18,7 +18,7 @@ class CreditDialog(
         window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
-    fun setCreditContent(ringtone: Ringtone) {
+    fun setCreditRingtone(ringtone: Ringtone) {
         val creditWeb = "https://creativecommons.org/licenses/by/3.0/"
         val full =  context.getString(
             R.string.credits_desc,

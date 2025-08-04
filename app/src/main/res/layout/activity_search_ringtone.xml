@@ -4,36 +4,49 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingTop="@dimen/_40sdp">
+    android:paddingTop="@dimen/_30sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/origin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/backBtn"
-            android:contentDescription="@string/imageview"
-            android:src="@drawable/icon_back"
-            android:layout_width="@dimen/_24sdp"
-            android:padding="@dimen/_2sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginStart="@dimen/_20sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-
-        <TextView
-            android:id="@+id/nameScreen"
-            android:contentDescription="@string/imageview"
-            android:text="@string/find_ringtone"
-            android:layout_marginStart="@dimen/_2sdp"
-            style="@style/CustomTextStyleSemiBold18sp"
-            android:textColor="@color/main_color"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_24sdp"
-            app:layout_constraintStart_toEndOf="@id/backBtn"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/previousScreen"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:contentDescription="@string/imageview"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/icon_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/nameScreen"
+                style="@style/CustomTextStyleSemiBold18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:contentDescription="@string/imageview"
+                android:gravity="center"
+                android:text="@string/categories"
+                android:textColor="@color/main_color"
+                app:layout_constraintBottom_toBottomOf="@id/previousScreen"
+                app:layout_constraintStart_toEndOf="@id/previousScreen"
+                app:layout_constraintTop_toTopOf="@id/previousScreen" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/searchText"
@@ -41,7 +54,7 @@
             style="@style/CustomTextStyle16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_21sdp"
+            android:layout_marginTop="@dimen/_11sdp"
             android:layout_marginEnd="@dimen/_20sdp"
             android:paddingEnd="@dimen/_50sdp"
             android:background="@drawable/background_radius_100"
@@ -57,7 +70,7 @@
             android:textColorHint="@color/textColorHint"
             android:textCursorDrawable="@drawable/cursor_color"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameScreen" />
+            app:layout_constraintTop_toBottomOf="@+id/backBtn" />
 
         <ImageView
             android:id="@+id/closeButton"

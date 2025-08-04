@@ -27,6 +27,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemPhotoBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.CreditDialog
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -191,13 +192,6 @@ class PlaySlideWallpaperAdapter(
                 }
             }
 
-
-            binding.ccIcon.setOnClickListener {
-                println("ccIcon is here!")
-//                val dialog = CreditDialog(context)
-//                dialog.setCreditContent(ringtone)
-//                dialog.show()
-            }
         }
 
         private var isImageView1Visible = true

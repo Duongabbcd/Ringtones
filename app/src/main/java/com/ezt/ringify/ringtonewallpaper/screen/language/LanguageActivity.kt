@@ -20,6 +20,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.GlobalConstant
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 
 
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
@@ -73,30 +74,43 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                 if(!start) {
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
-                    if(RemoteConfig.INTER_LANGUAGE_070625 != "0") {
+                    if (RemoteConfig.INTER_WALLPAPER != "0") {
                         AdsManager.loadAndShowInterSP2(this, AdsManager.INTER_LANGUAGE, "INTER_LANGUAGE", object: AdsManager.AdListenerWithNative {
                             override fun onAdClosedOrFailed() {
-                                startActivity(Intent(this@LanguageActivity, IntroActivityNew::class.java))
-                                finish()
+                                nextScreenByCondition()
                             }
 
                             override fun onAdClosedOrFailedWithNative() {
-                                startActivity(Intent(this@LanguageActivity, IntroActivityNew::class.java))
-                                finish()
+                                nextScreenByCondition()
                             }
 
-                        }, isCheckTestDevice = false)
+                        },
+                            isCheckTestDevice = false
+                        )
                     } else {
-                        startActivity(Intent(this, IntroActivityNew::class.java))
-                        finish()
+                        nextScreenByCondition()
+
                     }
 
                 }
-            }else {
+            } else {
                 Toast.makeText(this, "Please select language", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+    private fun nextScreenByCondition() {
+        val count = Common.getCountOpenApp(this)
+        if (count < 1) {
+            startActivity(Intent(this@LanguageActivity, IntroActivityNew::class.java))
+            finish()
+        } else {
+            startActivity(Intent(this@LanguageActivity, MainActivity::class.java))
+            finish()
+        }
+    }
+
+
     private var isFirstTime = true
     private fun getLanguage() {
         adapter2 = LanguageAdapter(object: LanguageAdapter.OnClickListener {

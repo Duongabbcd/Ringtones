@@ -122,7 +122,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
     }
 
     private fun showAfterIntro1(callback : () -> Unit){
-        if(RemoteConfig.INTER_INTRO_070625.contains("1") && !isTestDevice){
+        if (RemoteConfig.INTER_RINGTONE.contains("1") && !isTestDevice) {
             showInter(callback)
         }else {
             callback.invoke()
@@ -130,7 +130,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
     }
 
     private fun showAfterIntro2(callback : () -> Unit){
-        if(RemoteConfig.INTER_INTRO_070625.contains("2") && !isTestDevice){
+        if (RemoteConfig.INTER_RINGTONE.contains("2") && !isTestDevice) {
             showInter(callback)
         }else {
             callback.invoke()
@@ -138,7 +138,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
     }
 
     private fun showAfterIntro3(callback : () -> Unit){
-        if(RemoteConfig.INTER_INTRO_070625.contains("3") && !isTestDevice){
+        if (RemoteConfig.INTER_RINGTONE.contains("3") && !isTestDevice) {
             showInter(callback)
         }else {
             callback.invoke()

@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/origin"
@@ -58,13 +59,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:layout_width="@dimen/_140sdp"
-                android:layout_height="@dimen/_270sdp">
+                android:layout_width="@dimen/_115sdp"
+                android:layout_height="@dimen/_240sdp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/currentCallScreen"
                     android:src="@drawable/default_callscreen"
-                    android:layout_margin="@dimen/_7sdp"
+                    android:layout_margin="@dimen/_6sdp"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay_CustomShape8dp"
                     android:layout_width="match_parent"
@@ -226,13 +227,14 @@
                 android:background="@drawable/background_radius_12"
                 android:layout_marginHorizontal="@dimen/_40sdp"
                 app:layout_constraintTop_toBottomOf="@id/currentFrame"
-                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:paddingVertical="@dimen/_6sdp"
                 android:paddingHorizontal="@dimen/_16sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:contentDescription="@string/imageview"
                     android:src="@drawable/icon_next_cs"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_weight="1"
