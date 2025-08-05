@@ -17,6 +17,14 @@
     <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
     <string name="high_light_3">Anrufbildschirm</string>
 
+    <string name="phone_setting">Telefoneinstellungen</string>
+    <string name="clear_caches">Cache leeren</string>
+    <string name="reset_ringtones">Alle Klingeltöne auf Standard zurücksetzen</string>
+    <string name="reset_wallpapers">Alle Hintergründe auf Standard zurücksetzen</string>
+    <string name="set_wallpaper_title">Hintergrund festlegen</string>
+    <string name="exit">Beenden</string>
+
+
     <string name="callscreen_setting">Als Anrufbildschirm festlegen</string>
     <string name="no_connection">Immer noch keine Internetverbindung</string>
     <string name="avatar">Avatar</string>

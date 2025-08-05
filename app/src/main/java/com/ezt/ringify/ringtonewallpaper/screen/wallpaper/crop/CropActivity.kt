@@ -129,7 +129,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 setResult(RESULT_OK, resultIntent)
-                SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_RINGTONE")
+                SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_WALLPAPER")
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this, resources.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
@@ -156,7 +156,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                     loadRemoteImageIntoCropView(this@CropActivity, it, cropImageView)
                 }
 
-                btnReset.setOnClickListener {
+                btnExit.setOnClickListener {
                     cropImageView.resetCropRect()
                     imageUrl?.let {
                         loadRemoteImageIntoCropView(this@CropActivity, it, cropImageView)
@@ -168,7 +168,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                 }
 
                 btnExit.setOnClickListener {
-                    SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_RINGTONE")
+                    SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_WALLPAPER")
                 }
             }
             binding.noInternet.root.gone()
@@ -176,7 +176,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
     }
 
     override fun onBackPressed() {
-        SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_RINGTONE")
+        SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_WALLPAPER")
     }
 
     companion object {

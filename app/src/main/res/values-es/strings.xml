@@ -27,6 +27,14 @@
     <string name="second_wpp_sort">Tendencia</string>
     <string name="third_wpp_sort">Nuevo</string>
 
+    <string name="phone_setting">Configuración del teléfono</string>
+    <string name="clear_caches">Borrar cachés</string>
+    <string name="reset_ringtones">Restablecer todos los tonos a los predeterminados</string>
+    <string name="reset_wallpapers">Restablecer todos los fondos a los predeterminados</string>
+    <string name="set_wallpaper_title">Establecer fondo de pantalla</string>
+    <string name="exit">Salir</string>
+
+
     <string name="english">Alemán</string>
     <string name = "hindi">Alemán</string>
     <string name="spanish">Alemán</string>

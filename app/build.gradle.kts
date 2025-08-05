@@ -119,6 +119,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-messaging")
 
+    implementation(libs.adjust.android)
+
     implementation("com.google.ads.mediation:pangle:7.2.0.6.0")
     implementation("com.google.ads.mediation:applovin:13.0.1.0")
     implementation("com.google.ads.mediation:facebook:6.20.0.0")

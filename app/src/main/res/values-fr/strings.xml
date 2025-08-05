@@ -26,6 +26,14 @@
     <string name="quick_theme">Thème rapide</string>
     <string name="customize">Personnaliser</string>
 
+    <string name="phone_setting">Paramètres du téléphone</string>
+    <string name="clear_caches">Vider le cache</string>
+    <string name="reset_ringtones">Réinitialiser toutes les sonneries par défaut</string>
+    <string name="reset_wallpapers">Réinitialiser tous les fonds d\'écran par défaut</string>
+    <string name="set_wallpaper_title">Définir le fond d\'écran</string>
+    <string name="exit">Quitter</string>
+
+
     <string name="first_wpp_sort">Par défaut</string>
     <string name="second_wpp_sort">Tendance</string>
     <string name="third_wpp_sort">Nouveau</string>

@@ -12,7 +12,7 @@
     android:paddingTop="@dimen/_24sdp">
 
     <TextView
-        android:text="@string/credits"
+        android:text="@string/set_wallpaper_title"
         android:layout_marginTop="@dimen/_12sdp"
         style="@style/CustomTextStyleSemiBold16sp"
         android:gravity="center"

@@ -156,4 +156,11 @@
     <string name="second_wpp_sort">In tendenza</string>
     <string name="third_wpp_sort">Nuovo</string>
 
+    <string name="phone_setting">Impostazioni telefono</string>
+    <string name="clear_caches">Cancella cache</string>
+    <string name="reset_ringtones">Ripristina tutte le suonerie ai valori predefiniti</string>
+    <string name="reset_wallpapers">Ripristina tutti gli sfondi ai valori predefiniti</string>
+    <string name="set_wallpaper_title">Imposta sfondo</string>
+    <string name="exit">Esci</string>
+
 </resources>

@@ -156,4 +156,11 @@
     <string name="second_wpp_sort">प्रचलित</string>
     <string name="third_wpp_sort">नया</string>
 
+    <string name="phone_setting">फ़ोन सेटिंग्स</string>
+    <string name="clear_caches">कैश साफ़ करें</string>
+    <string name="reset_ringtones">सभी रिंगटोन को डिफ़ॉल्ट पर रीसेट करें</string>
+    <string name="reset_wallpapers">सभी वॉलपेपर को डिफ़ॉल्ट पर रीसेट करें</string>
+    <string name="set_wallpaper_title">वॉलपेपर सेट करें</string>
+    <string name="exit">बाहर निकलें</string>
+
 </resources>

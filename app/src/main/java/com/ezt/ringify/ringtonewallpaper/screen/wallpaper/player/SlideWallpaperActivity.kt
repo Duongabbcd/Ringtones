@@ -42,7 +42,6 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneAc
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.crop.CropActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.SlideshowWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -194,7 +193,7 @@ class SlideWallpaperActivity :
     }
 
     private fun continueAfterCrop(bitmap: Bitmap) {
-        println("continueAfterCrop: $bitmap")
+        println("continueAfterCrop: $bitmap and $settingOption")
         lifecycleScope.launch {
             val bottomSheet = DownloadWallpaperBottomSheet(this@SlideWallpaperActivity)
             bottomSheet.apply {
@@ -265,52 +264,30 @@ class SlideWallpaperActivity :
 
 
     private fun setUpPhotoByCondition(imageUrl: List<ImageContent>) {
-        val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
-            settingOption = result
+        if (imageUrl.size > 1) {
+            lifecycleScope.launch {
+                setUpLiveWallpaperByCondition(imageUrl)
+            }
+        } else {
+            val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
+                settingOption = result
 
-            if (imageUrl.size > 1) {
-                lifecycleScope.launch {
-                    setUpLiveWallpaperByCondition(result, imageUrl)
-                }
-            } else {
+
                 val intent = Intent(this@SlideWallpaperActivity, CropActivity::class.java).apply {
                     putExtra("imageUrl", imageUrl.first().url.full)
                 }
                 cropLauncher.launch(intent)
-            }
 
+
+            }
+            dialog.show()
         }
-        dialog.show()
     }
 
-    private suspend fun setUpLiveWallpaperByCondition(result: Int, imageUrls: List<ImageContent>) {
+    private suspend fun setUpLiveWallpaperByCondition(imageUrls: List<ImageContent>) {
         val bitmap = urlToBitmap(imageUrls.first().url.full) ?: return
         lifecycleScope.launch {
-            when (result) {
-                1 -> {
-                    startLiveWallpaper(imageUrls)
-                    setWallpaperFromUrl(
-                        context = this@SlideWallpaperActivity,
-                        bitmap = bitmap,
-                        target = WallpaperTarget.LOCK
-                    )
-
-                }
-
-                2 -> {
-                    startLiveWallpaper(imageUrls)
-                }
-
-                else -> {
-                    startLiveWallpaper(imageUrls)
-                    setWallpaperFromUrl(
-                        context = this@SlideWallpaperActivity,
-                        bitmap = bitmap,
-                        target = WallpaperTarget.LOCK
-                    )
-
-                }
-            }
+            startLiveWallpaper(imageUrls)
         }
     }
 

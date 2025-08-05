@@ -1,6 +1,5 @@
 package com.ezt.ringify.ringtonewallpaper.screen.ringtone.search
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,14 +12,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.applovin.impl.sdk.AppLovinBroadcastManager
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_CALLSCREEN
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_LANGUAGE
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_RINGTONE
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_WALLPAPER
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -202,10 +203,26 @@ class SearchRingtoneActivity :
 
     companion object {
         fun backToScreen(activity: AppCompatActivity, title: String = "INTER_RINGTONE") {
-            if (RemoteConfig.INTER_RINGTONE != "0") {
+            val inter = when (title) {
+                "INTER_LANGUAGE" -> INTER_LANGUAGE
+                "INTER_RINGTONE" -> INTER_RINGTONE
+                "INTER_WALLPAPER" -> INTER_WALLPAPER
+                "INTER_CALLSCREEN" -> INTER_CALLSCREEN
+                else -> INTER_LANGUAGE
+            }
+
+            val condition = when (title) {
+                "INTER_LANGUAGE" -> RemoteConfig.INTER_LANGUAGE
+                "INTER_RINGTONE" -> RemoteConfig.INTER_RINGTONE
+                "INTER_WALLPAPER" -> RemoteConfig.INTER_WALLPAPER
+                "INTER_CALLSCREEN" -> RemoteConfig.INTER_CALLSCREEN
+                else -> RemoteConfig.INTER_LANGUAGE
+            }
+
+            if (condition != "0") {
                 AdsManager.loadAndShowInterSP2(
                     activity,
-                    AdsManager.INTER_RINGTONE,
+                    inter,
                     title,
                     callback = object : AdsManager.AdListenerWithNative {
                         override fun onAdClosedOrFailed() {
@@ -215,7 +232,6 @@ class SearchRingtoneActivity :
                         override fun onAdClosedOrFailedWithNative() {
                             activity.finish()
                         }
-
                     },
                     false
                 )

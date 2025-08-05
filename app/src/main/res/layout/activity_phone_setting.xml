@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topController"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_background"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingTop="@dimen/_30sdp"
+        android:paddingBottom="@dimen/_11sdp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:contentDescription="@string/imageview"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/icon_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/nameScreen"
+                style="@style/CustomTextStyleSemiBold18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:contentDescription="@string/imageview"
+                android:text="@string/setting"
+                android:textColor="@color/main_color"
+                app:layout_constraintStart_toEndOf="@id/backBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/flash"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_141sdp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:background="@drawable/background_radius_8_gray_stroke"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingVertical="@dimen/_24sdp"
+        app:layout_constraintTop_toBottomOf="@id/topController">
+
+        <RelativeLayout
+            android:id="@+id/resetRingtoneBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_24sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:text="@string/reset_ringtones" />
+
+            <ImageView
+                android:id="@+id/nextIcon1"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_next_screen" />
+
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:background="@color/defaultGray"
+            app:layout_constraintTop_toBottomOf="@id/resetRingtoneBtn" />
+
+
+        <RelativeLayout
+            android:id="@+id/resetWallpaperBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider1">
+
+            <TextView
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:text="@string/reset_wallpapers" />
+
+            <ImageView
+                android:id="@+id/nextIcon2"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_next_screen" />
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vibration"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_141sdp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_22sdp"
+        android:background="@drawable/background_radius_8_gray_stroke"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingVertical="@dimen/_24sdp"
+        app:layout_constraintTop_toBottomOf="@id/flash">
+
+        <RelativeLayout
+            android:id="@+id/notificationEnable"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_24sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:text="@string/notification" />
+
+            <ImageView
+                android:id="@+id/notificationSwitcher"
+                android:layout_width="@dimen/_52sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/switch_disabled" />
+
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:background="@color/defaultGray"
+            app:layout_constraintTop_toBottomOf="@id/notificationEnable" />
+
+
+        <RelativeLayout
+            android:id="@+id/clearCacheBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider2">
+
+            <TextView
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:text="@string/clear_caches" />
+
+            <TextView
+                android:id="@+id/vibrationTitle"
+                style="@style/CustomTextStyle14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_toStartOf="@id/nextIcon3"
+                android:gravity="center"
+                android:text="28.14MB"
+                android:textColor="@color/subTitle" />
+
+            <ImageView
+                android:id="@+id/nextIcon3"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_next_screen" />
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toTopOf="@id/frBanner" />
+
+    <FrameLayout
+        android:id="@+id/frBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

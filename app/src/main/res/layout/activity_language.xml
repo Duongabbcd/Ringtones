@@ -53,7 +53,7 @@
         tools:listitem="@layout/rcv_language"
         app:layout_constraintBottom_toTopOf="@+id/applyBtn"
         app:layout_constraintTop_toBottomOf="@id/topController"
-        android:layout_marginBottom="@dimen/_18sdp"/>
+        android:layout_marginBottom="@dimen/_16sdp" />
 
 
     <TextView
@@ -65,16 +65,16 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:ellipsize="marquee"
         android:scrollHorizontally="true"
-        android:textColor="@color/white"
+        android:layout_marginBottom="@dimen/_16sdp"
         style="@style/CustomTextStyleMedium12sp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/view"
-        android:background="@drawable/background_radius_12_gray"
-        android:paddingVertical="@dimen/_16sdp"
+        android:background="@drawable/background_radius_16_gray"
+        android:paddingVertical="@dimen/_8sdp"
         android:paddingHorizontal="@dimen/_12sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
+        android:textColor="@color/customGray"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

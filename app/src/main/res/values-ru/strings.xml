@@ -154,4 +154,12 @@
     <string name="first_wpp_sort">По умолчанию</string>
     <string name="second_wpp_sort">Популярное</string>
     <string name="third_wpp_sort">Новое</string>
+
+    <string name="phone_setting">Настройки телефона</string>
+    <string name="clear_caches">Очистить кэш</string>
+    <string name="reset_ringtones">Сбросить все рингтоны по умолчанию</string>
+    <string name="reset_wallpapers">Сбросить все обои по умолчанию</string>
+    <string name="set_wallpaper_title">Установить обои</string>
+    <string name="exit">Выход</string>
+
 </resources>

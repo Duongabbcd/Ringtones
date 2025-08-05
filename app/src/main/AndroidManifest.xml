@@ -183,6 +183,11 @@
 
         </activity>
 
+        <activity
+            android:name=".screen.setting.PhoneSettingActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
         <!--end of all screens-->
 
         <meta-data

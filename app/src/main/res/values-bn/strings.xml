@@ -165,4 +165,12 @@
     <string name="first_wpp_sort">ডিফল্ট</string>
     <string name="second_wpp_sort">জনপ্রিয়</string>
     <string name="third_wpp_sort">নতুন</string>
+
+    <string name="phone_setting">ফোন সেটিংস</string>
+    <string name="clear_caches">ক্যাশ পরিষ্কার করুন</string>
+    <string name="reset_ringtones">সব রিংটোন ডিফল্টে রিসেট করুন</string>
+    <string name="reset_wallpapers">সব ওয়ালপেপার ডিফল্টে রিসেট করুন</string>
+    <string name="set_wallpaper_title">ওয়ালপেপার সেট করুন</string>
+    <string name="exit">প্রস্থান</string>
+
 </resources>

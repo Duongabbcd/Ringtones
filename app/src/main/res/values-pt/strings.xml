@@ -155,4 +155,12 @@
     <string name="first_wpp_sort">Padrão</string>
     <string name="second_wpp_sort">Em alta</string>
     <string name="third_wpp_sort">Novo</string>
+
+    <string name="phone_setting">Configurações do telefone</string>
+    <string name="clear_caches">Limpar caches</string>
+    <string name="reset_ringtones">Redefinir todos os toques para o padrão</string>
+    <string name="reset_wallpapers">Redefinir todos os papéis de parede para o padrão</string>
+    <string name="set_wallpaper_title">Definir papel de parede</string>
+    <string name="exit">Sair</string>
+
 </resources>

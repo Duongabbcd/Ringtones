@@ -50,7 +50,7 @@ class SetWallpaperDialog(
 
             bothOfThemOption.setOnClickListener {
                 updateDisplayIcons(thirdSortIcon, listOf(firstSortIcon, secondSortIcon))
-                optionIndex =3
+                optionIndex = 3
             }
         }
     }

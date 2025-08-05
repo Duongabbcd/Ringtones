@@ -155,4 +155,12 @@
     <string name="first_wpp_sort">Default</string>
     <string name="second_wpp_sort">Sedang Tren</string>
     <string name="third_wpp_sort">Baru</string>
+
+    <string name="phone_setting">Pengaturan Telepon</string>
+    <string name="clear_caches">Bersihkan cache</string>
+    <string name="reset_ringtones">Atur ulang semua nada dering ke default</string>
+    <string name="reset_wallpapers">Atur ulang semua wallpaper ke default</string>
+    <string name="set_wallpaper_title">Setel Wallpaper</string>
+    <string name="exit">Keluar</string>
+
 </resources>

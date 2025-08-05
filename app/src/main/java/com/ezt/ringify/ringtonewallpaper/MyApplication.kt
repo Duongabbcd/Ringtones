@@ -2,16 +2,14 @@ package com.ezt.ringify.ringtonewallpaper
 
 import android.app.Activity
 import android.app.Application
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.annotation.OptIn
-import androidx.media3.common.util.UnstableApi
+import android.preference.PreferenceManager
 import com.admob.max.dktlibrary.application.AdsApplication
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.AppPreferences
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 
 @HiltAndroidApp
 class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
@@ -58,6 +56,66 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
     }
 
     companion object {
-        lateinit var spManager: AppPreferences
+        private var instance: MyApplication? = null
+
+        lateinit var mFirebaseAnalytics: FirebaseAnalytics
+
+
+        fun getInstance(): MyApplication {
+            return instance!!
+        }
+
+        @JvmStatic
+        fun initROAS(revenue: Long, currency: String) {
+            try {
+                val sharedPref = PreferenceManager.getDefaultSharedPreferences(instance)
+                val editor: SharedPreferences.Editor = sharedPref.edit()
+                val currentImpressionRevenue = revenue / 1000000
+                // make sure to divide by 10^6
+                val previousTroasCache: Float = sharedPref.getFloat(
+                    "TroasCache",
+                    0F
+                ) //Use App Local storage to store cache of tROAS
+                val currentTroasCache = (previousTroasCache + currentImpressionRevenue).toFloat()
+                //check whether to trigger  tROAS event
+                if (currentTroasCache >= 0.01) {
+                    LogTroasFirebaseAdRevenueEvent(currentTroasCache, currency)
+                    editor.putFloat("TroasCache", 0f) //reset TroasCache
+                } else {
+                    editor.putFloat("TroasCache", currentTroasCache)
+                }
+                editor.commit()
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        private fun LogTroasFirebaseAdRevenueEvent(tRoasCache: Float, currency: String) {
+            try {
+                val bundle = Bundle()
+                bundle.putDouble(
+                    FirebaseAnalytics.Param.VALUE,
+                    tRoasCache.toDouble()
+                ) //(Required)tROAS event must include Double Value
+                bundle.putString(
+                    FirebaseAnalytics.Param.CURRENCY,
+                    currency
+                ) //put in the correct currency
+                mFirebaseAnalytics.logEvent("Daily_Ads_Revenue", bundle)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+
+        @JvmStatic
+        fun trackingEvent(event: String) {
+            try {
+                val params = Bundle()
+                mFirebaseAnalytics.logEvent(event, params)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

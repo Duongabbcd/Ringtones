@@ -22,7 +22,6 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 
-
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
     private var adapter2: LanguageAdapter? = null
     private var start = false
@@ -32,7 +31,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         allLanguages = GlobalConstant.getListLocation(this@LanguageActivity)
-
 
         start = intent.getBooleanExtra("fromSplash", false)
         binding.apply {
@@ -75,7 +73,11 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        AdsManager.loadAndShowInterSP2(this, AdsManager.INTER_LANGUAGE, "INTER_LANGUAGE", object: AdsManager.AdListenerWithNative {
+                        AdsManager.showInterAds(
+                            this,
+                            AdsManager.INTER_LANGUAGE,
+                            "INTER_LANGUAGE",
+                            object : AdsManager.AdListenerWithNative {
                             override fun onAdClosedOrFailed() {
                                 nextScreenByCondition()
                             }
@@ -116,9 +118,11 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
         adapter2 = LanguageAdapter(object: LanguageAdapter.OnClickListener {
             override fun onClickListener(position: Int, language: Language) {
                 if(language.key != selectedLanguage || language.name != selectedLanguageName) {
-                    binding.applyBtn.setBackgroundResource(R.drawable.background_radius_12)
+                    binding.applyBtn.setTextColor(resources.getColor(R.color.white))
+                    binding.applyBtn.setBackgroundResource(R.drawable.background_radius_16_purple)
                 } else {
-                    binding.applyBtn.setBackgroundResource(R.drawable.background_radius_12_gray)
+                    binding.applyBtn.setTextColor(resources.getColor(R.color.main_color))
+                    binding.applyBtn.setBackgroundResource(R.drawable.background_radius_16_gray)
                 }
                 selectedLanguage = language.key
                 selectedLanguageName = language.name
@@ -136,7 +140,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
         adapter2?.updateData(allLanguages, selected )
         binding.allLanguages.layoutManager = LinearLayoutManager(this)
         binding.allLanguages.adapter = adapter2
-//        binding.rcvLanguageList.setHasFixedSize(true)
     }
 
 
@@ -157,7 +160,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         if(!start) {
             finish()
         } else {

@@ -68,7 +68,7 @@
     <string name="editor_s_choices">Editor\'s Choices</string>
     <string name="find_ringtone">Find Ringtone</string>
     <string name="find_wallpaper">Find Wallpaper</string>
-    <string name="notification">Notification</string>
+    <string name="notification">Notifications</string>
     <string name="download">Download</string>
     <string name="set_ringotne">Set as Ringotne</string>
     <string name="set_wallpaper">Set as Wallpaper</string>
@@ -176,4 +176,11 @@
     <string name="first_wpp_sort">Default</string>
     <string name="second_wpp_sort">Trending</string>
     <string name="third_wpp_sort">New</string>
+
+    <string name="phone_setting">Phone Settings</string>
+    <string name="clear_caches">Clear caches</string>
+    <string name="reset_ringtones">Reset all ringtones to default</string>
+    <string name="reset_wallpapers">Reset all wallpapers to default</string>
+    <string name="set_wallpaper_title">Set Wallpaper</string>
+    <string name="exit">Exit</string>
 </resources>

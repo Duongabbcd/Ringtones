@@ -1,15 +1,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@drawable/bg_purple_gradient"
+    android:layout_height="match_parent"
     android:paddingTop="@dimen/_40sdp">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/origin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <com.canhub.cropper.CropImageView
             android:id="@+id/cropImageView"
@@ -37,6 +39,23 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent">
 
+
+            <TextView
+                android:id="@+id/btnExit"
+                style="@style/CustomTextStyleMedium14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_radius_12_purple_stroke"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_10sdp"
+                android:text="@string/reset"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
             <TextView
                 android:id="@+id/btnCrop"
                 style="@style/CustomTextStyleMedium14sp"
@@ -51,36 +70,7 @@
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <TextView
-                android:id="@+id/btnReset"
-                style="@style/CustomTextStyleMedium14sp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_weight="1"
-                android:background="@drawable/background_radius_12_purple_stroke"
-                android:gravity="center"
-                android:paddingVertical="@dimen/_10sdp"
-                android:text="@string/reset"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <TextView
-                android:id="@+id/btnExit"
-                style="@style/CustomTextStyleMedium14sp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:background="@drawable/background_radius_12_gray"
-                android:gravity="center"
-                android:paddingVertical="@dimen/_10sdp"
-                android:text="Exit"
-                android:textColor="@color/customBlack"
-                app:layout_constraintBottom_toBottomOf="parent" />
         </LinearLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -15,8 +15,12 @@ import android.widget.Toast
 import com.ezt.ringify.ringtonewallpaper.R
 import java.util.Locale
 import android.provider.Settings
+import com.admob.max.dktlibrary.AppOpenManager
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.example.ratingdialog.RatingDialog
+import com.ezt.ringify.ringtonewallpaper.BuildConfig
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 
 object Common {
     var countDone = 0
@@ -115,23 +119,25 @@ object Common {
         return preferences.getString(key, default).toString()
     }
 
-//     fun showRate(context: Activity) {
-//        val ratingDialog1 = RatingDialog.Builder(context).session(1).date(1).ignoreRated(false)
-//            .setNameApp(context.resources.getString(R.string.app_name)).setIcon(R.drawable.app_logo_square)
-//            .setEmail("namkutethanhhoa@gmail.com").isShowButtonLater(true).isClickLaterDismiss(true)
-//            .setTextButtonLater("Maybe Later").setOnlickMaybeLate {
-//                AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
-//            }.setOnlickRate {
-//                AppOpenManager.getInstance().disableAppResumeWithActivity(MainActivity::class.java)
-//            }.setDeviceInfo(
-//                BuildConfig.VERSION_NAME,
-//                Build.VERSION.SDK_INT.toString(),
-//                Build.MANUFACTURER + "_" + Build.MODEL
-//            ) .ratingButtonColor(Color.parseColor("#004BBB"))
-//            .build()
-//        ratingDialog1 . setCanceledOnTouchOutside (false)
-//        ratingDialog1 . show ()
-//    }
+    fun showRate(context: Activity) {
+        val ratingDialog1 = RatingDialog.Builder(context).session(1).date(1).ignoreRated(false)
+            .setNameApp(context.resources.getString(R.string.app_name))
+            .setIcon(R.drawable.icon_app_round)
+            .setEmail("namkutethanhhoa@gmail.com")
+            .isShowButtonLater(true).isClickLaterDismiss(true)
+            .setTextButtonLater("Maybe Later").setOnlickMaybeLate {
+                AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
+            }.setOnlickRate {
+                AppOpenManager.getInstance().disableAppResumeWithActivity(MainActivity::class.java)
+            }.setDeviceInfo(
+                BuildConfig.VERSION_NAME,
+                Build.VERSION.SDK_INT.toString(),
+                Build.MANUFACTURER + "_" + Build.MODEL
+            ).ratingButtonColor(Color.parseColor("#004BBB"))
+            .build()
+        ratingDialog1.setCanceledOnTouchOutside(false)
+        ratingDialog1.show()
+    }
 
     fun logEventFirebase(context: Context, eventName: String) {
 //        val firebaseAnalytics = FirebaseAnalytics.getInstance(context)

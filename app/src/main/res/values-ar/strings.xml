@@ -167,4 +167,11 @@
     <string name="first_wpp_sort">الافتراضي</string>
     <string name="second_wpp_sort">رائج</string>
     <string name="third_wpp_sort">جديد</string>
+
+    <string name="phone_setting">إعدادات الهاتف</string>
+    <string name="clear_caches">مسح ذاكرة التخزين المؤقت</string>
+    <string name="reset_ringtones">إعادة تعيين جميع النغمات إلى الوضع الافتراضي</string>
+    <string name="reset_wallpapers">إعادة تعيين جميع الخلفيات إلى الوضع الافتراضي</string>
+    <string name="set_wallpaper_title">تعيين الخلفية</string>
+    <string name="exit">خروج</string>
 </resources>

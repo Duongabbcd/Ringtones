@@ -154,4 +154,12 @@
     <string name="first_wpp_sort">기본</string>
     <string name="second_wpp_sort">인기</string>
     <string name="third_wpp_sort">새로운</string>
+
+    <string name="phone_setting">전화 설정</string>
+    <string name="clear_caches">캐시 지우기</string>
+    <string name="reset_ringtones">모든 벨소리를 기본값으로 재설정</string>
+    <string name="reset_wallpapers">모든 배경화면을 기본값으로 재설정</string>
+    <string name="set_wallpaper_title">배경화면 설정</string>
+    <string name="exit">종료</string>
+
 </resources>

@@ -17,6 +17,7 @@ import com.admob.max.dktlibrary.GoogleENative
 import com.admob.max.dktlibrary.utils.admod.BannerHolderAdmob
 import com.admob.max.dktlibrary.utils.admod.InterHolderAdmob
 import com.admob.max.dktlibrary.utils.admod.NativeHolderAdmob
+import com.admob.max.dktlibrary.utils.admod.callback.AdCallBackInterLoad
 import com.admob.max.dktlibrary.utils.admod.callback.AdsInterCallBack
 import com.admob.max.dktlibrary.utils.admod.callback.NativeAdmobCallback
 import com.applovin.sdk.AppLovinSdkUtils
@@ -25,7 +26,9 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MediaAspectRatio
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
+import com.mbridge.msdk.video.bt.module.orglistener.c
 
 object AdsManager {
     var isDebug = true
@@ -659,6 +662,115 @@ object AdsManager {
         }
     }
 
+    fun showInterAds(
+        context: Context,
+        interHolder: InterHolderAdmob,
+        type: String,
+        callback: AdListenerWithNative,
+        isCheckTestDevice: Boolean = false
+    ) {
+        var isNowTestDeviceOrNot = isCheckTestDevice
+        if (isTestDevice && isCheckTestDevice) {
+            callback.onAdClosedOrFailed()
+            return
+        }
+        if (!AdmobUtils.isNetworkConnected(context)) {
+            callback.onAdClosedOrFailed()
+            return
+        }
+        when (type) {
+            "INTER_LANGUAGE" -> {
+                if (RemoteConfig.INTER_RINGTONE == "0" || isTestDevice) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+            }
+
+            "INTER_RINGTONE" -> {
+                if (RemoteConfig.INTER_RINGTONE == "0" || isTestDevice) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+                countClickRingtone++
+                if (countClickRingtone % RemoteConfig.INTER_RINGTONE.toInt() != 0) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+            }
+
+            "INTER_WALLPAPER" -> {
+                if (RemoteConfig.INTER_WALLPAPER == "0" || isTestDevice) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+                countClickWallpaper++
+                if (countClickRingtone % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+            }
+
+            "INTER_CALLSCREEN" -> {
+                isNowTestDeviceOrNot = true
+                if (RemoteConfig.INTER_CALLSCREEN == "0" || isTestDevice) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+                countClickCallscreen++
+
+                if (countClickRingtone % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
+                    callback.onAdClosedOrFailed()
+                    return
+                }
+            }
+        }
+
+        AppOpenManager.getInstance().isAppResumeEnabled = true
+        AdmobUtils.showAdInterstitialWithCallbackNotLoadNew(
+            context as AppCompatActivity,
+            interHolder,
+            1000,
+            object : AdsInterCallBack {
+                override fun onStartAction() {
+                    println("onStartAction")
+                }
+
+                override fun onEventClickAdClosed() {
+                    println("onEventClickAdClosed")
+                    callback.onAdClosedOrFailedWithNative()
+                }
+
+                override fun onAdShowed() {
+                    AppOpenManager.getInstance().isAppResumeEnabled = false
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        try {
+                            AdmobUtils.dismissAdDialog()
+                        } catch (_: Exception) {
+
+                        }
+                    }, 800)
+                }
+
+                override fun onAdLoaded() {
+
+                }
+
+                override fun onAdFail(p0: String?) {
+                    println("onAdFail: $p0")
+                    callback.onAdClosedOrFailed()
+                }
+
+                override fun onClickAds() {
+
+                }
+
+                override fun onPaid(p0: AdValue?, p1: String?) {
+                }
+            },
+            false
+        )
+    }
+
     fun loadAndShowInterSP2(
         context: Context,
         interHolder: InterHolderAdmob,
@@ -882,6 +994,48 @@ object AdsManager {
 //                }
 //            })
 //    }
+
+    fun loadAdInter(context: Context, interHolder: InterHolderAdmob) {
+        if (!AdmobUtils.isNetworkConnected(context) || AdsManager.isTestDevice) {
+            return
+        }
+
+        AdmobUtils.loadAndGetAdInterstitial(context, interHolder, object : AdCallBackInterLoad {
+            override fun onAdClosed() {
+                //do nothing
+                println("onAdClosed")
+            }
+
+            override fun onEventClickAdClosed() {
+                //do nothing
+                println("onEventClickAdClosed")
+            }
+
+            override fun onAdShowed() {
+                //do nothing
+                println("onAdShowed")
+            }
+
+            override fun onAdLoaded(
+                p0: InterstitialAd?,
+                p1: Boolean
+            ) {
+                //do nothing
+                println("onAdLoaded")
+            }
+
+            override fun onAdFail(p0: String?) {
+                //do nothing
+                println("onAdFail")
+            }
+
+            override fun onPaid(p0: AdValue?, p1: String?) {
+                //do nothing
+                println("onPaid")
+            }
+
+        })
+    }
 
 
     interface onLoading {

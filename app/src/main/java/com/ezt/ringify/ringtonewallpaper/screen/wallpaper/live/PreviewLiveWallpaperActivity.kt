@@ -39,7 +39,6 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity.Companion.currentIndex
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -200,17 +199,12 @@ class PreviewLiveWallpaperActivity :
     }
 
     private fun setUpVideoByCondition(videoUrl: String) {
-        val dialog = SetWallpaperDialog(this) { result ->
-            println("setUpVideoByCondition: $result")
-            settingOption = result
-            launchLiveWallpaper(this, videoUrl)
-        }
-        dialog.show()
+        launchLiveWallpaper(this, videoUrl)
     }
 
     fun launchLiveWallpaper(context: Context, videoUrl: String) {
         // Save the video URL to SharedPreferences
-        val prefs = context.getSharedPreferences("video_wallpaper", Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences("video_wallpaper", MODE_PRIVATE)
         prefs.edit().putString("video_url", videoUrl).apply()
         Log.d("LivePreview", "Saved wallpaper URL: $videoUrl")
 

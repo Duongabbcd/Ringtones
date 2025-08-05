@@ -184,6 +184,21 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                             IntroActivityNew.isIntroFullFail1 = !result
                         }
                     }
+
+                    if (RemoteConfig.INTER_LANGUAGE != "0") {
+                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_LANGUAGE)
+                    }
+                    if (RemoteConfig.INTER_RINGTONE != "0") {
+                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_RINGTONE)
+                    }
+
+                    if (RemoteConfig.INTER_WALLPAPER != "0") {
+                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_WALLPAPER)
+                    }
+
+                    if (RemoteConfig.INTER_CALLSCREEN != "0") {
+                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_CALLSCREEN)
+                    }
                 }
             })
 
@@ -191,6 +206,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     private fun showBanner() {
         Log.d("ADS_SPLASH_070625", "showBanner: ${RemoteConfig.ADS_SPLASH_070625}")
+        binding.frBanner.visibility = View.GONE
         when (RemoteConfig.ADS_SPLASH_070625) {
             "1" -> {
                 binding.tvStart.visibility = View.GONE
