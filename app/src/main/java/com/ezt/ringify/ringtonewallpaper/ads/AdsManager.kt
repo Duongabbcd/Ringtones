@@ -28,7 +28,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
-import com.mbridge.msdk.video.bt.module.orglistener.c
+import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 
 object AdsManager {
     var isDebug = true
@@ -57,7 +57,7 @@ object AdsManager {
     var INTER_CALLSCREEN = InterHolderAdmob("")
 
     var BANNER_PLAY_SONG = ""
-    var BANNER_COLLAP_PLAY_SONG =BannerHolderAdmob("")
+    var BANNER_COLLAP_PLAY_SONG = BannerHolderAdmob("")
     var NATIVE_COLLAP_PLAY_SONG = NativeHolderAdmob("")
 
     var ONRESUME = ""
@@ -97,7 +97,7 @@ object AdsManager {
             isMoveNextScreen()
             return
         }
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             isMoveNextScreen()
             view.visibility = View.GONE
             line.visibility = View.GONE
@@ -140,7 +140,7 @@ object AdsManager {
             line.visibility = View.GONE
             return
         }
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             view.visibility = View.GONE
             line.visibility = View.GONE
             return
@@ -189,7 +189,7 @@ object AdsManager {
             return
         }
 
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             isMoveNextScreen()
             nativeAdContainer.visibility = View.GONE
             return
@@ -241,7 +241,7 @@ object AdsManager {
             return
         }
 
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
@@ -291,7 +291,7 @@ object AdsManager {
                 isMoveNextScreen()
                 return
             }
-            if (!AdmobUtils.isNetworkConnected(activity)) {
+            if (isNetworkConnected(activity)) {
                 isMoveNextScreen()
                 nativeAdContainer.visibility = View.GONE
                 return
@@ -346,7 +346,7 @@ object AdsManager {
             callback.onAdClosedOrFailed()
             return
         }
-        if (!AdmobUtils.isNetworkConnected(context)) {
+        if (isNetworkConnected(context)) {
             callback.onAdClosedOrFailed()
             return
         }
@@ -393,7 +393,7 @@ object AdsManager {
         if (isTestDevice || isCheckTestDevice) {
             return
         }
-        if (!AdmobUtils.isNetworkConnected(context)) {
+        if (isNetworkConnected(context)) {
             return
         }
         AdmobUtils.loadAndGetNativeAds(context, nativeHolder, isCheckTestDevice, object : NativeAdmobCallback {
@@ -420,7 +420,7 @@ object AdsManager {
             viewGroup.visibility = View.GONE
             return
         }
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
             return
         }
@@ -471,7 +471,7 @@ object AdsManager {
             viewGroup.visibility = View.GONE
             return
         }
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
             return
         }
@@ -522,7 +522,7 @@ object AdsManager {
             viewGroup.visibility = View.GONE
             return
         }
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
             return
         }
@@ -573,7 +573,7 @@ object AdsManager {
             viewGroup.visibility = View.GONE
             return
         }
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
             return
         }
@@ -622,7 +622,7 @@ object AdsManager {
     fun showAdNativeLanguage(activity: Activity, nativeAdContainer: ViewGroup, native: NativeHolderAdmob,
                              checkTestAd: Boolean = false,        isCheckTestDevice: Boolean =false, callback: () -> Unit,
                      ) {
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (isNetworkConnected(activity)) {
             callback.invoke()
             nativeAdContainer.visibility = View.GONE
             return
@@ -674,7 +674,7 @@ object AdsManager {
             callback.onAdClosedOrFailed()
             return
         }
-        if (!AdmobUtils.isNetworkConnected(context)) {
+        if (isNetworkConnected(context)) {
             callback.onAdClosedOrFailed()
             return
         }
@@ -783,7 +783,7 @@ object AdsManager {
             callback.onAdClosedOrFailed()
             return
         }
-        if (!AdmobUtils.isNetworkConnected(context)) {
+        if (isNetworkConnected(context)) {
             callback.onAdClosedOrFailed()
             return
         }
@@ -933,7 +933,7 @@ object AdsManager {
             view.visibility = View.GONE
             return
         }
-        if (!AdmobUtils.isNetworkConnected(context)) {
+        if (isNetworkConnected(context)) {
             view.visibility = View.GONE
             return
         }
@@ -973,7 +973,7 @@ object AdsManager {
 //        if(isTestDevice) {
 //            return
 //        }
-//        if (!AdmobUtils.isNetworkConnected(context) || AdsManager.isTestDevice) {
+//        if (isNetworkConnected(context) || AdsManager.isTestDevice) {
 //            IntroActivityNew.isIntroFullFail1 = true
 //            view.visibility = View.GONE
 //            return
@@ -996,7 +996,7 @@ object AdsManager {
 //    }
 
     fun loadAdInter(context: Context, interHolder: InterHolderAdmob) {
-        if (!AdmobUtils.isNetworkConnected(context) || AdsManager.isTestDevice) {
+        if (isNetworkConnected(context) || AdsManager.isTestDevice) {
             return
         }
 
@@ -1049,7 +1049,7 @@ object AdsManager {
         onLoaded: (Boolean) -> Unit
     ) {
 
-        if (!AdmobUtils.isNetworkConnected(context) || isTestDevice) {
+        if (isNetworkConnected(context) || isTestDevice) {
             return
         }
 

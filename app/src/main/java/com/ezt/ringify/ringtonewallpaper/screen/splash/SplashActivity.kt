@@ -9,11 +9,10 @@ import android.util.Log
 import android.view.View
 import com.admob.max.dktlibrary.AOAManager
 import com.admob.max.dktlibrary.AdmobUtils
-import com.admob.max.dktlibrary.AdmobUtils.isNetworkConnected
 import com.admob.max.dktlibrary.AppOpenManager
 import com.admob.max.dktlibrary.cmp.GoogleMobileAdsConsentManager
-import com.admob.max.dktlibrary.firebase.FireBaseConfig
 import com.admob.max.dktlibrary.utils.admod.callback.MobileAdsListener
+import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity2
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySplashBinding
@@ -21,7 +20,6 @@ import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.inVisible
 import com.google.android.ump.FormError
-import com.google.firebase.FirebaseApp
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isDebug
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isTestDevice
@@ -34,6 +32,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.google.android.gms.ads.AdValue
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.exitProcess
+import com.ezt.ringify.ringtonewallpaper.ads.FireBaseConfig
 
 class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
     private var appOpenManager: AOAManager? = null
@@ -51,7 +50,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this)
+
 //        Common.setCountOpenApp(this,0)
     }
 

@@ -37,6 +37,7 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
@@ -737,16 +738,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     override fun onResume() {
         super.onResume()
-
-        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
-            AdsManager.showAdBanner(
-                this,
-                BANNER_HOME,
-                binding.frBanner,
-                binding.view,
-                isCheckTestDevice = false
-            ) {}
-        }
+        loadBanner(this, BANNER_HOME)
 
         if (!serviceBound) return
 

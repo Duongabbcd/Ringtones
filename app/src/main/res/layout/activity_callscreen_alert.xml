@@ -296,11 +296,9 @@
             android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@id/frBanner" />
 
-        <FrameLayout
+        <include
             android:id="@+id/frBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            layout="@layout/ads_banner" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

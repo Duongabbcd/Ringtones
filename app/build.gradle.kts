@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.lifecycle.livedata.core)
+    implementation(libs.firebase.config)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,6 +72,7 @@ dependencies {
     implementation(project(":carouselview"))
     implementation(project(":cropper"))
 
+    implementation("com.intuit.sdp:sdp-android:1.1.1")
     implementation ("com.auth0:java-jwt:4.4.0")
 
     implementation("com.google.dagger:hilt-android:2.55")
@@ -104,6 +106,7 @@ dependencies {
     implementation("me.angrybyte.slider:slider:1.4.2")
     implementation("com.seosh817:circularseekbar:1.0.2")
     implementation("io.coil-kt:coil:2.4.0")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     implementation("androidx.room:room-runtime:2.7.1")
     implementation("androidx.room:room-ktx:2.7.1")
@@ -126,4 +129,6 @@ dependencies {
     implementation("com.google.ads.mediation:facebook:6.20.0.0")
     implementation("com.google.ads.mediation:vungle:7.4.2.0")
     implementation("com.google.ads.mediation:mintegral:16.9.71.0")
+
+    implementation("com.google.android.gms:play-services-ads:24.5.0") // or latest
 }

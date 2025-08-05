@@ -8,6 +8,7 @@ import android.preference.PreferenceManager
 import com.admob.max.dktlibrary.application.AdsApplication
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.HiltAndroidApp
 
@@ -15,6 +16,9 @@ import dagger.hilt.android.HiltAndroidApp
 class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
     override fun onCreate() {
         super.onCreate()
+        instance = this // ✅ Fix: Set instance here
+
+        FirebaseApp.initializeApp(this)
         val deviceId = Common.getDeviceId(this)
         val secret = "abcadhjgashjd1231" // TODO: Replace with your actual secret
         val jwt = Common.generateJwt(deviceId, secret)

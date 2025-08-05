@@ -6,7 +6,8 @@
     <string name="facebook_id" translatable="false"> </string>
     <string name="facebook_client_token" translatable="false"> </string>
 
-    <string name="imageview">imageView</string>
+    <string name="imageview" translatable="false">imageView</string>
+    <string name="bonus_preferences" translatable="false">Bonus_Preferences</string>
     <string name="unknown_caller" translatable="false">Unknown caller</string>
 
     <string name="appDesc">#1 High Quality Ringtones</string>

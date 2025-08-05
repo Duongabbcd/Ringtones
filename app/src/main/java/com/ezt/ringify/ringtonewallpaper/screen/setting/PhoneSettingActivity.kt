@@ -11,6 +11,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 class PhoneSettingActivity :
@@ -47,15 +48,7 @@ class PhoneSettingActivity :
 
     override fun onResume() {
         super.onResume()
-        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
-            AdsManager.showAdBanner(
-                this,
-                BANNER_HOME,
-                binding.frBanner,
-                binding.view,
-                isCheckTestDevice = false
-            ) {}
-        }
+        loadBanner(this, BANNER_HOME)
     }
 
 }

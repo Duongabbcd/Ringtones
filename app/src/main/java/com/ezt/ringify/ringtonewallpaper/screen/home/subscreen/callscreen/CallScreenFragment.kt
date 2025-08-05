@@ -16,6 +16,7 @@ import android.telecom.TelecomManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -115,8 +116,26 @@ class CallScreenFragment :
                 callScreenAdapter.submitList(items.take(10))
             }
 
-            callScreenViewModel.loading.observe(viewLifecycleOwner) {
-                progressBar.isVisible = it
+            callScreenViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        CallScreenItem.CALLSCREEN_EMPTY
+                    }
+                    callScreenAdapter.submitList(loadingItems)
+
+                    // Disable scrolling
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    callScreenViewModel.callScreens.value?.let { realItems ->
+                        callScreenAdapter.submitList(realItems.take(10))
+                    }
+
+                    // Re-enable touch
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
             }
 
             contentViewModel.callScreenContent.observe(viewLifecycleOwner) { items ->
@@ -401,25 +420,29 @@ class CallScreenAdapter(private val onClickListener: (CallScreenItem) -> Unit) :
         fun bind(position: Int) {
             val callScreen = allCallScreens[position]
             binding.apply {
-                binding.callScreenImage.load(callScreen.thumbnail.url.medium) {
-                    crossfade(true) // Optional fade animation
-                    placeholder(R.drawable.default_callscreen)
-                    error(R.drawable.default_callscreen)
-                    listener(
-                        onSuccess = { _, _ ->
-                            progressBar.visibility = View.GONE
-                        },
-                        onError = { _, _ ->
-                            progressBar.visibility = View.GONE
-                        }
-                    )
-                }
+                if (callScreen == CallScreenItem.CALLSCREEN_EMPTY) {
+                    binding.callScreenImage.setImageResource(R.drawable.default_callscreen)
+                } else {
+                    binding.callScreenImage.load(callScreen.thumbnail.url.medium) {
+                        crossfade(true) // Optional fade animation
+                        placeholder(R.drawable.default_callscreen)
+                        error(R.drawable.default_callscreen)
+                        listener(
+                            onSuccess = { _, _ ->
+                                progressBar.visibility = View.GONE
+                            },
+                            onError = { _, _ ->
+                                progressBar.visibility = View.GONE
+                            }
+                        )
+                    }
 
-
-                root.setOnClickListener {
-                    onClickListener(callScreen)
+                    root.setOnClickListener {
+                        onClickListener(callScreen)
+                    }
                 }
             }
         }
     }
+
 }

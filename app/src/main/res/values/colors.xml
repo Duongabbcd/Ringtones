@@ -32,4 +32,5 @@
 
     <color name="purple">#993399</color>
     <color name="purpleDark">#663399</color>
+    <color name="blue_grey_700">#455A64</color>
 </resources>

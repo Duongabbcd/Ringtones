@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -23,6 +24,9 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -84,50 +88,6 @@ class WallpaperFragment :
             allSub1.layoutManager = LinearLayoutManager(ctx, RecyclerView.HORIZONTAL, false)
             allSub2.layoutManager = LinearLayoutManager(ctx, RecyclerView.HORIZONTAL, false)
             allSub3.layoutManager = LinearLayoutManager(ctx, RecyclerView.HORIZONTAL, false)
-            wallPaperViewModel.trendingWallpaper.observe(viewLifecycleOwner) { items ->
-                wallPaperAdapter.submitList(items)
-            }
-
-            wallPaperViewModel.total1.observe(viewLifecycleOwner) { number ->
-                trendingCount.text = number.formatWithComma()
-            }
-
-            wallPaperViewModel.newWallpaper.observe(viewLifecycleOwner) { items ->
-                newWallpaperAdapter.submitList(items)
-            }
-
-            wallPaperViewModel.total2.observe(viewLifecycleOwner) { number ->
-                newWallpaperCount.text = number.formatWithComma()
-            }
-
-
-            wallPaperViewModel.subWallpaper1.observe(viewLifecycleOwner) { items ->
-                subWallpaperAdapter1.submitList(items)
-            }
-
-
-            wallPaperViewModel.total3.observe(viewLifecycleOwner) { number ->
-                sub1Count.text = number.formatWithComma()
-            }
-
-
-            wallPaperViewModel.subWallpaper2.observe(viewLifecycleOwner) { items ->
-                subWallpaperAdapter2.submitList(items)
-            }
-
-            wallPaperViewModel.total4.observe(viewLifecycleOwner) { number ->
-                sub2Count.text = number.formatWithComma()
-            }
-
-
-
-            wallPaperViewModel.subWallpaper3.observe(viewLifecycleOwner) { items ->
-                subWallpaperAdapter3.submitList(items)
-            }
-
-            wallPaperViewModel.total5.observe(viewLifecycleOwner) { number ->
-                sub3Count.text = number.formatWithComma()
-            }
 
             openAll1.setOnClickListener {
                 withSafeContext { ctx ->
@@ -167,29 +127,15 @@ class WallpaperFragment :
                 }
             }
 
+            loadingAllTrending()
 
-            wallPaperViewModel.loading1.observe(viewLifecycleOwner) {
-                loading1.isVisible = it
-                newWallpaperCount.isVisible = !it
+            loadAllNewWallpaper()
 
-            }
+            loadingAllSub1()
+            loadingAllSub2()
+            loadingAllSub3()
 
-            wallPaperViewModel.loading2.observe(viewLifecycleOwner) {
-                loading2.isVisible = it
-                trendingCount.isVisible = !it
-            }
-            wallPaperViewModel.loading3.observe(viewLifecycleOwner) {
-                loading3.isVisible = it
-                sub1Count.isVisible = !it
-            }
-            wallPaperViewModel.loading4.observe(viewLifecycleOwner) {
-                loading4.isVisible = it
-                sub2Count.isVisible = !it
-            }
-            wallPaperViewModel.loading5.observe(viewLifecycleOwner) {
-                loading5.isVisible = it
-                sub3Count.isVisible = !it
-            }
+
             categoryViewModel.categoryName1.observe(viewLifecycleOwner) {
                 sub1.text = it
             }
@@ -247,6 +193,178 @@ class WallpaperFragment :
             }
         }
 
+    }
+
+    private fun loadingAllSub1() {
+        binding.apply {
+            wallPaperViewModel.loading3.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll3.isEnabled = false
+                    subWallpaperAdapter1.submitList(loadingItems)
+                    sub1Count.text = "5"
+
+                    // Disable scrolling
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    wallPaperViewModel.subWallpaper1.observe(viewLifecycleOwner) { items ->
+                        subWallpaperAdapter1.submitList(items)
+                    }
+
+
+                    wallPaperViewModel.total3.observe(viewLifecycleOwner) { number ->
+                        sub1Count.text = number.formatWithComma()
+                    }
+                    openAll3.isEnabled = true
+
+                    // Re-enable touch
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+    }
+
+    private fun loadingAllSub2() {
+        binding.apply {
+            wallPaperViewModel.loading4.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll4.isEnabled = false
+                    subWallpaperAdapter2.submitList(loadingItems)
+                    sub2Count.text = "5"
+
+                    // Disable scrolling
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    wallPaperViewModel.subWallpaper2.observe(viewLifecycleOwner) { items ->
+                        subWallpaperAdapter2.submitList(items)
+                    }
+
+
+                    wallPaperViewModel.total4.observe(viewLifecycleOwner) { number ->
+                        sub2Count.text = number.formatWithComma()
+                    }
+                    openAll4.isEnabled = true
+
+                    // Re-enable touch
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+    }
+
+    private fun loadingAllSub3() {
+        binding.apply {
+            wallPaperViewModel.loading5.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll5.isEnabled = false
+                    subWallpaperAdapter3.submitList(loadingItems)
+                    sub3Count.text = "5"
+
+                    // Disable scrolling
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    wallPaperViewModel.subWallpaper3.observe(viewLifecycleOwner) { items ->
+                        subWallpaperAdapter3.submitList(items)
+                    }
+
+                    wallPaperViewModel.total5.observe(viewLifecycleOwner) { number ->
+                        sub3Count.text = number.formatWithComma()
+                    }
+                    openAll5.isEnabled = true
+
+                    // Re-enable touch
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+    }
+
+    private fun loadAllNewWallpaper() {
+        binding.apply {
+            wallPaperViewModel.loading2.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll2.isEnabled = false
+                    newWallpaperAdapter.submitList(loadingItems)
+                    newWallpaperCount.text = "5"
+
+                    // Disable scrolling
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    wallPaperViewModel.newWallpaper.observe(viewLifecycleOwner) { items ->
+                        newWallpaperAdapter.submitList(items)
+                    }
+
+                    wallPaperViewModel.total2.observe(viewLifecycleOwner) { number ->
+                        newWallpaperCount.text = number.formatWithComma()
+                    }
+                    openAll2.isEnabled = true
+
+                    // Re-enable touch
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+    }
+
+    private fun loadingAllTrending() {
+        binding.apply {
+            wallPaperViewModel.loading1.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll1.isEnabled = false
+                    wallPaperAdapter.submitList(loadingItems)
+                    trendingCount.text = "5"
+
+                    // Disable scrolling
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    wallPaperViewModel.trendingWallpaper.observe(viewLifecycleOwner) { items ->
+                        wallPaperAdapter.submitList(items)
+                    }
+
+                    wallPaperViewModel.total1.observe(viewLifecycleOwner) { number ->
+                        trendingCount.text = number.formatWithComma()
+                    }
+                    openAll1.isEnabled = true
+
+                    // Re-enable touch
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
     }
 
     private fun setupCustomWallpapers() {

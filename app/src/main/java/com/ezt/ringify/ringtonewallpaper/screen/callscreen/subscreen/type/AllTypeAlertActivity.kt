@@ -20,6 +20,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallS
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.flashTypeValue
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.vibrationValue
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview.PreviewCallScreenActivity
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 class AllTypeAlertActivity :
@@ -61,15 +62,7 @@ class AllTypeAlertActivity :
 
     override fun onResume() {
         super.onResume()
-        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
-            AdsManager.showAdBanner(
-                this,
-                BANNER_HOME,
-                binding.frBanner,
-                binding.view,
-                isCheckTestDevice = false
-            ) {}
-        }
+        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {

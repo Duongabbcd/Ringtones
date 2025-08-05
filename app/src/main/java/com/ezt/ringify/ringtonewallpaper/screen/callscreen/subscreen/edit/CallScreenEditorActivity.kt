@@ -24,6 +24,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllAvatarAdap
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackgroundAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 @AndroidEntryPoint
@@ -255,15 +256,7 @@ class CallScreenEditorActivity :
 
     override fun onResume() {
         super.onResume()
-        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
-            AdsManager.showAdBanner(
-                this,
-                BANNER_HOME,
-                binding.frBanner,
-                binding.view,
-                isCheckTestDevice = false
-            ) {}
-        }
+        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {

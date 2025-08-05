@@ -10,6 +10,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.PhoneSettingActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -21,7 +22,10 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
         binding.apply {
             backBtn.setOnClickListener {
                 MainActivity.selectedTab = 0
-                SearchRingtoneActivity.backToScreen(this@SettingActivity)
+                startActivity(Intent(this@SettingActivity, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                })
             }
 
             languageOption.setOnClickListener {
@@ -42,19 +46,9 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
 
     override fun onBackPressed() {
         super.onBackPressed()
-        SearchRingtoneActivity.backToScreen(this@SettingActivity)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
-            AdsManager.showAdBanner(
-                this,
-                BANNER_HOME,
-                binding.frBanner,
-                binding.view,
-                isCheckTestDevice = false
-            ) {}
-        }
+        startActivity(Intent(this@SettingActivity, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        })
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.admob.max.dktlibrary.AdmobUtils
@@ -15,7 +16,9 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.BannerAds
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.RingtoneFragment
@@ -113,20 +116,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onResume() {
         super.onResume()
-        if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
-            AdsManager.showAdBanner(
-                this,
-                BANNER_HOME,
-                binding.frBanner,
-                binding.view,
-                isCheckTestDevice = false
-            ) {}
-        }
-
+        loadBanner(this, BANNER_HOME)
         internetConnected = AdmobUtils.isNetworkConnected(this@MainActivity)
         println("onResume: $internetConnected")
 
     }
+
 
     private fun displayScreen() {
         println("displayScreen: $selectedTab")
@@ -172,6 +167,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         var displayMode = DisplayMode.WALLPAPER
 
         var internetConnected = false
+
+        fun loadBanner(activity: AppCompatActivity, banner: String = BANNER_HOME) {
+            println("RemoteConfig.BANNER_COLLAP_ALL_070625: ${RemoteConfig.BANNER_COLLAP_ALL_070625}")
+            if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+                BannerAds.initBannerAds(activity, banner)
+            }
+
+        }
     }
 
     override fun onBackPressed() {

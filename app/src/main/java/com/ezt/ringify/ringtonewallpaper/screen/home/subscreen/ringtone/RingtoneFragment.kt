@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -21,6 +22,9 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.Category
+import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,6 +83,48 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 }
             }
 
+
+
+            categoryViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    val loadingItems1 = List(6) {
+                        Category.EMPTY_CATEGORY
+                    }
+                    categoryAdapter.submitList(loadingItems1)
+
+
+                    requireActivity().window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    displayNormalData()
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+
+            }
+
+            binding.noInternet.tryAgain.setOnClickListener {
+                withSafeContext { ctx ->
+                    val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                    if (connected) {
+                        binding.origin.visible()
+                        binding.noInternet.root.visibility = View.VISIBLE
+                        // Maybe reload your data
+                    } else {
+                        Toast.makeText(
+                            ctx,
+                            R.string.no_connection,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun displayNormalData() {
+        binding.apply {
             categoryViewModel.ringtoneCategory.observe(viewLifecycleOwner) { items ->
                 withSafeContext { ctx ->
                     val initialFav = Common.getAllFavouriteGenres(ctx)  // List<Int>
@@ -97,28 +143,6 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             ringtoneViewModel.popular.observe(viewLifecycleOwner) { items ->
                 RingtonePlayerRemote.setRingtoneQueue(items)
                 ringToneAdapter.submitList(items.take(5))
-            }
-
-            categoryViewModel.loading.observe(viewLifecycleOwner) {
-                loading1.isVisible = it
-                loading2.isVisible = it
-            }
-
-            binding.noInternet.tryAgain.setOnClickListener {
-                withSafeContext { ctx ->
-                    val connected = connectionViewModel.isConnectedLiveData.value ?: false
-                    if (connected) {
-                        binding.origin.visible()
-                        binding.noInternet.root.visibility = View.VISIBLE
-                        // Maybe reload your data
-                    } else {
-                        Toast.makeText(
-                            ctx,
-                            R.string.no_connection,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
             }
         }
     }

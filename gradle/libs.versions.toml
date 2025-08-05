@@ -19,6 +19,7 @@ androidgradleplugin = "8.5.2"
 kotlinxcoroutines = "1.8.1"
 ktlint = "1.3.1"
 adjustAndroid = "4.33.1"
+firebaseConfig = "22.0.1"
 
 [libraries]
 adjust-android = { module = "com.adjust.sdk:adjust-android", version.ref = "adjustAndroid" }
@@ -33,6 +34,7 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 androidx-lifecycle-livedata-core = { group = "androidx.lifecycle", name = "lifecycle-livedata-core", version.ref = "lifecycleLivedataCore" }
 
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version = "1.3.7" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebaseConfig" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
