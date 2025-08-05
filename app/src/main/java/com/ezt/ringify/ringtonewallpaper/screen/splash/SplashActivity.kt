@@ -33,6 +33,7 @@ import com.google.android.gms.ads.AdValue
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.exitProcess
 import com.ezt.ringify.ringtonewallpaper.ads.FireBaseConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 
 class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
     private var appOpenManager: AOAManager? = null
@@ -100,6 +101,13 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                         AdsManager.countClickRingtone = 0
                         AdsManager.countClickWallpaper = 0
                         AdsManager.countClickCallscreen = 0
+
+                        InterAds.initInterLanguage(this@SplashActivity, callback = object : InterAds.Callback {
+                            override fun callback() {
+                                println("")
+                            }
+
+                        })
 
                         if (isInitAds.get()) {
                             return

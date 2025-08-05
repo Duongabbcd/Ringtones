@@ -20,6 +20,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.GlobalConstant
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
@@ -73,22 +74,9 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        AdsManager.showInterAds(
-                            this,
-                            AdsManager.INTER_LANGUAGE,
-                            "INTER_LANGUAGE",
-                            object : AdsManager.AdListenerWithNative {
-                            override fun onAdClosedOrFailed() {
-                                nextScreenByCondition()
-                            }
-
-                            override fun onAdClosedOrFailedWithNative() {
-                                nextScreenByCondition()
-                            }
-
-                        },
-                            isCheckTestDevice = false
-                        )
+                        InterAds.showAdsLanguage(activity = this@LanguageActivity) {
+                            nextScreenByCondition()
+                        }
                     } else {
                         nextScreenByCondition()
 
@@ -102,14 +90,12 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     }
 
     private fun nextScreenByCondition() {
-        val count = Common.getCountOpenApp(this)
-        if (count <= 1) {
-            startActivity(Intent(this@LanguageActivity, IntroActivityNew::class.java))
-            finish()
+        val intent = if (Common.getCountOpenApp(this) <= 1) {
+            Intent(this@LanguageActivity, IntroActivityNew::class.java)
         } else {
-            startActivity(Intent(this@LanguageActivity, MainActivity::class.java))
-            finish()
+            Intent(this@LanguageActivity, MainActivity::class.java)
         }
+        startActivity(intent)
     }
 
 
