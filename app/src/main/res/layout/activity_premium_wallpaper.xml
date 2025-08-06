@@ -49,7 +49,7 @@
                     android:layout_marginStart="@dimen/_8sdp"
                     android:contentDescription="@string/imageview"
                     android:gravity="center"
-                    android:text="@string/favourite"
+                    android:text="@string/premiums"
                     android:textColor="@color/main_color"
                     app:layout_constraintBottom_toBottomOf="@id/previousScreen"
                     app:layout_constraintStart_toEndOf="@id/previousScreen"

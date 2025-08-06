@@ -560,7 +560,7 @@ object InterAds {
                     return false
                 }
                 countClickWallpaper++
-                if (countClickRingtone % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
+                if (countClickWallpaper % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
                     onLoadFailed?.invoke()
                     return false
                 }
@@ -572,8 +572,7 @@ object InterAds {
                     return false
                 }
                 countClickCallscreen++
-
-                if (countClickRingtone % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
+                if (countClickCallscreen % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
                     onLoadFailed?.invoke()
                     return false
 

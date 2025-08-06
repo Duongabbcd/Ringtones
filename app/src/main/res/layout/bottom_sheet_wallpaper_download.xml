@@ -129,6 +129,7 @@
         app:layout_constraintBottom_toTopOf="@id/frBanner" />
 
     <include
+        android:visibility="gone"
         android:id="@+id/frBanner"
         layout="@layout/ads_banner" />
 
