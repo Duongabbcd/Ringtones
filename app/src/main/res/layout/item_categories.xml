@@ -39,8 +39,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_53sdp"
-        android:text="Pop"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="2"
+        android:text="Indian - TV Series, Movies &amp; More"
         android:textColor="@color/white"
         style="@style/CustomTextStyleMedium14sp"/>
 

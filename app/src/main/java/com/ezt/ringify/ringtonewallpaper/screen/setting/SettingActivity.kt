@@ -18,7 +18,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadBanner(this, BANNER_HOME)
         binding.apply {
             backBtn.setOnClickListener {
                 MainActivity.selectedTab = 0

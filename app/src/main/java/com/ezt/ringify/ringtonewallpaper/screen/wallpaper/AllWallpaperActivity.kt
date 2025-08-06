@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityAllWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemCategoryWallpaperBinding
@@ -107,6 +108,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
 
     override fun onResume() {
         super.onResume()
+        InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
         MainActivity.loadBanner(this, BANNER_HOME)
     }
 

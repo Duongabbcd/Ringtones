@@ -12,9 +12,9 @@ object RemoteConfig {
     var ADS_INTRO_070625 = "1"
     var NATIVE_FULL_SCREEN_INTRO_070625 = "0"
 
-    var INTER_RINGTONE = "1"
-    var INTER_WALLPAPER = "1"
-    var INTER_CALLSCREEN = "1"
+    var INTER_RINGTONE = "3"
+    var INTER_WALLPAPER = "3"
+    var INTER_CALLSCREEN = "3"
     var INTER_LANGUAGE = "1"
 
     var REMOTE_ADS_HOME_070625 = "1"

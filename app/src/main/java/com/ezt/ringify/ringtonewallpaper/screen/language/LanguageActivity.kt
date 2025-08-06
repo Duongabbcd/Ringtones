@@ -22,6 +22,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
+import com.ezt.ringify.ringtonewallpaper.screen.splash.SplashActivity
 
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
     private var adapter2: LanguageAdapter? = null
@@ -32,6 +33,15 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         allLanguages = GlobalConstant.getListLocation(this@LanguageActivity)
+
+        if (RemoteConfig.INTER_WALLPAPER != "0") {
+            InterAds.preloadInterAds(
+                this@LanguageActivity,
+                alias = InterAds.ALIAS_INTER_RINGTONE,
+                adUnit = InterAds.INTER_RINGTONE
+            )
+        }
+
 
         start = intent.getBooleanExtra("fromSplash", false)
         binding.apply {
@@ -67,16 +77,24 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
 
     private fun changeLanguageDone() {
         binding.applyBtn.setOnClickListener {
-            println("changeLanguageDone: $selectedLanguage and $selectedLanguageName")
             if (selectedLanguage != "") {
                 Common.setPreLanguage(this@LanguageActivity, selectedLanguage)
                 if(!start) {
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        InterAds.showAdsLanguage(activity = this@LanguageActivity) {
-                            nextScreenByCondition()
-                        }
+                        println("changeLanguageDone: $selectedLanguage and $selectedLanguageName")
+                        InterAds.showPreloadInter(
+                            activity = this@LanguageActivity,
+                            InterAds.ALIAS_INTER_LANGUAGE,
+                            onLoadDone = {
+                                println("onLoadDone")
+                                nextScreenByCondition()
+                            },
+                            onLoadFailed = {
+                                println("onLoadFailed")
+                                nextScreenByCondition()
+                            })
                     } else {
                         nextScreenByCondition()
 
@@ -95,6 +113,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
         } else {
             Intent(this@LanguageActivity, MainActivity::class.java)
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 

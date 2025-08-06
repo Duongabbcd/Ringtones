@@ -83,8 +83,6 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 }
             }
 
-
-
             categoryViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
                 if (isLoading) {
                     val loadingItems1 = List(6) {

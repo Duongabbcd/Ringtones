@@ -102,13 +102,6 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                         AdsManager.countClickWallpaper = 0
                         AdsManager.countClickCallscreen = 0
 
-                        InterAds.initInterLanguage(this@SplashActivity, callback = object : InterAds.Callback {
-                            override fun callback() {
-                                println("")
-                            }
-
-                        })
-
                         if (isInitAds.get()) {
                             return
                         }
@@ -193,19 +186,13 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                     }
 
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_LANGUAGE)
-                    }
-                    if (RemoteConfig.INTER_RINGTONE != "0") {
-                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_RINGTONE)
-                    }
-
-                    if (RemoteConfig.INTER_WALLPAPER != "0") {
-                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_WALLPAPER)
+                        InterAds.preloadInterAds(
+                            this@SplashActivity,
+                            alias = InterAds.ALIAS_INTER_LANGUAGE,
+                            adUnit = InterAds.INTER_LANGUAGE
+                        )
                     }
 
-                    if (RemoteConfig.INTER_CALLSCREEN != "0") {
-                        AdsManager.loadAdInter(this@SplashActivity, AdsManager.INTER_CALLSCREEN)
-                    }
                 }
             })
 

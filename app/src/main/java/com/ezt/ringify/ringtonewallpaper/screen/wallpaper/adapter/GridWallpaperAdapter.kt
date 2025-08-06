@@ -75,7 +75,6 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
         isPremium = premium
         isLive = live
 
-        val start = allWallpapers.size
         allWallpapers.clear()
         allWallpapers.addAll(list)
 
@@ -150,13 +149,6 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
                     onClickListener(wallpaper)
 
                 }
-            }
-        }
-
-        private fun onImageLoaded() {
-            imagesLoadedInBatch++
-            if (imagesLoadedInBatch >= imagesToLoadInBatch) {
-                onAllImagesLoaded?.invoke()
             }
         }
     }

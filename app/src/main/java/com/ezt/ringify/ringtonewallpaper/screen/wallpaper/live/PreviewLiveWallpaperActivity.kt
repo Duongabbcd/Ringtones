@@ -241,7 +241,7 @@ class PreviewLiveWallpaperActivity :
                 }
             }
         }
-        if (!isBackground) bottomSheet.show()
+        if (!isBackground) bottomSheet.dismiss()
 
         val ringtoneUrl = currentWallpaper.contents.first().url.full
         lifecycleScope.launch {

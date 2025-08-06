@@ -13,6 +13,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
@@ -116,6 +117,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
+            binding.nameScreen.isSelected = true
             displayItems()
             binding.noInternet.root.gone()
         }
@@ -175,6 +177,11 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
     override fun onResume() {
         super.onResume()
+        InterAds.preloadInterAds(
+            this,
+            alias = InterAds.ALIAS_INTER_RINGTONE,
+            adUnit = InterAds.INTER_RINGTONE
+        )
         loadBanner(this, BANNER_HOME)
     }
 

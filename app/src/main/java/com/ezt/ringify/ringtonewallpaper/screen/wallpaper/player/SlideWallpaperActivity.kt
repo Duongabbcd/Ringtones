@@ -26,9 +26,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySlideWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -107,6 +106,7 @@ class SlideWallpaperActivity :
         } else {
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
             index = allRingtones.indexOf(currentWallpaper)
+            binding.horizontalWallpapers.smoothScrollToPosition(index)
             println("savedInstanceState 1: $index")
         }
 
@@ -211,7 +211,7 @@ class SlideWallpaperActivity :
             val isSuccess: Boolean = when (settingOption) {
                 1 -> {
                     bottomSheet.setType("lock")
-                    bottomSheet.show()
+                    bottomSheet.dismiss()
                     setWallpaperFromUrl(
                         context = this@SlideWallpaperActivity,
                         bitmap = bitmap,
@@ -221,7 +221,7 @@ class SlideWallpaperActivity :
 
                 2 -> {
                     bottomSheet.setType("home")
-                    bottomSheet.show()
+                    bottomSheet.dismiss()
                     setWallpaperFromUrl(
                         context = this@SlideWallpaperActivity,
                         bitmap = bitmap,
@@ -232,7 +232,7 @@ class SlideWallpaperActivity :
 
                 else -> {
                     bottomSheet.setType("both")
-                    bottomSheet.show()
+                    bottomSheet.dismiss()
 
                     setWallpaperFromUrl(
                         context = this@SlideWallpaperActivity,
@@ -398,7 +398,7 @@ class SlideWallpaperActivity :
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
                     updateIndex(position, "onPositionChange")
-                    setUpNewPlayer(position)
+//                    setUpNewPlayer(position)
                     // 🔁 force rebind to update playingHolder
                 }
 
@@ -580,6 +580,7 @@ class SlideWallpaperActivity :
 
     override fun onResume() {
         super.onResume()
+        InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
         loadBanner(this, BANNER_HOME)
     }
 

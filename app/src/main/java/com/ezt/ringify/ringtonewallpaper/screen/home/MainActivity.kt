@@ -8,21 +8,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.admob.max.dktlibrary.AdmobUtils
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
 import kotlin.system.exitProcess
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.BannerAds
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
-import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.RingtoneFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.WallpaperFragment
+import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
@@ -37,7 +36,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        println("I am here")
         var countOpen = Common.getCountOpenApp(this)
         if (countOpen < 2) {
             countOpen++
@@ -57,7 +56,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
         }
-        displayScreen()
+
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             binding.topFeedback.gone()
@@ -116,10 +115,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onResume() {
         super.onResume()
+        displayScreen()
         loadBanner(this, BANNER_HOME)
-        internetConnected = AdmobUtils.isNetworkConnected(this@MainActivity)
-        println("onResume: $internetConnected")
-
     }
 
 
@@ -127,15 +124,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         println("displayScreen: $selectedTab")
         when (selectedTab) {
             0 -> {
+                InterAds.preloadInterAds(
+                    this@MainActivity,
+                    alias = InterAds.ALIAS_INTER_RINGTONE,
+                    adUnit = InterAds.INTER_RINGTONE
+                )
                 openFragment(RingtoneFragment.Companion.newInstance())
             }
 
             1 -> {
+                InterAds.preloadInterAds(
+                    this@MainActivity,
+                    alias = InterAds.ALIAS_INTER_WALLPAPER,
+                    adUnit = InterAds.INTER_WALLPAPER
+                )
                 openFragment(WallpaperFragment.Companion.newInstance())
 
             }
 
             2 -> {
+                InterAds.preloadInterAds(
+                    this@MainActivity,
+                    alias = InterAds.ALIAS_INTER_CALLSCREEN,
+                    adUnit = InterAds.INTER_CALLSCREEN
+                )
                 openFragment(CallScreenFragment.Companion.newInstance())
             }
 
@@ -144,6 +156,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
             else -> {
+                InterAds.preloadInterAds(
+                    this@MainActivity,
+                    alias = InterAds.ALIAS_INTER_RINGTONE,
+                    adUnit = InterAds.INTER_RINGTONE
+                )
                 openFragment(RingtoneFragment.Companion.newInstance())
             }
         }
@@ -165,8 +182,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         var isChangeTheme = false
         var count = 0
         var displayMode = DisplayMode.WALLPAPER
-
-        var internetConnected = false
 
         fun loadBanner(activity: AppCompatActivity, banner: String = BANNER_HOME) {
             println("RemoteConfig.BANNER_COLLAP_ALL_070625: ${RemoteConfig.BANNER_COLLAP_ALL_070625}")

@@ -106,9 +106,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
                 }
             }
         } else {
-            showAfterIntro3 {
-                startAc()
-            }
+            startAc()
         }
     }
 

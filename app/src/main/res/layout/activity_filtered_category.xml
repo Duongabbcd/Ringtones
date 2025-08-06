@@ -21,10 +21,11 @@
 
             <LinearLayout
                 android:id="@+id/backBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="@dimen/_10sdp"
+                app:layout_constraintEnd_toStartOf="@id/sortIcon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -42,16 +43,17 @@
                 <TextView
                     android:id="@+id/nameScreen"
                     style="@style/CustomTextStyleSemiBold18sp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:contentDescription="@string/imageview"
-                    android:gravity="center"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
                     android:text="@string/categories"
-                    android:textColor="@color/main_color"
-                    app:layout_constraintBottom_toBottomOf="@id/previousScreen"
-                    app:layout_constraintStart_toEndOf="@id/previousScreen"
-                    app:layout_constraintTop_toTopOf="@id/previousScreen" />
+                    android:textColor="@color/main_color" />
 
             </LinearLayout>
 

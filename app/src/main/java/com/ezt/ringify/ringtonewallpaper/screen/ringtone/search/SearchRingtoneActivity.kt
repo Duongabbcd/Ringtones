@@ -16,13 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_CALLSCREEN
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_LANGUAGE
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_RINGTONE
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.INTER_WALLPAPER
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
@@ -44,7 +40,6 @@ import kotlin.getValue
 @AndroidEntryPoint
 class SearchRingtoneActivity :
     BaseActivity<ActivitySearchRingtoneBinding>(ActivitySearchRingtoneBinding::inflate) {
-    //    private var ignoreTextChange = false
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val ringtoneTrendingAdapter: TrendingAdapter by lazy {
         TrendingAdapter()
@@ -187,6 +182,11 @@ class SearchRingtoneActivity :
 
     override fun onResume() {
         super.onResume()
+        InterAds.preloadInterAds(
+            this,
+            alias = InterAds.ALIAS_INTER_RINGTONE,
+            adUnit = InterAds.INTER_RINGTONE
+        )
         loadBanner(this, BANNER_HOME)
     }
 
@@ -197,11 +197,11 @@ class SearchRingtoneActivity :
     companion object {
         fun backToScreen(activity: AppCompatActivity, title: String = "INTER_RINGTONE") {
             val inter = when (title) {
-                "INTER_LANGUAGE" -> INTER_LANGUAGE
-                "INTER_RINGTONE" -> INTER_RINGTONE
-                "INTER_WALLPAPER" -> INTER_WALLPAPER
-                "INTER_CALLSCREEN" -> INTER_CALLSCREEN
-                else -> INTER_LANGUAGE
+                "INTER_LANGUAGE" -> InterAds.ALIAS_INTER_LANGUAGE
+                "INTER_RINGTONE" -> InterAds.ALIAS_INTER_RINGTONE
+                "INTER_WALLPAPER" -> InterAds.ALIAS_INTER_WALLPAPER
+                "INTER_CALLSCREEN" -> InterAds.ALIAS_INTER_CALLSCREEN
+                else -> InterAds.ALIAS_INTER_LANGUAGE
             }
 
             val condition = when (title) {
@@ -213,21 +213,17 @@ class SearchRingtoneActivity :
             }
 
             if (condition != "0") {
-                AdsManager.loadAndShowInterSP2(
-                    activity,
-                    inter,
-                    title,
-                    callback = object : AdsManager.AdListenerWithNative {
-                        override fun onAdClosedOrFailed() {
-                            activity.finish()
-                        }
-
-                        override fun onAdClosedOrFailedWithNative() {
-                            activity.finish()
-                        }
+                InterAds.showPreloadInter(
+                    activity = activity,
+                    alias = inter,
+                    onLoadDone = {
+                        println("onLoadDone")
+                        activity.finish()
                     },
-                    false
-                )
+                    onLoadFailed = {
+                        println("onLoadFailed")
+                        activity.finish()
+                    })
             } else {
                 activity.finish()
             }

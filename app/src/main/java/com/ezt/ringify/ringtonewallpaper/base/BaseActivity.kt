@@ -51,7 +51,7 @@ abstract class BaseActivity<T : ViewBinding>(private val inflater: Inflate<T>) :
                                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                             )
 
-                    val isInDarkMode = true
+                    val isInDarkMode = false
                     val fl = if (isInDarkMode) {
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     } else {

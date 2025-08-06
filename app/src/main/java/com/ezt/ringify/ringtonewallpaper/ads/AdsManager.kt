@@ -820,7 +820,6 @@ object AdsManager {
             }
 
             "INTER_CALLSCREEN" -> {
-                isNowTestDeviceOrNot = true
                 if (RemoteConfig.INTER_CALLSCREEN == "0" || isTestDevice) {
                     callback.onAdClosedOrFailed()
                     return

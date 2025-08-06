@@ -20,7 +20,7 @@ class PhoneSettingActivity :
         super.onCreate(savedInstanceState)
         binding.apply {
             backBtn.setOnClickListener {
-                SearchRingtoneActivity.backToScreen(this@PhoneSettingActivity)
+                finish()
             }
             updateNotificationSwitchUI()
         }
@@ -43,7 +43,7 @@ class PhoneSettingActivity :
     }
 
     override fun onBackPressed() {
-        SearchRingtoneActivity.backToScreen(this@PhoneSettingActivity)
+        finish()
     }
 
     override fun onResume() {
