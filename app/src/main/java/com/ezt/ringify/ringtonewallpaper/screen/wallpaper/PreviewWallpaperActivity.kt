@@ -2,7 +2,9 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +16,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
@@ -130,9 +133,158 @@ class PreviewWallpaperActivity :
             allCategories.visible()
             when (categoryId) {
                 -3 -> {
-                    nameScreen.text = getString(R.string.favourite)
-                    // Attach observer only once
-                    favourite.loadLiveAllWallpapers()
+                    previewFavouriteItems()
+                }
+
+                -2 -> {
+                    nameScreen.text = getString(R.string.trending)
+                    wallPaperViewModel.loadTrendingWallpapers()
+                    previewSelectItems(
+                        wallPaperViewModel.trendingWallpaper,
+                        wallPaperViewModel.loading1
+                    )
+                }
+
+                -1 -> {
+                    nameScreen.text = getString(R.string.new_wallpaper)
+                    wallPaperViewModel.loadNewWallpapers()
+                    previewSelectItems(wallPaperViewModel.newWallpaper, wallPaperViewModel.loading2)
+                }
+
+                else -> {
+                    if (categoryId == 75) {
+                        when (type) {
+                            2 -> {
+                                nameScreen.text = getString(R.string.slide)
+                                wallPaperViewModel.loadSlideWallpaper()
+                                previewSelectItems(
+                                    wallPaperViewModel.slideWallpaper,
+                                    wallPaperViewModel.loading2, true
+                                )
+                            }
+
+                            3 -> {
+                                nameScreen.text = getString(R.string.single)
+                                wallPaperViewModel.loadSingleWallpaper()
+                                previewSelectItems(
+                                    wallPaperViewModel.singleWallpapers,
+                                    wallPaperViewModel.loading3, true
+                                )
+                            }
+
+                            1 -> {
+                                nameScreen.text = getString(R.string.video)
+                                wallPaperViewModel.loadPremiumVideoWallpaper()
+                                previewSelectItems(
+                                    wallPaperViewModel.premiumWallpapers,
+                                    wallPaperViewModel.loading1, true
+                                )
+                            }
+                        }
+                    } else {
+                        categoryViewModel.getCategoryByName(categoryId)
+                        categoryViewModel.category.observe(this@PreviewWallpaperActivity) { category ->
+                            nameScreen.text = category.name
+                        }
+                        wallPaperViewModel.loadSubWallpapers1(categoryId)
+                        previewSelectItems(
+                            wallPaperViewModel.subWallpaper1,
+                            wallPaperViewModel.loading3
+                        )
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun previewSelectItems(
+        data: LiveData<List<Wallpaper>>,
+        loading: LiveData<Boolean>,
+        isPremium: Boolean = false
+    ) {
+        binding.apply {
+            loading.observe(this@PreviewWallpaperActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(15) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+                    // Disable scrolling
+                    wallpaperAdapter.submitList(loadingItems)
+                    this@PreviewWallpaperActivity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    data.observe(this@PreviewWallpaperActivity) { items ->
+                        if (items.isEmpty()) {
+                            allCategories.gone()
+                            noDataLayout.visible()
+                        } else {
+                            noDataLayout.gone()
+                            allCategories.visible()
+                            wallpaperAdapter.submitList(items, isPremium)
+                        }
+                    }
+                    // Re-enable touch
+                    this@PreviewWallpaperActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+    }
+
+
+    private fun previewTrendingItems() {
+        binding.apply {
+            nameScreen.text = getString(R.string.trending)
+            // Attach observer only once
+            wallPaperViewModel.loadTrendingWallpapers()
+            wallPaperViewModel.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(15) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+                    // Disable scrolling
+                    wallpaperAdapter.submitFavouriteList(loadingItems)
+                    this@PreviewWallpaperActivity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    wallPaperViewModel.trendingWallpaper.observe(this@PreviewWallpaperActivity) { items ->
+                        if (items.isEmpty()) {
+                            allCategories.gone()
+                            noDataLayout.visible()
+                        } else {
+                            noDataLayout.gone()
+                            allCategories.visible()
+                            wallpaperAdapter.submitList(items)
+                        }
+                    }
+                    // Re-enable touch
+                    this@PreviewWallpaperActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+    }
+
+    private fun previewFavouriteItems() {
+        binding.apply {
+            nameScreen.text = getString(R.string.favourite)
+            // Attach observer only once
+            favourite.loadLiveAllWallpapers()
+            favourite.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(15) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+                    // Disable scrolling
+                    wallpaperAdapter.submitFavouriteList(loadingItems)
+                    this@PreviewWallpaperActivity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
                     favourite.allLiveWallpapers.observe(this@PreviewWallpaperActivity) { items ->
                         if (items.isEmpty()) {
                             allCategories.gone()
@@ -143,62 +295,11 @@ class PreviewWallpaperActivity :
                             wallpaperAdapter.submitFavouriteList(items)
                         }
                     }
-                }
-
-                -2 -> {
-                    nameScreen.text = getString(R.string.trending)
-                    wallPaperViewModel.loadTrendingWallpapers()
-                    wallPaperViewModel.trendingWallpaper.observe(this@PreviewWallpaperActivity) { items ->
-                        wallpaperAdapter.submitList(items)
-                    }
-                }
-
-                -1 -> {
-                    nameScreen.text = getString(R.string.new_wallpaper)
-                    wallPaperViewModel.loadNewWallpapers()
-                    wallPaperViewModel.newWallpaper.observe(this@PreviewWallpaperActivity) { items ->
-                        wallpaperAdapter.submitList(items)
-                    }
-                }
-
-                else -> {
-                    if (categoryId == 75) {
-                        when (type) {
-                            2 -> {
-                                wallPaperViewModel.loadSlideWallpaper()
-                                wallPaperViewModel.slideWallpaper.observe(this@PreviewWallpaperActivity) {
-                                    wallpaperAdapter.submitList(it, premium = true)
-                                }
-                            }
-
-                            3 -> {
-                                wallPaperViewModel.loadSingleWallpaper()
-                                wallPaperViewModel.singleWallpapers.observe(this@PreviewWallpaperActivity) {
-                                    wallpaperAdapter.submitList(it, premium = true)
-                                }
-                            }
-
-                            else -> {
-                                wallPaperViewModel.loadPremiumVideoWallpaper()
-                                wallPaperViewModel.premiumWallpapers.observe(this@PreviewWallpaperActivity) {
-                                    wallpaperAdapter.submitList(it, premium = true)
-                                }
-                                return@apply
-                            }
-                        }
-                    }
-
-                    categoryViewModel.getCategoryByName(categoryId)
-                    categoryViewModel.category.observe(this@PreviewWallpaperActivity) { category ->
-                        nameScreen.text = category.name
-                    }
-
-                    wallPaperViewModel.loadSubWallpapers1(categoryId)
-                    wallPaperViewModel.subWallpaper1.observe(this@PreviewWallpaperActivity) { items ->
-                        wallpaperAdapter.submitList(items, premium = categoryId == 75)
-                    }
+                    // Re-enable touch
+                    this@PreviewWallpaperActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
             }
+
         }
     }
 

@@ -72,6 +72,7 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
     }
 
     fun submitList(list: List<Wallpaper>, live: Boolean = false, premium: Boolean = false) {
+        println("list: $list")
         isPremium = premium
         isLive = live
 
@@ -117,7 +118,7 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
                 val url = wallpaper.thumbnail?.url?.medium
                     ?: wallpaper.contents.firstOrNull()?.url?.full
 
-                println("GridWallpaperViewHolder: ${wallpaper.id} and ${wallpaper.contents.first().url.full}")
+                println("GridWallpaperViewHolder: ${wallpaper.id}")
                 if (url != null) {
                     progressBar.visibility = View.VISIBLE
                     loading.visibility = View.VISIBLE

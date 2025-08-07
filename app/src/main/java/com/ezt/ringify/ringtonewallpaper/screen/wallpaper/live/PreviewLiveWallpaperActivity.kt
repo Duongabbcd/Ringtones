@@ -97,6 +97,13 @@ class PreviewLiveWallpaperActivity :
             index = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
             currentIndex = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
             Log.d("PreviewLive", "Initial index: $index")
+
+            binding.horizontalWallpapers.post {
+                val layoutManager = binding.horizontalWallpapers.layoutManager
+                if (layoutManager is LinearLayoutManager) {
+                    layoutManager.scrollToPosition(index)
+                }
+            }
         }
 
         addedWallpaperIds.addAll(allWallpapers.map { it.id })

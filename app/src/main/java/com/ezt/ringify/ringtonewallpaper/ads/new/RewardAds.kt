@@ -14,9 +14,9 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-//import com.adjust.sdk.Adjust
-//import com.adjust.sdk.AdjustAdRevenue
-//import com.adjust.sdk.AdjustConfig
+import com.adjust.sdk.Adjust
+import com.adjust.sdk.AdjustAdRevenue
+import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.ezt.ringify.ringtonewallpaper.R
 
@@ -46,17 +46,17 @@ object RewardAds {
                 override fun onAdLoaded(ad: RewardedAd) {
                     Log.d(TAG, "Load OK")
                     mRewardAds = ad
-//                    ad.setOnPaidEventListener { adValue ->
-//                        try {
-//                            MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
-//                            val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
-//                                setRevenue(adValue.valueMicros / 1_000_000.0, adValue.currencyCode)
-//                            }
-//                            Adjust.trackAdRevenue(adRevenue)
-//                        } catch (e: Exception) {
-//                            e.printStackTrace()
-//                        }
-//                    }
+                    ad.setOnPaidEventListener { adValue ->
+                        try {
+                            MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
+                            val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
+                                setRevenue(adValue.valueMicros / 1_000_000.0, adValue.currencyCode)
+                            }
+                            Adjust.trackAdRevenue(adRevenue)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                     isLoading = false
                 }
 
@@ -161,17 +161,21 @@ object RewardAds {
                     override fun onAdLoaded(ad: RewardedAd) {
                         Log.d(TAG, "Load OK")
                         mRewardAds = ad
-//                        ad.setOnPaidEventListener { adValue ->
-//                            try {
-//                                App.initROAS(adValue.valueMicros, adValue.currencyCode)
-//                                val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
-//                                    setRevenue(adValue.valueMicros / 1_000_000.0, adValue.currencyCode)
-//                                }
-//                                Adjust.trackAdRevenue(adRevenue)
-//                            } catch (e: Exception) {
-//                                e.printStackTrace()
-//                            }
-//                        }
+                        ad.setOnPaidEventListener { adValue ->
+                            try {
+                                MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
+                                val adRevenue =
+                                    AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
+                                        setRevenue(
+                                            adValue.valueMicros / 1_000_000.0,
+                                            adValue.currencyCode
+                                        )
+                                    }
+                                Adjust.trackAdRevenue(adRevenue)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
                         isLoading = false
 
                         mRewardAds?.fullScreenContentCallback = object : FullScreenContentCallback() {

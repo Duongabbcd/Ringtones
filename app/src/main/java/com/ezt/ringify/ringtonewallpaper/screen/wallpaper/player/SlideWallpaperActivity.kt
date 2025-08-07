@@ -106,7 +106,12 @@ class SlideWallpaperActivity :
         } else {
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
             index = allRingtones.indexOf(currentWallpaper)
-            binding.horizontalWallpapers.smoothScrollToPosition(index)
+            binding.horizontalWallpapers.post {
+                val layoutManager = binding.horizontalWallpapers.layoutManager
+                if (layoutManager is LinearLayoutManager) {
+                    layoutManager.scrollToPosition(index)
+                }
+            }
             println("savedInstanceState 1: $index")
         }
 

@@ -48,10 +48,12 @@ class FavouriteWallpaperViewModel @Inject constructor(
 
     fun loadLiveWallpaperById(id: Int) {
         println("loadWallpaperById 0: $id")
+        _loading1.value = true
         viewModelScope.launch {
             _liveWallpaper.value = repository.getLiveWallpaperById(id)
             println("loadWallpaperById: ${_liveWallpaper.value}")
         }
+        _loading1.value = false
     }
     
 
