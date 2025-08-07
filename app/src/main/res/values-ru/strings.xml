@@ -16,7 +16,10 @@
     <string name="high_light_2">обои</string>
     <string name="desc_3">Динамические темы экрана звонка</string>
     <string name="high_light_3">Экран звонка</string>
-    <string name="fav_1">Выберите не менее 3 музыкальных жанров, которые вам нравятся</string>
+
+    <string name="fav_1">Выберите 3 музыкальных жанра, которые вам нравятся</string>
+    <string name="selection_title">Вы можете выбрать только до 3</string>
+
     <string name="fav_light_1">музыкальные жанры</string>
     <string name="fav_2">Выберите любимые обои</string>
     <string name="fav_light_2">любимые обои</string>

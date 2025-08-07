@@ -16,7 +16,10 @@
     <string name="high_light_2">wallpaper</string>
     <string name="desc_3">Tema Layar Panggilan Dinamis</string>
     <string name="high_light_3">Layar Panggilan</string>
-    <string name="fav_1">Pilih minimal 3 genre musik yang Anda suka</string>
+
+    <string name="fav_1">3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
+    <string name="selection_title">आप अधिकतम 3 ही चुन सकते हैं</string>
+
     <string name="fav_light_1">genre musik</string>
     <string name="fav_2">Pilih wallpaper favorit Anda</string>
     <string name="fav_light_2">wallpaper favorit</string>

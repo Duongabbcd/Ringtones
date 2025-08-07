@@ -17,7 +17,9 @@
     <string name="desc_3">ডায়নামিক কল স্ক্রিন থিম</string>
     <string name="high_light_3">কল স্ক্রিন</string>
 
-    <string name="fav_1">আপনার পছন্দের অন্তত ৩টি সঙ্গীত ঘরানা নির্বাচন করুন</string>
+    <string name="fav_1">আপনার পছন্দের ৩টি সঙ্গীত ধরণ নির্বাচন করুন</string>
+    <string name="selection_title">আপনি সর্বোচ্চ ৩টি বেছে নিতে পারেন</string>
+
     <string name="fav_light_1">সঙ্গীত ঘরানা</string>
     <string name="fav_2">আপনার প্রিয় ওয়ালপেপার বেছে নিন</string>
     <string name="fav_light_2">প্রিয় ওয়ালপেপার</string>

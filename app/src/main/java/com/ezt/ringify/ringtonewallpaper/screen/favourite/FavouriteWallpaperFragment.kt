@@ -32,6 +32,7 @@ class FavouriteWallpaperFragment : Fragment() {
             allFavWallpaper.addAll(items)
 
             println("wallpaperAdapter: $allFavWallpaper")
+            binding.currentItem.text = "${allFavWallpaper.size} / 3"
         }
     }
 

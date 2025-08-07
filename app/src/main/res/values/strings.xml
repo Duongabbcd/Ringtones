@@ -27,7 +27,7 @@
     <string name="desc_3">Dynamic Call Screen Themes</string>
     <string name="high_light_3">Call Screen</string>
 
-    <string name="fav_1">Select at least 3 music genres you like</string>
+    <string name="fav_1">Select 3 music genres you like</string>
     <string name="fav_light_1">music genres</string>
     <string name="fav_2">Choose your favorite wallpaper</string>
     <string name="fav_light_2">favorite wallpaper</string>
@@ -184,4 +184,6 @@
     <string name="reset_wallpapers">Reset all wallpapers to default</string>
     <string name="set_wallpaper_title">Set Wallpaper</string>
     <string name="exit">Exit</string>
+    <string name="selection_title">You can select up to 3 only</string>
+
 </resources>

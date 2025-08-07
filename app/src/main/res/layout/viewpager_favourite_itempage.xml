@@ -31,61 +31,63 @@
 
         <ImageView
             android:id="@+id/slideDot"
+            android:contentDescription="@string/imageview"
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/first_favourite" />
     </LinearLayout>
 
-    <!-- Scrollable Content -->
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="@dimen/_12sdp"
-        android:paddingBottom="@dimen/_14sdp"
-        app:layout_constraintTop_toBottomOf="@id/topControl"
-        app:layout_constraintBottom_toTopOf="@id/bottomControlLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingBottom="@dimen/_12sdp"
+        app:layout_constraintTop_toBottomOf="@+id/topControl"
+        app:layout_constraintBottom_toTopOf="@+id/bottomControlLayout"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/description"
+            style="@style/CustomTextStyleSemiBold18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_28sdp"
+            android:layout_marginEnd="@dimen/_26sdp"
+            android:text="@string/desc_1" />
 
-            <TextView
-                android:id="@+id/description"
-                style="@style/CustomTextStyleSemiBold18sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_28sdp"
-                android:layout_marginEnd="@dimen/_26sdp"
-                android:text="@string/desc_1" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/allFavourite"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:adjustViewBounds="true"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:contentDescription="@string/imageview"
-                android:src="@drawable/bg_intro2" />
-        </LinearLayout>
-    </ScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allFavourite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_8sdp"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/bg_intro2" />
+    </LinearLayout>
 
     <!-- Bottom Control -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomControlLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_29sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
         app:layout_constraintBottom_toTopOf="@id/frNative"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:id="@+id/currentItem"
+            android:layout_marginStart="@dimen/_26sdp"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            style="@style/CustomTextStyleSemiBold18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/skipBtn"
             style="@style/CustomTextStyleMedium14sp"

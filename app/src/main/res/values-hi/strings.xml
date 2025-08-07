@@ -16,7 +16,10 @@
     <string name="high_light_2">वॉलपेपर</string>
     <string name="desc_3">डायनामिक कॉल स्क्रीन थीम</string>
     <string name="high_light_3">कॉल स्क्रीन</string>
-    <string name="fav_1">कम से कम 3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
+
+    <string name="fav_1">3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
+    <string name="selection_title">आप अधिकतम 3 ही चुन सकते हैं</string>
+
     <string name="fav_light_1">संगीत शैलियाँ</string>
     <string name="fav_2">अपनी पसंदीदा वॉलपेपर चुनें</string>
     <string name="fav_light_2">पसंदीदा वॉलपेपर</string>

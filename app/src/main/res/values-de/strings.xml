@@ -34,7 +34,9 @@
     <string name="quick_theme">Schnelles Thema</string>
     <string name="customize">Anpassen</string>
 
-    <string name="fav_1">Wähle mindestens 3 Musikrichtungen, die du magst</string>
+    <string name="fav_1">Wähle 3 Musikgenres, die du magst</string>
+    <string name="selection_title">Du kannst nur bis zu 3 auswählen</string>
+
     <string name="fav_light_1">Musikrichtungen</string>
     <string name="fav_2">Wähle dein Lieblingshintergrundbild</string>
     <string name="fav_light_2">Lieblingshintergrund</string>

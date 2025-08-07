@@ -18,7 +18,9 @@
     <string name = "desc_3">Más información encontrada aquí</string>
     <string name = "high_light_3">Más información</string>
 
-    <string name="fav_1">Vor 3 Monaten wurde das Ergebnis verbessert</string>
+    <string name="fav_1">Selecciona 3 géneros musicales que te gusten</string>
+    <string name="selection_title">Solo puedes seleccionar hasta 3</string>
+
     <string name="fav_light_1">Nueva versión</string>
     <string name = "fav_2">Erweitern Sie su navegador en su cuenta</string>
     <string name = "fav_light_2">Nueva versión</string>

@@ -16,7 +16,10 @@
     <string name="high_light_2">wallpaper</string>
     <string name="desc_3">Temi dinamici per schermata di chiamata</string>
     <string name="high_light_3">Schermata chiamata</string>
-    <string name="fav_1">Seleziona almeno 3 generi musicali che ti piacciono</string>
+
+    <string name="fav_1">Seleziona 3 generi musicali che ti piacciono</string>
+    <string name="selection_title">Puoi selezionare solo fino a 3</string>
+
     <string name="fav_light_1">generi musicali</string>
     <string name="fav_2">Scegli il tuo sfondo preferito</string>
     <string name="fav_light_2">sfondo preferito</string>

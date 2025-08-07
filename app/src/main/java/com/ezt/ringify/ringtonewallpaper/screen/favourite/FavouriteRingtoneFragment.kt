@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -36,7 +37,7 @@ class FavouriteRingtoneFragment : Fragment() {
             allFavRingtones.addAll(list)
 
             println("ringtoneAdapter: $allFavRingtones")
-
+            binding.currentItem.text = "${allFavRingtones.size} / 3"
         }
     }
 
@@ -148,25 +149,24 @@ class SelectingFavouriteAdapter(private val onSelectionChanged: (List<Int>) -> U
 
                 root.setOnClickListener {
                     val clickedId = category.id
-                    var removeId: Int? = null
 
-                    if (selectedCategories.contains(category.id)) {
-                        selectedCategories.remove(category.id)
-                    } else {
-                        if (selectedCategories.size >= 3) {
-                            removeId = selectedCategories.removeAt(0) // Limit to 4 items
-                        }
+                    if (selectedCategories.contains(clickedId)) {
+                        // ✅ Already selected → remove
+                        selectedCategories.remove(clickedId)
+                        notifyItemChanged(position)
+                        onSelectionChanged(selectedCategories)
+                        return@setOnClickListener
+                    }
+
+                    // ✅ Not selected → only add if size < 3
+                    if (selectedCategories.size < 3) {
                         selectedCategories.add(clickedId)
+                        notifyItemChanged(position)
+                        onSelectionChanged(selectedCategories)
+                    } else {
+                        // ❌ Do nothing or show a toast
+                        Toast.makeText(context, "You can select up to 3 only", Toast.LENGTH_SHORT).show()
                     }
-
-                    notifyItemChanged(position)
-                    removeId?.let { id ->
-                        val removedPosition = allCategories.indexOfFirst { it.id == id }
-                        if (removedPosition != -1) {
-                            notifyItemChanged(removedPosition)
-                        }
-                    }
-                    onSelectionChanged(selectedCategories) // Notify parent
                 }
 
             }

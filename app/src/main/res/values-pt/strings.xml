@@ -16,7 +16,11 @@
     <string name="high_light_2">papéis de parede</string>
     <string name="desc_3">Temas dinâmicos de tela de chamada</string>
     <string name="high_light_3">Tela de chamada</string>
-    <string name="fav_1">Selecione pelo menos 3 gêneros musicais que você gosta</string>
+
+    <string name="fav_1">Selecione 3 gêneros musicais que você gosta</string>
+    <string name="selection_title">Você pode selecionar até 3 apenas</string>
+
+
     <string name="fav_light_1">gêneros musicais</string>
     <string name="fav_2">Escolha seu papel de parede favorito</string>
     <string name="fav_light_2">papel de parede favorito</string>

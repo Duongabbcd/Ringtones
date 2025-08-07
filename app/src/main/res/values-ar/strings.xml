@@ -18,7 +18,8 @@
     <string name="desc_3">موضوعات شاشة الاتصال الديناميكية</string>
     <string name="high_light_3">فحص المكالمات</string>
 
-    <string name="fav_1">حدد 3 أنواع موسيقية على الأقل تحبها</string>
+    <string name="fav_1">اختر 3 أنواع من الموسيقى التي تفضلها</string>
+    <string name="selection_title">يمكنك اختيار 3 فقط</string>
     <string name="fav_light_1">أنواع الموسيقى</string>
     <string name="fav_2">اختر الخلفية المفضلة لديك</string>
     <string name="fav_light_2">خلفية الشاشة المفضلة</string>

@@ -74,7 +74,7 @@ data class Category(
 ) {
     companion object {
         val EMPTY_CATEGORY = Category(
-            -99, "EMPTY_CATEGORY", Thumbnail("", Size(0,0), Url("","","","") ),0,0,0,0,0,0,0,0,0,0,0,"",""
+            -99, "", Thumbnail("", Size(0,0), Url("","","","") ),0,0,0,0,0,0,0,0,0,0,0,"",""
         )
     }
 }
