@@ -3,36 +3,22 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="@dimen/_35sdp"
-    android:paddingTop="@dimen/_18sdp"
-    android:background="@drawable/background_radius_16"
-    android:paddingBottom="@dimen/_52sdp"
+    android:background="@drawable/background_radius_16_top_corner"
+    android:paddingTop="@dimen/_36sdp"
+    android:paddingBottom="@dimen/_24sdp"
     android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/top"
-        android:backgroundTint="#D9D9D9"
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="@dimen/_7sdp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:id="@+id/rewardBtn"
-        app:layout_constraintTop_toBottomOf="@id/top"
+        android:layout_height="@dimen/_52sdp"
         android:gravity="center"
-        android:background="@drawable/background_radius_10_gray"
-        android:backgroundTint="#DA6849"
+        android:background="@drawable/background_radius_12"
+        android:backgroundTint="#8246FF"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal" >
 
-        <ImageView
-            android:contentDescription="@string/imageview"
-            android:layout_width="@dimen/_45sdp"
-            android:layout_height="@dimen/_45sdp"
-            android:layout_marginVertical="@dimen/_10sdp"
-            android:src="@drawable/icon_reward_play"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,5 +30,14 @@
             style="@style/CustomTextStyleSemiBold18sp"/>
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/_21sdp"
+        android:layout_height="@dimen/_21sdp"
+        android:layout_margin="@dimen/_4sdp"
+        android:contentDescription="@string/imageview"
+        android:src="@drawable/icon_ad_mini"
+        app:layout_constraintEnd_toEndOf="@id/rewardBtn"
+        app:layout_constraintTop_toTopOf="@id/rewardBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

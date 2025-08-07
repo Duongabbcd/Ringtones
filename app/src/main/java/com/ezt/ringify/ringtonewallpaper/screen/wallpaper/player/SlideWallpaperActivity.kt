@@ -27,13 +27,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.ads.new.RewardAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySlideWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.reward.RewardBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper.setWallpaperFromUrl
@@ -51,6 +54,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -134,7 +140,8 @@ class SlideWallpaperActivity :
                     // User denied and selected "Don't ask again"
                     showGoToSettingsDialog()
                 } else {
-                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -151,7 +158,8 @@ class SlideWallpaperActivity :
                 intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT)
+                    .show()
                 finish()
             }
         }
@@ -161,27 +169,125 @@ class SlideWallpaperActivity :
 
         binding.apply {
             share.setOnClickListener {
-                val imageUrl = currentWallpaper.contents.first().url.full
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, imageUrl)
-                    type = "text/plain"
+                val total = currentWallpaper.contents.size
+                if (total == 1) {
+                    checkPayBeforeNormalWallpaper {
+                        val imageUrl = currentWallpaper.contents.first().url.full
+                        val shareIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, imageUrl)
+                            type = "text/plain"
+                        }
+                        startActivity(Intent.createChooser(shareIntent, "Share image via"))
+                    }
+                } else {
+                    checkPayBeforeSpecialWallpaper {
+                        val imageUrls = currentWallpaper.contents.map { it.url.full }
+                        val shareText = imageUrls.joinToString(separator = "\n") // one URL per line
+
+                        val shareIntent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, shareText)
+                            type = "text/plain"
+                        }
+
+                        startActivity(Intent.createChooser(shareIntent, "Share images via"))
+                    }
                 }
-                startActivity(Intent.createChooser(shareIntent, "Share image via"))
             }
 
             download.setOnClickListener {
-                downloadWallpaper()
+                val imageUrl = currentWallpaper.contents
+                if (imageUrl.size == 1) {
+                    checkPayBeforeNormalWallpaper {
+                        downloadWallpaper()
+                    }
+                } else {
+                    checkPayBeforeSpecialWallpaper {
+                        downloadWallpaper()
+                    }
+                }
             }
+
             wallpaper.setOnClickListener {
                 val imageUrl = currentWallpaper.contents
-
                 setUpPhotoByCondition(imageUrl)
-
             }
 
         }
     }
+
+    private fun checkPayBeforeSpecialWallpaper(onClickListener: () -> Unit) {
+        val listName = mutableListOf<Int>()
+        val origin = Common.getAllFreeWallpapers(this@SlideWallpaperActivity)
+        listName.addAll(origin)
+        if (!listName.contains(currentWallpaper.id)) {
+            val rewardBottomSheet = RewardBottomSheet(this@SlideWallpaperActivity) {
+                RewardAds.showAds(this@SlideWallpaperActivity, object : RewardAds.RewardCallback {
+                    override fun onAdShowed() {
+                        Log.d(TAG, "onAdShowed")
+                    }
+
+                    override fun onAdDismiss() {
+                        Log.d(TAG, "onAdDismiss")
+                        if (listName.size > RemoteConfig.totalFreeRingtones.toInt()) {
+                            listName.drop(0)
+                        }
+                        listName.add(currentWallpaper.id)
+                        Common.setAllFreeWallpapers(this@SlideWallpaperActivity, listName)
+                        onClickListener()
+                    }
+
+                    override fun onAdFailedToShow() {
+                        Log.d(TAG, "onAdFailedToShow")
+                        onClickListener()
+                    }
+
+                    override fun onEarnedReward() {
+                        Log.d(TAG, "onEarnedReward")
+
+                    }
+
+                    override fun onPremium() {
+                        Log.d(TAG, "onPremium")
+                        onClickListener()
+                    }
+
+                })
+
+            }
+            rewardBottomSheet.show()
+
+        } else {
+            onClickListener()
+        }
+    }
+
+    private fun checkPayBeforeNormalWallpaper(onClickListener: () -> Unit) {
+        val listName = mutableListOf<Int>()
+        val origin = Common.getAllFreeWallpapers(this@SlideWallpaperActivity)
+        listName.addAll(origin)
+        if (!listName.contains(currentWallpaper.id)) {
+            InterAds.showPreloadInter(
+                this@SlideWallpaperActivity,
+                InterAds.ALIAS_INTER_DOWNLOAD,
+                onLoadDone = {
+                    if (listName.size > RemoteConfig.totalFreeRingtones.toInt()) {
+                        listName.drop(0)
+                    }
+                    listName.add(currentWallpaper.id)
+                    Common.setAllFreeWallpapers(this@SlideWallpaperActivity, listName)
+                    onClickListener()
+                },
+                onLoadFailed = {
+                    onClickListener()
+                })
+
+        } else {
+            onClickListener()
+        }
+    }
+
 
     private val cropLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -270,28 +376,36 @@ class SlideWallpaperActivity :
 
 
     private fun setUpPhotoByCondition(imageUrl: List<ImageContent>) {
-        if (imageUrl.size > 1) {
-            lifecycleScope.launch {
-                setUpLiveWallpaperByCondition(imageUrl)
-            }
-        } else {
+        println("setUpPhotoByCondition: ${imageUrl.size}")
+        if (imageUrl.size == 1) {
+            InterAds.preloadInterAds(
+                this,
+                alias = InterAds.ALIAS_INTER_DOWNLOAD,
+                adUnit = InterAds.INTER_DOWNLOAD
+            )
             val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
                 settingOption = result
-
-
-                val intent = Intent(this@SlideWallpaperActivity, CropActivity::class.java).apply {
-                    putExtra("imageUrl", imageUrl.first().url.full)
+                checkPayBeforeNormalWallpaper {
+                    val intent =
+                        Intent(this@SlideWallpaperActivity, CropActivity::class.java).apply {
+                            putExtra("imageUrl", imageUrl.first().url.full)
+                        }
+                    cropLauncher.launch(intent)
                 }
-                cropLauncher.launch(intent)
-
-
             }
             dialog.show()
+        } else {
+            checkPayBeforeSpecialWallpaper {
+                lifecycleScope.launch {
+                    setUpLiveWallpaperByCondition(imageUrl)
+                }
+            }
         }
     }
 
     private suspend fun setUpLiveWallpaperByCondition(imageUrls: List<ImageContent>) {
         val bitmap = urlToBitmap(imageUrls.first().url.full) ?: return
+        println("setUpLiveWallpaperByCondition: $bitmap")
         lifecycleScope.launch {
             startLiveWallpaper(imageUrls)
         }
@@ -337,9 +451,7 @@ class SlideWallpaperActivity :
     }
 
     private fun actuallyDownloadWallpaper(isBackground: Boolean = false) {
-
-        val bottomSheet = DownloadWallpaperBottomSheet(this)
-        bottomSheet.apply {
+        val bottomSheet = DownloadWallpaperBottomSheet(this).apply {
             setType("download")
             setCancelable(false)
             setCanceledOnTouchOutside(false)
@@ -349,30 +461,40 @@ class SlideWallpaperActivity :
                 b.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
+
         if (!isBackground) {
             bottomSheet.show()
         }
 
+        val urls = currentWallpaper.contents.map { it.url.full }
 
-        val ringtoneUrl = currentWallpaper.contents.first().url.full
         lifecycleScope.launch {
-            val uri = RingtoneHelper.downloadImage(this@SlideWallpaperActivity, ringtoneUrl)
+            val uris: List<Uri?> = withContext(Dispatchers.IO) {
+                coroutineScope {
+                    urls.map { url ->
+                        async {
+                            RingtoneHelper.downloadImage(this@SlideWallpaperActivity, url)
+                        }
+                    }.awaitAll()
+                }
+            }
+
             withContext(Dispatchers.Main) {
-                if (uri != null) {
-                    downloadedUri = uri
+                if (uris.all { it != null }) {
+                    downloadedUri = uris.first() // or handle multiple URIs as needed
                     delay(5000L)
-                    bottomSheet.showSuccess().also {
-                        enableDismiss(bottomSheet)
-                    }
+                    bottomSheet.showSuccess()
+                    enableDismiss(bottomSheet)
                     viewModel.increaseDownload(currentWallpaper)
                 } else {
-                    bottomSheet.showFailure().also {
-                        enableDismiss(bottomSheet)
-                    }
+                    bottomSheet.showFailure()
+                    enableDismiss(bottomSheet)
                 }
             }
         }
     }
+
+
 
     private fun enableDismiss(bottomSheet: DownloadWallpaperBottomSheet) {
         bottomSheet.apply {
@@ -572,9 +694,10 @@ class SlideWallpaperActivity :
     }
 
     companion object {
-        var imageBitmap: Bitmap? = null
         var settingOption = 0
         var currentIndex = 0
+
+        private val TAG = SlideWallpaperActivity::class.java.name
     }
 
 
@@ -587,6 +710,7 @@ class SlideWallpaperActivity :
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
         loadBanner(this, BANNER_HOME)
+        RewardAds.initRewardAds(this)
     }
 
     override fun onBackPressed() {

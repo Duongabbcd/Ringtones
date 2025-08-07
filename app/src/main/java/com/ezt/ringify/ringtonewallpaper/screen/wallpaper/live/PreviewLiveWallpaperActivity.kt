@@ -25,9 +25,9 @@ import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.RewardAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewLiveWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -35,11 +35,11 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.reward.RewardBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity.Companion.currentIndex
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -155,7 +155,7 @@ class PreviewLiveWallpaperActivity :
         ) { permissions ->
             val allGranted = permissions.values.all { it }
             if (allGranted) {
-                actuallyDownloadWallpaper()
+                actuallyDownloadVideoWallpaper()
             } else {
                 val permanentlyDenied = permissions.keys.any { permission ->
                     !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
@@ -186,23 +186,77 @@ class PreviewLiveWallpaperActivity :
     private fun setupButtons() {
         binding.apply {
             share.setOnClickListener {
-                val videoUrl = currentWallpaper.contents.first().url.full
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, "Check out this video")
-                    putExtra(Intent.EXTRA_TEXT, videoUrl)
+                checkPayBeforeUsingVideoWallpaper {
+                    val videoUrl = currentWallpaper.contents.first().url.full
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, "Check out this video")
+                        putExtra(Intent.EXTRA_TEXT, videoUrl)
+                    }
+                    startActivity(Intent.createChooser(shareIntent, "Share video via"))
                 }
-                startActivity(Intent.createChooser(shareIntent, "Share video via"))
             }
 
             download.setOnClickListener {
-                downloadWallpaper()
+                checkPayBeforeUsingVideoWallpaper {
+                    downloadVideoWallpaper()
+                }
             }
 
             wallpaper.setOnClickListener {
-                val videoUrl = currentWallpaper.contents.first().url.full
-                setUpVideoByCondition(videoUrl)
+                checkPayBeforeUsingVideoWallpaper {
+                    val videoUrl = currentWallpaper.contents.first().url.full
+                    setUpVideoByCondition(videoUrl)
+                }
             }
+        }
+    }
+
+    private fun checkPayBeforeUsingVideoWallpaper(onClickListener: () -> Unit) {
+        val listName = mutableListOf<Int>()
+        val origin = Common.getAllFreeWallpapers(this@PreviewLiveWallpaperActivity)
+        listName.addAll(origin)
+        if (!listName.contains(currentWallpaper.id)) {
+            val rewardBottomSheet = RewardBottomSheet(this@PreviewLiveWallpaperActivity) {
+                RewardAds.showAds(
+                    this@PreviewLiveWallpaperActivity,
+                    object : RewardAds.RewardCallback {
+                        override fun onAdShowed() {
+                            Log.d(TAG, "onAdShowed")
+                        }
+
+                        override fun onAdDismiss() {
+                            Log.d(TAG, "onAdDismiss")
+                            if (listName.size > RemoteConfig.totalFreeRingtones.toInt()) {
+                                listName.drop(0)
+                            }
+                            listName.add(currentWallpaper.id)
+                            Common.setAllFreeWallpapers(this@PreviewLiveWallpaperActivity, listName)
+                            onClickListener()
+                        }
+
+                        override fun onAdFailedToShow() {
+                            Log.d(TAG, "onAdFailedToShow")
+                            onClickListener()
+                        }
+
+                        override fun onEarnedReward() {
+                            Log.d(TAG, "onEarnedReward")
+
+                        }
+
+                        override fun onPremium() {
+                            Log.d(TAG, "onPremium")
+                            onClickListener()
+                        }
+
+                    })
+
+            }
+            rewardBottomSheet.show()
+
+        } else {
+            onClickListener()
         }
     }
 
@@ -228,17 +282,18 @@ class PreviewLiveWallpaperActivity :
     }
 
 
-    private fun downloadWallpaper() {
+    private fun downloadVideoWallpaper() {
         val missingPermissions = RingtoneHelper.getMissingPhotoPermissions(this)
         if (missingPermissions.isEmpty()) {
-            actuallyDownloadWallpaper()
+            actuallyDownloadVideoWallpaper()
         } else {
             requestPermissionLauncher.launch(missingPermissions.toTypedArray())
         }
     }
 
-    private fun actuallyDownloadWallpaper(isBackground: Boolean = false) {
+    private fun actuallyDownloadVideoWallpaper(isBackground: Boolean = false) {
         val bottomSheet = DownloadWallpaperBottomSheet(this).apply {
+            setType()
             setCancelable(false)
             setCanceledOnTouchOutside(false)
             setOnShowListener { dialog ->
@@ -248,7 +303,7 @@ class PreviewLiveWallpaperActivity :
                 }
             }
         }
-        if (!isBackground) bottomSheet.dismiss()
+        if (!isBackground) bottomSheet.show()
 
         val ringtoneUrl = currentWallpaper.contents.first().url.full
         lifecycleScope.launch {
@@ -450,7 +505,7 @@ class PreviewLiveWallpaperActivity :
     }
 
     companion object {
-        var settingOption = 0
+        private val TAG = PreviewLiveWallpaperActivity::class.java.name
     }
 
     @OptIn(UnstableApi::class)
@@ -474,6 +529,7 @@ class PreviewLiveWallpaperActivity :
     override fun onResume() {
         super.onResume()
         loadBanner(this, BANNER_HOME)
+        RewardAds.initRewardAds(this)
     }
 
     override fun onBackPressed() {

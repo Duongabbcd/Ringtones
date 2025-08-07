@@ -86,19 +86,19 @@ object BannerAds {
                 override fun onAdLoaded() {
                     super.onAdLoaded()
                     println("onAdLoaded: is here")
-                    mAdViewBanner.setOnPaidEventListener { adValue ->
-                        try {
-                            MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
-                            val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB)
-                            adRevenue.setRevenue(
-                                adValue.valueMicros / 1_000_000.0,
-                                adValue.currencyCode
-                            )
-                            Adjust.trackAdRevenue(adRevenue)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
+//                    mAdViewBanner.setOnPaidEventListener { adValue ->
+//                        try {
+//                            MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
+//                            val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB)
+//                            adRevenue.setRevenue(
+//                                adValue.valueMicros / 1_000_000.0,
+//                                adValue.currencyCode
+//                            )
+//                            Adjust.trackAdRevenue(adRevenue)
+//                        } catch (e: Exception) {
+//                            e.printStackTrace()
+//                        }
+//                    }
                     adViewContainer.visibility = View.VISIBLE
                     hideBannerLoading(ctx, false)
                 }

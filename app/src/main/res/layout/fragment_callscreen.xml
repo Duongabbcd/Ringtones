@@ -96,7 +96,7 @@
                     android:paddingVertical="@dimen/_4sdp"
                     android:text="Unknown Number"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/defaultAvatar" />

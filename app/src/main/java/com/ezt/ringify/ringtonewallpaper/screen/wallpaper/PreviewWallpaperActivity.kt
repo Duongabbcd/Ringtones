@@ -13,6 +13,7 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBin
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
@@ -55,6 +56,10 @@ class PreviewWallpaperActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (AdmobUtils.isNetworkConnected(this)) {
+            displayItems()
+        }
+
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(
@@ -69,6 +74,7 @@ class PreviewWallpaperActivity :
 
     override fun onResume() {
         super.onResume()
+
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
         connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
             checkInternetConnected(isConnected)
@@ -87,7 +93,6 @@ class PreviewWallpaperActivity :
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            displayItems()
             loadMoreData()
             binding.noInternet.root.gone()
         }
@@ -204,30 +209,14 @@ class PreviewWallpaperActivity :
         isPremium: Boolean = false
     ) {
         binding.apply {
-            loading.observe(this@PreviewWallpaperActivity) { isLoading ->
-                if (isLoading) {
-                    val loadingItems = List(15) {
-                        Wallpaper.EMPTY_WALLPAPER
-                    }
-                    // Disable scrolling
-                    wallpaperAdapter.submitList(loadingItems)
-                    this@PreviewWallpaperActivity.window.setFlags(
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                    )
+            data.observe(this@PreviewWallpaperActivity) { items ->
+                if (items.isEmpty()) {
+                    allCategories.gone()
+                    noDataLayout.visible()
                 } else {
-                    data.observe(this@PreviewWallpaperActivity) { items ->
-                        if (items.isEmpty()) {
-                            allCategories.gone()
-                            noDataLayout.visible()
-                        } else {
-                            noDataLayout.gone()
-                            allCategories.visible()
-                            wallpaperAdapter.submitList(items, isPremium)
-                        }
-                    }
-                    // Re-enable touch
-                    this@PreviewWallpaperActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    noDataLayout.gone()
+                    allCategories.visible()
+                    wallpaperAdapter.submitList(items, isPremium)
                 }
             }
         }

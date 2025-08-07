@@ -30,14 +30,15 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.RewardAds
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.reward.RewardBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.bottomsheet.DownloadRingtoneBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
@@ -164,14 +165,14 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     private val progressReceiver = object : android.content.BroadcastReceiver() {
-        override fun onReceive(context: android.content.Context?, intent: android.content.Intent?) {
+        override fun onReceive(context: android.content.Context?, intent: Intent?) {
             val progress = intent?.getLongExtra("progress", 0L) ?: 0L
             playRingtoneAdapter.updateProgress(progress.toFloat())
         }
     }
 
     private val endedReceiver = object : android.content.BroadcastReceiver() {
-        override fun onReceive(context: android.content.Context?, intent: android.content.Intent?) {
+        override fun onReceive(context: android.content.Context?, intent: Intent?) {
             playRingtoneAdapter.onSongEnded()
         }
     }
@@ -211,12 +212,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         isPlaying = savedInstanceState?.getBoolean("isPlaying", false) ?: false
         // Bind service
         val intent = Intent(this, RingtonePlayerService::class.java)
-        bindService(intent, serviceConnection, android.content.Context.BIND_AUTO_CREATE)
+        bindService(intent, serviceConnection, BIND_AUTO_CREATE)
 
         // Register progress and ended receivers
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+        LocalBroadcastManager.getInstance(this)
             .registerReceiver(progressReceiver, android.content.IntentFilter("ringtone_progress"))
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+        LocalBroadcastManager.getInstance(this)
             .registerReceiver(endedReceiver, android.content.IntentFilter("ringtone_ended"))
 
         handler = Handler(Looper.getMainLooper())
@@ -422,21 +423,72 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private fun setupButtons() {
         binding.apply {
             download.setOnClickListener {
-                downloadRingtone()
+                checkPayBeforeUsingRingtone {
+                    downloadRingtone()
+                }
             }
 
             ringTone.setOnClickListener {
-                setupRingtone()
+                checkPayBeforeUsingRingtone {
+                    setupRingtone()
+                }
             }
 
             notification.setOnClickListener {
-                setupRingtone(true)
+                checkPayBeforeUsingRingtone {
+                    setupRingtone(true)
+                }
             }
         }
     }
 
-    private fun downloadRingtone() {
+    private fun checkPayBeforeUsingRingtone(onClickListener: () -> Unit) {
+        val listName = mutableListOf<String>()
+        val origin = Common.getAllFreeRingtones(this@RingtoneActivity)
+        listName.addAll(origin)
+        if (!listName.contains(currentRingtone.name)) {
+            val rewardBottomSheet = RewardBottomSheet(this@RingtoneActivity) {
+                RewardAds.showAds(this@RingtoneActivity, object : RewardAds.RewardCallback {
+                    override fun onAdShowed() {
+                        Log.d(TAG, "onAdShowed")
+                    }
 
+                    override fun onAdDismiss() {
+                        Log.d(TAG, "onAdDismiss")
+                        if (listName.size > RemoteConfig.totalFreeRingtones.toInt()) {
+                            listName.drop(0)
+                        }
+                        listName.add(currentRingtone.name)
+                        Common.setAllFreeRingtones(this@RingtoneActivity, listName)
+                        onClickListener()
+                    }
+
+                    override fun onAdFailedToShow() {
+                        Log.d(TAG, "onAdFailedToShow")
+                        onClickListener()
+                    }
+
+                    override fun onEarnedReward() {
+                        Log.d(TAG, "onEarnedReward")
+
+                    }
+
+                    override fun onPremium() {
+                        Log.d(TAG, "onPremium")
+                        onClickListener()
+                    }
+
+                })
+
+            }
+            rewardBottomSheet.show()
+
+        } else {
+            onClickListener()
+        }
+    }
+
+    private fun downloadRingtone() {
         val missingPermissions = RingtoneHelper.getMissingAudioPermissions(this)
 
         if (missingPermissions.isEmpty()) {
@@ -739,6 +791,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     override fun onResume() {
         super.onResume()
         loadBanner(this, BANNER_HOME)
+        RewardAds.initRewardAds(this)
 
         if (!serviceBound) return
 
@@ -804,6 +857,10 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             playRingtoneAdapter.setCurrentPlayingPosition(index, false)
             println("Activity onStop: pause playback")
         }
+    }
+
+    companion object {
+        private val TAG = RingtoneActivity::class.java.name
     }
 }
 

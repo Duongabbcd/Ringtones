@@ -223,6 +223,40 @@ object Common {
         return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: listOf()
     }
 
+    fun getAllFreeRingtones(mContext: Context): List<String> {
+        val preferences = mContext.getSharedPreferences(
+            mContext.packageName,
+            MODE_MULTI_PROCESS
+        )
+        val savedList = preferences.getString("KEY_Free_Ringtones", null)
+        return savedList?.split(",")?.mapNotNull { it } ?: listOf()
+    }
+
+    fun setAllFreeRingtones(context: Context, list: List<String> = emptyList()) {
+        val preferences = context.getSharedPreferences(
+            context.packageName,
+            MODE_MULTI_PROCESS
+        )
+        preferences.edit().putString("KEY_Free_Ringtones", list.joinToString(",")).apply()
+    }
+
+    fun getAllFreeWallpapers(mContext: Context): List<Int> {
+        val preferences = mContext.getSharedPreferences(
+            mContext.packageName,
+            MODE_MULTI_PROCESS
+        )
+        val savedList = preferences.getString("KEY_Free_Wallpapers", null)
+        return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: listOf()
+    }
+
+    fun setAllFreeWallpapers(context: Context, list: List<Int> = emptyList()) {
+        val preferences = context.getSharedPreferences(
+            context.packageName,
+            MODE_MULTI_PROCESS
+        )
+        preferences.edit().putString("KEY_Free_Wallpapers", list.joinToString(",")).apply()
+    }
+
     fun setTheme(context: Context, selectedTheme: Int) {
         val preferences = context.getSharedPreferences(
             context.packageName,

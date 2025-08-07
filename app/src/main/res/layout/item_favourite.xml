@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/_9sdp"
     android:background="@drawable/background_radius_12_light_gray"
-    android:layout_height="@dimen/_128sdp">
+    android:layout_height="wrap_content">
     
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/categoryAvatar"
@@ -15,7 +15,8 @@
         android:layout_margin="@dimen/_4sdp"
         android:contentDescription="@string/imageview"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_86sdp"/>
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1" />
 
     <TextView
         android:id="@+id/categoryName"
@@ -25,6 +26,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/CustomTextStyleMedium12sp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

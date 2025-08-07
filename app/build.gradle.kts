@@ -98,7 +98,10 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.6")
 
     implementation("com.google.android.material:material:1.10.0")
-    implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1") // or your Glide version
+    kapt("com.github.bumptech.glide:compiler:4.15.1")        // if using kapt
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.15.1")// OkHttp integration
+
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 

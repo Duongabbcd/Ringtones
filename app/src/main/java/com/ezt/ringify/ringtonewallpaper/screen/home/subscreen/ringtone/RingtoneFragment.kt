@@ -90,7 +90,6 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                     }
                     categoryAdapter.submitList(loadingItems1)
 
-
                     requireActivity().window.setFlags(
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE

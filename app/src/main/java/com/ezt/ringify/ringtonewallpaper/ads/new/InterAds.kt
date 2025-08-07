@@ -41,11 +41,13 @@ object InterAds {
     const val INTER_RINGTONE = "inter_ringtone"
     const val INTER_WALLPAPER = "inter_wallpaper"
     const val INTER_CALLSCREEN = "inter_callscreen"
+    const val INTER_DOWNLOAD = "inter_download"
 
     private const val INTER_TEST_ID = "ca-app-pub-3940256099942544/1033173712"
     private const val INTER_ID_DEFAULT = "your-ad-id"
 
     const val ALIAS_INTER_LANGUAGE = "alias_inter_language"
+    const val ALIAS_INTER_DOWNLOAD = "alias_inter_download"
     const val ALIAS_INTER_RINGTONE = "alias_inter_ringtone"
     const val ALIAS_INTER_WALLPAPER = "alias_inter_wallpaper"
     const val ALIAS_INTER_CALLSCREEN = "alias_inter_callscreen"
@@ -61,7 +63,7 @@ object InterAds {
     var interPreloadMap = mutableMapOf<String, MutableLiveData<InterAdWrapper>>()
 
     class InterAdWrapper(var intersAd: InterstitialAd?) {
-        var state : Int = -1
+        var state: Int = -1
         var adId: String? = null
     }
 
@@ -261,7 +263,11 @@ object InterAds {
         }
     }
 
-    fun showAds(activity: FragmentActivity, callback: () -> Unit, needLoadAfterShow : Boolean = true) {
+    fun showAds(
+        activity: FragmentActivity,
+        callback: () -> Unit,
+        needLoadAfterShow: Boolean = true
+    ) {
         try {
             val prefs = Prefs(MyApplication.Companion.getInstance())
             if (prefs.premium || prefs.isRemoveAd) {
@@ -339,7 +345,7 @@ object InterAds {
             if (!activity.isDestroyed && !activity.isFinishing && loadingDialog?.isShowing == false) {
                 loadingDialog?.show()
             }
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
 
@@ -374,7 +380,7 @@ object InterAds {
             } else {
                 initInterAds(activity) {
                     dismissAdDialog()
-                    showAds(activity, callback,false)
+                    showAds(activity, callback, false)
                 }
             }
         } else {
@@ -387,7 +393,11 @@ object InterAds {
         loadingDialog?.takeIf { it.isShowing }?.dismiss()
     }
 
-    private fun showAdsFull(context: Activity, callback: () -> Unit, needLoadAfterShow : Boolean = true) {
+    private fun showAdsFull(
+        context: Activity,
+        callback: () -> Unit,
+        needLoadAfterShow: Boolean = true
+    ) {
         mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 mInterstitialAd = null
@@ -535,8 +545,15 @@ object InterAds {
         onLoadFailed: (() -> Unit)? = null,
     ): Boolean {
         when (alias) {
+            ALIAS_INTER_DOWNLOAD -> {
+                if (RemoteConfig.INTER_DOWNLOAD == "0" || isTestDevice) {
+                    onLoadFailed?.invoke()
+                    return false
+                }
+            }
+
             ALIAS_INTER_LANGUAGE -> {
-                if (RemoteConfig.INTER_RINGTONE == "0" || isTestDevice) {
+                if (RemoteConfig.INTER_LANGUAGE == "0" || isTestDevice) {
                     onLoadFailed?.invoke()
                     return false
                 }
@@ -580,13 +597,6 @@ object InterAds {
             }
         }
 
-        println(
-            "showPreloadInter: ${Prefs(MyApplication.getInstance()).premium} and ${
-                Prefs(
-                    MyApplication.getInstance()
-                ).isRemoveAd
-            }"
-        )
         if (!AdmobUtils.isNetworkConnected(activity)) {
             onLoadFailed?.invoke()
             return false

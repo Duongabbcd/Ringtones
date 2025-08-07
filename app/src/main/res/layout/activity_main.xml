@@ -95,6 +95,7 @@
 
     <include
         android:id="@+id/frBanner"
+        android:visibility="visible"
         layout="@layout/ads_banner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

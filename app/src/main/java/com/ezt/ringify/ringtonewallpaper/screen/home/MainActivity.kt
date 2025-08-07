@@ -36,14 +36,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("I am here")
         var countOpen = Common.getCountOpenApp(this)
+        showNotificationDialog(countOpen)
         if (countOpen < 2) {
             countOpen++
             Common.setCountOpenApp(this, countOpen)
         }
 
-        showNotificationDialog(countOpen)
+
 
         selectedTab = savedInstanceState?.getInt("selectedTab") ?: 0
 

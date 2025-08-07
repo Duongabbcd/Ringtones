@@ -51,7 +51,7 @@
                 android:background="@drawable/background_radius_12_purple_stroke"
                 android:gravity="center"
                 android:paddingVertical="@dimen/_10sdp"
-                android:text="@string/reset"
+                android:text="@string/exit"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent" />
 

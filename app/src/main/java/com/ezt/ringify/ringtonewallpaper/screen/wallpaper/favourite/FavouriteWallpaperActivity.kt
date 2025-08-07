@@ -2,7 +2,9 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -79,9 +81,11 @@ class FavouriteWallpaperActivity :
                 allTrending.visible()
                 if (items.isNullOrEmpty()) {
                     noDataLayout1.visible()
-                    allTrending.gone()
+                    allTrending.visibility = View.INVISIBLE
+                    allTrending.isEnabled = false
                     return@observe
                 }
+                allTrending.isEnabled = true
                 liveAdapter.submitList(items)
             }
 
@@ -89,9 +93,11 @@ class FavouriteWallpaperActivity :
                 allNewWallpaper.visible()
                 if (items.isNullOrEmpty()) {
                     noDataLayout2.visible()
-                    allNewWallpaper.gone()
+                    allNewWallpaper.visibility = View.INVISIBLE
+                    allNewWallpaper.isEnabled = false
                     return@observe
                 }
+                allNewWallpaper.isEnabled = true
                 singleAdapter.submitList(items)
             }
 

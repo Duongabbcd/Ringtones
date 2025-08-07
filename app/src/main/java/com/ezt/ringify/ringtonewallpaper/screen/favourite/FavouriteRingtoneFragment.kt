@@ -180,6 +180,10 @@ class SelectingFavouriteAdapter(private val onSelectionChanged: (List<Int>) -> U
                 else
                     R.drawable.background_radius_12_light_gray
             )
+
+            val textColor =
+                context.resources.getColor(if (isSelected) R.color.white else R.color.customBlack)
+            binding.categoryName.setTextColor(textColor)
         }
     }
 

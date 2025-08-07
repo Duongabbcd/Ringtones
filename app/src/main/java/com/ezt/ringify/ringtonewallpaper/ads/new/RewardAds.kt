@@ -74,7 +74,8 @@ object RewardAds {
     private fun isCanLoadAds(): Boolean = !isLoading && !isShowing
 
     private fun isCanShowAds(): Boolean {
-        if (isLoading || isShowing) return false
+        println("isLoading $isLoading and isShowing $isShowing")
+//        if (isLoading || isShowing) return false
         Log.e(TAG, "mInterstitialAd == null")
         return mRewardAds != null
     }
@@ -92,7 +93,7 @@ object RewardAds {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
+        println("isCanShowAds: ${isCanShowAds()}")
         if (isCanShowAds()) {
             try {
                 showAdsFull(activity, callback)

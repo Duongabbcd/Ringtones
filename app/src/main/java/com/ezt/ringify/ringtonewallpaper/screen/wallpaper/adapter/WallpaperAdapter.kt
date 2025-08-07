@@ -1,10 +1,16 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemBigCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemWallpaperBinding
@@ -64,12 +70,33 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
                     wallPaper.setImageResource(R.drawable.icon_default_category)
                     return@apply
                 }
-                val url = wallpaper.thumbnail?.url?.medium ?: content.url.medium
+                val url = wallpaper.thumbnail?.url?.small ?: content.url.small
                 url?.let {
                     Glide.with(context)
-                        .load(it)
+                        .load(url)
                         .placeholder(R.drawable.icon_default_category)
                         .error(R.drawable.icon_default_category)
+                        .listener(object : RequestListener<Drawable> {
+
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                e?.logRootCauses("GlideError")  // logs detailed causes
+                                Log.e("Glide", "Load failed", e)
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean = false
+                        })
                         .into(wallPaper)
                 } ?: wallPaper.setImageResource(R.drawable.icon_default_category)
 

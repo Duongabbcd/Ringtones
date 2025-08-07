@@ -1,10 +1,17 @@
 package com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemCategoriesBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.R
@@ -47,12 +54,16 @@ class CategoryAdapter(private val onClickListener: (Category) -> Unit): Recycler
            val category = allCategories[position]
             binding.apply {
                 categoryName.text = category.name
-                println("ringTone: ${category.thumbnail}")
 
-                category.thumbnail?.url?.full.let {
-                    Glide.with(context).load(it).placeholder(R.drawable.icon_default_category).error(
-                        R.drawable.icon_default_category).into(binding.defaultBg)
+                val url = category.thumbnail?.url?.small
+                println("CategoryViewHolder: $url")
+
+                defaultBg.load(url) {
+                    placeholder(R.drawable.icon_default_category)
+                    error(R.drawable.icon_default_category)
+                    crossfade(true)
                 }
+
 
                 root.setOnClickListener {
                     onClickListener(category)

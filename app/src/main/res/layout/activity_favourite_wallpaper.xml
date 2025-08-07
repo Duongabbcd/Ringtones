@@ -109,12 +109,12 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/allTrending"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_190sdp"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:layout_marginTop="@dimen/_4sdp"
                         android:layout_marginEnd="@dimen/_8sdp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/trendingCount" />
+                        app:layout_constraintTop_toBottomOf="@id/trending" />
 
                     <LinearLayout
                         android:id="@+id/noDataLayout1"
@@ -124,7 +124,6 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/trending">
 
 
@@ -173,7 +172,6 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/newWallpaper">
 
 
@@ -207,12 +205,12 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/allNewWallpaper"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_190sdp"
                         android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:layout_marginEnd="@dimen/_8sdp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/newWallpaperCount" />
+                        app:layout_constraintTop_toBottomOf="@id/newWallpaper" />
 
                     <ProgressBar
                         android:id="@+id/loading1"

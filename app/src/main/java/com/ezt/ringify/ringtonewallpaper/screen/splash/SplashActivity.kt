@@ -102,6 +102,10 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                         AdsManager.countClickWallpaper = 0
                         AdsManager.countClickCallscreen = 0
 
+                        RemoteConfig.totalFreeRingtones = "5"
+                        RemoteConfig.totalFreeWallpapers = "20"
+
+
                         if (isInitAds.get()) {
                             return
                         }

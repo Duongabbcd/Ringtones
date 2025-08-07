@@ -57,6 +57,8 @@ class PlaySlideWallpaperAdapter(
 //        val diffCallback = WallpaperDiffCallback(items, new)
 //        val diffResult = DiffUtil.calculateDiff(diffCallback)
 
+        println("PlaySlideWallpaperAdapter: ${new.firstOrNull()}")
+
         items.clear()
         items.addAll(new)
         notifyDataSetChanged()

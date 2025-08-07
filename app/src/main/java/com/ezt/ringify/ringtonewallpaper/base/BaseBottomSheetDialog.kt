@@ -31,7 +31,7 @@ abstract class BaseBottomSheetDialog<VB : ViewBinding>(context: Context) : Botto
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
         try {
             hideNavigationBar()
         }catch (e: Exception){

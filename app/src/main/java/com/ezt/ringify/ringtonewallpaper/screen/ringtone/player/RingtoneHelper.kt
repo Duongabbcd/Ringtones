@@ -2,7 +2,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.ringtone.player
 
 import android.Manifest
 import android.app.Activity
-import android.app.DownloadManager
 import android.app.WallpaperManager
 import android.content.ContentUris
 import android.content.ContentValues
@@ -10,22 +9,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -145,15 +139,42 @@ object RingtoneHelper {
         return withContext(Dispatchers.IO) {
             try {
                 val resolver = context.contentResolver
-                val fileName = "image_${System.currentTimeMillis()}.jpg"
+                val fileName = "image_${imageUrl.hashCode()}.jpg" // safer file name
 
+                val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+                // Query for existing file
+                val selection =
+                    "${MediaStore.MediaColumns.DISPLAY_NAME} = ? AND ${MediaStore.MediaColumns.RELATIVE_PATH} = ?"
+                val selectionArgs = arrayOf(
+                    fileName,
+                    "${Environment.DIRECTORY_PICTURES}/"
+                )
+
+                resolver.query(
+                    collection,
+                    arrayOf(MediaStore.MediaColumns._ID),
+                    selection,
+                    selectionArgs,
+                    null
+                )?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val id =
+                            cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
+                        val existingUri = ContentUris.withAppendedId(collection, id)
+                        // Delete the existing file
+                        resolver.delete(existingUri, null, null)
+                    }
+                }
+
+                // Prepare new image to insert
                 val contentValues = ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                     put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
                     put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
                 }
 
-                val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                val uri = resolver.insert(collection, contentValues)
 
                 uri?.let {
                     resolver.openOutputStream(it)?.use { outputStream ->
@@ -171,13 +192,49 @@ object RingtoneHelper {
         }
     }
 
+
     suspend fun downloadVideo(
         context: Context,
         videoUrl: String,
-        fileName: String = "video_${System.currentTimeMillis()}.mp4"
+        fileName: String = "video_$videoUrl.mp4"
     ): Uri? = withContext(Dispatchers.IO) {
         try {
-            val inputStream: InputStream
+            val resolver = context.contentResolver
+
+            // Delete existing file (Android 10+)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val collection =
+                    MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                val selection = "${MediaStore.Downloads.DISPLAY_NAME} = ?"
+                val selectionArgs = arrayOf(fileName)
+
+                // Query existing file
+                val cursor = resolver.query(
+                    collection,
+                    arrayOf(MediaStore.Downloads._ID),
+                    selection,
+                    selectionArgs,
+                    null
+                )
+
+                cursor?.use {
+                    if (it.moveToFirst()) {
+                        val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Downloads._ID))
+                        val deleteUri = ContentUris.withAppendedId(collection, id)
+                        resolver.delete(deleteUri, null, null)
+                    }
+                }
+            } else {
+                // Delete file manually for Android 9 and below
+                val downloadsPath =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val file = File(downloadsPath, fileName)
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+
+            // Start connection
             val connection = URL(videoUrl).openConnection() as HttpURLConnection
             connection.connectTimeout = 15_000
             connection.readTimeout = 15_000
@@ -189,11 +246,9 @@ object RingtoneHelper {
                 return@withContext null
             }
 
-            inputStream = connection.inputStream
+            val inputStream = connection.inputStream
 
             val savedUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Android 10+ - Use MediaStore to save in Downloads
-                val resolver = context.contentResolver
                 val contentValues = ContentValues().apply {
                     put(MediaStore.Downloads.DISPLAY_NAME, fileName)
                     put(MediaStore.Downloads.MIME_TYPE, "video/mp4")
@@ -215,14 +270,12 @@ object RingtoneHelper {
                 }
                 inputStream.close()
 
-                // Mark file as not pending anymore
                 contentValues.clear()
                 contentValues.put(MediaStore.Downloads.IS_PENDING, 0)
                 resolver.update(itemUri, contentValues, null, null)
 
                 itemUri
             } else {
-                // Android 9 and below - save directly to Downloads folder with WRITE_EXTERNAL_STORAGE permission
                 val downloadsPath =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 if (!downloadsPath.exists()) downloadsPath.mkdirs()

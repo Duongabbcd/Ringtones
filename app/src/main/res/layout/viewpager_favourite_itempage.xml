@@ -104,8 +104,8 @@
         <TextView
             android:id="@+id/nextBtn"
             style="@style/CustomTextStyleSemiBold14sp"
-            android:layout_width="155dp"
-            android:layout_height="66dp"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_20sdp"
             android:background="@drawable/background_radius_12"
             android:gravity="center"
