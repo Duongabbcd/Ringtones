@@ -141,7 +141,7 @@ class SelectingFavouriteAdapter(private val onSelectionChanged: (List<Int>) -> U
         fun bind(position: Int) {
             val category = allCategories[position]
             binding.apply {
-                category.thumbnail?.url?.full.let {
+                category.thumbnail?.url?.medium.let {
                     Glide.with(context).load(it).placeholder(R.drawable.icon_default_category)
                         .error(
                             R.drawable.icon_default_category

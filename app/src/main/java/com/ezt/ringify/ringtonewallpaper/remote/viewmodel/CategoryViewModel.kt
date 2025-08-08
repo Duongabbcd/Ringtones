@@ -61,7 +61,7 @@ class CategoryViewModel @Inject constructor(
 
             hasMorePages1 = result.dataPage.nextPageUrl != null
             currentPage1++
-            allWallpapers1.addAll(result.dataPage.categories)
+            allWallpapers1.addAll(result.dataPage.categories.filter { it.id != 22 })
             _ringtoneCategory.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
@@ -80,7 +80,7 @@ class CategoryViewModel @Inject constructor(
             hasMorePages1 = result.dataPage.nextPageUrl != null
             currentPage1++
             println("loadWallpaperCategories 123: ${result.dataPage.nextPageUrl}")
-            allWallpapers1.addAll(result.dataPage.categories)
+            allWallpapers1.addAll(result.dataPage.categories.filter { it.id != 51 })
             _wallpaperCategory.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
