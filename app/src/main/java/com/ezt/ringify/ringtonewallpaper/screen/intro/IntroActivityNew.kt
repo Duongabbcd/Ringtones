@@ -64,7 +64,7 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
 
     private fun startAc() {
         val countOpen = Common.getCountOpenApp(this)
-        if (countOpen == 1) {
+        if (countOpen == 0) {
             startActivity(Intent(this, FavouriteActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             })

@@ -107,7 +107,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     }
 
     private fun nextScreenByCondition() {
-        val intent = if (Common.getCountOpenApp(this) <= 1) {
+        val intent = if (Common.getCountOpenApp(this) == 0) {
             Intent(this@LanguageActivity, IntroActivityNew::class.java)
         } else {
             Intent(this@LanguageActivity, MainActivity::class.java)
