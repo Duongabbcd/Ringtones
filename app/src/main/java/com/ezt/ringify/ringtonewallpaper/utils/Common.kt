@@ -257,6 +257,57 @@ object Common {
         preferences.edit().putString("KEY_Free_Wallpapers", list.joinToString(",")).apply()
     }
 
+    fun getAllNewRingtones(mContext: Context): List<Int> {
+        val preferences = mContext.getSharedPreferences(
+            mContext.packageName,
+            MODE_MULTI_PROCESS
+        )
+        val savedList = preferences.getString("KEY_Fixed_New", null)
+        return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: listOf()
+    }
+
+    fun setAllNewRingtones(context: Context, list: List<Int> = emptyList()) {
+        val preferences = context.getSharedPreferences(
+            context.packageName,
+            MODE_MULTI_PROCESS
+        )
+        preferences.edit().putString("KEY_Fixed_New", list.joinToString(",")).apply()
+    }
+
+    fun getAllTrendingRingtones(mContext: Context): List<Int> {
+        val preferences = mContext.getSharedPreferences(
+            mContext.packageName,
+            MODE_MULTI_PROCESS
+        )
+        val savedList = preferences.getString("KEY_Fixed_Trend", null)
+        return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: listOf()
+    }
+
+    fun setAllWeeklyTrendingRingtones(context: Context, list: List<Int> = emptyList()) {
+        val preferences = context.getSharedPreferences(
+            context.packageName,
+            MODE_MULTI_PROCESS
+        )
+        preferences.edit().putString("KEY_Fixed_Trend", list.joinToString(",")).apply()
+    }
+
+    fun getAllEditorChoices(mContext: Context): List<Int> {
+        val preferences = mContext.getSharedPreferences(
+            mContext.packageName,
+            MODE_MULTI_PROCESS
+        )
+        val savedList = preferences.getString("KEY_Fixed_Choice", null)
+        return savedList?.split(",")?.mapNotNull { it.toIntOrNull() } ?: listOf()
+    }
+
+    fun setAllEditorChoices(context: Context, list: List<Int> = emptyList()) {
+        val preferences = context.getSharedPreferences(
+            context.packageName,
+            MODE_MULTI_PROCESS
+        )
+        preferences.edit().putString("KEY_Fixed_Choice", list.joinToString(",")).apply()
+    }
+
     fun setTheme(context: Context, selectedTheme: Int) {
         val preferences = context.getSharedPreferences(
             context.packageName,

@@ -72,13 +72,13 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             }
 
             openAll1.setOnClickListener {
-                withSafeContext {  ctx ->
+                withSafeContext { ctx ->
                     startActivity(Intent(ctx, RingtoneCategoryActivity::class.java))
                 }
             }
 
             openAll2.setOnClickListener {
-                withSafeContext {  ctx ->
+                withSafeContext { ctx ->
                     startActivity(Intent(ctx, FilteredRingtonesActivity::class.java))
                 }
             }
@@ -101,12 +101,12 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
 
             }
 
-            binding.noInternet.tryAgain.setOnClickListener {
+            noInternet.tryAgain.setOnClickListener {
                 withSafeContext { ctx ->
                     val connected = connectionViewModel.isConnectedLiveData.value ?: false
                     if (connected) {
-                        binding.origin.visible()
-                        binding.noInternet.root.visibility = View.VISIBLE
+                        origin.visible()
+                        noInternet.root.visibility = View.VISIBLE
                         // Maybe reload your data
                     } else {
                         Toast.makeText(
@@ -116,6 +116,35 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                         ).show()
                     }
                 }
+            }
+
+            newRingtones.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
+                        putExtra("categoryId", -101)
+                    }
+                    )
+                }
+            }
+
+            weeklyTrending.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
+                        putExtra("categoryId", -102)
+                    }
+                    )
+                }
+            }
+
+            editorChoice.setOnClickListener {
+                withSafeContext { ctx ->
+                    startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
+                        putExtra("categoryId", -103)
+                    }
+                    )
+                }
+
+
             }
         }
     }

@@ -21,7 +21,6 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.RingtoneFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.WallpaperFragment
-import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
@@ -30,6 +29,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -43,6 +43,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             Common.setCountOpenApp(this, countOpen)
         }
 
+        checkIfNewWeek()
 
 
         selectedTab = savedInstanceState?.getInt("selectedTab") ?: 0
@@ -90,6 +91,35 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 }
             }
             true
+        }
+    }
+
+    private fun checkIfNewWeek() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+
+        val calendar = Calendar.getInstance()
+        val currentWeek = calendar.get(Calendar.WEEK_OF_YEAR)
+        val currentYear = calendar.get(Calendar.YEAR)
+
+        val lastSavedWeek = prefs.getInt("last_week", -1)
+        val lastSavedYear = prefs.getInt("last_year", -1)
+
+        val isNewWeek = lastSavedWeek != currentWeek || lastSavedYear != currentYear
+
+        if (isNewWeek) {
+            Common.setAllNewRingtones(this, list = emptyList())
+            Common.setAllEditorChoices(this, list = emptyList())
+            Common.setAllWeeklyTrendingRingtones(this, list = emptyList())
+            // It's a new week!
+            println("✅ New week started!")
+
+            // Save current week and year
+            prefs.edit()
+                .putInt("last_week", currentWeek)
+                .putInt("last_year", currentYear)
+                .apply()
+        } else {
+            println("📅 Still the same week.")
         }
     }
 

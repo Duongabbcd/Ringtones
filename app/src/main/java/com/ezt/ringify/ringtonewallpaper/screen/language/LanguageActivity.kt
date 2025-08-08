@@ -22,7 +22,6 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
-import com.ezt.ringify.ringtonewallpaper.screen.splash.SplashActivity
 
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
     private var adapter2: LanguageAdapter? = null

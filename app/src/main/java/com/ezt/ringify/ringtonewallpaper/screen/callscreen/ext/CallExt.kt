@@ -41,10 +41,12 @@ fun isSPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 fun isQPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
 enum class FlashType(val label: String) {
-    NONE("None"),
-    ONCE("Flash Once"),
+    DEFAULT("Default"),
     FAST_BLINK("Fast Blink"),
     SLOW_BLINK("Slow Blink"),
+    STROBE("Strobe Light"),
+    PULSE("Pulse"),
+    TRIPLE("Triple Flash"),
     SOS("SOS Signal");
 
     companion object {
@@ -55,9 +57,13 @@ enum class FlashType(val label: String) {
 }
 
 enum class VibrationType(val label: String) {
-    NONE("None"),
-    SHORT("Short"),
-    LONG("Long"),
+    DEFAULT("Default"),
+    SINGLE_CLICK("Single click"),
+    DOUBLE_CLICK("Double click"),
+    SINGLE_HEAVY_CLICK("Single heavy click"),
+    DOUBLE_HEAVY_CLICK("Double heavy click"),
+    RISING_ALERT("Rising alert"),
+    RHYTHMIC_TAP("Rhythmic tap"),
     DOUBLE("Double Pulse"),
     HEARTBEAT("Heartbeat Pattern");
 

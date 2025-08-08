@@ -26,7 +26,7 @@ class CreditDialog(
             creditWeb
         )
 
-        val target = ringtone.author.name
+        val target = ringtone.author.name ?: ""
         val target2 =  ringtone.name
         IntroFragmentNew.setSpannableString(full, listOf(target, target2), binding.creditDesc)
     }

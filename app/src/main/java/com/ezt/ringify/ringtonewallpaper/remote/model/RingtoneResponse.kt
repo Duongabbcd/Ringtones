@@ -16,14 +16,15 @@ data class RingtoneData(
     val path: String,
     @SerializedName("per_page") val perPage: Int,
     @SerializedName("prev_page_url") val prevPageUrl: String?,
-    val to: Int
+    val to: Int,
+    @SerializedName("total") val total: Int,
 )
 
 data class Ringtone(
     val id: Int,
     val name: String,
     val contents: RingtoneContents,
-    val author: Author,
+    var author: Author = Author(-1, "", 0),
 
     @SerializedName("categories")
     val categories: List<Category>,
@@ -64,6 +65,6 @@ data class RingtoneContents(
 
 data class Author(
     val id: Int,
-    val name: String,
+    var name: String? = "",
     val active: Int
 )

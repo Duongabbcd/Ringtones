@@ -68,6 +68,10 @@ class FavouriteRingtoneFragment : Fragment() {
             callbackIntro.onNext(position, nextPage)
 
         }
+
+        binding.skipBtn.setOnClickListener {
+            callbackIntro.onNext(1, 2)
+        }
     }
 
 

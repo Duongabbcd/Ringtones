@@ -1,17 +1,21 @@
 package com.ezt.ringify.ringtonewallpaper.remote.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RingtoneViewModel @Inject constructor(
+    @ApplicationContext private val contexts: Context,
     private val repository: RingtoneRepository
 ) : ViewModel() {
 
@@ -32,6 +36,11 @@ class RingtoneViewModel @Inject constructor(
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
+
+    private val _loading1 = MutableLiveData<Boolean>()
+    val loading1: LiveData<Boolean> = _loading1
+    private val _customRingtones = MutableLiveData<List<Ringtone>>()
+    val customRingtones: LiveData<List<Ringtone>> = _customRingtones
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -150,5 +159,105 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
+    fun loadNewRingtones() = viewModelScope.launch {
+        _loading1.value = true
+        try {
+            val backupList = Common.getAllNewRingtones(contexts)
+            if (backupList.isNotEmpty()) {
+                val backupRingtones = mutableListOf<Ringtone>()
+                backupList.onEach { id ->
+                    backupRingtones.addAll(repository.getRingtoneById(id).data.data)
+                }
+                _customRingtones.value = backupRingtones
 
+                _error.value = null
+                return@launch
+            }
+            println("searchRingtonesByName")
+            val result = repository.fetchNewRingtones(1)
+            val totalPage = if (result.data.total / 30 < 1) 1 else result.data.total / 30
+            val randomNumbers = (1..totalPage).shuffled().take(1)
+            val allNewRingtones = mutableListOf<Ringtone>()
+            println("randomNumbers: $randomNumbers")
+            allNewRingtones.addAll(repository.fetchNewRingtones(randomNumbers.first()).data.data)
+            val fixedRingtoneId = allNewRingtones.map { it.id }
+            Common.setAllNewRingtones(context = contexts, fixedRingtoneId)
+            _customRingtones.value = allNewRingtones
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("searchRingtonesByName Exception: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
+    fun loadWeeklyTrendingRingtones() = viewModelScope.launch {
+        _loading1.value = true
+        try {
+            val backupList = Common.getAllTrendingRingtones(contexts)
+            if (backupList.isNotEmpty()) {
+                val backupRingtones = mutableListOf<Ringtone>()
+                backupList.onEach { id ->
+                    backupRingtones.addAll(repository.getRingtoneById(id).data.data)
+                }
+                _customRingtones.value = backupRingtones
+
+                _error.value = null
+                return@launch
+            }
+            println("searchRingtonesByName")
+            val result = repository.fetchTrendingRingtones(1)
+            val totalPage = if (result.data.total / 30 < 1) 1 else result.data.total / 30
+            val randomNumbers = (1..totalPage).shuffled().take(1)
+            val allNewRingtones = mutableListOf<Ringtone>()
+            println("randomNumbers: $randomNumbers")
+            allNewRingtones.addAll(repository.fetchTrendingRingtones(randomNumbers.first()).data.data)
+            val fixedRingtoneId = allNewRingtones.map { it.id }
+            Common.setAllWeeklyTrendingRingtones(context = contexts, fixedRingtoneId)
+            _customRingtones.value = allNewRingtones
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("searchRingtonesByName Exception: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
+    fun loadEditorChoicesRingtones() = viewModelScope.launch {
+        _loading1.value = true
+        try {
+            val backupList = Common.getAllEditorChoices(contexts)
+            if (backupList.isNotEmpty()) {
+                val backupRingtones = mutableListOf<Ringtone>()
+                backupList.onEach { id ->
+                    backupRingtones.addAll(repository.getRingtoneById(id).data.data)
+                }
+                _customRingtones.value = backupRingtones
+
+                _error.value = null
+                return@launch
+            }
+            println("searchRingtonesByName")
+            val result = repository.fetchPrivateRingtones(1)
+            val totalPage = if (result.data.total / 30 < 1) 1 else result.data.total / 30
+            val randomNumbers = (1..totalPage).shuffled().take(1)
+            val allNewRingtones = mutableListOf<Ringtone>()
+            println("randomNumbers: $randomNumbers")
+            allNewRingtones.addAll(repository.fetchPrivateRingtones(randomNumbers.first()).data.data)
+            val fixedRingtoneId = allNewRingtones.map { it.id }
+            Common.setAllEditorChoices(context = contexts, fixedRingtoneId)
+            _customRingtones.value = allNewRingtones
+
+            _error.value = null
+        } catch (e: Exception) {
+            println("searchRingtonesByName Exception: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
 }

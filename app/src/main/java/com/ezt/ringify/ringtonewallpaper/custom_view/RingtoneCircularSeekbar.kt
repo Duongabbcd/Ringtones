@@ -607,10 +607,7 @@ class RingtoneCircularSeekbar @JvmOverloads constructor(
             canvas.drawPath(circleProgressPath, circleProgressPaint)
         }
         if (!disablePointer) {
-            if (userIsMovingPointer) {
-                canvas.drawPath(circlePointerPath, pointerHaloPaint)
-            }
-            canvas.drawPath(circlePointerPath, pointerPaint)
+            canvas.drawPath(circlePointerPath, pointerHaloPaint)
         }
 
 

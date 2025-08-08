@@ -3,14 +3,10 @@ package com.ezt.ringify.ringtonewallpaper.screen.callscreen
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.VideoProfile
@@ -81,8 +77,8 @@ class CallScreenActivity :
         val flashTypeLabel = prefs.getString("FLASH_TYPE", "None") ?: "None"
         val vibrationTypeLabel = prefs.getString("VIBRATION_TYPE", "None") ?: "None"
 
-        val flashType = FlashType.fromLabel(flashTypeLabel) ?: FlashType.NONE
-        val vibrationType = VibrationType.fromLabel(vibrationTypeLabel) ?: VibrationType.NONE
+        val flashType = FlashType.fromLabel(flashTypeLabel) ?: FlashType.DEFAULT
+        val vibrationType = VibrationType.fromLabel(vibrationTypeLabel) ?: VibrationType.DEFAULT
         flashVibrationManager.startFlashAndVibration(
             isFlashEnabled,
             flashType,

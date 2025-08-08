@@ -33,15 +33,15 @@
                 app:cs_circle_style="round"
                 app:cs_disable_pointer="false"
                 app:cs_disable_progress_glow="true"
-                app:cs_end_angle="180"
                 app:cs_max="100"
                 app:cs_pointer_halo_border_width="@dimen/_6sdp"
                 app:cs_move_outside_circle="true"
                 app:cs_pointer_color="#FF6586"
                 app:cs_pointer_halo_color="#FF6586"
-                app:cs_pointer_halo_width="@dimen/_10sdp"
+                app:cs_end_angle="180"
                 app:cs_progress="10"
                 app:cs_negative_enabled="true"
+                app:cs_pointer_halo_width="@dimen/_2sdp"
                 app:cs_start_angle="180" />
 
             <!-- Your center image -->

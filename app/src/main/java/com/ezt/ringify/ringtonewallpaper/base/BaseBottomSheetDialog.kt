@@ -39,6 +39,14 @@ abstract class BaseBottomSheetDialog<VB : ViewBinding>(context: Context) : Botto
         }
         setWhiteNavigationBar(this)
         createContentView()
+
+        window?.apply {
+            // Allow layout to extend behind navigation bar
+            setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+        }
     }
 
     private fun hideNavigationBar() {
@@ -80,33 +88,12 @@ abstract class BaseBottomSheetDialog<VB : ViewBinding>(context: Context) : Botto
             behavior.isHideable = true
             it.layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
 
-            // Handle keyboard visibility changes
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                window?.let { window ->
-//                    WindowCompat.setDecorFitsSystemWindows(window, false)
-//                    window.decorView.setOnApplyWindowInsetsListener { _, insets ->
-//                        val keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-//                        if (keyboardHeight > 0) {
-//                            // Keyboard is visible, adjust bottom sheet
-//                            behavior.isFitToContents = false
-//                            behavior.peekHeight = keyboardHeight
-//                        } else {
-//                            // Keyboard is hidden, reset bottom sheet
-//                            behavior.isFitToContents = true
-//                            behavior.peekHeight = 0
-//                        }
-//                        insets
-//                    }
-//                }
-//            }
 
             it.post {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
 
-//        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
-//        window?.setGravity(Gravity.BOTTOM)
     }
 
     private fun createContentView() {
@@ -137,7 +124,7 @@ abstract class BaseBottomSheetDialog<VB : ViewBinding>(context: Context) : Botto
             // ...customize your dim effect here
             val navigationBarDrawable = GradientDrawable()
             navigationBarDrawable.shape = GradientDrawable.RECTANGLE
-            navigationBarDrawable.setColor(Color.parseColor("#27242D"))
+            navigationBarDrawable.setColor(Color.parseColor("#FFFFFF"))
             val layers = arrayOf<Drawable>(dimDrawable, navigationBarDrawable)
             val windowBackground = LayerDrawable(layers)
             windowBackground.setLayerInsetTop(1, metrics.heightPixels)

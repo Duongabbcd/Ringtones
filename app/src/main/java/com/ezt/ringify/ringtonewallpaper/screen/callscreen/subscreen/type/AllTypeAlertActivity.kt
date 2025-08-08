@@ -15,6 +15,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.flashTypeValue
@@ -25,15 +26,21 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneAc
 
 class AllTypeAlertActivity :
     BaseActivity<ActivityAllTypeAlertBinding>(ActivityAllTypeAlertBinding::inflate) {
+    private val flashVibrationManager: FlashVibrationManager by lazy {
+        FlashVibrationManager(this)
+    }
 
     private val adapter: TypeAlertAdapter by lazy {
         TypeAlertAdapter { selected ->
             if (alertType == "Flash") {
                 flashTypeValue = selected
+                val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.DEFAULT
+                flashVibrationManager.playFlashType(flash)
             } else {
                 vibrationValue = selected
+                val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.DEFAULT
+                flashVibrationManager.playVibration(vibration)
             }
-            SearchRingtoneActivity.backToScreen(this@AllTypeAlertActivity, "INTER_CALLSCREEN")
         }
     }
 
@@ -44,6 +51,7 @@ class AllTypeAlertActivity :
         super.onCreate(savedInstanceState)
 
         binding.backBtn.setOnClickListener {
+            flashVibrationManager.stopFlashAndVibration()
             SearchRingtoneActivity.backToScreen(
                 this@AllTypeAlertActivity,
                 "INTER_CALLSCREEN"

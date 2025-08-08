@@ -16,9 +16,15 @@ import javax.inject.Singleton
 class RingtoneRepository @Inject constructor(
     private val apiService: ApiService
 ) {
-    suspend fun fetchRingtones(): RingtoneResponse = apiService.getRingtones()
+    suspend fun getRingtoneById(ringtoneId: Int): RingtoneResponse =
+        apiService.getRingtoneById(where = "id+$ringtoneId")
     suspend fun fetchPopularRingtones(page: Int): RingtoneResponse = apiService.getPopularRingtones(page)
     suspend fun fetchTrendingRingtones(currentPage2: Int): RingtoneResponse = apiService.getTrendingRingtones(currentPage2)
+    suspend fun fetchPrivateRingtones(currentPage2: Int): RingtoneResponse =
+        apiService.fetchPrivateRingtones(currentPage2)
+
+    suspend fun fetchNewRingtones(currentPage2: Int): RingtoneResponse =
+        apiService.getNewRingtones(page = currentPage2)
 
     suspend fun fetchRingtoneCategories(page: Int): CategoriesResponse =
         apiService.getRingtoneCategory(page)

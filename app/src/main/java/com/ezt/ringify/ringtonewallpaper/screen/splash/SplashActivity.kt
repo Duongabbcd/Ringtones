@@ -7,11 +7,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import com.admob.max.dktlibrary.AOAManager
 import com.admob.max.dktlibrary.AdmobUtils
 import com.admob.max.dktlibrary.AppOpenManager
 import com.admob.max.dktlibrary.cmp.GoogleMobileAdsConsentManager
 import com.admob.max.dktlibrary.utils.admod.callback.MobileAdsListener
+import com.ezt.ringify.ringtonewallpaper.MyApplication
 import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity2
@@ -29,14 +29,14 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SCREEN_INT
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.REMOTE_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
-import com.google.android.gms.ads.AdValue
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.exitProcess
 import com.ezt.ringify.ringtonewallpaper.ads.FireBaseConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.ads.helper.GDPRRequestable
+import com.ezt.ringify.ringtonewallpaper.ads.new.OpenAds
 
 class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
-    private var appOpenManager: AOAManager? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
     private var isInitAds = AtomicBoolean(false)
 
@@ -48,11 +48,46 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
     }
     private var showAds = true
     private var isFinish = false
+    private var isLoadAdsDone = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initGDPR()
+        isLoadAdsDone = false
+    }
 
-//        Common.setCountOpenApp(this,0)
+    private fun initGDPR() {
+        MyApplication.trackingEvent("check_GDPR")
+        GDPRRequestable.getGdprRequestable(this)
+            .setOnRequestGDPRCompleted(object : GDPRRequestable.RequestGDPRCompleted {
+                override fun onRequestGDPRCompleted(formError: FormError?) {
+                    println("onRequestGDPRCompleted: $formError")
+                    initAds()
+                }
+            })
+        GDPRRequestable.getGdprRequestable(this).requestGDPR()
+    }
+
+    private fun initAds() {
+        OpenAds.initOpenAds(this) {
+            isLoadAdsDone = true
+            handler.removeCallbacks(runnable)
+            showBanner()
+
+        }
+    }
+
+    private fun showAdsIfAppRunning() {
+        println("showAdsIfAppRunning: $isDestroyed and $isLoadAdsDone")
+        if (!isDestroyed) {
+            if (OpenAds.isCanShowOpenAds()) {
+                OpenAds.showOpenAds(this) {
+                    nextScreen()
+                }
+            } else {
+                nextScreen()
+            }
+        }
     }
 
     override fun initView() {
@@ -68,42 +103,19 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                 R.xml.remote_config_default,
                 object : FireBaseConfig.CompleteListener {
                     override fun onComplete() {
-//                        REMOTE_SPLASH_070625 =
-//                            FireBaseConfig.getValue("REMOTE_SPLASH_070625")
-//                        RemoteConfig.ADS_SPLASH_070625 =
-//                            FireBaseConfig.getValue("ADS_SPLASH_070625")
-//                        NATIVE_FULL_SPLASH_070625 =
-//                            FireBaseConfig.getValue("NATIVE_FULL_SPLASH_070625")
-//                        RemoteConfig.NATIVE_LANGUAGE_070625 =
-//                            FireBaseConfig.getValue("NATIVE_LANGUAGE_070625")
-//                        RemoteConfig.INTER_LANGUAGE_070625 =
-//                            FireBaseConfig.getValue("INTER_LANGUAGE_070625")
-//                        NATIVE_INTRO_070625 = FireBaseConfig.getValue("NATIVE_INTRO_070625")
-//                        RemoteConfig.ADS_INTRO_070625 = FireBaseConfig.getValue("ADS_INTRO_070625")
-//                        NATIVE_FULL_SCREEN_INTRO_070625 =
-//                            FireBaseConfig.getValue("NATIVE_FULL_SCREEN_INTRO_070625")
-//                        RemoteConfig.INTER_INTRO_070625 =
-//                            FireBaseConfig.getValue("INTER_INTRO_070625")
-//                        RemoteConfig.INTER_HOME_070625 =
-//                            FireBaseConfig.getValue("INTER_HOME_070625")
-//                        RemoteConfig.REMOTE_ADS_PLAY_SONG_070625 =
-//                            FireBaseConfig.getValue("REMOTE_ADS_PLAY_SONG_070625")
-//                        RemoteConfig.REMOTE_ADS_HOME_070625 =
-//                            FireBaseConfig.getValue("REMOTE_ADS_HOME_070625")
-//                        RemoteConfig.NATIVE_CUSTOM_HOME_070625 =
-//                            FireBaseConfig.getValue("NATIVE_CUSTOM_HOME_070625")
-//                        RemoteConfig.BANNER_COLLAP_ALL_070625 =
-//                            FireBaseConfig.getValue("BANNER_COLLAP_ALL_070625")
-//                        RemoteConfig.UPDATE_APP_VERSION =
-//                            FireBaseConfig.getValue("UPDATE_APP_VERSION")
-//                        RemoteConfig.ONRESUME_070625 = FireBaseConfig.getValue("ONRESUME_070625")
+                        RemoteConfig.INTER_LANGUAGE = FireBaseConfig.getValue("INTER_LANGUAGE")
+                        RemoteConfig.INTER_DOWNLOAD = FireBaseConfig.getValue("INTER_DOWNLOAD")
+                        RemoteConfig.INTER_RINGTONE = FireBaseConfig.getValue("INTER_RINGTONE")
+                        RemoteConfig.INTER_WALLPAPER = FireBaseConfig.getValue("INTER_WALLPAPER")
+                        RemoteConfig.INTER_CALLSCREEN = FireBaseConfig.getValue("INTER_CALLSCREEN")
+                        RemoteConfig.totalFreeRingtones =
+                            FireBaseConfig.getValue("totalFreeRingtones")
+                        RemoteConfig.totalFreeWallpapers =
+                            FireBaseConfig.getValue("totalFreeWallpapers")
 
                         AdsManager.countClickRingtone = 0
                         AdsManager.countClickWallpaper = 0
                         AdsManager.countClickCallscreen = 0
-
-                        RemoteConfig.totalFreeRingtones = "5"
-                        RemoteConfig.totalFreeWallpapers = "20"
 
 
                         if (isInitAds.get()) {
@@ -111,6 +123,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                         }
                         isInitAds.set(true)
                         setupCMP()
+
                     }
                 })
         } else {
@@ -157,7 +170,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             isCheckTestDevice = false,
             mobileAdsListener = object : MobileAdsListener {
                 override fun onSuccess() {
-                    showBanner()
+//                    showBanner()
                     println("RemoteConfig.ONRESUME_070625: ${RemoteConfig.ONRESUME_070625}")
                     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.P && RemoteConfig.ONRESUME_070625 == "1") {
                         AppOpenManager.getInstance().init(application, AdsManager.ONRESUME)
@@ -208,15 +221,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
         when (RemoteConfig.ADS_SPLASH_070625) {
             "1" -> {
                 binding.tvStart.visibility = View.GONE
-                AdsManager.showAdBanner(
-                    this,
-                    AdsManager.BANNER_SPLASH,
-                    binding.frBanner,
-                    binding.view,
-                    false
-                ) {
-                    showAds()
-                }
+                showAds()
             }
 
             "2" -> {
@@ -263,8 +268,8 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             "1" -> {
                 binding.tvStart.visible()
                 Handler(Looper.getMainLooper()).postDelayed({
-                    loadAOA()
-                }, 1500)
+                    showAdsIfAppRunning()
+                }, 10)
             }
 
             "2" -> {
@@ -279,36 +284,6 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     private var isCheckFail = false
 
-    private fun loadAOA() {
-        val initialValue = AdsManager.AOA_SPLASH
-        appOpenManager = AOAManager(
-            this@SplashActivity,
-            initialValue,
-            10000,
-            object : AOAManager.AppOpenAdsListener {
-                override fun onAdPaid(adValue: AdValue, adUnitAds: String) {
-                }
-
-                override fun onAdsClose() {
-                    if (NATIVE_FULL_SPLASH_070625 == "1" && !isTestDevice) {
-                        nextScreen()
-                    } else {
-                        nextScreen()
-                    }
-                }
-
-                override fun onAdsFailed(message: String) {
-                    isCheckFail = true
-                    nextScreen()
-                }
-
-                override fun onAdsLoaded() {
-
-                }
-            })
-        appOpenManager?.loadAoA()
-
-    }
 
     private fun showInter() {
         val initialValue = AdsManager.INTER_SPLASH

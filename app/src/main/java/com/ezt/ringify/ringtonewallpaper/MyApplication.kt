@@ -19,6 +19,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
         instance = this // ✅ Fix: Set instance here
 
         FirebaseApp.initializeApp(this)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         val deviceId = Common.getDeviceId(this)
         val secret = "abcadhjgashjd1231" // TODO: Replace with your actual secret
         val jwt = Common.generateJwt(deviceId, secret)
@@ -83,7 +84,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
                 val currentTroasCache = (previousTroasCache + currentImpressionRevenue).toFloat()
                 //check whether to trigger  tROAS event
                 if (currentTroasCache >= 0.01) {
-                    LogTroasFirebaseAdRevenueEvent(currentTroasCache, currency)
+                    logTroasFirebaseAdRevenueEvent(currentTroasCache, currency)
                     editor.putFloat("TroasCache", 0f) //reset TroasCache
                 } else {
                     editor.putFloat("TroasCache", currentTroasCache)
@@ -94,7 +95,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
             }
         }
 
-        private fun LogTroasFirebaseAdRevenueEvent(tRoasCache: Float, currency: String) {
+        private fun logTroasFirebaseAdRevenueEvent(tRoasCache: Float, currency: String) {
             try {
                 val bundle = Bundle()
                 bundle.putDouble(

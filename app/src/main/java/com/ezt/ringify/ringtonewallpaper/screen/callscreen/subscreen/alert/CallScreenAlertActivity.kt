@@ -7,9 +7,7 @@ import android.widget.Toast
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenAlertBinding
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
@@ -17,7 +15,6 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTypeAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 
 class CallScreenAlertActivity :
     BaseActivity<ActivityCallscreenAlertBinding>(ActivityCallscreenAlertBinding::inflate) {
@@ -126,14 +123,14 @@ class CallScreenAlertActivity :
     }
 
     private fun togglePlayPreview() {
-        val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.NONE
-        val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.NONE
+        val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.DEFAULT
+        val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.DEFAULT
 
         if (!isFlashEnabled && !isVibrationEnabled) {
             Toast.makeText(this, resources.getString(R.string.enable_function), Toast.LENGTH_SHORT).show()
             return
         }
-        if (flash == FlashType.NONE && vibration == VibrationType.NONE) {
+        if (flash == FlashType.DEFAULT && vibration == VibrationType.DEFAULT) {
             Toast.makeText(this, resources.getString(R.string.select_testing_value), Toast.LENGTH_SHORT).show()
             return
         }
@@ -144,16 +141,9 @@ class CallScreenAlertActivity :
         )
 
         if (isPlayed) {
-            flashVibrationManager.startFlashAndVibration(true, flash, true, vibration) {
-                println("onComplete: is here")
-                isPlayed = false
-                binding.player.setImageResource(R.drawable.icon_play_alert) // <- correct icon
-            }
-            binding.player.setImageResource(R.drawable.icon_pause_alert) // update immediately for user feedback
+            flashVibrationManager.startFlashAndVibration(true, flash, true, vibration)
         } else {
             flashVibrationManager.stopFlashAndVibration()
-            isPlayed = false
-            binding.player.setImageResource(R.drawable.icon_play_alert)
         }
     }
 }

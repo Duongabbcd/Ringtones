@@ -13,7 +13,6 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.CallbackIntro
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.Companion.setSpannableString
 import com.ezt.ringify.ringtonewallpaper.utils.Common
-import com.iab.omid.library.mmadbridge.walking.async.a
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -22,7 +21,6 @@ class FavouriteWallpaperFragment : Fragment() {
     private val binding by lazy { ViewpagerFavouriteItempageBinding.inflate(layoutInflater) }
     private lateinit var callbackIntro: CallbackIntro
     private var position = 0
-
     private val categoryViewModel: CategoryViewModel by viewModels()
 
     private var allFavWallpaper: MutableList<Int> = mutableListOf()
@@ -63,6 +61,10 @@ class FavouriteWallpaperFragment : Fragment() {
             val nextPage = position++
             callbackIntro.onNext(position,nextPage)
 
+        }
+
+        binding.skipBtn.setOnClickListener {
+            callbackIntro.onNext(1, 2)
         }
     }
 

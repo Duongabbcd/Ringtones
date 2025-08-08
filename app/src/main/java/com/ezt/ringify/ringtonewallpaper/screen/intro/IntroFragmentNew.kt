@@ -38,8 +38,8 @@ class IntroFragmentNew : Fragment() {
         if (activity is CallbackIntro) callbackIntro = activity as CallbackIntro
         position = arguments?.getInt(ARG_POSITION) ?: 0
         if (arguments != null) {
-            println("IntroActivityNew.numberPage: ${IntroActivityNew.numberPage}")
-            when (IntroActivityNew.numberPage) {
+            println("IntroActivityNew.numberPage: $numberPage")
+            when (numberPage) {
                 3 -> {
                     fragmentPosition3()
                 }
@@ -78,9 +78,6 @@ class IntroFragmentNew : Fragment() {
         binding.skipBtn.setOnClickListener {
             callbackIntro.onNext(numberPage - 1,3)
         }
-
-
-
     }
 
 
@@ -189,7 +186,7 @@ class IntroFragmentNew : Fragment() {
         binding.slideDot.setImageResource(R.drawable.third_intro)
         binding.introImage.setImageResource(R.drawable.icon_call)
         binding.introTitle.text = getString(R.string.intro_title_3)
-        binding.skipBtn.gone()
+//        binding.skipBtn.gone()
 //        binding.intro2.visible()
 //     binding.intro3.gone()
 //        binding.intro4.gone()
@@ -206,7 +203,7 @@ class IntroFragmentNew : Fragment() {
         binding.slideDot.setImageResource(R.drawable.second_intro)
         binding.introImage.setImageResource(R.drawable.icon_frame)
         binding.introTitle.text = getString(R.string.intro_title_2)
-        binding.skipBtn.gone()
+//        binding.skipBtn.gone()
 //        binding.intro2.visible()
 //     binding.intro3.gone()
 //        binding.intro4.gone()
@@ -222,7 +219,7 @@ class IntroFragmentNew : Fragment() {
         binding.image2.setImageResource(R.drawable.bg_intro1)
         binding.introImage.setImageResource(R.drawable.icon_song)
         binding.slideDot.setImageResource(R.drawable.first_intro)
-        binding.skipBtn.gone()
+        //        binding.skipBtn.gone()
 //        binding.intro2.visible()
 //     binding.intro3.gone()
 //        binding.intro4.gone()

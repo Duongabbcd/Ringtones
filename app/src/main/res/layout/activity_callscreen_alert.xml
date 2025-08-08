@@ -11,282 +11,275 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/view"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/topController"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_background"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingTop="@dimen/_30sdp"
+                android:paddingBottom="@dimen/_11sdp"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/topController"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/backBtn"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/top_background"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_30sdp"
-                    android:paddingBottom="@dimen/_11sdp"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_10sdp"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <LinearLayout
-                        android:id="@+id/backBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/_10sdp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:id="@+id/previousScreen"
-                            android:layout_width="@dimen/_24sdp"
-                            android:layout_height="@dimen/_24sdp"
-                            android:contentDescription="@string/imageview"
-                            android:padding="@dimen/_2sdp"
-                            android:src="@drawable/icon_back"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/nameScreen"
-                            style="@style/CustomTextStyleSemiBold18sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_24sdp"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:contentDescription="@string/imageview"
-                            android:gravity="center"
-                            android:text="@string/alert"
-                            android:textColor="@color/main_color"
-                            app:layout_constraintBottom_toBottomOf="@id/previousScreen"
-                            app:layout_constraintStart_toEndOf="@id/previousScreen"
-                            app:layout_constraintTop_toTopOf="@id/previousScreen" />
-
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/topController">
-
                     <ImageView
-                        android:id="@+id/player"
-                        android:layout_width="@dimen/_120sdp"
-                        android:layout_height="@dimen/_120sdp"
+                        android:id="@+id/previousScreen"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:contentDescription="@string/imageview"
-                        android:src="@drawable/icon_play_alert"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.501"
+                        android:padding="@dimen/_2sdp"
+                        android:src="@drawable/icon_back"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                     <TextView
-                        android:id="@+id/title"
-                        style="@style/CustomTextStyle14sp"
+                        android:id="@+id/nameScreen"
+                        style="@style/CustomTextStyleSemiBold18sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:contentDescription="@string/imageview"
                         android:gravity="center"
-                        android:text="@string/flash_title"
-                        android:textColor="@color/customBlack"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/player" />
+                        android:text="@string/alert"
+                        android:textColor="@color/main_color"
+                        app:layout_constraintBottom_toBottomOf="@id/previousScreen"
+                        app:layout_constraintStart_toEndOf="@id/previousScreen"
+                        app:layout_constraintTop_toTopOf="@id/previousScreen" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/flash"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_22sdp"
-                        android:background="@drawable/background_radius_8_gray_stroke"
-                        android:paddingHorizontal="@dimen/_16sdp"
-                        android:paddingVertical="@dimen/_24sdp"
-                        app:layout_constraintTop_toBottomOf="@id/title">
-
-                        <RelativeLayout
-                            android:id="@+id/flashEnable"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_24sdp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <TextView
-                                style="@style/CustomTextStyleMedium14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentStart="true"
-                                android:gravity="center_vertical"
-                                android:text="@string/enable_flash_alert" />
-
-                            <ImageView
-                                android:id="@+id/flashSwitcher"
-                                android:layout_width="@dimen/_52sdp"
-                                android:layout_height="@dimen/_24sdp"
-                                android:layout_alignParentEnd="true"
-                                android:contentDescription="@string/imageview"
-                                android:src="@drawable/switch_disabled" />
-
-                        </RelativeLayout>
-
-
-                        <View
-                            android:id="@+id/divider1"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_1sdp"
-                            android:layout_marginTop="@dimen/_24sdp"
-                            android:background="@color/defaultGray"
-                            app:layout_constraintTop_toBottomOf="@id/flashEnable" />
-
-
-                        <RelativeLayout
-                            android:id="@+id/flashType"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_24sdp"
-                            android:layout_marginTop="@dimen/_24sdp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider1">
-
-                            <TextView
-                                style="@style/CustomTextStyleMedium14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentStart="true"
-                                android:gravity="center_vertical"
-                                android:text="@string/flash_type" />
-
-                            <TextView
-                                android:id="@+id/flashTitle"
-                                style="@style/CustomTextStyle14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="@dimen/_8sdp"
-                                android:layout_toStartOf="@id/nextIcon1"
-                                android:gravity="center"
-                                android:text="@string/default_title"
-                                android:textColor="@color/subTitle" />
-
-                            <ImageView
-                                android:id="@+id/nextIcon1"
-                                android:layout_width="@dimen/_20sdp"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentEnd="true"
-                                android:contentDescription="@string/imageview"
-                                android:src="@drawable/icon_next_screen" />
-
-                        </RelativeLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/vibration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_22sdp"
-                        android:background="@drawable/background_radius_8_gray_stroke"
-                        android:paddingHorizontal="@dimen/_16sdp"
-                        android:paddingVertical="@dimen/_24sdp"
-                        app:layout_constraintTop_toBottomOf="@id/flash">
-
-                        <RelativeLayout
-                            android:id="@+id/vibrationEnable"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_24sdp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <TextView
-                                style="@style/CustomTextStyleMedium14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentStart="true"
-                                android:gravity="center_vertical"
-                                android:text="@string/enable_vibration" />
-
-                            <ImageView
-                                android:id="@+id/vibrationSwitcher"
-                                android:layout_width="@dimen/_52sdp"
-                                android:layout_height="@dimen/_24sdp"
-                                android:layout_alignParentEnd="true"
-                                android:contentDescription="@string/imageview"
-                                android:src="@drawable/switch_disabled" />
-
-                        </RelativeLayout>
-
-
-                        <View
-                            android:id="@+id/divider2"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_1sdp"
-                            android:layout_marginTop="@dimen/_24sdp"
-                            android:background="@color/defaultGray"
-                            app:layout_constraintTop_toBottomOf="@id/vibrationEnable" />
-
-
-                        <RelativeLayout
-                            android:id="@+id/vibrationType"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_24sdp"
-                            android:layout_marginTop="@dimen/_24sdp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/divider2">
-
-                            <TextView
-                                style="@style/CustomTextStyleMedium14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentStart="true"
-                                android:gravity="center_vertical"
-                                android:text="@string/vibration_type" />
-
-                            <TextView
-                                android:id="@+id/vibrationTitle"
-                                style="@style/CustomTextStyle14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="@dimen/_8sdp"
-                                android:layout_toStartOf="@id/nextIcon2"
-                                android:gravity="center"
-                                android:text="@string/default_title"
-                                android:textColor="@color/subTitle" />
-
-                            <ImageView
-                                android:id="@+id/nextIcon2"
-                                android:layout_width="@dimen/_20sdp"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentEnd="true"
-                                android:contentDescription="@string/imageview"
-                                android:src="@drawable/icon_next_screen" />
-
-                        </RelativeLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/applyBtn"
-                        style="@style/CustomTextStyleSemiBold14sp"
-                        android:layout_width="@dimen/_156sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:background="@drawable/background_radius_12"
-                        android:gravity="center"
-                        android:text="@string/apply"
-                        android:textColor="@color/white"
-                        android:visibility="visible"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/vibration" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/_8sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/topController">
+
+                <ImageView
+                    android:id="@+id/player"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_play_alert"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/CustomTextStyle14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/flash_title"
+                    android:textColor="@color/customBlack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/player" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/flash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/background_radius_8_gray_stroke"
+                    android:paddingHorizontal="@dimen/_16sdp"
+                    android:paddingVertical="@dimen/_16sdp"
+                    app:layout_constraintTop_toBottomOf="@id/title">
+
+                    <RelativeLayout
+                        android:id="@+id/flashEnable"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_24sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            style="@style/CustomTextStyleMedium14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/enable_flash_alert" />
+
+                        <ImageView
+                            android:id="@+id/flashSwitcher"
+                            android:layout_width="@dimen/_52sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/imageview"
+                            android:src="@drawable/switch_disabled" />
+
+                    </RelativeLayout>
+
+
+                    <View
+                        android:id="@+id/divider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:background="@color/defaultGray"
+                        app:layout_constraintTop_toBottomOf="@id/flashEnable" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/flashType"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider1">
+
+                        <TextView
+                            style="@style/CustomTextStyleMedium14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/flash_type" />
+
+                        <TextView
+                            android:id="@+id/flashTitle"
+                            style="@style/CustomTextStyle14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@id/nextIcon1"
+                            android:gravity="center"
+                            android:text="@string/default_title"
+                            android:textColor="@color/subTitle" />
+
+                        <ImageView
+                            android:id="@+id/nextIcon1"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/imageview"
+                            android:src="@drawable/icon_next_screen" />
+
+                    </RelativeLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/vibration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/background_radius_8_gray_stroke"
+                    android:paddingHorizontal="@dimen/_16sdp"
+                    android:paddingVertical="@dimen/_16sdp"
+                    app:layout_constraintTop_toBottomOf="@id/flash">
+
+                    <RelativeLayout
+                        android:id="@+id/vibrationEnable"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_24sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            style="@style/CustomTextStyleMedium14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/enable_vibration" />
+
+                        <ImageView
+                            android:id="@+id/vibrationSwitcher"
+                            android:layout_width="@dimen/_52sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/imageview"
+                            android:src="@drawable/switch_disabled" />
+
+                    </RelativeLayout>
+
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:background="@color/defaultGray"
+                        app:layout_constraintTop_toBottomOf="@id/vibrationEnable" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/vibrationType"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider2">
+
+                        <TextView
+                            style="@style/CustomTextStyleMedium14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/vibration_type" />
+
+                        <TextView
+                            android:id="@+id/vibrationTitle"
+                            style="@style/CustomTextStyle14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:layout_toStartOf="@id/nextIcon2"
+                            android:gravity="center"
+                            android:text="@string/default_title"
+                            android:textColor="@color/subTitle" />
+
+                        <ImageView
+                            android:id="@+id/nextIcon2"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/imageview"
+                            android:src="@drawable/icon_next_screen" />
+
+                    </RelativeLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/applyBtn"
+                    style="@style/CustomTextStyleSemiBold14sp"
+                    android:layout_width="@dimen/_156sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@drawable/background_radius_12"
+                    android:gravity="center"
+                    android:text="@string/apply"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vibration" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <View

@@ -62,8 +62,9 @@ class RingtoneAdapter(private val onClickListener: (Ringtone) -> Unit) :
         fun bind(position: Int) {
             val ringTone = allRingtones[position]
             binding.apply {
+                println("RingtoneViewHolder: $ringTone")
                 ringToneName.text = ringTone.name
-                ringToneAuthor.text = ringTone.author.name
+                ringToneAuthor.text = ringTone.author.name ?: ""
 
                 if(ringTone.trend == 1) {
                     marker.visible()
