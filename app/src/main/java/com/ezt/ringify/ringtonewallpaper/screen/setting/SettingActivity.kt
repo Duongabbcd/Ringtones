@@ -14,6 +14,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.load
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.PhoneSettingActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 
 class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +42,11 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
             rateOption.setOnClickListener {
 //                Common.showRate(this@SettingActivity)
             }
+
+            rateOption.gone()
+            feedbackOption.gone()
+            policyOption.gone()
+            shareOption.gone()
         }
     }
 
