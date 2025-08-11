@@ -401,4 +401,15 @@ object Common {
         return preferences.getString("KEY_Wpp_SortOrder", "Default").toString()
     }
 
+    fun setNotificationEnable(context: Context, isEnable: Boolean) {
+        val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
+        preferences.edit().putBoolean("KEY_NOTIF_ENABLE", isEnable).apply()
+    }
+
+
+    fun getNotificationEnable(context: Context): Boolean {
+        val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
+        return preferences.getBoolean("KEY_NOTIF_ENABLE", false)
+    }
+
 }

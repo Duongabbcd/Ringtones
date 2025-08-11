@@ -38,8 +38,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var countOpen = Common.getCountOpenApp(this)
-        showNotificationDialog(countOpen)
-        if (countOpen < 2) {
+
+        if (countOpen < 1) {
+            showNotificationDialog(countOpen)
             countOpen++
             Common.setCountOpenApp(this, countOpen)
         }
@@ -145,8 +146,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 }
                 dialog.show()
             }
+        } else {
+            val dialog = NotificationDialog(this) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    100
+                )
+            }
+            dialog.show()
         }
-
     }
 
     override fun onResume() {

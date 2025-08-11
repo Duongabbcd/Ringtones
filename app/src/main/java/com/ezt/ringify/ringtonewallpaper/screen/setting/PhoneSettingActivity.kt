@@ -22,6 +22,7 @@ import com.ezt.ringify.ringtonewallpaper.databinding.DialogFeedbackBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.DialogResetBinding
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import java.io.IOException
 
 class PhoneSettingActivity :
@@ -68,17 +69,22 @@ class PhoneSettingActivity :
         }
     }
 
+    private  var isNotifEnabled : Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkAndRequestStoragePermission()
+        updateNotificationSwitchUI()
         binding.apply {
             backBtn.setOnClickListener {
                 finish()
             }
-            if (isTiramisuOrAbove) {
-                binding.notificationSwitcher.isEnabled = true // You can toggle this if needed
-            } else {
-                binding.notificationSwitcher.isEnabled = false // You can toggle this if needed
+
+            notificationSwitcher.setOnClickListener {
+                isNotifEnabled = !isNotifEnabled
+                val displayIcon = if (isNotifEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
+                binding.notificationSwitcher.setImageResource(displayIcon)
+                Common.setNotificationEnable(this@PhoneSettingActivity, isNotifEnabled)
             }
 
             resetRingtoneBtn.setOnClickListener {
@@ -136,7 +142,7 @@ class PhoneSettingActivity :
                 dialog.show()
             }
 
-            updateNotificationSwitchUI()
+
         }
     }
 
@@ -150,8 +156,8 @@ class PhoneSettingActivity :
             // Below Android 13, permission is granted by default
             true
         }
-
-        val displayIcon = if (isGranted) R.drawable.switch_enabled else R.drawable.switch_disabled
+        isNotifEnabled = Common.getNotificationEnable(this@PhoneSettingActivity)
+        val displayIcon = if (isGranted && isNotifEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
         binding.notificationSwitcher.setImageResource(displayIcon)
     }
 
