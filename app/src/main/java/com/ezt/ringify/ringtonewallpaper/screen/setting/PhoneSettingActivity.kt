@@ -2,29 +2,33 @@ package com.ezt.ringify.ringtonewallpaper.screen.setting
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPhoneSettingBinding
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.databinding.DialogFeedbackBinding
+import com.ezt.ringify.ringtonewallpaper.databinding.DialogResetBinding
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
+import java.io.IOException
 
 class PhoneSettingActivity :
     BaseActivity<ActivityPhoneSettingBinding>(ActivityPhoneSettingBinding::inflate) {
     private val isTiramisuOrAbove by lazy {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     }
-
-    private var currentWallpaper: Bitmap? = null
 
     private fun checkAndRequestStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -78,13 +82,60 @@ class PhoneSettingActivity :
             }
 
             resetRingtoneBtn.setOnClickListener {
-                getAndSetDefaultRingtone(this@PhoneSettingActivity)
+                val dialog = ResetDialog(this@PhoneSettingActivity) { result ->
+                    if (result) {
+                        val wallpaperManager =
+                            WallpaperManager.getInstance(this@PhoneSettingActivity)
 
+                        try {
+                            wallpaperManager.clear()
+                            // Optionally notify the user
+                            Toast.makeText(
+                                this@PhoneSettingActivity,
+                                "Ringtone reset to default",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                            Toast.makeText(
+                                this@PhoneSettingActivity,
+                                "Failed to reset ringtone",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+                dialog.show()
             }
+
 
             resetWallpaperBtn.setOnClickListener {
-                getWallpaperDrawable()
+                val dialog = ResetDialog(this@PhoneSettingActivity) { result ->
+                    if (result) {
+                        val wallpaperManager =
+                            WallpaperManager.getInstance(this@PhoneSettingActivity)
+
+                        try {
+                            wallpaperManager.clear()
+                            // Optionally notify the user
+                            Toast.makeText(
+                                this@PhoneSettingActivity,
+                                "Wallpaper reset to default",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                            Toast.makeText(
+                                this@PhoneSettingActivity,
+                                "Failed to reset wallpaper",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+                dialog.show()
             }
+
             updateNotificationSwitchUI()
         }
     }
@@ -141,4 +192,31 @@ class PhoneSettingActivity :
     companion object {
         private const val STORAGE_PERMISSION_CODE = 1001
     }
+}
+
+class ResetDialog(context: Context, private val onClickListener: (Boolean) -> Unit) :
+    Dialog(context) {
+    private val binding by lazy { DialogResetBinding.inflate(layoutInflater) }
+
+    init {
+        setContentView(binding.root)
+        window?.setBackgroundDrawableResource(R.color.transparent)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding.apply {
+            okBtn.setOnClickListener {
+                onClickListener(true)
+                dismiss()
+            }
+
+            cancelBtn.setOnClickListener {
+                onClickListener(false)
+                dismiss()
+            }
+
+        }
+    }
+
 }
