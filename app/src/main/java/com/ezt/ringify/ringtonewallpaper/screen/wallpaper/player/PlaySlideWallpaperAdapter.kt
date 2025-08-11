@@ -126,6 +126,11 @@ class PlaySlideWallpaperAdapter(
 
         @SuppressLint("ClickableViewAccessibility")
         fun bind(wallpaper: Wallpaper, pos: Int) {
+            binding.ccIcon.setOnClickListener {
+                val dialog = CreditDialog(context)
+                dialog.setCreditWallpaper()
+                dialog.show()
+            }
             // Avoid unnecessary rebind
 
             // Set playingHolder for external progress updates
@@ -277,6 +282,12 @@ class PlaySlideWallpaperAdapter(
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
 
             println("LivePlayerViewHolder: $videoUrl and $isCurrent")
+
+            binding.ccIcon.setOnClickListener {
+                val dialog = CreditDialog(context)
+                dialog.setCreditWallpaper()
+                dialog.show()
+            }
 
             if (!isCurrent) {
                 // Not current item — reset state and show thumbnail only

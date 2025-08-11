@@ -37,7 +37,7 @@ class FavouriteRingtoneFragment : Fragment() {
             allFavRingtones.addAll(list)
 
             println("ringtoneAdapter: $allFavRingtones")
-            binding.currentItem.text = "${allFavRingtones.size} / 3"
+            binding.currentItem.text = "(${allFavRingtones.size}/3)"
         }
     }
 

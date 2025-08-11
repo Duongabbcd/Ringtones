@@ -41,6 +41,7 @@ fun isSPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 fun isQPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
 enum class FlashType(val label: String) {
+    None("None"),
     DEFAULT("Default"),
     FAST_BLINK("Fast Blink"),
     SLOW_BLINK("Slow Blink"),
@@ -57,6 +58,7 @@ enum class FlashType(val label: String) {
 }
 
 enum class VibrationType(val label: String) {
+    None("None"),
     DEFAULT("Default"),
     SINGLE_CLICK("Single click"),
     DOUBLE_CLICK("Double click"),

@@ -9,7 +9,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewCallscreenBinding
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.startCall
@@ -22,10 +21,6 @@ class PreviewCallScreenActivity :
         super.onCreate(savedInstanceState)
 
         val prefs = getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
-        val background = prefs.getString("BACKGROUND", "") ?: ""
-        if (background.isNotEmpty()) {
-            backgroundUrl = background
-        }
 
         val start = prefs.getString("ANSWER", "") ?: ""
         if (start.isNotEmpty()) {
@@ -40,28 +35,9 @@ class PreviewCallScreenActivity :
             avatarUrl = avatar
         }
 
-        println("videoUrl: $avatarUrl")
-
+        println("avatarUrl: $avatarUrl")
 
         binding.apply {
-            val placeholderDrawable = ContextCompat.getDrawable(
-                this@PreviewCallScreenActivity,
-                R.drawable.default_callscreen
-            )
-            Glide.with(this@PreviewCallScreenActivity)
-                .load(backgroundUrl)
-                .into(object : CustomTarget<Drawable>() {
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable>?
-                    ) {
-                        binding.callScreenImage.background = resource
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        binding.callScreenImage.background = placeholder ?: placeholderDrawable
-                    }
-                })
 
             Glide.with(this@PreviewCallScreenActivity).load(avatarUrl)
                 .placeholder(R.drawable.default_cs_avt).error(R.drawable.default_cs_avt)
@@ -80,6 +56,36 @@ class PreviewCallScreenActivity :
                     "INTER_CALLSCREEN"
                 )
             }
+            println("backgroundURL: $backgroundUrl")
+            if (backgroundUrl.isNullOrEmpty()) {
+                binding.callScreenImage.setBackgroundResource(R.drawable.default_callscreen)
+            } else {
+                Glide.with(this@PreviewCallScreenActivity)
+                    .load(backgroundUrl)
+                    .placeholder(R.drawable.default_callscreen)
+                    .error(R.drawable.default_callscreen)
+                    .into(binding.callScreenImage)
+            }
+
+            val placeholderDrawable = ContextCompat.getDrawable(
+                this@PreviewCallScreenActivity,
+                R.drawable.default_callscreen
+            )
+            Glide.with(this@PreviewCallScreenActivity)
+                .load(backgroundUrl)
+                .placeholder(placeholderDrawable)
+                .into(object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        binding.callScreenImage.background = resource
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        binding.callScreenImage.background = placeholder ?: placeholderDrawable
+                    }
+                })
         }
     }
 

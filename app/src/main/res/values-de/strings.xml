@@ -176,4 +176,6 @@
     <string name="can_not_open_default">Standard-App-Einstellungen können nicht geöffnet werden.</string>
     <string name="can_not_overlay">Overlay-Berechtigungseinstellungen können nicht geöffnet werden.</string>
 
+    <string name="call_screen_feedback_1">Möchten Sie mehr Anpassungen</string>
+    <string name="call_screen_feedback_2">Anrufbildschirm funktioniert nicht nach dem Festlegen als Anrufbildschirm</string>
 </resources>

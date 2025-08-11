@@ -24,16 +24,24 @@ class FavouriteWallpaperViewModel @Inject constructor(
     private var _liveWallpaper = MutableLiveData<Wallpaper>()
     val liveWallpaper: LiveData<Wallpaper> get() = _liveWallpaper
 
+    private var _slideWallpaper = MutableLiveData<Wallpaper>()
+    val slideWallpaper: LiveData<Wallpaper> get() = _slideWallpaper
+
     private var _allWallpapers = MutableLiveData<List<Wallpaper>>()
     val allWallpapers: LiveData<List<Wallpaper>> get() = _allWallpapers
 
     private var _allLiveWallpapers = MutableLiveData<List<Wallpaper>>()
     val allLiveWallpapers: LiveData<List<Wallpaper>> get() = _allLiveWallpapers
 
+    private var _allSlideWallpapers = MutableLiveData<List<Wallpaper>>()
+    val allSlideWallpapers: LiveData<List<Wallpaper>> get() = _allSlideWallpapers
+
     private val _loading1 = MutableLiveData<Boolean>()
     val loading1: LiveData<Boolean> = _loading1
     private val _loading2 = MutableLiveData<Boolean>()
     val loading2: LiveData<Boolean> = _loading2
+    private val _loading3 = MutableLiveData<Boolean>()
+    val loading3: LiveData<Boolean> = _loading3
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -55,6 +63,16 @@ class FavouriteWallpaperViewModel @Inject constructor(
         }
         _loading1.value = false
     }
+
+    fun loadSlideWallpaperById(id: Int) {
+        println("loadSlideWallpaperById 0: $id")
+        _loading1.value = true
+        viewModelScope.launch {
+            _slideWallpaper.value = repository.getSlideWallpaperById(id)
+            println("loadSlideWallpaperById: ${_liveWallpaper.value}")
+        }
+        _loading1.value = false
+    }
     
 
     fun loadAllWallpapers() {
@@ -62,7 +80,6 @@ class FavouriteWallpaperViewModel @Inject constructor(
             _loading1.value = true
             try {
                 _allWallpapers.value = repository.getAllWallpapers()
-                println("loadWallpaperById: ${_wallpaper.value}")
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
@@ -78,13 +95,27 @@ class FavouriteWallpaperViewModel @Inject constructor(
             _loading2.value = true
             try {
                 _allLiveWallpapers.value = repository.getAllLiveWallpapers()
-                println("loadWallpaperById: ${_wallpaper.value}")
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
                 _error.value = e.localizedMessage
             } finally {
                 _loading2.value = false
+            }
+        }
+    }
+
+    fun loadSlideAllWallpapers() {
+        viewModelScope.launch {
+            _loading3.value = true
+            try {
+                _allSlideWallpapers.value = repository.getAllSlideWallpapers()
+                _error.value = null
+            } catch (e: Exception) {
+                println("loadWallpapers: ${e.message}")
+                _error.value = e.localizedMessage
+            } finally {
+                _loading3.value = false
             }
         }
     }
@@ -112,13 +143,29 @@ class FavouriteWallpaperViewModel @Inject constructor(
         }
     }
 
+    fun insertSlideWallpaper(wallpaper: Wallpaper) = viewModelScope.launch(Dispatchers.IO) {
+        println("insertWallpaper: $wallpaper")
+        repository.insertSlideWallpaper(wallpaper).also {
+
+            ringtoneRepository.updateStatus(
+                InteractionRequest(
+                    3, 3, wallpaper.id
+                )
+            )
+        }
+    }
+
     fun deleteWallpaper(wallpaper: Wallpaper) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteWallpaper(wallpaper)
     }
-
     fun deleteLiveWallpaper(wallpaper: Wallpaper) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteLiveWallpaper(wallpaper)
     }
+
+    fun deleteSlideWallpaper(wallpaper: Wallpaper) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteSlideWallpaper(wallpaper)
+    }
+
 
     fun increaseDownload(wallpaper: Wallpaper) {
         viewModelScope.launch(Dispatchers.IO) {

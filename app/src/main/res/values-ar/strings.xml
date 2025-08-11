@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="appDesc">نغمات رنين عالية الجودة رقم 1</string>
     <string name="next_title">هيا بنا</string>
     <string name="next">التالي</string>
     <string name="skip">تخطي</string>
-    <string name="intro_1">لنبدأ...</string>
-    <string name="intro_2">واحد آخر...</string>
+    <string name="intro_1">لنبدأ…</string>
+    <string name="intro_2">واحد آخر…</string>
     <string name="intro_3">وانتهينا.</string>
     <string name="intro_title_1">مرحبا بكم في</string>
     <string name="intro_title_2">احصل على كامل</string>
@@ -49,7 +48,7 @@
     <string name="callScreen">شاشة المكالمات</string>
     <string name="setting">الإعداد</string>
     <string name="search">بحث</string>
-    <string name="searching">جاري البحث...</string>
+    <string name="searching">جاري البحث…</string>
     <string name="topic">الموضوع الذي تريده</string>
     <string name="see_all">عرض الكل</string>
 
@@ -109,7 +108,7 @@
     <string name="successfully">بنجاح!</string>
     <string name="failed">فشل!</string>
     <string name="notif_title">لا تفوت التحديثات الأخيرة</string>
-    <string name="notif_desc">قم بتشغيل الإشعارات للحصول على معلومات حول نغمة الرنين الجديدة وخلفية الشاشة والميزات...</string>
+    <string name="notif_desc">قم بتشغيل الإشعارات للحصول على معلومات حول نغمة الرنين الجديدة وخلفية الشاشة والميزات…</string>
     <string name="feedback_1">هل تريد المزيد من النغمات مثل هذه</string>
     <string name="feedback_2">لا يمكن تشغيل نغمة الرنين هذه</string>
     <string name="feedback_3">نغمة الرنين لا تعمل بعد ضبط نغمة الرنين</string>
@@ -175,4 +174,7 @@
     <string name="reset_wallpapers">إعادة تعيين جميع الخلفيات إلى الوضع الافتراضي</string>
     <string name="set_wallpaper_title">تعيين الخلفية</string>
     <string name="exit">خروج</string>
+
+    <string name="call_screen_feedback_1">تريد المزيد من التخصيصات</string>
+    <string name="call_screen_feedback_2">شاشة الاتصال لا تعمل بعد التعيين كشاشة الاتصال</string>
 </resources>

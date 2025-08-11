@@ -85,7 +85,6 @@
             <ImageView
                 android:contentDescription="@string/imageview"
                 android:id="@+id/ccIcon"
-                android:visibility="gone"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_alignParentEnd="true"

@@ -60,10 +60,14 @@ class AllTypeAlertActivity :
         binding.allTypeAlerts.adapter = adapter
 
         if (alertType == "Flash") {
-            adapter.submitList(FlashType.entries.map { it.label }, currentValue)
+            adapter.submitList(
+                FlashType.entries.filter { it != FlashType.None }.map { it.label },
+                currentValue
+            )
             binding.nameScreen.text = getString(R.string.flash_type)
         } else {
-            adapter.submitList(VibrationType.entries.map { it.label }, currentValue)
+            adapter.submitList(VibrationType.entries.filter { it != VibrationType.None }
+                .map { it.label }, currentValue)
             binding.nameScreen.text = getString(R.string.vibration_type)
         }
     }

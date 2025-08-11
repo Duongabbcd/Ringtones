@@ -17,6 +17,10 @@
     <string name="desc_3">Tema Layar Panggilan Dinamis</string>
     <string name="high_light_3">Layar Panggilan</string>
 
+    <string name="call_screen_feedback_1">Ingin lebih banyak penyesuaian</string>
+    <string name="call_screen_feedback_2">Layar panggilan tidak berfungsi setelah diatur sebagai layar panggilan</string>
+
+
     <string name="fav_1">3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
     <string name="selection_title">आप अधिकतम 3 ही चुन सकते हैं</string>
 

@@ -19,6 +19,8 @@
 
     <string name="fav_1">Selecione 3 gêneros musicais que você gosta</string>
     <string name="selection_title">Você pode selecionar até 3 apenas</string>
+    <string name="call_screen_feedback_1">Quer mais personalizações</string>
+    <string name="call_screen_feedback_2">A tela de chamada não funciona após definir como tela de chamada</string>
 
 
     <string name="fav_light_1">gêneros musicais</string>

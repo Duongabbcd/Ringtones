@@ -19,6 +19,7 @@ import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.DefaultDataSource
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.CreditDialog
 
 @OptIn(UnstableApi::class)
 class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter() {
@@ -82,6 +83,12 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
 
         fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
+
+            binding.ccIcon.setOnClickListener {
+                val dialog = CreditDialog(context)
+                dialog.setCreditWallpaper()
+                dialog.show()
+            }
 
             if (!isCurrent) {
                 // Not current item — reset state and show thumbnail only

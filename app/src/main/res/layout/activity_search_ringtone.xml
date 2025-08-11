@@ -74,6 +74,7 @@
 
         <ImageView
             android:id="@+id/closeButton"
+            android:contentDescription="@string/imageview"
             android:src="@drawable/icon_close_black"
             android:layout_marginEnd="@dimen/_20sdp"
             app:layout_constraintEnd_toEndOf="@id/searchText"

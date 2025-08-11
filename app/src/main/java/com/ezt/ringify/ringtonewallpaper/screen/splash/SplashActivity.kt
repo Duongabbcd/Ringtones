@@ -52,20 +52,25 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initGDPR()
+        initAds()
         isLoadAdsDone = false
     }
 
     private fun initGDPR() {
-        MyApplication.trackingEvent("check_GDPR")
-        GDPRRequestable.getGdprRequestable(this)
-            .setOnRequestGDPRCompleted(object : GDPRRequestable.RequestGDPRCompleted {
-                override fun onRequestGDPRCompleted(formError: FormError?) {
-                    println("onRequestGDPRCompleted: $formError")
-                    initAds()
-                }
-            })
-        GDPRRequestable.getGdprRequestable(this).requestGDPR()
+        if (isNetworkConnected(this)) {
+            MyApplication.trackingEvent("check_GDPR")
+            GDPRRequestable.getGdprRequestable(this)
+                .setOnRequestGDPRCompleted(object : GDPRRequestable.RequestGDPRCompleted {
+                    override fun onRequestGDPRCompleted(formError: FormError?) {
+                        println("onRequestGDPRCompleted: $formError")
+
+                    }
+                })
+            GDPRRequestable.getGdprRequestable(this).requestGDPR()
+        } else {
+
+        }
+
     }
 
     private fun initAds() {
@@ -73,7 +78,6 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             isLoadAdsDone = true
             handler.removeCallbacks(runnable)
             showBanner()
-
         }
     }
 

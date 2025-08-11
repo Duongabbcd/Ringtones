@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Ringtones &amp; Wallpapers - Ringify</string>
+    <string name="app_name" translatable="false">Ringify</string>
 
     <string name="admob_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
     <string name="adjust_token_key" translatable="false"> </string>
@@ -185,5 +185,8 @@
     <string name="set_wallpaper_title">Set Wallpaper</string>
     <string name="exit">Exit</string>
     <string name="selection_title">You can select up to 3 only</string>
+
+    <string name="call_screen_feedback_1">Want more customizes</string>
+    <string name="call_screen_feedback_2">Call Screen do not work after set as Call Screen</string>
 
 </resources>

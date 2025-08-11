@@ -57,14 +57,15 @@
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_24sdp"
         android:background="@drawable/background_radius_8_gray_stroke"
-        android:paddingHorizontal="@dimen/_16sdp"
-        android:paddingVertical="@dimen/_24sdp"
+        android:paddingHorizontal="@dimen/_6sdp"
+        android:paddingVertical="@dimen/_14sdp"
         app:layout_constraintTop_toBottomOf="@id/topController">
 
         <RelativeLayout
             android:id="@+id/resetRingtoneBtn"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -91,7 +92,7 @@
             android:id="@+id/divider1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_1sdp"
-            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_14sdp"
             android:background="@color/defaultGray"
             app:layout_constraintTop_toBottomOf="@id/resetRingtoneBtn" />
 
@@ -99,8 +100,9 @@
         <RelativeLayout
             android:id="@+id/resetWallpaperBtn"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider1">
 
@@ -130,14 +132,15 @@
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_22sdp"
         android:background="@drawable/background_radius_8_gray_stroke"
-        android:paddingHorizontal="@dimen/_16sdp"
-        android:paddingVertical="@dimen/_24sdp"
+        android:paddingHorizontal="@dimen/_6sdp"
+        android:paddingVertical="@dimen/_14sdp"
         app:layout_constraintTop_toBottomOf="@id/flash">
 
         <RelativeLayout
             android:id="@+id/notificationEnable"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -159,12 +162,11 @@
 
         </RelativeLayout>
 
-
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_1sdp"
-            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_14sdp"
             android:background="@color/defaultGray"
             app:layout_constraintTop_toBottomOf="@id/notificationEnable" />
 
@@ -172,8 +174,9 @@
         <RelativeLayout
             android:id="@+id/clearCacheBtn"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider2">
 

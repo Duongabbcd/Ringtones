@@ -10,234 +10,312 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topController"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:background="@drawable/top_background"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingTop="@dimen/_30sdp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/previousScreen"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:contentDescription="@string/imageview"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/icon_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/nameScreen"
+                    style="@style/CustomTextStyleSemiBold18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:contentDescription="@string/imageview"
+                    android:gravity="center"
+                    android:text="@string/favourite"
+                    android:textColor="@color/main_color"
+                    app:layout_constraintBottom_toBottomOf="@id/previousScreen"
+                    app:layout_constraintStart_toEndOf="@id/previousScreen"
+                    app:layout_constraintTop_toTopOf="@id/previousScreen" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:paddingBottom="@dimen/_10sdp"
+            app:layout_constraintBottom_toTopOf="@id/frBanner"
+            app:layout_constraintTop_toBottomOf="@id/topController">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/_8sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/topController"
+                <TextView
+                    android:id="@+id/imageTitle"
+                    style="@style/CustomTextStyleMedium16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:text="@string/single"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/imageCount"
+                    style="@style/CustomTextStyleMedium16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:textColor="@color/subTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+
+                <TextView
+                    android:id="@+id/openAll3"
+                    style="@style/CustomTextStyleMedium12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:text="@string/see_all"
+                    android:textColor="#8246FF"
+                    app:layout_constraintBottom_toBottomOf="@id/imageTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageTitle" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allSingleWallpaper"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_200sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/imageTitle" />
+
+                <LinearLayout
+                    android:id="@+id/noDataLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/top_background"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_30sdp"
-                    android:paddingBottom="@dimen/_11sdp"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/imageTitle">
 
-                    <LinearLayout
-                        android:id="@+id/backBtn"
-                        android:layout_width="wrap_content"
+
+                    <ImageView
+                        android:layout_width="@dimen/_120sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/no_data" />
+
+                    <TextView
+                        style="@style/CustomTextStyle14sp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/_10sdp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:gravity="center"
+                        android:text="@string/no_data_desc" />
 
-                        <ImageView
-                            android:id="@+id/previousScreen"
-                            android:layout_width="@dimen/_24sdp"
-                            android:layout_height="@dimen/_24sdp"
-                            android:contentDescription="@string/imageview"
-                            android:padding="@dimen/_2sdp"
-                            android:src="@drawable/icon_back"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                </LinearLayout>
 
+                <ProgressBar
+                    android:id="@+id/loading3"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:progressTint="@color/main_color"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/allSingleWallpaper"
+                    app:layout_constraintEnd_toEndOf="@+id/allSingleWallpaper"
+                    app:layout_constraintStart_toStartOf="@+id/allSingleWallpaper"
+                    app:layout_constraintTop_toTopOf="@+id/allSingleWallpaper" />
 
-                        <TextView
-                            android:id="@+id/nameScreen"
-                            style="@style/CustomTextStyleSemiBold18sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_24sdp"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:contentDescription="@string/imageview"
-                            android:gravity="center"
-                            android:text="@string/favourite"
-                            android:textColor="@color/main_color"
-                            app:layout_constraintBottom_toBottomOf="@id/previousScreen"
-                            app:layout_constraintStart_toEndOf="@id/previousScreen"
-                            app:layout_constraintTop_toTopOf="@id/previousScreen" />
+                <TextView
+                    android:id="@+id/trending"
+                    style="@style/CustomTextStyleMedium16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:text="@string/video"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/allSingleWallpaper" />
 
-                    </LinearLayout>
+                <TextView
+                    android:id="@+id/trendingCount"
+                    style="@style/CustomTextStyleMedium16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:textColor="@color/subTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/trending" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/openAll1"
+                    style="@style/CustomTextStyleMedium12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:text="@string/see_all"
+                    android:textColor="#8246FF"
+                    app:layout_constraintBottom_toBottomOf="@id/trending"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/trending" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allTrending"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_200sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/trending" />
+
+                <LinearLayout
+                    android:id="@+id/noDataLayout1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/topController">
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/trending">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_120sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/no_data" />
 
                     <TextView
-                        android:id="@+id/trending"
-                        style="@style/CustomTextStyleMedium16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_20sdp"
-                        android:text="@string/video"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/trendingCount"
-                        style="@style/CustomTextStyleMedium16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_2sdp"
-                        android:textColor="@color/subTitle"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/trending" />
-
-                    <TextView
-                        android:id="@+id/openAll1"
-                        style="@style/CustomTextStyleMedium12sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_20sdp"
-                        android:text="@string/see_all"
-                        android:textColor="#8246FF"
-                        app:layout_constraintBottom_toBottomOf="@id/trending"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/trending" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/allTrending"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_190sdp"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/trending" />
-
-                    <LinearLayout
-                        android:id="@+id/noDataLayout1"
+                        style="@style/CustomTextStyle14sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@id/trending">
+                        android:text="@string/no_data_desc" />
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/loading1"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:progressTint="@color/main_color"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/allTrending"
+                    app:layout_constraintEnd_toEndOf="@+id/allTrending"
+                    app:layout_constraintStart_toStartOf="@+id/allTrending"
+                    app:layout_constraintTop_toTopOf="@+id/allTrending" />
+
+                <TextView
+                    android:id="@+id/newWallpaper"
+                    style="@style/CustomTextStyleMedium16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:text="@string/slide"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/allTrending" />
+
+                <TextView
+                    android:id="@+id/newWallpaperCount"
+                    style="@style/CustomTextStyleMedium16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:textColor="@color/subTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/newWallpaper" />
+
+                <LinearLayout
+                    android:id="@+id/noDataLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/newWallpaper">
 
 
-                        <ImageView
-                            android:layout_width="@dimen/_120sdp"
-                            android:layout_height="@dimen/_120sdp"
-                            android:contentDescription="@string/imageview"
-                            android:src="@drawable/no_data" />
-
-                        <TextView
-                            style="@style/CustomTextStyle14sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/no_data_desc" />
-
-                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="@dimen/_120sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/no_data" />
 
                     <TextView
-                        android:id="@+id/newWallpaper"
-                        style="@style/CustomTextStyleMedium16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_14sdp"
-                        android:text="@string/slide"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/allTrending" />
-
-                    <TextView
-                        android:id="@+id/newWallpaperCount"
-                        style="@style/CustomTextStyleMedium16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_2sdp"
-                        android:textColor="@color/subTitle"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/newWallpaper" />
-
-                    <LinearLayout
-                        android:id="@+id/noDataLayout2"
+                        style="@style/CustomTextStyle14sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@id/newWallpaper">
+                        android:text="@string/no_data_desc" />
 
+                </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="@dimen/_120sdp"
-                            android:layout_height="@dimen/_120sdp"
-                            android:contentDescription="@string/imageview"
-                            android:src="@drawable/no_data" />
+                <TextView
+                    android:id="@+id/openAll2"
+                    style="@style/CustomTextStyleMedium12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:text="@string/see_all"
+                    android:textColor="#8246FF"
+                    app:layout_constraintBottom_toBottomOf="@id/newWallpaper"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/newWallpaper" />
 
-                        <TextView
-                            style="@style/CustomTextStyle14sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/no_data_desc" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allNewWallpaper"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_300sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/newWallpaper" />
 
-                    </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/loading2"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:progressTint="@color/main_color"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/allNewWallpaper"
+                    app:layout_constraintEnd_toEndOf="@+id/allNewWallpaper"
+                    app:layout_constraintStart_toStartOf="@+id/allNewWallpaper"
+                    app:layout_constraintTop_toTopOf="@+id/allNewWallpaper" />
 
-                    <TextView
-                        android:id="@+id/openAll2"
-                        style="@style/CustomTextStyleMedium12sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_20sdp"
-                        android:text="@string/see_all"
-                        android:textColor="#8246FF"
-                        app:layout_constraintBottom_toBottomOf="@id/newWallpaper"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/newWallpaper" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/allNewWallpaper"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_190sdp"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/newWallpaper" />
-
-                    <ProgressBar
-                        android:id="@+id/loading1"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
-                        android:progressTint="@color/main_color"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/allTrending"
-                        app:layout_constraintEnd_toEndOf="@+id/allTrending"
-                        app:layout_constraintStart_toStartOf="@+id/allTrending"
-                        app:layout_constraintTop_toTopOf="@+id/allTrending" />
-
-                    <ProgressBar
-                        android:id="@+id/loading2"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
-                        android:progressTint="@color/main_color"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/allNewWallpaper"
-                        app:layout_constraintEnd_toEndOf="@+id/allNewWallpaper"
-                        app:layout_constraintStart_toStartOf="@+id/allNewWallpaper"
-                        app:layout_constraintTop_toTopOf="@+id/allNewWallpaper" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         </androidx.core.widget.NestedScrollView>
 
@@ -248,11 +326,9 @@
             android:background="@color/transparent"
             app:layout_constraintBottom_toTopOf="@id/frBanner" />
 
-        <FrameLayout
+        <include
             android:id="@+id/frBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            layout="@layout/ads_banner" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include

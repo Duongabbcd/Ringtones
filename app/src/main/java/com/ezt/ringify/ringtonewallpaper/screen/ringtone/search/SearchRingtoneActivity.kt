@@ -136,6 +136,7 @@ class SearchRingtoneActivity :
             closeButton.setOnClickListener {
                 searchText.setText("")
                 displayByCondition("")
+                noDataLayout.gone()
             }
 
         }

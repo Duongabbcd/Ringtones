@@ -133,6 +133,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             closeButton.setOnClickListener {
                 searchText.setText("")
                 displayByCondition("")
+                noDataLayout.gone()
             }
 
         }

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.ezt.ringify.ringtonewallpaper.local.dao.LiveWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.RingtoneDao
+import com.ezt.ringify.ringtonewallpaper.local.dao.SlideWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.WallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.database.FavouriteDatabase
 import dagger.Module
@@ -35,4 +36,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideLiveWallpaperDao(db: FavouriteDatabase): LiveWallpaperDao = db.liveWallpaperDao()
+
+
+    @Provides
+    @Singleton
+    fun provideSlideWallpaperDao(db: FavouriteDatabase): SlideWallpaperDao = db.slideWallpaperDao()
 }

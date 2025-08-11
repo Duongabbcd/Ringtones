@@ -786,6 +786,11 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         super.onPause()
         handler.removeCallbacks(progressUpdater)
         // Don't release player here! Service manages it.
+        if (serviceBound) {
+            playerService?.pause()
+            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
+            println("Activity onStop: pause playback")
+        }
     }
 
     override fun onResume() {
@@ -848,15 +853,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         super.onSaveInstanceState(outState)
         outState.putInt("currentId", currentId)
         outState.putBoolean("isPlaying", isPlaying)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (serviceBound) {
-            playerService?.pause()
-            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
-            println("Activity onStop: pause playback")
-        }
     }
 
     companion object {

@@ -43,10 +43,10 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
 //                Common.showRate(this@SettingActivity)
             }
 
-            rateOption.gone()
-            feedbackOption.gone()
-            policyOption.gone()
-            shareOption.gone()
+//            rateOption.gone()
+//            feedbackOption.gone()
+//            policyOption.gone()
+//            shareOption.gone()
         }
     }
 

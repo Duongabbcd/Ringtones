@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,7 +63,6 @@ class CallScreenFragment :
             currentCallScreen = result
             contentViewModel.getCallScreenContent(result.id)
             contentViewModel.getBackgroundContent(result.id)
-
         }
     }
 
@@ -279,9 +277,6 @@ class CallScreenFragment :
         if (missingPermissions.isNotEmpty()) {
             requestPermissions(missingPermissions.toTypedArray(), REQUEST_CODE_PERMISSIONS)
         }
-        //       else {
-//            openDefaultPhoneAppSettings()
-//        }
     }
 
     override fun onRequestPermissionsResult(
@@ -306,6 +301,7 @@ class CallScreenFragment :
             val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
             defaultAppSettingsLauncher.launch(intent)
         } catch (e: Exception) {
+            e.printStackTrace()
             Toast.makeText(
                 requireContext(),
                 "Can't open default apps settings.",
@@ -320,7 +316,8 @@ class CallScreenFragment :
                 data = Uri.parse("package:${requireContext().packageName}")
             }
             overlayPermissionLauncher.launch(intent)
-        } catch (e: Exception) {
+        } catch (ex: Exception) {
+            ex.printStackTrace()
             Toast.makeText(
                 requireContext(),
                 "Can't open overlay permission settings.",
@@ -333,7 +330,7 @@ class CallScreenFragment :
         val ctx = context ?: return
         val url = currentCallScreen.thumbnail.url.medium
         println("displayCallScreen: $background")
-        backgroundUrl = url
+        backgroundUrl = background
         Glide.with(ctx)
             .load(url)
             .placeholder(R.drawable.default_callscreen)
@@ -343,7 +340,7 @@ class CallScreenFragment :
 
     private fun saveCallScreenPreference(tag: String, value: String) {
         println("saveCallScreenPreference: $tag and $value")
-        val prefs = requireContext().getSharedPreferences("callscreen_prefs", Context.MODE_PRIVATE)
+        val prefs = requireContext().getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
         prefs.edit { putString(tag, value) }
     }
 
@@ -361,6 +358,8 @@ class CallScreenFragment :
     companion object {
         @JvmStatic
         fun newInstance() = CallScreenFragment()
+
+        private val TAG = CallScreenFragment.javaClass.name
 
         private const val REQUEST_CODE_PERMISSIONS = 101
 

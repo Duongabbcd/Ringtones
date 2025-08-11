@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ezt.ringify.ringtonewallpaper.local.LiveWallpaperEntity
-import com.ezt.ringify.ringtonewallpaper.local.WallpaperEntity
 
 @Dao
 interface LiveWallpaperDao {

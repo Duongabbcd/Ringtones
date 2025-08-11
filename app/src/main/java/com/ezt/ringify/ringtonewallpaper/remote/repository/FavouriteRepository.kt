@@ -2,9 +2,11 @@ package com.ezt.ringify.ringtonewallpaper.remote.repository
 
 import com.ezt.ringify.ringtonewallpaper.local.LiveWallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.RingtoneEntity
+import com.ezt.ringify.ringtonewallpaper.local.SlideWallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.WallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.dao.LiveWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.RingtoneDao
+import com.ezt.ringify.ringtonewallpaper.local.dao.SlideWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.WallpaperDao
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
@@ -15,6 +17,7 @@ class FavouriteRepository @Inject constructor(
     private val ringtoneDao: RingtoneDao,
     private val wallpaperDao: WallpaperDao,
     private val liveWallpaperDao: LiveWallpaperDao,
+    private val slideWallpaperDao: SlideWallpaperDao,
 ) {
 
     suspend fun getRingtoneById(id: Int): Ringtone =
@@ -32,17 +35,37 @@ class FavouriteRepository @Inject constructor(
         ringtoneDao.delete(ringtone.toEntity())
 
 
-    suspend fun getAllWallpapers(): List<Wallpaper> =
-        wallpaperDao.getAllWallpaper()?.map { it.toDomain() } ?: listOf()
+    suspend fun getAllWallpapers(): List<Wallpaper> {
+        val list = wallpaperDao.getAllWallpaper()
+        println("getAllWallpapers: $list")
+        return list?.map { it.toDomain() } ?: listOf()
+    }
 
-    suspend fun getAllLiveWallpapers(): List<Wallpaper> =
-        liveWallpaperDao.getAllWallpaper()?.map { it.toDomain() } ?: listOf()
+
+    suspend fun getAllLiveWallpapers(): List<Wallpaper> {
+        val list = liveWallpaperDao.getAllWallpaper()
+        println("getAllLiveWallpapers: $list")
+        return list?.map { it.toDomain() } ?: listOf()
+    }
+
+    suspend fun getAllSlideWallpapers(): List<Wallpaper> {
+        val list = slideWallpaperDao.getAllWallpaper()
+        println("getAllSlideWallpapers: $list")
+        return list?.map { it.toDomain() } ?: listOf()
+    }
 
     suspend fun getWallpaperById(id: Int): Wallpaper =
         wallpaperDao.getById(id)?.toDomain() ?: Wallpaper.EMPTY_WALLPAPER
 
     suspend fun getLiveWallpaperById(id: Int): Wallpaper =
         liveWallpaperDao.getById(id)?.toDomain() ?: Wallpaper.EMPTY_WALLPAPER
+
+
+    suspend fun getSlideWallpaperById(id: Int): Wallpaper {
+        val origin = slideWallpaperDao.getById(id)
+        println("getSlideWallpaperById: $origin")
+        return origin?.toDomain() ?: Wallpaper.EMPTY_WALLPAPER
+    }
 
     suspend fun insertWallpaper(wallpaper: Wallpaper) =
         wallpaperDao.insert(wallpaper.toEntity())
@@ -55,6 +78,12 @@ class FavouriteRepository @Inject constructor(
 
     suspend fun deleteLiveWallpaper(wallpaper: Wallpaper) =
         liveWallpaperDao.delete(wallpaper.toLiveEntity())
+
+    suspend fun insertSlideWallpaper(wallpaper: Wallpaper) =
+        slideWallpaperDao.insert(wallpaper.toSlideEntity())
+
+    suspend fun deleteSlideWallpaper(wallpaper: Wallpaper) =
+        slideWallpaperDao.delete(wallpaper.toSlideEntity())
 }
 
 
@@ -111,6 +140,30 @@ fun Wallpaper.toLiveEntity(): LiveWallpaperEntity =
         createdAt
     )
 
+fun Wallpaper.toSlideEntity(): SlideWallpaperEntity =
+    SlideWallpaperEntity(
+        id = id,
+        name = name,
+        thumbnail = thumbnail ?: OBJECT_EMPTY,
+        contents = contents,
+        originalId = originalId,
+        type,
+        active,
+        orderIndex,
+        isPrivate,
+        trend,
+        popular,
+        dailyRating,
+        weeklyRating,
+        monthlyRating,
+        like,
+        set,
+        download,
+        country,
+        updatedAt,
+        createdAt
+    )
+
 fun WallpaperEntity.toDomain() : Wallpaper =
     Wallpaper( id = id, name = name, thumbnail = if(thumbnail == OBJECT_EMPTY) null else thumbnail,
         contents = contents, originalId = originalId, type, active, orderIndex, isPrivate, trend, popular, dailyRating, weeklyRating, monthlyRating,
@@ -118,6 +171,31 @@ fun WallpaperEntity.toDomain() : Wallpaper =
 )
 
 fun LiveWallpaperEntity.toDomain(): Wallpaper =
+    Wallpaper(
+        id = id,
+        name = name,
+        thumbnail = if (thumbnail == OBJECT_EMPTY) null else thumbnail,
+        contents = contents,
+        originalId = originalId,
+        type,
+        active,
+        orderIndex,
+        isPrivate,
+        trend,
+        popular,
+        dailyRating,
+        weeklyRating,
+        monthlyRating,
+        like,
+        set,
+        download,
+        country,
+        updatedAt,
+        createdAt
+    )
+
+
+fun SlideWallpaperEntity.toDomain(): Wallpaper =
     Wallpaper(
         id = id,
         name = name,

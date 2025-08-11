@@ -20,6 +20,9 @@
     <string name="fav_1">3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
     <string name="selection_title">आप अधिकतम 3 ही चुन सकते हैं</string>
 
+    <string name="call_screen_feedback_1">अधिक अनुकूलन चाहते हैं</string>
+    <string name="call_screen_feedback_2">कॉल स्क्रीन को कॉल स्क्रीन के रूप में सेट करने के बाद काम नहीं कर रही है</string>
+
     <string name="fav_light_1">संगीत शैलियाँ</string>
     <string name="fav_2">अपनी पसंदीदा वॉलपेपर चुनें</string>
     <string name="fav_light_2">पसंदीदा वॉलपेपर</string>

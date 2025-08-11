@@ -175,4 +175,8 @@
     <string name="grant_all_permissions">Veuillez accorder toutes les autorisations pour continuer.</string>
     <string name="can_not_open_default">Impossible d’ouvrir les paramètres des applications par défaut.</string>
     <string name="can_not_overlay">Impossible d’ouvrir les paramètres d’autorisation de superposition.</string>
+
+    <string name="call_screen_feedback_1">Vous voulez plus de personnalisations</string>
+    <string name="call_screen_feedback_2">L’écran d’appel ne fonctionne pas après l’avoir défini comme écran d’appel</string>
+
 </resources>

@@ -20,6 +20,10 @@
     <string name="fav_1">Seleziona 3 generi musicali che ti piacciono</string>
     <string name="selection_title">Puoi selezionare solo fino a 3</string>
 
+    <string name="call_screen_feedback_1">Vuoi più personalizzazioni</string>
+    <string name="call_screen_feedback_2">La schermata delle chiamate non funziona dopo essere stata impostata come schermata delle chiamate</string>
+
+
     <string name="fav_light_1">generi musicali</string>
     <string name="fav_2">Scegli il tuo sfondo preferito</string>
     <string name="fav_light_2">sfondo preferito</string>

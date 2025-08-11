@@ -21,6 +21,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.RingtoneFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.WallpaperFragment
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.search.SearchWallpaperActivity
@@ -76,6 +77,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 R.id.callScreen -> {
                     selectedTab = 2
                     binding.topFeedback.visible()
+                    binding.topFeedback.setOnClickListener {
+                        val dialog = FeedbackDialog(this)
+                        dialog.setCallScreenFeedback()
+                        dialog.show()
+                    }
                     binding.searchButton.gone()
                     displayScreen()
                 }
@@ -154,6 +160,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         println("displayScreen: $selectedTab")
         when (selectedTab) {
             0 -> {
+                binding.appName.setImageResource(R.drawable.icon_app_name)
                 InterAds.preloadInterAds(
                     this@MainActivity,
                     alias = InterAds.ALIAS_INTER_RINGTONE,
@@ -163,6 +170,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
             1 -> {
+                binding.appName.setImageResource(R.drawable.icon_wallpaper_name)
                 InterAds.preloadInterAds(
                     this@MainActivity,
                     alias = InterAds.ALIAS_INTER_WALLPAPER,
@@ -173,6 +181,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
             2 -> {
+                binding.appName.setImageResource(R.drawable.icon_callscreen_name)
                 InterAds.preloadInterAds(
                     this@MainActivity,
                     alias = InterAds.ALIAS_INTER_CALLSCREEN,

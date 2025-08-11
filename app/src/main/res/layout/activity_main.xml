@@ -17,11 +17,12 @@
         <ImageView
             android:id="@+id/appName"
             android:layout_width="@dimen/_129sdp"
-            android:contentDescription="@string/imageview"
             android:layout_height="@dimen/_44sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_app_name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/icon_app_name"/>
+            app:layout_constraintBottom_toBottomOf="@id/searchButton"
+            app:layout_constraintTop_toTopOf="@id/searchButton" />
 
         <LinearLayout
             android:id="@+id/searchButton"

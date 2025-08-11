@@ -103,7 +103,7 @@ class CallScreenAlertActivity :
     }
 
     private fun updateUIFromValues() {
-        val default = getString(R.string.default_title)
+        val default = ""
         binding.flashTitle.text = if (flashTypeValue == "None") default else flashTypeValue
         binding.vibrationTitle.text = if (vibrationValue == "None") default else vibrationValue
         updateSwitchUI()
@@ -123,27 +123,68 @@ class CallScreenAlertActivity :
     }
 
     private fun togglePlayPreview() {
-        val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.DEFAULT
-        val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.DEFAULT
+        val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.None
+        val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.None
 
-        if (!isFlashEnabled && !isVibrationEnabled) {
-            Toast.makeText(this, resources.getString(R.string.enable_function), Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (flash == FlashType.DEFAULT && vibration == VibrationType.DEFAULT) {
-            Toast.makeText(this, resources.getString(R.string.select_testing_value), Toast.LENGTH_SHORT).show()
-            return
-        }
+        when {
+            !isFlashEnabled && !isVibrationEnabled -> {
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.enable_function),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
 
-        isPlayed = !isPlayed
-        binding.player.setImageResource(
-            if (isPlayed) R.drawable.icon_pause_alert else R.drawable.icon_play_alert
-        )
+            flash == FlashType.None && vibration == VibrationType.None -> {
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.select_testing_value),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
 
-        if (isPlayed) {
-            flashVibrationManager.startFlashAndVibration(true, flash, true, vibration)
-        } else {
-            flashVibrationManager.stopFlashAndVibration()
+            isFlashEnabled && !isVibrationEnabled -> {
+                isPlayed = !isPlayed
+                binding.player.setImageResource(
+                    if (isPlayed) R.drawable.icon_pause_alert else R.drawable.icon_play_alert
+                )
+
+                if (isPlayed) {
+                    flashVibrationManager.playFlashType(flash)
+                } else {
+                    flashVibrationManager.stopFlashAndVibration()
+                }
+                return
+            }
+
+            !isFlashEnabled && isVibrationEnabled -> {
+                isPlayed = !isPlayed
+                binding.player.setImageResource(
+                    if (isPlayed) R.drawable.icon_pause_alert else R.drawable.icon_play_alert
+                )
+
+                if (isPlayed) {
+                    flashVibrationManager.playVibration(vibration)
+                } else {
+                    flashVibrationManager.stopFlashAndVibration()
+                }
+                return
+            }
+
+            else -> {
+                isPlayed = !isPlayed
+                binding.player.setImageResource(
+                    if (isPlayed) R.drawable.icon_pause_alert else R.drawable.icon_play_alert
+                )
+
+                if (isPlayed) {
+                    flashVibrationManager.startFlashAndVibration(true, flash, true, vibration)
+                } else {
+                    flashVibrationManager.stopFlashAndVibration()
+                }
+            }
         }
     }
 }

@@ -91,12 +91,10 @@ class PreviewLiveWallpaperActivity :
         if (savedInstanceState != null) {
             currentIndex = savedInstanceState.getInt("current_index", 0)
             index = currentIndex
-            Log.d("PreviewLive", "Restored index: $index")
         } else {
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
             index = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
             currentIndex = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
-            Log.d("PreviewLive", "Initial index: $index")
 
             binding.horizontalWallpapers.post {
                 val layoutManager = binding.horizontalWallpapers.layoutManager

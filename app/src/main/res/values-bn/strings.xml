@@ -175,4 +175,6 @@
     <string name="set_wallpaper_title">ওয়ালপেপার সেট করুন</string>
     <string name="exit">প্রস্থান</string>
 
+    <string name="call_screen_feedback_1">আরও কাস্টমাইজ করতে চান</string>
+    <string name="call_screen_feedback_2">কল স্ক্রিন সেট করার পর কাজ করছে না</string>
 </resources>

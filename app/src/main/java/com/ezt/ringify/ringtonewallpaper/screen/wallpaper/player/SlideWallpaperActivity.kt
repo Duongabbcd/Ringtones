@@ -433,7 +433,6 @@ class SlideWallpaperActivity :
         startActivity(intent)
     }
 
-
     private fun downloadWallpaper() {
 
         val missingPermissions = RingtoneHelper.getMissingPhotoPermissions(this)
@@ -493,8 +492,6 @@ class SlideWallpaperActivity :
             }
         }
     }
-
-
 
     private fun enableDismiss(bottomSheet: DownloadWallpaperBottomSheet) {
         bottomSheet.apply {
@@ -620,12 +617,12 @@ class SlideWallpaperActivity :
 
         playSlideWallpaperAdapter.setCurrentPlayingPosition(position)
         viewModel.loadWallpaperById(currentWallpaper.id)
+        viewModel.loadSlideWallpaperById(currentWallpaper.id)
     }
 
     private val snapHelper: OneItemSnapHelper by lazy {
         OneItemSnapHelper()
     }
-
 
     private var isFavorite: Boolean = false  // ← track this in activity
 
@@ -637,18 +634,34 @@ class SlideWallpaperActivity :
                 else R.drawable.icon_unfavourite
             )
         }
+
+        viewModel.slideWallpaper.observe(this) { dbRingtone ->
+            isFavorite = dbRingtone.id == currentWallpaper.id
+            binding.favourite.setImageResource(
+                if (isFavorite) R.drawable.icon_favourite
+                else R.drawable.icon_unfavourite
+            )
+        }
     }
 
     private fun displayFavouriteIcon(isManualChange: Boolean = false) {
         if (isFavorite) {
             if (isManualChange) {
-                viewModel.deleteWallpaper(currentWallpaper)
+                if (currentWallpaper.contents.size > 1) {
+                    viewModel.deleteSlideWallpaper(currentWallpaper)
+                } else {
+                    viewModel.deleteWallpaper(currentWallpaper)
+                }
                 binding.favourite.setImageResource(R.drawable.icon_unfavourite)
                 isFavorite = false
             }
         } else {
             if (isManualChange) {
-                viewModel.insertWallpaper(currentWallpaper)
+                if (currentWallpaper.contents.size > 1) {
+                    viewModel.insertSlideWallpaper(currentWallpaper)
+                } else {
+                    viewModel.insertWallpaper(currentWallpaper)
+                }
                 binding.favourite.setImageResource(R.drawable.icon_favourite)
                 isFavorite = true
             }
@@ -679,6 +692,7 @@ class SlideWallpaperActivity :
                 }
                 println("onCreate: $index")
                 viewModel.loadWallpaperById(currentWallpaper.id)
+                viewModel.loadSlideWallpaperById(currentWallpaper.id)
                 observeRingtoneFromDb()
 
                 favourite.setOnClickListener {

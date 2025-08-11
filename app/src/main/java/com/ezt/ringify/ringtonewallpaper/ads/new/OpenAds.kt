@@ -81,7 +81,7 @@ object OpenAds {
 
     fun isCanShowOpenAds(): Boolean {
         val result = appOpenAd != null && !isOpenShowingAd
-        println("isCanShowOpenAds: $appOpenAd and $isOpenShowingAd}")
+        println("isCanShowOpenAds: $appOpenAd and $isOpenShowingAd")
         return result
     }
 
@@ -96,7 +96,9 @@ object OpenAds {
             e.printStackTrace()
         }
 
-        if (System.currentTimeMillis() - lastTimeShowAds > InterAds.TIME_DELAY) {
+        val condition = System.currentTimeMillis() - lastTimeShowAds > InterAds.TIME_DELAY
+        println("showOpenAds: $condition and ${isCanShowOpenAds()}")
+        if (condition) {
             if (isCanShowOpenAds()) {
                 appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {

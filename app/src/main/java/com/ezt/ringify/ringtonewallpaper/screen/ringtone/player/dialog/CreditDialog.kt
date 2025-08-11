@@ -31,6 +31,20 @@ class CreditDialog(
         IntroFragmentNew.setSpannableString(full, listOf(target, target2), binding.creditDesc)
     }
 
+    fun setCreditWallpaper() {
+        val creditWeb = "EZT"
+        val authorName = "EZTech"
+        val full = context.getString(
+            R.string.credits_desc,
+            authorName,
+            creditWeb
+        )
+
+        val target = authorName
+        val target2 = creditWeb
+        IntroFragmentNew.setSpannableString(full, listOf(target, target2), binding.creditDesc)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {

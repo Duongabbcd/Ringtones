@@ -96,10 +96,9 @@ class CallScreenEditorActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val prefs = getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
-        val background = prefs.getString("BACKGROUND", "") ?: ""
-        if (background.isNotEmpty()) {
-            backgroundUrl = background
-        }
+//        if (background.isNotEmpty()) {
+//            backgroundUrl = background
+//        }
 
         val start = prefs.getString("ANSWER", "") ?: ""
         if (start.isNotEmpty()) {
@@ -200,6 +199,7 @@ class CallScreenEditorActivity :
 
             applyBtn.setOnClickListener {
                 saveCallScreenPreference("BACKGROUND", backgroundUrl)
+                SearchRingtoneActivity.backToScreen(this@CallScreenEditorActivity)
             }
         }
     }

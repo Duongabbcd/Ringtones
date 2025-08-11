@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +15,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionVie
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
@@ -45,6 +45,15 @@ class FavouriteWallpaperActivity :
         }
     }
 
+    private val slideAdapter: WallpaperAdapter by lazy {
+        WallpaperAdapter {
+            println("Wallpaper: $it")
+            startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
+                putExtra("wallpaperCategoryId", -3)
+            })
+        }
+    }
+
     private val singleAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
             println("Wallpaper: $it")
@@ -70,15 +79,20 @@ class FavouriteWallpaperActivity :
                 checkInternetConnected(isConnected)
             }
             allTrending.adapter = liveAdapter
-            allNewWallpaper.adapter = singleAdapter
+            allNewWallpaper.adapter = slideAdapter
+            allSingleWallpaper.adapter = singleAdapter
 
             allTrending.layoutManager =
                 LinearLayoutManager(this@FavouriteWallpaperActivity, RecyclerView.HORIZONTAL, false)
             allNewWallpaper.layoutManager =
                 LinearLayoutManager(this@FavouriteWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
+            allSingleWallpaper.layoutManager =
+                LinearLayoutManager(this@FavouriteWallpaperActivity, RecyclerView.HORIZONTAL, false)
+
             favouriteWallpaperViewModel.allLiveWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
                 allTrending.visible()
+                noDataLayout1.gone()
                 if (items.isNullOrEmpty()) {
                     noDataLayout1.visible()
                     allTrending.visibility = View.INVISIBLE
@@ -90,7 +104,21 @@ class FavouriteWallpaperActivity :
             }
 
             favouriteWallpaperViewModel.allWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
+                allSingleWallpaper.visible()
+                noDataLayout3.gone()
+                if (items.isNullOrEmpty()) {
+                    noDataLayout3.visible()
+                    allSingleWallpaper.visibility = View.INVISIBLE
+                    allSingleWallpaper.isEnabled = false
+                    return@observe
+                }
+                allSingleWallpaper.isEnabled = true
+                singleAdapter.submitList(items)
+            }
+
+            favouriteWallpaperViewModel.allSlideWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
                 allNewWallpaper.visible()
+                noDataLayout2.gone()
                 if (items.isNullOrEmpty()) {
                     noDataLayout2.visible()
                     allNewWallpaper.visibility = View.INVISIBLE
@@ -98,7 +126,8 @@ class FavouriteWallpaperActivity :
                     return@observe
                 }
                 allNewWallpaper.isEnabled = true
-                singleAdapter.submitList(items)
+                slideAdapter.submitList(items)
+
             }
 
 
@@ -106,7 +135,7 @@ class FavouriteWallpaperActivity :
                 startActivity(
                     Intent(
                         this@FavouriteWallpaperActivity,
-                        PreviewLiveWallpaperActivity::class.java
+                        PreviewWallpaperActivity::class.java
                     ).apply {
                         putExtra("wallpaperCategoryId", -3)
                         putExtra("type", 1)
@@ -117,11 +146,23 @@ class FavouriteWallpaperActivity :
                 startActivity(
                     Intent(
                         this@FavouriteWallpaperActivity,
-                        SlideWallpaperActivity::class.java
+                        PreviewWallpaperActivity::class.java
                     ).apply {
-                        putExtra("wallpaperCategoryId", -3)
+                        putExtra("wallpaperCategoryId", -4)
                     })
             }
+
+            openAll3.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@FavouriteWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("wallpaperCategoryId", -5)
+                    })
+            }
+
+
 
             favouriteWallpaperViewModel.loading1.observe(this@FavouriteWallpaperActivity) {
                 loading1.isVisible = it
@@ -132,6 +173,11 @@ class FavouriteWallpaperActivity :
             favouriteWallpaperViewModel.loading2.observe(this@FavouriteWallpaperActivity) {
                 loading2.isVisible = it
                 trendingCount.isVisible = !it
+            }
+
+            favouriteWallpaperViewModel.loading3.observe(this@FavouriteWallpaperActivity) {
+                loading3.isVisible = it
+                imageCount.isVisible = !it
             }
 
         }
@@ -146,6 +192,7 @@ class FavouriteWallpaperActivity :
             binding.origin.visible()
             favouriteWallpaperViewModel.loadAllWallpapers()
             favouriteWallpaperViewModel.loadLiveAllWallpapers()
+            favouriteWallpaperViewModel.loadSlideAllWallpapers()
             binding.noInternet.root.gone()
         }
     }

@@ -8,9 +8,11 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.ezt.ringify.ringtonewallpaper.local.LiveWallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.RingtoneEntity
+import com.ezt.ringify.ringtonewallpaper.local.SlideWallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.WallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.dao.LiveWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.RingtoneDao
+import com.ezt.ringify.ringtonewallpaper.local.dao.SlideWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.WallpaperDao
 import com.ezt.ringify.ringtonewallpaper.remote.model.Author
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
@@ -22,14 +24,15 @@ import com.google.gson.Gson
 
 
 @Database(
-    entities = [RingtoneEntity::class, WallpaperEntity::class, LiveWallpaperEntity::class],
-    version = 3
+    entities = [RingtoneEntity::class, WallpaperEntity::class, LiveWallpaperEntity::class, SlideWallpaperEntity::class],
+    version = 4
 )
 @TypeConverters(Converters::class)
 abstract class FavouriteDatabase() : RoomDatabase() {
     abstract fun ringToneDao(): RingtoneDao
     abstract fun wallPaperDao(): WallpaperDao
     abstract fun liveWallpaperDao(): LiveWallpaperDao
+    abstract fun slideWallpaperDao(): SlideWallpaperDao
 
 
     companion object {

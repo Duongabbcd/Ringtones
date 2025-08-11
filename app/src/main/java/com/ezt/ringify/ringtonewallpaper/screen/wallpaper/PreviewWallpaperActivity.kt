@@ -22,6 +22,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -37,12 +38,21 @@ class PreviewWallpaperActivity :
 
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter { wallpaper ->
-            startActivity(
-                Intent(this, SlideWallpaperActivity::class.java).apply {
-                    putExtra("wallpaperCategoryId", categoryId)
-                    if (categoryId == 75) putExtra("type", type)
-                }
-            )
+            if (type == -3) {
+                startActivity(
+                    Intent(this, PreviewLiveWallpaperActivity::class.java).apply {
+                        putExtra("wallpaperCategoryId", categoryId)
+                        putExtra("type", 1)
+                    }
+                )
+            } else {
+                startActivity(
+                    Intent(this, SlideWallpaperActivity::class.java).apply {
+                        putExtra("wallpaperCategoryId", categoryId)
+                        if (categoryId == 75) putExtra("type", type)
+                    }
+                )
+            }
         }.apply {
             onAllImagesLoaded = {
                 binding.allCategories.post { notifyDataSetChanged() }
@@ -137,8 +147,24 @@ class PreviewWallpaperActivity :
         binding.apply {
             allCategories.visible()
             when (categoryId) {
+                -5 -> {
+                    nameScreen.text = getString(R.string.favourite)
+                    // Attach observer only once
+                    favourite.loadAllWallpapers()
+                    previewLiveFavouriteItems(favourite.loading1, favourite.allWallpapers)
+                }
+
+                -4 -> {
+                    nameScreen.text = getString(R.string.favourite)
+                    // Attach observer only once
+                    favourite.loadSlideAllWallpapers()
+                    previewLiveFavouriteItems(favourite.loading2, favourite.allSlideWallpapers)
+                }
                 -3 -> {
-                    previewFavouriteItems()
+                    nameScreen.text = getString(R.string.favourite)
+                    // Attach observer only once
+                    favourite.loadLiveAllWallpapers()
+                    previewLiveFavouriteItems(favourite.loading1, favourite.allLiveWallpapers)
                 }
 
                 -2 -> {
@@ -257,40 +283,38 @@ class PreviewWallpaperActivity :
         }
     }
 
-    private fun previewFavouriteItems() {
+    private fun previewLiveFavouriteItems(
+        loading: LiveData<Boolean>,
+        allWallpapers: LiveData<List<Wallpaper>>
+    ) {
         binding.apply {
-            nameScreen.text = getString(R.string.favourite)
-            // Attach observer only once
-            favourite.loadLiveAllWallpapers()
-            favourite.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
+            loading.observe(this@PreviewWallpaperActivity) { isLoading ->
                 if (isLoading) {
-                    val loadingItems = List(15) {
-                        Wallpaper.EMPTY_WALLPAPER
-                    }
-                    // Disable scrolling
+                    val loadingItems = List(15) { Wallpaper.EMPTY_WALLPAPER }
                     wallpaperAdapter.submitFavouriteList(loadingItems)
-                    this@PreviewWallpaperActivity.window.setFlags(
+                    window.setFlags(
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                     )
                 } else {
-                    favourite.allLiveWallpapers.observe(this@PreviewWallpaperActivity) { items ->
-                        if (items.isEmpty()) {
-                            allCategories.gone()
-                            noDataLayout.visible()
-                        } else {
-                            noDataLayout.gone()
-                            allCategories.visible()
-                            wallpaperAdapter.submitFavouriteList(items)
-                        }
-                    }
-                    // Re-enable touch
-                    this@PreviewWallpaperActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
             }
 
+            allWallpapers.observe(this@PreviewWallpaperActivity) { items ->
+                println("items: $items")
+                if (items.isEmpty()) {
+                    allCategories.gone()
+                    noDataLayout.visible()
+                } else {
+                    noDataLayout.gone()
+                    allCategories.visible()
+                    wallpaperAdapter.submitFavouriteList(items)
+                }
+            }
         }
     }
+
 
     private fun removeAllObservers() {
         favourite.allLiveWallpapers.removeObservers(this)

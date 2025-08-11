@@ -19,8 +19,7 @@ class FlashVibrationManager(private val context: Context) {
         isFlashEnabled: Boolean,
         flashType: FlashType,
         isVibrationEnabled: Boolean,
-        vibrationType: VibrationType,
-        onComplete: (() -> Unit)? = null
+        vibrationType: VibrationType
     ) {
         stopFlashAndVibration()
         println("startFlashAndVibration: isVibrationEnabled: $isFlashEnabled and isVibrationEnabled: $isVibrationEnabled")

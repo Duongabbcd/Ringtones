@@ -1,12 +1,13 @@
 package com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog
 
-import android.R
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import com.ezt.ringify.ringtonewallpaper.databinding.DialogFeedbackBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
+import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 
 class FeedbackDialog(
     context: Context
@@ -21,6 +22,15 @@ class FeedbackDialog(
     fun setRingtoneFeedback(ringtone: Ringtone) {
         binding.apply {
             ringToneName.text = "${ringtone.name}"
+        }
+    }
+
+    fun setCallScreenFeedback() {
+        binding.apply {
+            ringToneName.text = context.resources.getString(R.string.callScreen)
+            firstTitle.text = context.resources.getString(R.string.call_screen_feedback_1)
+            secondTitle.text = context.resources.getString(R.string.call_screen_feedback_2)
+            feedback3.gone()
         }
     }
 

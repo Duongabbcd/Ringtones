@@ -122,7 +122,7 @@
     <string name="successfully">¡Erfolgreich!</string>
     <string name="failed">¡Error!</string>
     <string name="notif_title">Las nuevas noticias</string>
-    <string name="notif_desc">Bei der Suche nach einer neuen Nachricht und einem kostenlosen Download Weitere Informationen...</string>
+    <string name="notif_desc">Bei der Suche nach einer neuen Nachricht und einem kostenlosen Download Weitere Informationen…</string>
     <string name = "feedback_1">Sie haben die Möglichkeit, Ihre Meinung zu ändern</string>
     <string name = "feedback_2">Das Ergebnis ist noch nicht erreicht</string>
     <string name = "feedback_3">Der Name des Benutzers ist nicht verfügbar</string>
@@ -177,4 +177,7 @@
     <string name="grant_all_permissions">Por favor, concede todos los permisos para continuar.</string>
     <string name="can_not_open_default">No se pueden abrir los ajustes de aplicaciones predeterminadas.</string>
     <string name="can_not_overlay">No se pueden abrir los ajustes de permisos de superposición.</string>
+
+    <string name="call_screen_feedback_1">Quieres más personalizaciones</string>
+    <string name="call_screen_feedback_2">La pantalla de llamada no funciona después de configurarla como pantalla de llamada</string>
 </resources>
