@@ -1,6 +1,5 @@
 package com.ezt.ringify.ringtonewallpaper.remote.viewmodel
 
-import android.media.Image
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

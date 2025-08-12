@@ -29,7 +29,7 @@ object NetworkModule {
             val original: Request = chain.request()
             val requestBuilder = original.newBuilder()
                 .header("Accept", "application/json")
-                .header("AuthorizationApi", "$token")
+                .header("AuthorizationApi", token)
             val request = requestBuilder.build()
             chain.proceed(request)
         }

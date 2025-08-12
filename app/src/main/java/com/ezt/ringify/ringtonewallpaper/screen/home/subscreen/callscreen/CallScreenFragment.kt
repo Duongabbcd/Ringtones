@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.telecom.TelecomManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,13 +61,11 @@ class CallScreenFragment :
 
     private val callScreenAdapter: CallScreenAdapter by lazy {
         CallScreenAdapter { result ->
-            currentCallScreen = result
             contentViewModel.getCallScreenContent(result.id)
             contentViewModel.getBackgroundContent(result.id)
         }
     }
-
-    private var currentCallScreen: CallScreenItem = CallScreenItem.CALLSCREEN_EMPTY
+    private var onRequestDialerCallBack: ((granted: Boolean) -> Unit)? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,19 +87,41 @@ class CallScreenFragment :
         binding.apply {
             val ctx = context ?: return@apply
             val prefs = ctx.getSharedPreferences("callscreen_prefs",MODE_PRIVATE)
-            backgroundUrl = prefs.getString("BACKGROUND", "") ?: ""
-            avatarUrl = prefs.getString("AVATAR", "") ?: ""
+
+            val backupBackground = prefs.getString("BACKGROUND", "") ?: ""
+            val currentBackground = if (backgroundUrl != "") backgroundUrl else backupBackground
+
+            val backupAvatar = prefs.getString("AVATAR", "") ?: ""
+            val currentAvatar = if (avatarUrl != "") avatarUrl else backupAvatar
+
+            val backupEnd = prefs.getString("END", "") ?: ""
+            val currentEnd = if (endCall != "") endCall else backupEnd
+
+            val backupStart = prefs.getString("START", "") ?: ""
+            val currentStart = if (startCall != "") startCall else backupStart
 
             Glide.with(ctx)
-                .load(backgroundUrl)
+                .load(currentBackground)
                 .placeholder(R.drawable.default_callscreen)
                 .error(R.drawable.default_callscreen)
                 .into(binding.currentCallScreen)
             Glide.with(ctx)
-                .load(avatarUrl)
+                .load(currentAvatar)
                 .placeholder(R.drawable.default_cs_avt)
                 .error(R.drawable.default_cs_avt)
                 .into(binding.defaultAvatar)
+
+            Glide.with(ctx)
+                .load(currentEnd)
+                .placeholder(R.drawable.icon_end_call)
+                .error(R.drawable.icon_end_call)
+                .into(binding.end)
+
+            Glide.with(ctx)
+                .load(currentStart)
+                .placeholder(R.drawable.icon_start_call)
+                .error(R.drawable.icon_start_call)
+                .into(binding.start)
 
             connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
                 checkInternetConnected(isConnected)
@@ -210,18 +231,18 @@ class CallScreenFragment :
             saveCallScreenPreference("BACKGROUND", backgroundUrl)
             saveCallScreenPreference("CANCEL", endCall)
             saveCallScreenPreference("ANSWER", startCall)
+            saveCallScreenPreference("AVATAR", avatarUrl)
             Toast.makeText(ctx, getString(R.string.successful_setup), Toast.LENGTH_SHORT).show()
         }
     }
 
-    private var isPermission = false
-    private var onRequestDialerCallBack: ((granted: Boolean) -> Unit)? = null
+
 
     @SuppressLint("InlinedApi")
     fun launchSetDefaultDialerIntent(context: Context, callback: (granted: Boolean) -> Unit) {
         val telecomManager = context.getSystemService(TELECOM_SERVICE) as TelecomManager
         val isAlreadyDefaultDialer = context.packageName == telecomManager.defaultDialerPackage
-        println("launchSetDefaultDialerIntent is here: $isAlreadyDefaultDialer")
+        Log.d(TAG, "launchSetDefaultDialerIntent is here: $isAlreadyDefaultDialer")
         if (isAlreadyDefaultDialer) {
             return
         }
@@ -328,18 +349,17 @@ class CallScreenFragment :
 
     private fun displayCallScreen(background: String) {
         val ctx = context ?: return
-        val url = currentCallScreen.thumbnail.url.medium
-        println("displayCallScreen: $background")
+        Log.d(TAG, "displayCallScreen: $background")
         backgroundUrl = background
         Glide.with(ctx)
-            .load(url)
+            .load(backgroundUrl)
             .placeholder(R.drawable.default_callscreen)
             .error(R.drawable.default_callscreen)
             .into(binding.currentCallScreen)
     }
 
     private fun saveCallScreenPreference(tag: String, value: String) {
-        println("saveCallScreenPreference: $tag and $value")
+        Log.d(TAG, "saveCallScreenPreference: $tag and $value")
         val prefs = requireContext().getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
         prefs.edit { putString(tag, value) }
     }
@@ -371,7 +391,6 @@ class CallScreenFragment :
             android.Manifest.permission.MANAGE_OWN_CALLS
         )
 
-        const val IS_PERMISSION_DUP_KEY = "IS_PERMISSION_DUP_KEY"
         const val REQUEST_CODE_SET_DEFAULT_DIALER = 1007
     }
 }

@@ -89,7 +89,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
                 } else {
                     editor.putFloat("TroasCache", currentTroasCache)
                 }
-                editor.commit()
+                editor.apply()
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }

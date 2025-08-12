@@ -91,14 +91,35 @@
                     android:background="@drawable/background_radius_12_gray"
                     android:backgroundTint="@color/customBlack_0_5"
                     android:gravity="center"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:text="Unknown Number"
+                    android:text="@string/unknown_caller"
                     android:textColor="@color/white"
-                    android:textSize="8sp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/defaultAvatar" />
+
+
+                <ImageView
+                    android:id="@+id/end"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_end_call"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/start"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:contentDescription="@string/imageview"
+                    android:src="@drawable/icon_start_call"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

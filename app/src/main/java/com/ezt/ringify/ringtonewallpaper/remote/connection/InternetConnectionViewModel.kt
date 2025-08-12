@@ -6,12 +6,8 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.admob.max.dktlibrary.AdmobUtils
 
 class InternetConnectionViewModel(application: Application) : AndroidViewModel(application) {
     val isConnectedLiveData = ConnectivityLiveData(application)

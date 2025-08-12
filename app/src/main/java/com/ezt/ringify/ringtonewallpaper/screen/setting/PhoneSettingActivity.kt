@@ -23,6 +23,7 @@ import com.ezt.ringify.ringtonewallpaper.databinding.DialogResetBinding
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.utils.Utils
 import java.io.IOException
 
 class PhoneSettingActivity :
@@ -57,6 +58,9 @@ class PhoneSettingActivity :
             backBtn.setOnClickListener {
                 finish()
             }
+
+            cacheTitle.text = Utils.getCacheSize(this@PhoneSettingActivity)
+
 
             binding.notificationSwitcher.setOnClickListener {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -156,6 +160,7 @@ class PhoneSettingActivity :
                         if (cacheDir != null && cacheDir.isDirectory) {
                             cacheDir.deleteRecursively()
                         }
+                        cacheTitle.text = Utils.getCacheSize(this@PhoneSettingActivity)
                         Toast.makeText(
                             this@PhoneSettingActivity,
                             resources.getString(R.string.cache_1),

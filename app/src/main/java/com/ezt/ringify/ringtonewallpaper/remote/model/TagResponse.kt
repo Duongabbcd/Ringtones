@@ -1,9 +1,5 @@
 package com.ezt.ringify.ringtonewallpaper.remote.model
 
-data class TagResponse(
-    val data: List<Tag>
-)
-
 data class Tag(
     val id: Int,
     val name: String,

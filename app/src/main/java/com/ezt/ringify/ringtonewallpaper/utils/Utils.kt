@@ -21,6 +21,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import com.ezt.ringify.ringtonewallpaper.R
+import java.io.File
 import java.io.IOException
 import java.text.NumberFormat
 import java.util.Locale
@@ -186,6 +187,33 @@ object Utils {
         }
         cursor.close()
         return result
+    }
+
+    fun getCacheSize(context: Context): String {
+        val cacheDir = context.cacheDir
+        val sizeInBytes = getFolderSize(cacheDir)
+        return formatSize(sizeInBytes)
+    }
+
+    fun getFolderSize(dir: File): Long {
+        var size: Long = 0
+        dir.listFiles()?.forEach { file ->
+            size += if (file.isDirectory) getFolderSize(file) else file.length()
+        }
+        return size
+    }
+
+    fun formatSize(size: Long): String {
+        val kb = 1024.0
+        val mb = kb * 1024
+        val gb = mb * 1024
+
+        return when {
+            size >= gb -> String.format("%.2f GB", size / gb)
+            size >= mb -> String.format("%.2f MB", size / mb)
+            size >= kb -> String.format("%.2f KB", size / kb)
+            else -> "$size Bytes"
+        }
     }
 
 //    fun setBackgroundColor(

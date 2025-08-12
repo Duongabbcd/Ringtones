@@ -20,8 +20,6 @@ object GlobalConstant {
         listLanguage.add(Language(R.drawable.russia, context.resources.getString(R.string.russian), "ru"))
         listLanguage.add(Language(R.drawable.korean,context.resources.getString(R.string.korean),"ko"))
 
-
-
         return listLanguage
     }
 }

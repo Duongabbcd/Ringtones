@@ -189,14 +189,13 @@
                 android:text="@string/clear_caches" />
 
             <TextView
-                android:id="@+id/vibrationTitle"
+                android:id="@+id/cacheTitle"
                 style="@style/CustomTextStyle14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_toStartOf="@id/nextIcon3"
                 android:gravity="center"
-                android:text="28.14MB"
                 android:textColor="@color/subTitle" />
 
             <ImageView
