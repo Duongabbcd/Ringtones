@@ -53,7 +53,25 @@ class FavouriteActivity : BaseActivity<ActivityFavouriteBinding>(ActivityFavouri
     }
 
     override fun onNext(position: Int, introPos: Int) {
-        startAc()
+        if (position < numberPage - 1) {
+            when (introPos) {
+                0 -> {
+                    showAfterIntro1 {
+                        binding.viewpager.currentItem++
+                    }
+                }
+
+                else -> {
+                    showAfterIntro1 {
+                        binding.viewpager.currentItem++
+                    }
+                }
+            }
+        } else {
+            showAfterIntro2 {
+                startAc()
+            }
+        }
     }
 
     private fun showAfterIntro1(callback : () -> Unit){

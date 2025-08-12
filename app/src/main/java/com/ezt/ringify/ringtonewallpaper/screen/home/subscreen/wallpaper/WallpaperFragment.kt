@@ -3,7 +3,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -27,7 +26,6 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
-import com.mbridge.msdk.foundation.same.report.campaignreport.a
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 

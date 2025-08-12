@@ -29,6 +29,21 @@
     <string name="second_wpp_sort">Tendencia</string>
     <string name="third_wpp_sort">Nuevo</string>
 
+    <string name="reset_wallpaper_question">¿Realmente quieres restablecer tu fondo de pantalla actual?</string>
+    <string name="reset_ringtone_question">¿Realmente quieres restablecer tu tono de llamada actual?</string>
+    <string name="reset_cache_question">¿Realmente quieres borrar la caché?</string>
+
+    <string name="reset_wallpaper">Restablecer fondo de pantalla</string>
+    <string name="reset_ringtone">Restablecer tono de llamada</string>
+    <string name="reset_cache">Borrar caché</string>
+
+    <string name="cache_1">Caché limpiada correctamente</string>
+    <string name="cache_2">Error al limpiar la caché</string>
+    <string name="ringtone_1">Tono de llamada restablecido a predeterminado</string>
+    <string name="ringtone_2">Error al restablecer el tono de llamada</string>
+    <string name="wallpaper_1">Fondo de pantalla restablecido a predeterminado</string>
+    <string name="wallpaper_2">Error al restablecer el fondo de pantalla</string>
+
     <string name="phone_setting">Configuración del teléfono</string>
     <string name="clear_caches">Borrar cachés</string>
     <string name="reset_ringtones">Restablecer todos los tonos a los predeterminados</string>

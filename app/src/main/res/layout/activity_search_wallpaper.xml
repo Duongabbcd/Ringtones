@@ -135,7 +135,7 @@
             android:id="@+id/loading1"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:progressTint="@color/main_color"
+            android:indeterminateTint="@color/main_color"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

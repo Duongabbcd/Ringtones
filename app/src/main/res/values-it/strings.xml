@@ -23,6 +23,14 @@
     <string name="call_screen_feedback_1">Vuoi più personalizzazioni</string>
     <string name="call_screen_feedback_2">La schermata delle chiamate non funziona dopo essere stata impostata come schermata delle chiamate</string>
 
+    <string name="reset_wallpaper_question">Vuoi davvero reimpostare lo sfondo attuale?</string>
+    <string name="reset_ringtone_question">Vuoi davvero reimpostare la suoneria attuale?</string>
+    <string name="reset_cache_question">Vuoi davvero svuotare la cache?</string>
+
+    <string name="reset_wallpaper">Reimposta sfondo</string>
+    <string name="reset_ringtone">Reimposta suoneria</string>
+    <string name="reset_cache">Svuota cache</string>
+
 
     <string name="fav_light_1">generi musicali</string>
     <string name="fav_2">Scegli il tuo sfondo preferito</string>
@@ -170,4 +178,10 @@
     <string name="set_wallpaper_title">Imposta sfondo</string>
     <string name="exit">Esci</string>
 
+    <string name="cache_1">Cache cancellata con successo</string>
+    <string name="cache_2">Impossibile cancellare la cache</string>
+    <string name="ringtone_1">Suoneria ripristinata al valore predefinito</string>
+    <string name="ringtone_2">Impossibile ripristinare la suoneria</string>
+    <string name="wallpaper_1">Sfondo ripristinato al valore predefinito</string>
+    <string name="wallpaper_2">Impossibile ripristinare lo sfondo</string>
 </resources>

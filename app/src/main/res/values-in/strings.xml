@@ -24,6 +24,14 @@
     <string name="fav_1">3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
     <string name="selection_title">आप अधिकतम 3 ही चुन सकते हैं</string>
 
+    <string name="reset_wallpaper_question">Apakah Anda benar-benar ingin mengatur ulang wallpaper Anda saat ini?</string>
+    <string name="reset_ringtone_question">Apakah Anda benar-benar ingin mengatur ulang nada dering Anda saat ini?</string>
+    <string name="reset_cache_question">Apakah Anda benar-benar ingin menghapus cache?</string>
+
+    <string name="reset_wallpaper">Atur Ulang Wallpaper</string>
+    <string name="reset_ringtone">Atur Ulang Nada Dering</string>
+    <string name="reset_cache">Hapus Cache</string>
+
     <string name="fav_light_1">genre musik</string>
     <string name="fav_2">Pilih wallpaper favorit Anda</string>
     <string name="fav_light_2">wallpaper favorit</string>

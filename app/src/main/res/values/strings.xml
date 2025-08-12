@@ -189,4 +189,20 @@
     <string name="call_screen_feedback_1">Want more customizes</string>
     <string name="call_screen_feedback_2">Call Screen do not work after set as Call Screen</string>
 
+    <string name="reset_wallpaper_question">Do you really want to reset your current wallpaper?</string>
+    <string name="reset_ringtone_question">Do you really want to reset your current ringtone?</string>
+    <string name="reset_cache_question">Do you really want to clear cache?</string>
+
+    <string name="reset_wallpaper">Reset Wallpaper</string>
+    <string name="reset_ringtone">Reset Ringtone</string>
+    <string name="reset_cache">Clear Caches</string>
+
+    <string name="cache_1">Clear cache successfully</string>
+    <string name="cache_2">Failed to clear cache</string>
+
+    <string name="ringtone_1">Ringtone reset to default</string>
+    <string name="ringtone_2">Failed to reset ringtone</string>
+
+    <string name="wallpaper_1">Wallpaper reset to default</string>
+    <string name="wallpaper_2">Failed to reset wallpaper</string>
 </resources>

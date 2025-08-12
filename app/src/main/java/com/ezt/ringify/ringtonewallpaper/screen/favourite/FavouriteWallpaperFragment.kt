@@ -64,7 +64,7 @@ class FavouriteWallpaperFragment : Fragment() {
         }
 
         binding.skipBtn.setOnClickListener {
-            callbackIntro.onNext(1, 2)
+            callbackIntro.onNext(2, 2)
         }
     }
 

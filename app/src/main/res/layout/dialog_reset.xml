@@ -12,20 +12,22 @@
     android:paddingBottom="@dimen/_20sdp">
 
     <TextView
+        android:id="@+id/confirmTitle"
         style="@style/CustomTextStyleSemiBold18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
         android:gravity="center"
-        android:text="Reset Wallpaper" />
+        android:text="@string/reset_wallpaper" />
 
     <TextView
+        android:id="@+id/confirmQuestion"
         style="@style/CustomTextStyle14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
         android:gravity="center"
-        android:text="Do you really want to reset your current wallpaper?" />
+        android:text="@string/reset_wallpaper_question" />
 
     <LinearLayout
         android:layout_width="match_parent"

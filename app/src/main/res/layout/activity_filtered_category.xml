@@ -87,7 +87,7 @@
             android:id="@+id/progressBar"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:progressTint="@color/main_color"
+            android:indeterminateTint="@color/main_color"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/allCategories"
             app:layout_constraintEnd_toEndOf="@+id/allCategories"

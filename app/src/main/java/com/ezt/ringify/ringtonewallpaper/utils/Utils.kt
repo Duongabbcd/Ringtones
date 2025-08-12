@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.media.RingtoneManager
 import android.net.Uri
 import android.renderscript.Allocation
 import android.renderscript.Element
@@ -171,6 +172,22 @@ object Utils {
         return outputBitmap
     }
 
+    fun getFirstRingtone(context: Context, type: Int): RingtoneItem? {
+        val ringtoneManager = RingtoneManager(context)
+        ringtoneManager.setType(type)
+
+        val cursor = ringtoneManager.cursor
+        var result: RingtoneItem? = null
+
+        if (cursor.moveToFirst()) {
+            val title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+            val uri = ringtoneManager.getRingtoneUri(cursor.position)
+            result = RingtoneItem(title, uri)
+        }
+        cursor.close()
+        return result
+    }
+
 //    fun setBackgroundColor(
 //        context: Context,
 //        selected: List<TextView>,
@@ -225,3 +242,8 @@ class SwipeGestureListener(val activity: Activity) : GestureDetector.SimpleOnGes
     }
 
 }
+
+data class RingtoneItem(
+    val title: String,
+    val uri: Uri
+)

@@ -33,6 +33,20 @@
     <string name="set_wallpaper_title">Définir le fond d\'écran</string>
     <string name="exit">Quitter</string>
 
+    <string name="reset_wallpaper_question">Voulez-vous vraiment réinitialiser votre fond d’écran actuel ?</string>
+    <string name="reset_ringtone_question">Voulez-vous vraiment réinitialiser votre sonnerie actuelle ?</string>
+    <string name="reset_cache_question">Voulez-vous vraiment vider le cache ?</string>
+
+    <string name="reset_wallpaper">Réinitialiser le fond d’écran</string>
+    <string name="reset_ringtone">Réinitialiser la sonnerie</string>
+    <string name="reset_cache">Vider le cache</string>
+
+    <string name="cache_1">Cache effacée avec succès</string>
+    <string name="cache_2">Échec de l\'effacement du cache</string>
+    <string name="ringtone_1">Sonnerie réinitialisée par défaut</string>
+    <string name="ringtone_2">Échec de la réinitialisation de la sonnerie</string>
+    <string name="wallpaper_1">Fond d\'écran réinitialisé par défaut</string>
+    <string name="wallpaper_2">Échec de la réinitialisation du fond d\'écran</string>
 
     <string name="first_wpp_sort">Par défaut</string>
     <string name="second_wpp_sort">Tendance</string>

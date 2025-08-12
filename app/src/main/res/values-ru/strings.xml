@@ -23,6 +23,21 @@
     <string name="call_screen_feedback_1">Хотите больше настроек</string>
     <string name="call_screen_feedback_2">Экран вызова не работает после установки в качестве экрана вызова</string>
 
+    <string name="reset_wallpaper_question">Вы действительно хотите сбросить текущие обои?</string>
+    <string name="reset_ringtone_question">Вы действительно хотите сбросить текущий рингтон?</string>
+    <string name="reset_cache_question">Вы действительно хотите очистить кэш?</string>
+
+    <string name="reset_wallpaper">Сбросить обои</string>
+    <string name="reset_ringtone">Сбросить рингтон</string>
+    <string name="reset_cache">Очистить кэш</string>
+
+    <string name="cache_1">Кэш успешно очищен</string>
+    <string name="cache_2">Не удалось очистить кэш</string>
+    <string name="ringtone_1">Мелодия звонка сброшена на стандартную</string>
+    <string name="ringtone_2">Не удалось сбросить мелодию звонка</string>
+    <string name="wallpaper_1">Обои сброшены на стандартные</string>
+    <string name="wallpaper_2">Не удалось сбросить обои</string>
+
     <string name="fav_light_1">музыкальные жанры</string>
     <string name="fav_2">Выберите любимые обои</string>
     <string name="fav_light_2">любимые обои</string>

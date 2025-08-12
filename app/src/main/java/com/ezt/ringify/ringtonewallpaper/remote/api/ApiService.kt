@@ -83,9 +83,9 @@ interface ApiService {
     @GET("api/v1/wallpapers?app=1")
     suspend fun getWallpapersByCategory(
         @Query("with") with: String = "tags+id,name-apps+id,name",
-        @Query("app") appId: Int = 1,
         @Query("category") categoryId: Int,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 30,
     ): WallpaperResponse
 
     @GET("api/v1/categories?app=1")

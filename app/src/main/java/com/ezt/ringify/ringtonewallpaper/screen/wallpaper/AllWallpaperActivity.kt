@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
@@ -66,6 +67,11 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
                     categoryViewModel.loadWallpapersByCategory(it.id, categoryWallpaperAdapter)
                 }
             }
+
+            categoryViewModel.loading.observe(this@AllWallpaperActivity) { isLoading ->
+                binding.loadingCategories.isVisible = isLoading
+            }
+
 
             categoryViewModel.wallpapersMap.observe(this@AllWallpaperActivity) { map ->
                 categoryWallpaperAdapter.submitWallpapersMap(map)
@@ -206,11 +212,12 @@ class CategoryWallpaperAdapter(
                 trendingCount.gone()
 
                 if (isLoading) {
-                    allTrending.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
+                    allTrending.isEnabled = false
+                    progressBar.gone()
+                    wallpaperAdapter.submitList(List(5) { Wallpaper.EMPTY_WALLPAPER })
                 } else {
-                    allTrending.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
+                    allTrending.isEnabled = true
+                    progressBar.gone()
                     wallpaperAdapter.submitList(wallpapers)
                 }
 

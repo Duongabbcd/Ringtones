@@ -22,6 +22,20 @@
     <string name="call_screen_feedback_1">Quer mais personalizações</string>
     <string name="call_screen_feedback_2">A tela de chamada não funciona após definir como tela de chamada</string>
 
+    <string name="reset_wallpaper_question">Você realmente quer redefinir seu papel de parede atual?</string>
+    <string name="reset_ringtone_question">Você realmente quer redefinir seu toque atual?</string>
+    <string name="reset_cache_question">Você realmente quer limpar o cache?</string>
+
+    <string name="reset_wallpaper">Redefinir papel de parede</string>
+    <string name="reset_ringtone">Redefinir toque</string>
+    <string name="reset_cache">Limpar cache</string>
+
+    <string name="cache_1">Cache limpa com sucesso</string>
+    <string name="cache_2">Falha ao limpar cache</string>
+    <string name="ringtone_1">Toque redefinido para o padrão</string>
+    <string name="ringtone_2">Falha ao redefinir toque</string>
+    <string name="wallpaper_1">Papel de parede redefinido para o padrão</string>
+    <string name="wallpaper_2">Falha ao redefinir papel de parede</string>
 
     <string name="fav_light_1">gêneros musicais</string>
     <string name="fav_2">Escolha seu papel de parede favorito</string>

@@ -34,7 +34,12 @@ class RingtoneRepository @Inject constructor(
 suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
     apiService.getAllWallpaperCategories(page)
     suspend fun fetchTrendingWallpapers(page: Int): WallpaperResponse = apiService.getTrendingWallpapers(page)
-    suspend fun fetchWallpaperByCategory(categoryId: Int, page: Int): WallpaperResponse = apiService.getWallpapersByCategory(categoryId = categoryId,page= page)
+    suspend fun fetchWallpaperByCategory(
+        categoryId: Int,
+        page: Int,
+        limit: Int = 30
+    ): WallpaperResponse =
+        apiService.getWallpapersByCategory(categoryId = categoryId, page = page, limit = limit)
     suspend fun getAllExcludingCategory(): CategoriesResponse = apiService.getAllExcludingCategory()
 
     suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String, page: Int): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy, page = page)

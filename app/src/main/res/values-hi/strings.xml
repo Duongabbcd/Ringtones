@@ -23,6 +23,21 @@
     <string name="call_screen_feedback_1">अधिक अनुकूलन चाहते हैं</string>
     <string name="call_screen_feedback_2">कॉल स्क्रीन को कॉल स्क्रीन के रूप में सेट करने के बाद काम नहीं कर रही है</string>
 
+    <string name="reset_wallpaper_question">क्या आप वास्तव में अपने वर्तमान वॉलपेपर को रीसेट करना चाहते हैं?</string>
+    <string name="reset_ringtone_question">क्या आप वास्तव में अपनी वर्तमान रिंगटोन को रीसेट करना चाहते हैं?</string>
+    <string name="reset_cache_question">क्या आप वास्तव में कैश साफ़ करना चाहते हैं?</string>
+
+    <string name="reset_wallpaper">वॉलपेपर रीसेट करें</string>
+    <string name="reset_ringtone">रिंगटोन रीसेट करें</string>
+    <string name="reset_cache">कैश साफ़ करें</string>
+
+    <string name="cache_1">कैश सफलतापूर्वक साफ़ किया गया</string>
+    <string name="cache_2">कैश साफ़ करने में विफल</string>
+    <string name="ringtone_1">रिंगटोन डिफ़ॉल्ट पर रीसेट किया गया</string>
+    <string name="ringtone_2">रिंगटोन रीसेट करने में विफल</string>
+    <string name="wallpaper_1">वॉलपेपर डिफ़ॉल्ट पर रीसेट किया गया</string>
+    <string name="wallpaper_2">वॉलपेपर रीसेट करने में विफल</string>
+
     <string name="fav_light_1">संगीत शैलियाँ</string>
     <string name="fav_2">अपनी पसंदीदा वॉलपेपर चुनें</string>
     <string name="fav_light_2">पसंदीदा वॉलपेपर</string>

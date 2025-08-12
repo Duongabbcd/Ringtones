@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.home
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
+import com.ezt.ringify.ringtonewallpaper.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -40,6 +42,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         var countOpen = Common.getCountOpenApp(this)
 
         if (countOpen < 1) {
+            val defaultRingtone = Utils.getFirstRingtone(this, RingtoneManager.TYPE_RINGTONE)
+            val defaultNotification =
+                Utils.getFirstRingtone(this, RingtoneManager.TYPE_NOTIFICATION)
+
+            defaultRingtone?.uri?.let { value ->
+                RingtoneManager.setActualDefaultRingtoneUri(
+                    this,
+                    RingtoneManager.TYPE_RINGTONE,
+                    value
+                )
+            }
+            defaultNotification?.uri?.let { value ->
+                RingtoneManager.setActualDefaultRingtoneUri(
+                    this,
+                    RingtoneManager.TYPE_NOTIFICATION,
+                    value
+                )
+            }
+
             showNotificationDialog(countOpen)
             countOpen++
             Common.setCountOpenApp(this, countOpen)

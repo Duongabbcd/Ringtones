@@ -3,7 +3,6 @@
     android:layout_width="@dimen/_116sdp"
     android:layout_height="@dimen/_190sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <com.google.android.material.imageview.ShapeableImageView
         android:scaleType="centerCrop"
         android:id="@+id/wallPaper"
@@ -12,5 +11,17 @@
         android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminateTint="@color/main_color"
+        android:padding="@dimen/_36sdp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

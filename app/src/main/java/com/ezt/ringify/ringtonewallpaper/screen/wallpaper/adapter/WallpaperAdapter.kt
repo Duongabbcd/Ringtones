@@ -16,6 +16,8 @@ import com.ezt.ringify.ringtonewallpaper.databinding.ItemBigCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 
 
@@ -67,15 +69,16 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
             binding.apply {
                 val content = wallpaper.contents.firstOrNull()
                 if (content == null) {
-                    wallPaper.setImageResource(R.drawable.icon_default_category)
+                    wallPaper.setImageResource(R.drawable.item_wallpaper_default)
                     return@apply
                 }
+                progressBar.visible()
                 val url = wallpaper.thumbnail?.url?.small ?: content.url.small
                 url?.let {
                     Glide.with(context)
                         .load(url)
-                        .placeholder(R.drawable.icon_default_category)
-                        .error(R.drawable.icon_default_category)
+                        .placeholder(R.drawable.item_wallpaper_default)
+                        .error(R.drawable.item_wallpaper_default)
                         .listener(object : RequestListener<Drawable> {
 
                             override fun onLoadFailed(
@@ -86,6 +89,7 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
                             ): Boolean {
                                 e?.logRootCauses("GlideError")  // logs detailed causes
                                 Log.e("Glide", "Load failed", e)
+                                progressBar.gone()
                                 return false
                             }
 
@@ -95,10 +99,13 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
                                 target: com.bumptech.glide.request.target.Target<Drawable?>?,
                                 dataSource: DataSource?,
                                 isFirstResource: Boolean
-                            ): Boolean = false
+                            ): Boolean {
+                                progressBar.gone()
+                                return false
+                            }
                         })
                         .into(wallPaper)
-                } ?: wallPaper.setImageResource(R.drawable.icon_default_category)
+                } ?: wallPaper.setImageResource(R.drawable.item_wallpaper_default)
 
                 root.setOnClickListener {
                     RingtonePlayerRemote.setCurrentWallpaper(wallpaper)

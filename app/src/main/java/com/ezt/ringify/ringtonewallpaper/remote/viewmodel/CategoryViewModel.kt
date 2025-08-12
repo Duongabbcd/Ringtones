@@ -171,7 +171,11 @@ class CategoryViewModel @Inject constructor(
 
                 while (hasMorePages) {
                     val result =
-                        repository.fetchWallpaperByCategory(categoryId = categoryId, page = page)
+                        repository.fetchWallpaperByCategory(
+                            categoryId = categoryId,
+                            page = page,
+                            limit = 5
+                        )
                     wallpapersForCategory.addAll(result.data.data)
 
                     hasMorePages = result.data.nextPageUrl != null

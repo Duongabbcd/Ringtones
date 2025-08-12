@@ -1,27 +1,27 @@
 package com.ezt.ringify.ringtonewallpaper.screen.setting
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.Context
-import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPhoneSettingBinding
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.databinding.DialogFeedbackBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.DialogResetBinding
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import java.io.IOException
 
@@ -31,81 +31,88 @@ class PhoneSettingActivity :
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     }
 
-    private fun checkAndRequestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // On Android 13+ you don't need READ_EXTERNAL_STORAGE for wallpapers
-            getWallpaperDrawable()
-        } else {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    STORAGE_PERMISSION_CODE
-                )
-            } else {
-                getWallpaperDrawable()
-            }
-        }
-    }
+    private var isNotifEnabled: Boolean = false
+    private lateinit var settingsResultLauncher: ActivityResultLauncher<Intent>
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        println("onRequestPermissionsResult: $requestCode and ${grantResults[0] == PackageManager.PERMISSION_GRANTED}")
-        if (requestCode == STORAGE_PERMISSION_CODE &&
-            grantResults.isNotEmpty() &&
-            grantResults[0] == PackageManager.PERMISSION_GRANTED
-        ) {
-            getWallpaperDrawable()
-        } else {
-            println("Permission denied")
-        }
-    }
-
-    private  var isNotifEnabled : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkAndRequestStoragePermission()
-        updateNotificationSwitchUI()
+        println(
+            "PhoneSettingActivity: ${
+                ContextCompat.checkSelfPermission(
+                    this@PhoneSettingActivity, Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            }"
+        )
+
+        settingsResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            // Re-check permission after returning from Settings
+            displayInitialSwitchUI()
+        }
+
+        displayInitialSwitchUI()
         binding.apply {
             backBtn.setOnClickListener {
                 finish()
             }
 
-            notificationSwitcher.setOnClickListener {
-                isNotifEnabled = !isNotifEnabled
-                val displayIcon = if (isNotifEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
-                binding.notificationSwitcher.setImageResource(displayIcon)
-                Common.setNotificationEnable(this@PhoneSettingActivity, isNotifEnabled)
+            binding.notificationSwitcher.setOnClickListener {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(
+                            this@PhoneSettingActivity, Manifest.permission.POST_NOTIFICATIONS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // Toggle normally
+                        isNotifEnabled = !isNotifEnabled
+                        saveAndUpdateSwitchUI()
+                    } else {
+                        // Show dialog
+                        showGoToSettingsDialog()
+                    }
+                } else {
+                    // OS < Android 13 → toggle normally
+                    isNotifEnabled = !isNotifEnabled
+                    saveAndUpdateSwitchUI()
+                }
             }
 
             resetRingtoneBtn.setOnClickListener {
-                val dialog = ResetDialog(this@PhoneSettingActivity) { result ->
+                val dialog = ResetDialog(this@PhoneSettingActivity, "ringtone") { result ->
                     if (result) {
-                        val wallpaperManager =
-                            WallpaperManager.getInstance(this@PhoneSettingActivity)
+                        val defaultRingtone = RingtoneManager.getActualDefaultRingtoneUri(
+                            this@PhoneSettingActivity,
+                            RingtoneManager.TYPE_RINGTONE
+                        )
+                        val defaultNotification = RingtoneManager.getActualDefaultRingtoneUri(
+                            this@PhoneSettingActivity,
+                            RingtoneManager.TYPE_NOTIFICATION
+                        )
+
+                        RingtoneHelper.setAsSystemRingtone(
+                            this@PhoneSettingActivity,
+                            defaultRingtone,
+                            false
+                        )
+                        RingtoneHelper.setAsSystemRingtone(
+                            this@PhoneSettingActivity,
+                            defaultNotification,
+                            true
+                        )
 
                         try {
-                            wallpaperManager.clear()
                             // Optionally notify the user
                             Toast.makeText(
                                 this@PhoneSettingActivity,
-                                "Ringtone reset to default",
+                                resources.getString(R.string.ringtone_1),
                                 Toast.LENGTH_SHORT
                             ).show()
                         } catch (e: IOException) {
                             e.printStackTrace()
                             Toast.makeText(
                                 this@PhoneSettingActivity,
-                                "Failed to reset ringtone",
+                                resources.getString(R.string.ringtone_2),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -126,14 +133,14 @@ class PhoneSettingActivity :
                             // Optionally notify the user
                             Toast.makeText(
                                 this@PhoneSettingActivity,
-                                "Wallpaper reset to default",
+                                resources.getString(R.string.wallpaper_1),
                                 Toast.LENGTH_SHORT
                             ).show()
                         } catch (e: IOException) {
                             e.printStackTrace()
                             Toast.makeText(
                                 this@PhoneSettingActivity,
-                                "Failed to reset wallpaper",
+                                resources.getString(R.string.wallpaper_2),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -142,23 +149,69 @@ class PhoneSettingActivity :
                 dialog.show()
             }
 
-
+            clearCacheBtn.setOnClickListener {
+                val dialog = ResetDialog(this@PhoneSettingActivity, "cache") { result ->
+                    try {
+                        val cacheDir = this@PhoneSettingActivity.cacheDir
+                        if (cacheDir != null && cacheDir.isDirectory) {
+                            cacheDir.deleteRecursively()
+                        }
+                        Toast.makeText(
+                            this@PhoneSettingActivity,
+                            resources.getString(R.string.cache_1),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Toast.makeText(
+                            this@PhoneSettingActivity,
+                            resources.getString(R.string.cache_2),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                dialog.show()
+            }
         }
     }
 
-    private fun updateNotificationSwitchUI() {
-        val isGranted = if (isTiramisuOrAbove) {
-            ContextCompat.checkSelfPermission(
+    private fun showGoToSettingsDialog() {
+        Common.showDialogGoToSetting(this@PhoneSettingActivity) { result ->
+            if (result) {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", packageName, null)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT)
+                    .show()
+                finish()
+            }
+        }
+    }
+
+    private fun displayInitialSwitchUI() {
+        if (isTiramisuOrAbove) {
+            var currentStatus = Common.getNotificationEnable(this)
+            var granted = ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED && currentStatus
+            binding.notificationSwitcher.setImageResource(
+                if (granted) R.drawable.switch_enabled else R.drawable.switch_disabled
+            )
         } else {
-            // Below Android 13, permission is granted by default
-            true
+            var currentStatus = Common.getNotificationEnable(this)
+            binding.notificationSwitcher.setImageResource(
+                if (currentStatus) R.drawable.switch_enabled else R.drawable.switch_disabled
+            )
         }
-        isNotifEnabled = Common.getNotificationEnable(this@PhoneSettingActivity)
-        val displayIcon = if (isGranted && isNotifEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
-        binding.notificationSwitcher.setImageResource(displayIcon)
+    }
+
+    private fun saveAndUpdateSwitchUI() {
+        Common.setNotificationEnable(this, isNotifEnabled)
+        binding.notificationSwitcher.setImageResource(
+            if (isNotifEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
+        )
     }
 
     override fun onBackPressed() {
@@ -170,37 +223,16 @@ class PhoneSettingActivity :
         loadBanner(this, BANNER_HOME)
     }
 
-    fun getAndSetDefaultRingtone(context: Context) {
-        // Get the current default ringtone URI
-        val currentUri: Uri = RingtoneManager.getActualDefaultRingtoneUri(
-            context, RingtoneManager.TYPE_RINGTONE
-        )
-        println("resetRingtoneBtn: $currentUri")
-
-        // Set the default ringtone to the current one again (example)
-        RingtoneManager.setActualDefaultRingtoneUri(
-            context, RingtoneManager.TYPE_RINGTONE, currentUri
-        )
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getWallpaperDrawable() {
-        try {
-            val wallpaperManager = WallpaperManager.getInstance(this)
-            val drawable = wallpaperManager.drawable
-            println("Got wallpaper drawable: $drawable")
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        }
-    }
-
-
     companion object {
         private const val STORAGE_PERMISSION_CODE = 1001
     }
 }
 
-class ResetDialog(context: Context, private val onClickListener: (Boolean) -> Unit) :
+class ResetDialog(
+    context: Context,
+    title: String = "wallpaper",
+    private val onClickListener: (Boolean) -> Unit
+) :
     Dialog(context) {
     private val binding by lazy { DialogResetBinding.inflate(layoutInflater) }
 
@@ -209,9 +241,25 @@ class ResetDialog(context: Context, private val onClickListener: (Boolean) -> Un
         window?.setBackgroundDrawableResource(R.color.transparent)
     }
 
+    private val question = when (title) {
+        "ringtone" -> context.resources.getString(R.string.reset_ringtone_question)
+        "cache" -> context.resources.getString(R.string.reset_cache_question)
+        "wallpaper" -> context.resources.getString(R.string.reset_wallpaper_question)
+        else -> context.resources.getString(R.string.reset_wallpaper_question)
+    }
+
+    private val title = when (title) {
+        "ringtone" -> context.resources.getString(R.string.ringtone_title)
+        "cache" -> context.resources.getString(R.string.reset_cache)
+        "wallpaper" -> context.resources.getString(R.string.reset_wallpaper)
+        else -> context.resources.getString(R.string.reset_wallpaper)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {
+            confirmQuestion.text = question
+            confirmTitle.text = title
             okBtn.setOnClickListener {
                 onClickListener(true)
                 dismiss()

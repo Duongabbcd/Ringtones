@@ -20,6 +20,14 @@
     <string name="call_screen_feedback_1">더 많은 사용자 지정을 원하십니까</string>
     <string name="call_screen_feedback_2">통화 화면으로 설정한 후 작동하지 않습니다</string>
 
+    <string name="reset_wallpaper_question">현재 배경 화면을 정말로 재설정하시겠습니까?</string>
+    <string name="reset_ringtone_question">현재 벨소리를 정말로 재설정하시겠습니까?</string>
+    <string name="reset_cache_question">캐시를 정말로 지우시겠습니까?</string>
+
+    <string name="reset_wallpaper">배경 화면 재설정</string>
+    <string name="reset_ringtone">벨소리 재설정</string>
+    <string name="reset_cache">캐시 지우기</string>
+
 
     <string name="fav_1">좋아하는 음악 장르 3가지를 선택하세요</string>
     <string name="selection_title">최대 3개만 선택할 수 있습니다</string>
@@ -169,4 +177,10 @@
     <string name="set_wallpaper_title">배경화면 설정</string>
     <string name="exit">종료</string>
 
+    <string name="cache_1">캐시가 성공적으로 삭제되었습니다</string>
+    <string name="cache_2">캐시 삭제 실패</string>
+    <string name="ringtone_1">벨소리가 기본값으로 재설정되었습니다</string>
+    <string name="ringtone_2">벨소리 재설정 실패</string>
+    <string name="wallpaper_1">배경화면이 기본값으로 재설정되었습니다</string>
+    <string name="wallpaper_2">배경화면 재설정 실패</string>
 </resources>

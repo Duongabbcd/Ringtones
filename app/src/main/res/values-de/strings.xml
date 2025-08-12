@@ -24,6 +24,21 @@
     <string name="set_wallpaper_title">Hintergrund festlegen</string>
     <string name="exit">Beenden</string>
 
+    <string name="reset_wallpaper_question">Möchten Sie Ihr aktuelles Hintergrundbild wirklich zurücksetzen?</string>
+    <string name="reset_ringtone_question">Möchten Sie Ihren aktuellen Klingelton wirklich zurücksetzen?</string>
+    <string name="reset_cache_question">Möchten Sie den Cache wirklich löschen?</string>
+
+    <string name="reset_wallpaper">Hintergrundbild zurücksetzen</string>
+    <string name="reset_ringtone">Klingelton zurücksetzen</string>
+    <string name="reset_cache">Cache löschen</string>
+
+    <string name="cache_1">Cache erfolgreich gelöscht</string>
+    <string name="cache_2">Cache konnte nicht gelöscht werden</string>
+    <string name="ringtone_1">Klingelton auf Standard zurückgesetzt</string>
+    <string name="ringtone_2">Klingelton konnte nicht zurückgesetzt werden</string>
+    <string name="wallpaper_1">Hintergrundbild auf Standard zurückgesetzt</string>
+    <string name="wallpaper_2">Hintergrundbild konnte nicht zurückgesetzt werden</string>
+
 
     <string name="callscreen_setting">Als Anrufbildschirm festlegen</string>
     <string name="no_connection">Immer noch keine Internetverbindung</string>

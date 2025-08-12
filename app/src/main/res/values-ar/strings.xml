@@ -177,4 +177,19 @@
 
     <string name="call_screen_feedback_1">تريد المزيد من التخصيصات</string>
     <string name="call_screen_feedback_2">شاشة الاتصال لا تعمل بعد التعيين كشاشة الاتصال</string>
+
+    <string name="reset_wallpaper_question">আপনি কি সত্যিই আপনার বর্তমান ওয়ালপেপার রিসেট করতে চান?</string>
+    <string name="reset_ringtone_question">আপনি কি সত্যিই আপনার বর্তমান রিংটোন রিসেট করতে চান?</string>
+    <string name="reset_cache_question">আপনি কি সত্যিই ক্যাশে মুছে ফেলতে চান?</string>
+
+    <string name="reset_wallpaper">ওয়ালপেপার রিসেট করুন</string>
+    <string name="reset_ringtone">রিংটোন রিসেট করুন</string>
+    <string name="reset_cache">ক্যাশে মুছুন</string>
+
+    <string name="cache_1">تم مسح ذاكرة التخزين المؤقت بنجاح</string>
+    <string name="cache_2">فشل في مسح ذاكرة التخزين المؤقت</string>
+    <string name="ringtone_1">تم إعادة تعيين نغمة الرنين إلى الافتراضي</string>
+    <string name="ringtone_2">فشل في إعادة تعيين نغمة الرنين</string>
+    <string name="wallpaper_1">تم إعادة تعيين الخلفية إلى الافتراضي</string>
+    <string name="wallpaper_2">فشل في إعادة تعيين الخلفية</string>
 </resources>
