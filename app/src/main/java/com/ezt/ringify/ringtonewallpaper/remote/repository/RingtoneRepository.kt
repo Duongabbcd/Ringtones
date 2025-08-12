@@ -8,6 +8,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.CategoriesResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.RingtoneResponse
+import com.ezt.ringify.ringtonewallpaper.remote.model.TagSearchingResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.WallpaperResponse
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -47,7 +48,7 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
         SearchRequest(name))
 
    suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
-   suspend fun searchTag(request: SearchRequest) = apiService.searchTags(request)
+
    suspend fun getWallPapersByTag(tagId: Int) = apiService.getWallpapersByTag(tagId = tagId)
 
     suspend fun getPremiumWallpaper() = apiService.getPremiumWallpaper()
@@ -77,6 +78,12 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
 
     suspend fun getAllIconContent(page: Int): ContentResponse =
         apiService.getAllIconContent(page)
+
+    //tag
+    suspend fun searchTag(request: SearchRequest): TagSearchingResponse =
+        apiService.searchTags(request)
+
+    suspend fun getAllTags() = apiService.getAllTags()
 
     companion object {
         var TOKEN: String = ""

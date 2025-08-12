@@ -43,6 +43,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.apply
 import androidx.core.content.edit
+import androidx.core.view.isVisible
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
@@ -157,10 +158,24 @@ class CallScreenFragment :
                 }
             }
 
+            contentViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+                binding.progressBar2.isVisible = isLoading
+            }
+
             contentViewModel.callScreenContent.observe(viewLifecycleOwner) { items ->
                 if (items.size >= 2) {
                     endCall = items.first().url.full
                     startCall = items.last().url.full
+                    Glide.with(ctx)
+                        .load(endCall)
+                        .placeholder(R.drawable.icon_end_call)
+                        .error(R.drawable.icon_end_call)
+                        .into(binding.end)
+                    Glide.with(ctx)
+                        .load(startCall)
+                        .placeholder(R.drawable.icon_start_call)
+                        .error(R.drawable.icon_start_call)
+                        .into(binding.start)
                 }
             }
             contentViewModel.backgroundContent.observe(viewLifecycleOwner) { items ->

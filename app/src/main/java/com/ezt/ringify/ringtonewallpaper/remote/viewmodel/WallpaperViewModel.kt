@@ -36,10 +36,6 @@ class WallpaperViewModel @Inject constructor(
     private val _subWallpaper3 = MutableLiveData<List<Wallpaper>>()
     val subWallpaper3: LiveData<List<Wallpaper>> = _subWallpaper3
 
-
-    private val _tags = MutableLiveData<Tag?>()
-    val tags: LiveData<Tag?> = _tags
-
     private val _searchWallpapers = MutableLiveData<List<Wallpaper>>()
     val searchWallpapers: LiveData<List<Wallpaper>> = _searchWallpapers
 
@@ -271,29 +267,6 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-
-    //Later
-    fun searchTag(searchText: String) = viewModelScope.launch {
-        _loading1.value = true
-        try {
-            _tags.value = null // Clear the old tag first
-            val result = repository.searchTag(SearchRequest(searchText))
-            println("searchTag: $searchText and $result")
-            if (result.data.isEmpty()) {
-                _error.value = "No matching tags found"
-                _tags.value = null // explicitly notify observers there's no tag
-            } else {
-                _tags.value = result.data.first() // only set if not empty
-                _error.value = null
-            }
-        } catch (e: Exception) {
-            println("searchTag exception: ${e.message}")
-            _tags.value = null
-            _error.value = e.localizedMessage
-        } finally {
-            _loading1.value = false
-        }
-    }
 
     fun searchWallpaperByTag(tagId: Int) = viewModelScope.launch {
         _loading1.value = true

@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.airbnb.lottie.animation.content.Content
+import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
@@ -22,6 +25,9 @@ class ContentViewModel @Inject constructor(
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
+    private val _loading2 = MutableLiveData<Boolean>()
+    val loading2: LiveData<Boolean> = _loading2
+
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
@@ -31,6 +37,8 @@ class ContentViewModel @Inject constructor(
 
     private val _backgroundContent = MutableLiveData<List<ImageContent>>()
     val backgroundContent: LiveData<List<ImageContent>> = _backgroundContent
+    private val _selectCallScreenContent = MutableLiveData<List<ContentItem>>()
+    val selectCallScreenContent: LiveData<List<ContentItem>> = _selectCallScreenContent
 
     private val _iconContent = MutableLiveData<List<Pair<ImageContent, ImageContent>>>()
     val iconContent: LiveData<List<Pair<ImageContent, ImageContent>>> = _iconContent
@@ -39,6 +47,7 @@ class ContentViewModel @Inject constructor(
     private var hasMorePages1 = true
     val allWallpapers1 = mutableListOf<ImageContent>()
     val allWallpapers2 = mutableListOf<Pair<ImageContent, ImageContent>>()
+    val allCallScreen = mutableListOf<ContentItem>()
 
     private var isLoadingMore = false
 
@@ -46,6 +55,7 @@ class ContentViewModel @Inject constructor(
         _loading.value = true
         try {
             val result = repository.getCallScreenContent(callScreenId)
+            println("getCallScreenContent: ${result.data.data.first().contents}")
             _callScreenContent.value = result.data.data.first().contents
 
             _error.value = null
@@ -58,7 +68,7 @@ class ContentViewModel @Inject constructor(
     }
 
     fun getBackgroundContent(callScreenId: Int) = viewModelScope.launch {
-        _loading.value = true
+        _loading2.value = true
         try {
             val result = repository.getBackgroundContent(callScreenId)
             _backgroundContent.value = result.data.data.first().contents
@@ -68,7 +78,7 @@ class ContentViewModel @Inject constructor(
             println("loadCallScreens: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading2.value = false
         }
     }
 
@@ -81,18 +91,18 @@ class ContentViewModel @Inject constructor(
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 
-            val newItems = result.data.data.mapNotNull { item ->
-                // Get image preview from content
-                val imageContent = item.contents.firstOrNull { content ->
-                    content.url.full.endsWith(".jpg", ignoreCase = true) ||
-                            content.url.full.endsWith(".png", ignoreCase = true) ||
-                            content.url.full.endsWith(".webp", ignoreCase = true)
-                }
-                imageContent // Only return if found, will be added to list
-            }
+//            val newItems = result.data.data.mapNotNull { item ->
+//                val imageContent = item.contents.firstOrNull { content ->
+//                    content.url.full.endsWith(".jpg", ignoreCase = true) ||
+//                            content.url.full.endsWith(".png", ignoreCase = true) ||
+//                            content.url.full.endsWith(".webp", ignoreCase = true)
+//                }
+//                imageContent
+//            }
+            val newItems = result.data.data
 
-            allWallpapers1.addAll(newItems)
-            _backgroundContent.value = allWallpapers1
+            allCallScreen.addAll(newItems)
+            _selectCallScreenContent.value = allCallScreen
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")

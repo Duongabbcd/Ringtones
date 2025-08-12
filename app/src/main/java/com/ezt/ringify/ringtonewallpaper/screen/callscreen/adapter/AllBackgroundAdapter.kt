@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemContentBackgroundBinding
+import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 
 
-class AllBackgroundAdapter(private val onClickListener: (String) -> Unit) :
+class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
     RecyclerView.Adapter<AllBackgroundAdapter.AllBackgroundViewHolder>() {
-    private val allBackgrounds: MutableList<ImageContent> = mutableListOf()
+    private val allBackgrounds: MutableList<ContentItem> = mutableListOf()
     private var selectedPosition: Int = RecyclerView.NO_POSITION
     private lateinit var context: Context
     override fun onCreateViewHolder(
@@ -34,7 +35,7 @@ class AllBackgroundAdapter(private val onClickListener: (String) -> Unit) :
         holder.bind(position)
     }
 
-    fun submitList(list: List<ImageContent>) {
+    fun submitList(list: List<ContentItem>) {
         allBackgrounds.clear()
         allBackgrounds.addAll(list)
         selectedPosition = RecyclerView.NO_POSITION
@@ -50,9 +51,15 @@ class AllBackgroundAdapter(private val onClickListener: (String) -> Unit) :
             val imageContent = allBackgrounds[position]
 
             binding.apply {
-                val input = imageContent.url.medium
+                val allContents = imageContent.contents
+                allContents.onEach {
+                    println("AllBackgroundViewHolder: ${it.url}")
+                }
+                val input =
+                    if (imageContent.contents.size >= 2) allContents.last() else allContents.first()
 
-                Glide.with(context).load(input).placeholder(R.drawable.default_callscreen)
+                Glide.with(context).load(input.url.medium)
+                    .placeholder(R.drawable.default_callscreen)
                     .error(R.drawable.default_callscreen).into(callScreenBackground)
 
                 // Highlight stroke if selected
@@ -79,7 +86,7 @@ class AllBackgroundAdapter(private val onClickListener: (String) -> Unit) :
                     selectedPosition = adapterPosition
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
-                    onClickListener(input)
+                    onClickListener(imageContent)
                 }
             }
         }

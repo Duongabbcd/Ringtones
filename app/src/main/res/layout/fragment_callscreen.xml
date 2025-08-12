@@ -41,6 +41,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/allQuickThemes" />
 
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/currentFrame"
+                app:layout_constraintEnd_toEndOf="@id/currentFrame"
+                app:layout_constraintStart_toStartOf="@id/currentFrame"
+                app:layout_constraintTop_toTopOf="@id/currentFrame" />
 
             <TextView
                 android:id="@+id/customize"

@@ -37,7 +37,30 @@ data class ContentItem(
     @SerializedName("time_public") val timePublic: Long,
     @SerializedName("updated_at") val updatedAt: String,
     @SerializedName("created_at") val createdAt: String
-)
+) {
+    companion object {
+        val CONTENT_EMPTY = ContentItem(
+            0,
+            "",
+            listOf<ImageContent>(),
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0L,
+            "",
+            ""
+        )
+    }
+}
 
 data class ImageContent(
     val path: String,

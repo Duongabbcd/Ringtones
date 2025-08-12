@@ -21,6 +21,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllAvatarAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackgroundAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
@@ -36,11 +37,17 @@ class CallScreenEditorActivity :
     private val allBackgroundAdapter: AllBackgroundAdapter by lazy {
         AllBackgroundAdapter { input ->
             println("AllBackgroundAdapter: $input")
-            if (input.isNullOrEmpty()) {
+            if (input.contents.isEmpty()) {
                 return@AllBackgroundAdapter
             }
-            backgroundUrl = input
-            displayBackground(input)
+
+
+            val allContents = input.contents
+            val result = if (allContents.size >= 2) allContents.last() else allContents.first()
+            val currentUrl = if (allContents.size >= 2) allContents.first().url.full else ""
+            backgroundUrl = result.url.medium
+            currentBackgroundUrl = currentUrl
+            displayBackground(backgroundUrl)
         }
     }
 
@@ -175,12 +182,13 @@ class CallScreenEditorActivity :
 
             contentViewModel.backgroundContent.observe(this@CallScreenEditorActivity) { items ->
                 println("allBackgroundAdapter: $items")
-                when (editorType) {
-                    1 -> allBackgroundAdapter.submitList(items)
-                    2 -> allAvatarAdapter.submitList(items)
-                    else -> allBackgroundAdapter.submitList(items)
-                }
+                allAvatarAdapter.submitList(items)
 
+            }
+
+            contentViewModel.selectCallScreenContent.observe(this@CallScreenEditorActivity) { items ->
+                println("allBackgroundAdapter: $items")
+                allBackgroundAdapter.submitList(items)
             }
 
             contentViewModel.iconContent.observe(this@CallScreenEditorActivity) { items ->
@@ -267,6 +275,7 @@ class CallScreenEditorActivity :
 
     companion object {
         var backgroundUrl: String = ""
+        var currentBackgroundUrl: String = ""
         var avatarUrl: String = ""
 
         var endCall: String = ""

@@ -6,6 +6,8 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.model.RingtoneResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.Tag
+import com.ezt.ringify.ringtonewallpaper.remote.model.TagResponse
+import com.ezt.ringify.ringtonewallpaper.remote.model.TagSearchingResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.WallpaperResponse
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
@@ -99,10 +101,6 @@ interface ApiService {
         @Body request: SearchRequest
     ):  SearchResponse
 
-    @POST("api/v1/tags/search?app=1")
-    suspend fun searchTags(
-        @Body request: SearchRequest
-    ):  TagResponse
 
     @GET("api/v1/wallpapers?app=1")
     suspend fun getWallpapersByTag(
@@ -156,7 +154,7 @@ interface ApiService {
     ): CategoriesResponse
 
     //Callscreen
-    @GET("api/v1/call_screens?app=1")
+    @GET("api/v1/call_screens?app=1&where=private+1")
     suspend fun getCallScreens(): CallScreenResponse
 
     @GET("api/v1/contents?app=1&where=type+3")
@@ -183,6 +181,17 @@ interface ApiService {
     suspend fun getAllIconContent(
         @Query("page") page: Int = 1
     ): ContentResponse
+
+    @POST("api/v1/tags/search?app=1")
+    suspend fun searchTags(
+        @Body request: SearchRequest
+    ): TagSearchingResponse
+
+    @GET("api/v1/tags")
+    suspend fun getAllTags(
+        @Query("app") app: Int = 1,
+        @Query("page") page: Int = 1
+    ): TagResponse
 }
 
 data class InteractionRequest(
@@ -197,8 +206,4 @@ data class SearchRequest(
 
 data class SearchResponse(
     val data: List<Ringtone>
-)
-
-data class TagResponse(
-    val data: List<Tag>
 )

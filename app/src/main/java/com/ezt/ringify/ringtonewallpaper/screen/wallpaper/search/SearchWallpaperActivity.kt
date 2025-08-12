@@ -13,12 +13,12 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.TagViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperTrendingAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.TagTrendingAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -31,17 +31,24 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     ActivitySearchWallpaperBinding::inflate
 ) {
     private val wallpaperViewModel: WallpaperViewModel by viewModels()
-    private val categoryViewModel: CategoryViewModel by viewModels()
-    private val wallpaperAdapter: WallpaperTrendingAdapter by lazy {
-        WallpaperTrendingAdapter()
+    private val tagViewModel: TagViewModel by viewModels()
+    private val wallpaperAdapter: TagTrendingAdapter by lazy {
+        TagTrendingAdapter { tag ->
+            println("TagTrendingAdapter: $tag")
+            binding.searchText.setText(tag.name)
+            binding.trendingIcon.gone()
+            binding.trendingTitle.gone()
+            binding.trendingRecyclerView.gone()
+            wallpaperViewModel.searchWallpaperByTag(tag.id)
+        }
     }
 
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
     private val searchWallpaperAdapter: GridWallpaperAdapter by lazy {
-        GridWallpaperAdapter({
+        GridWallpaperAdapter {
             startActivity(Intent(this@SearchWallpaperActivity, SlideWallpaperActivity::class.java))
-        }).apply {
+        }.apply {
             onAllImagesLoaded = {
                 // Safely post notifyDataSetChanged on RecyclerView's message queue
                 binding.allResults.post {
@@ -72,19 +79,8 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             allResults.adapter = searchWallpaperAdapter
             allResults.layoutManager = GridLayoutManager(this@SearchWallpaperActivity, 3)
 
-            categoryViewModel.wallpaperCategory.observe(this@SearchWallpaperActivity) { items ->
+            tagViewModel.tag.observe(this@SearchWallpaperActivity) { items ->
                 wallpaperAdapter.submitList(items)
-            }
-
-            wallpaperViewModel.tags.observe(this@SearchWallpaperActivity) { tag ->
-                if (tag == null) {
-                    binding.noDataLayout.visible()
-                    binding.allResults.gone()
-                } else {
-                    binding.noDataLayout.gone()
-                    binding.allResults.visible()
-                    wallpaperViewModel.searchWallpaperByTag(tag.id)
-                }
             }
 
             wallpaperViewModel.searchWallpapers.observe(this@SearchWallpaperActivity) { items ->
@@ -100,7 +96,11 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
 
             binding.searchText.addTextChangedListener(object : TextWatcher {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    wallpaperViewModel.searchTag(s.toString())
+                    if (s.isNullOrEmpty()) {
+                        tagViewModel.loadAllTags()
+                    } else {
+                        tagViewModel.searchTag(s.toString())
+                    }
                 }
 
                 override fun afterTextChanged(s: Editable?) {
@@ -109,6 +109,8 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             })
+
+
 
             searchText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -132,6 +134,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
 
             closeButton.setOnClickListener {
                 searchText.setText("")
+                tagViewModel.loadAllTags()
                 displayByCondition("")
                 noDataLayout.gone()
             }
@@ -146,7 +149,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            categoryViewModel.loadWallpaperCategories()
+            tagViewModel.loadAllTags()
             binding.noInternet.root.gone()
         }
     }
@@ -154,19 +157,13 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     private fun displayByCondition(input: String) {
         binding.apply {
             noDataLayout.gone()
-            if(input.isEmpty()) {
-                trendingTitle.visible()
-                trendingIcon.visible()
-                trendingRecyclerView.visible()
-
+            trendingTitle.visible()
+            trendingIcon.visible()
+            trendingRecyclerView.visible()
+            if (input.isEmpty()) {
                 allResults.gone()
                 closeButton.gone()
             } else {
-                trendingTitle.gone()
-                trendingIcon.gone()
-                trendingRecyclerView.gone()
-
-                allResults.visible()
                 closeButton.visible()
             }
         }
