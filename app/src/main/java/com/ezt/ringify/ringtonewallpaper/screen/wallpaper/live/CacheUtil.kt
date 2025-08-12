@@ -24,15 +24,6 @@ object CacheUtil {
             simpleCache ?: run {
                 val cacheDir = File(context.cacheDir, "exo_cache")
 
-                // Clear cache dir if corrupted (optional, you can call this manually before playback if preferred)
-                if (cacheDir.exists()) {
-                    try {
-                        cacheDir.deleteRecursively()
-                    } catch (e: Exception) {
-                        Log.e("CacheUtil", "Failed to clear cache dir", e)
-                    }
-                }
-
                 val cacheSize: Long = 100L * 1024 * 1024 // 100 MB
                 val evictor = LeastRecentlyUsedCacheEvictor(cacheSize)
                 val databaseProvider = StandaloneDatabaseProvider(context)
