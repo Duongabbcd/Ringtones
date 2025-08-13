@@ -522,7 +522,6 @@ class SlideWallpaperActivity :
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
                     updateIndex(position, "onPositionChange")
-//                    setUpNewPlayer(position)
                     // 🔁 force rebind to update playingHolder
                 }
 

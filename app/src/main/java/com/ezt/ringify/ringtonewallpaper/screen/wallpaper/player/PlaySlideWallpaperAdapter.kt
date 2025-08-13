@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.annotation.OptIn
+import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
@@ -48,17 +49,19 @@ class PlaySlideWallpaperAdapter(
 
     private  var isPlaying = false
     private  var isEnded = false
+    private  var isPremiumType = false
+
 
 
 
     override fun getItemCount() = items.size
 
-    fun submitList(new: List<Wallpaper>) {
+    fun submitList(new: List<Wallpaper>, isPremium: Boolean = false) {
 //        val diffCallback = WallpaperDiffCallback(items, new)
 //        val diffResult = DiffUtil.calculateDiff(diffCallback)
 
         println("PlaySlideWallpaperAdapter: ${new.firstOrNull()}")
-
+        isPremiumType = isPremium
         items.clear()
         items.addAll(new)
         notifyDataSetChanged()
@@ -132,6 +135,8 @@ class PlaySlideWallpaperAdapter(
                 dialog.show()
             }
             // Avoid unnecessary rebind
+
+            binding.premiumIcon.isVisible = isPremiumType
 
             // Set playingHolder for external progress updates
             if (wallpaper == RingtonePlayerRemote.currentPlayingRingtone) {

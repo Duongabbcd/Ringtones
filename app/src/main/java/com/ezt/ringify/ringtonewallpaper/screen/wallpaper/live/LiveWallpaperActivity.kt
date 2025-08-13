@@ -54,7 +54,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         }
 
         wallpaperViewModel.liveWallpapers.observe(this@LiveWallpaperActivity) { items ->
-            wallpaperAdapter.submitList(items, false)
+            wallpaperAdapter.submitList(items, live = true, premium = false)
         }
         binding.apply {
             backBtn.setOnClickListener {

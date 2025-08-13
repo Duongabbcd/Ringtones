@@ -50,8 +50,8 @@
 
             <ImageView
                 android:id="@+id/premiumIcon"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:layout_marginEnd="@dimen/_16sdp"
                 android:layout_toStartOf="@+id/ccIcon"
                 android:contentDescription="@string/imageview"
@@ -60,18 +60,17 @@
 
             <ImageView
                 android:id="@+id/liveIcon"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:layout_marginEnd="@dimen/_16sdp"
                 android:layout_toStartOf="@+id/ccIcon"
                 android:contentDescription="@string/imageview"
-                android:src="@drawable/icon_live_wallpaper"
-                android:visibility="gone" />
+                android:src="@drawable/icon_live_wallpaper" />
 
             <ImageView
                 android:id="@+id/ccIcon"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/imageview"
                 android:src="@drawable/icon_white_subtitle" />

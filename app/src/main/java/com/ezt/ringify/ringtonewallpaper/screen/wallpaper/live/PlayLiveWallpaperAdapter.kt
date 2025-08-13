@@ -20,6 +20,7 @@ import androidx.media3.datasource.DefaultDataSource
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.CreditDialog
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 
 @OptIn(UnstableApi::class)
 class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter() {
@@ -83,6 +84,8 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
 
         fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
+
+            binding.premiumIcon.visible()
 
             binding.ccIcon.setOnClickListener {
                 val dialog = CreditDialog(context)

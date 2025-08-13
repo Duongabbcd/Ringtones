@@ -84,15 +84,15 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             allSub1.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
             wallPaperViewModel.premiumWallpapers.observe(this@PremiumWallpaperActivity) { items ->
-                liveAdapter.submitList(items)
+                liveAdapter.submitList(items, true)
             }
 
             wallPaperViewModel.slideWallpaper.observe(this@PremiumWallpaperActivity) { items ->
-                slideAdapter.submitList(items)
+                slideAdapter.submitList(items, true)
             }
 
             wallPaperViewModel.singleWallpapers.observe(this@PremiumWallpaperActivity) { items ->
-                singleAdapter.submitList(items)
+                singleAdapter.submitList(items, true)
             }
 
             openAll1.setOnClickListener {

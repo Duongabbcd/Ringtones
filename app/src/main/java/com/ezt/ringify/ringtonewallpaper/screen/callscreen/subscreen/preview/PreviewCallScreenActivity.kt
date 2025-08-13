@@ -1,7 +1,5 @@
 package com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview
 
-import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.OptIn
@@ -11,23 +9,18 @@ import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewCallscreenBinding
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.endCall
-import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.startCall
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.photoBackgroundUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.videoBackgroundUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.setIcon
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.startCall
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.backgroundUrl
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.currentBackgroundUrl
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.startCall
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
@@ -110,37 +103,6 @@ class PreviewCallScreenActivity :
         }
     }
 
-    @OptIn(UnstableApi::class)
-    fun attachPlayer(videoUrl: String) {
-        Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
-        val player = PlayerManager.getPlayer(this)
-        val simpleCache = CacheUtil.getSimpleCache(this)
-
-        val dataSourceFactory = DefaultDataSource.Factory(this)
-        val cacheDataSourceFactory = CacheDataSource.Factory()
-            .setCache(simpleCache)
-            .setUpstreamDataSourceFactory(dataSourceFactory)
-            .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-
-        val mediaItem = MediaItem.fromUri(videoUrl.toUri())
-        val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
-            .createMediaSource(mediaItem)
-
-        player.apply {
-            stop()
-            clearMediaItems()
-            setMediaSource(mediaSource)
-            repeatMode = Player.REPEAT_MODE_ONE
-            playWhenReady = true
-
-            // 👇 Delay prepare() to ensure playerView is ready
-            binding.playerView.player = this
-            binding.playerView.post {
-                Log.d("PlayerViewHolder", "Calling prepare() after post")
-                prepare()
-            }
-        }
-    }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@PreviewCallScreenActivity, "INTER_CALLSCREEN")

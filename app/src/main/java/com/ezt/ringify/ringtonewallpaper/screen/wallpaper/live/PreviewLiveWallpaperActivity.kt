@@ -403,7 +403,7 @@ class PreviewLiveWallpaperActivity :
     private fun setUpNewPlayer(position: Int) {
         binding.horizontalWallpapers.smoothScrollToPosition(position)
         currentWallpaper = allWallpapers[position]
-        Log.d("PreviewLive", "setUpNewPlayer: position=$position wallpaper=$currentWallpaper")
+        Log.d("PreviewLive", "setUpNewPlayer: position= $position wallpaper= $currentWallpaper")
         favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
         index = position
         currentIndex = position

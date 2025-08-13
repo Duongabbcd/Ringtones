@@ -65,9 +65,9 @@
             <ImageView
                 android:contentDescription="@string/imageview"
                 android:id="@+id/premiumIcon"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
-                android:visibility="gone"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:visibility="visible"
                 android:layout_marginEnd="@dimen/_16sdp"
                 android:layout_toStartOf="@+id/ccIcon"
                 android:src="@drawable/icon_premium" />
@@ -76,8 +76,8 @@
                 android:contentDescription="@string/imageview"
                 android:id="@+id/liveIcon"
                 android:visibility="gone"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:layout_marginEnd="@dimen/_16sdp"
                 android:layout_toStartOf="@+id/ccIcon"
                 android:src="@drawable/icon_live_wallpaper" />
@@ -85,8 +85,8 @@
             <ImageView
                 android:contentDescription="@string/imageview"
                 android:id="@+id/ccIcon"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/icon_white_subtitle" />
         </RelativeLayout>

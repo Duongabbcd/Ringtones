@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -72,6 +73,8 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
                     wallPaper.setImageResource(R.drawable.item_wallpaper_default)
                     return@apply
                 }
+
+                premiumIcon.isVisible = premium
                 progressBar.visible()
                 val url = wallpaper.thumbnail?.url?.small ?: content.url.small
                 url?.let {

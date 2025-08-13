@@ -60,6 +60,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.content.edit
 
 @AndroidEntryPoint
 class CallScreenFragment :
@@ -503,8 +504,8 @@ class CallScreenFragment :
     private fun saveCallScreenPreference(tag: String, value: String) {
         Log.d(TAG, "saveCallScreenPreference: $tag and $value")
         val appCtx = requireContext().applicationContext
-        val prefs = appCtx.getSharedPreferences("callscreen_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putString(tag, value).apply()
+        val prefs = appCtx.getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
+        prefs.edit { putString(tag, value) }
     }
 
     private fun checkInternetConnected(isConnected: Boolean) {
