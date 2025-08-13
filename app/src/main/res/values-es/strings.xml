@@ -28,6 +28,7 @@
     <string name="first_wpp_sort">Predeterminado</string>
     <string name="second_wpp_sort">Tendencia</string>
     <string name="third_wpp_sort">Nuevo</string>
+    <string name="preview">Vista previa</string>
 
     <string name="reset_wallpaper_question">¿Realmente quieres restablecer tu fondo de pantalla actual?</string>
     <string name="reset_ringtone_question">¿Realmente quieres restablecer tu tono de llamada actual?</string>

@@ -14,6 +14,7 @@
     <ImageView
         android:visibility="gone"
         android:id="@+id/callScreenImage"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/imageview"
@@ -33,7 +34,6 @@
         android:contentDescription="@string/imageview" />
 
 
-
     <ImageView
         android:id="@+id/avatar"
         android:contentDescription="@string/imageview"
@@ -44,6 +44,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/endCallLottie"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_90sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/_36sdp"
+        android:layout_marginBottom="@dimen/_72sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/startCallLottie"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_90sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/_36sdp"
+        android:layout_marginBottom="@dimen/_72sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
 
     <ImageView

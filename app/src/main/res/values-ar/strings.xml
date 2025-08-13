@@ -22,6 +22,7 @@
     <string name="fav_light_1">أنواع الموسيقى</string>
     <string name="fav_2">اختر الخلفية المفضلة لديك</string>
     <string name="fav_light_2">خلفية الشاشة المفضلة</string>
+    <string name="preview">معاينة</string> <!-- Arabic -->
 
     <string name="english">الإنجليزية</string>
     <string name="hindi">الهندية</string>

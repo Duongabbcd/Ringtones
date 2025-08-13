@@ -94,6 +94,9 @@ class PhoneSettingActivity :
                             RingtoneManager.TYPE_NOTIFICATION
                         )
 
+                        println("resetRingtoneBtn 1: $defaultRingtone")
+                        println("resetRingtoneBtn 2: $defaultNotification")
+
                         RingtoneHelper.setAsSystemRingtone(
                             this@PhoneSettingActivity,
                             defaultRingtone,

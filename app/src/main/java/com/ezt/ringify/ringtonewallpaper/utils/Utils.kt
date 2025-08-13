@@ -3,29 +3,33 @@ package com.ezt.ringify.ringtonewallpaper.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Environment
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import android.util.Log
 import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import com.ezt.ringify.ringtonewallpaper.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.NumberFormat
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 object Utils {
@@ -203,6 +207,7 @@ object Utils {
         return size
     }
 
+    @SuppressLint("DefaultLocale")
     fun formatSize(size: Long): String {
         val kb = 1024.0
         val mb = kb * 1024
@@ -216,25 +221,73 @@ object Utils {
         }
     }
 
-//    fun setBackgroundColor(
-//        context: Context,
-//        selected: List<TextView>,
-//        unselected: List<TextView>,
-//        selectedColor: Int,
-//        unselectedColor: Int
-//    ) {
-//        selected.onEach {
-//            it.backgroundTintList = ColorStateList.valueOf(selectedColor)
-//            it.setTextColor(context.getColor(R.color.select_title))
-//        }
-//        unselected.onEach {
-//            it.backgroundTintList = ColorStateList.valueOf(unselectedColor)
-//            it.setTextColor(context.getColor(R.color.select_mode))
-//        }
-//    }
+    suspend fun downloadCallScreenFile(
+        context: Context,
+        fileUrl: String,
+        folderName: String = "background"
+    ): DownloadResult? =
+        withContext(Dispatchers.IO) {
+            val client = OkHttpClient()
 
-    const val NO_INTERNET = "No address associated with hostname"
+            val backgroundDir = File(
+                context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+                folderName
+            )
+
+            clearFolder(backgroundDir)
+            backgroundDir.mkdirs()
+
+            val extension = fileUrl.substringAfterLast('.', "").lowercase()
+            val backgroundFileName = when (extension) {
+                "mp4" -> "background.mp4"
+                "png", "jpg", "jpeg" -> "background.png"
+                else -> "$folderName.json"
+            }
+
+
+            val backgroundFile = File(backgroundDir, backgroundFileName)
+
+            val backgroundDownloaded = downloadFile(client, fileUrl, backgroundFile)
+            if (!backgroundDownloaded) return@withContext null
+
+            DownloadResult(
+                backgroundPath = backgroundFile.absolutePath
+            )
+        }
+
+    private fun clearFolder(folder: File) {
+        if (folder.exists()) {
+            folder.listFiles()?.forEach { it.delete() }
+        }
+    }
+
+    private fun downloadFile(client: OkHttpClient, url: String, targetFile: File): Boolean {
+        return try {
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                response.body?.byteStream().use { input ->
+                    FileOutputStream(targetFile).use { output ->
+                        input?.copyTo(output)
+                    }
+                }
+                Log.d("DownloadFile", "Downloaded: ${targetFile.absolutePath}")
+                true
+            } else {
+                Log.e("DownloadFile", "Failed: $url")
+                false
+            }.also { response.close() }
+        } catch (e: Exception) {
+            Log.e("DownloadFile", "Error downloading file", e)
+            false
+        }
+    }
+
 }
+
+data class DownloadResult(
+    val backgroundPath: String
+)
 
 class SwipeGestureListener(val activity: Activity) : GestureDetector.SimpleOnGestureListener() {
     private val SWIPE_THRESHOLD = 100

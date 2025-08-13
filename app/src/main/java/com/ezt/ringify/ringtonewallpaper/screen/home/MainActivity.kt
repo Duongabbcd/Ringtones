@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,6 +23,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.RingtoneFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.WallpaperFragment
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
@@ -42,25 +44,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         var countOpen = Common.getCountOpenApp(this)
 
         if (countOpen < 1) {
-            val defaultRingtone = Utils.getFirstRingtone(this, RingtoneManager.TYPE_RINGTONE)
-            val defaultNotification =
-                Utils.getFirstRingtone(this, RingtoneManager.TYPE_NOTIFICATION)
-
-            defaultRingtone?.uri?.let { value ->
-                RingtoneManager.setActualDefaultRingtoneUri(
-                    this,
-                    RingtoneManager.TYPE_RINGTONE,
-                    value
-                )
-            }
-            defaultNotification?.uri?.let { value ->
-                RingtoneManager.setActualDefaultRingtoneUri(
-                    this,
-                    RingtoneManager.TYPE_NOTIFICATION,
-                    value
-                )
-            }
-
             showNotificationDialog(countOpen)
             countOpen++
             Common.setCountOpenApp(this, countOpen)

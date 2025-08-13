@@ -25,6 +25,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationMan
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.service.MyInCallService
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.photoBackgroundUrl
 
 class CallScreenActivity :
     BaseActivity<ActivityCallScreenBinding>(ActivityCallScreenBinding::inflate) {
@@ -117,7 +118,7 @@ class CallScreenActivity :
             val placeholderDrawable =
                 ContextCompat.getDrawable(this@CallScreenActivity, R.drawable.default_callscreen)
             Glide.with(this@CallScreenActivity)
-                .load(CallScreenEditorActivity.Companion.backgroundUrl)
+                .load(photoBackgroundUrl)
                 .into(object : CustomTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable,

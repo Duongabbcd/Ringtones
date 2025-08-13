@@ -27,6 +27,7 @@
     <string name="reset_wallpaper_question">Möchten Sie Ihr aktuelles Hintergrundbild wirklich zurücksetzen?</string>
     <string name="reset_ringtone_question">Möchten Sie Ihren aktuellen Klingelton wirklich zurücksetzen?</string>
     <string name="reset_cache_question">Möchten Sie den Cache wirklich löschen?</string>
+    <string name="preview">Vorschau</string> <!-- German -->
 
     <string name="reset_wallpaper">Hintergrundbild zurücksetzen</string>
     <string name="reset_ringtone">Klingelton zurücksetzen</string>

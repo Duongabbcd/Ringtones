@@ -29,6 +29,7 @@
     <string name="reset_wallpaper">Redefinir papel de parede</string>
     <string name="reset_ringtone">Redefinir toque</string>
     <string name="reset_cache">Limpar cache</string>
+    <string name="preview">Pré-visualização</string>
 
     <string name="cache_1">Cache limpa com sucesso</string>
     <string name="cache_2">Falha ao limpar cache</string>

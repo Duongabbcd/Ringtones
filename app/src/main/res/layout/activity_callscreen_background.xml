@@ -74,6 +74,37 @@
                 android:layout_width="@dimen/_140sdp"
                 android:layout_height="@dimen/_270sdp">
 
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/playerContainer"
+                    app:layout_constraintEnd_toEndOf="@id/playerContainer"
+                    app:layout_constraintStart_toStartOf="@id/playerContainer"
+                    app:layout_constraintTop_toTopOf="@id/playerContainer" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/playerContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginVertical="@dimen/_2sdp"
+                    android:clipToOutline="true"
+                    android:visibility="gone"
+                    app:cardCornerRadius="@dimen/_10sdp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
+
+                    <androidx.media3.ui.PlayerView
+                        android:id="@+id/playerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#000"
+                        app:resize_mode="zoom"
+                        app:use_controller="false" />
+                </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/currentCallScreen"
                     android:src="@drawable/default_callscreen"
@@ -83,56 +114,79 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
-                <ImageView
-                    android:id="@+id/defaultAvatar"
-                    android:layout_width="@dimen/_38sdp"
-                    android:layout_height="@dimen/_38sdp"
-                    android:layout_marginTop="@dimen/_35sdp"
-                    android:contentDescription="@string/imageview"
-                    android:src="@drawable/default_cs_avt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <TextView
-                    style="@style/CustomTextStyleMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:background="@drawable/background_radius_12_gray"
-                    android:backgroundTint="@color/customBlack_0_5"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/_8sdp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:text="Unknown Number"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/defaultAvatar" />
-
-                <ImageView
-                    android:id="@+id/end"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_45sdp"
-                    android:layout_margin="@dimen/_15sdp"
-                    android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_end_call"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <ImageView
-                    android:id="@+id/start"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_45sdp"
-                    android:layout_margin="@dimen/_15sdp"
-                    android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_start_call"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/defaultAvatar"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginTop="@dimen/_35sdp"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/default_cs_avt"
+                app:layout_constraintEnd_toEndOf="@id/currentFrame"
+                app:layout_constraintStart_toStartOf="@id/currentFrame"
+                app:layout_constraintTop_toTopOf="@id/currentFrame" />
+
+
+            <TextView
+                style="@style/CustomTextStyleMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@drawable/background_radius_12_gray"
+                android:backgroundTint="@color/customBlack_0_5"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/unknown_caller"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                app:layout_constraintEnd_toEndOf="@id/currentFrame"
+                app:layout_constraintStart_toStartOf="@id/currentFrame"
+                app:layout_constraintTop_toBottomOf="@+id/defaultAvatar" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/endCallLottie"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_margin="@dimen/_15sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/currentFrame"
+                app:layout_constraintStart_toStartOf="@+id/currentFrame"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
+
+            <ImageView
+                android:id="@+id/endImage"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_margin="@dimen/_15sdp"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_end_call"
+                app:layout_constraintBottom_toBottomOf="@+id/currentFrame"
+                app:layout_constraintStart_toStartOf="@+id/currentFrame" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/startCallLottie"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_margin="@dimen/_15sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/currentFrame"
+                app:layout_constraintEnd_toEndOf="@+id/currentFrame"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
+
+
+            <ImageView
+                android:id="@+id/startImage"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_margin="@dimen/_15sdp"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_start_call"
+                app:layout_constraintBottom_toBottomOf="@+id/currentFrame"
+                app:layout_constraintEnd_toEndOf="@+id/currentFrame" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/allBackground"
@@ -155,7 +209,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Preview"
+                    android:text="@string/preview"
                     style="@style/CustomTextStyleSemiBold14sp"
                     android:textColor="@color/main_color"
                     android:layout_marginEnd="@dimen/_10sdp"
@@ -167,7 +221,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Apply"
+                    android:text="@string/apply"
                     style="@style/CustomTextStyleSemiBold14sp"
                     android:textColor="@color/white"
                     android:layout_marginStart="@dimen/_10sdp"

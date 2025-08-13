@@ -18,9 +18,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -37,17 +39,27 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CallScreenViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.backgroundUrl
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.apply
-import androidx.core.content.edit
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import com.airbnb.lottie.LottieAnimationView
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.avatarUrl
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.endCall
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity.Companion.startCall
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
+import com.ezt.ringify.ringtonewallpaper.utils.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 @AndroidEntryPoint
 class CallScreenFragment :
@@ -59,17 +71,34 @@ class CallScreenFragment :
 
     private lateinit var defaultAppSettingsLauncher: ActivityResultLauncher<Intent>
     private lateinit var overlayPermissionLauncher: ActivityResultLauncher<Intent>
+    private var callScreenSetupInProgress = false
 
     private val callScreenAdapter: CallScreenAdapter by lazy {
         CallScreenAdapter { result ->
+            val ctx = context ?: return@CallScreenAdapter
+            videoBackgroundUrl = ""
+            binding.playerContainer.gone()
+            hasRenderedFirstFrame = false
+            currentListener?.let {
+                PlayerManager.getPlayer(ctx).removeListener(it)
+                currentListener = null
+            }
+            binding.currentCallScreen.visible()
             contentViewModel.getCallScreenContent(result.id)
             contentViewModel.getBackgroundContent(result.id)
         }
     }
     private var onRequestDialerCallBack: ((granted: Boolean) -> Unit)? = null
+    private var currentListener: Player.Listener? = null
+    private var hasRenderedFirstFrame = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (callScreenSetupInProgress) {
+            val ctx = context ?: return
+            triggerCallScreenPermission(ctx)
+        }
 
         defaultAppSettingsLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -90,39 +119,53 @@ class CallScreenFragment :
             val prefs = ctx.getSharedPreferences("callscreen_prefs",MODE_PRIVATE)
 
             val backupBackground = prefs.getString("BACKGROUND", "") ?: ""
-            val currentBackground = if (backgroundUrl != "") backgroundUrl else backupBackground
+            var video = ""
+            var photo = ""
+            if (backupBackground.endsWith(".mp4", true)) {
+                video = backupBackground
+            } else {
+                photo = backupBackground
+            }
+
+            println("currentEnd and currentStart: $backupBackground $video ------ $photo")
+
+
+            videoBackgroundUrl =
+                if (videoBackgroundUrl.isEmpty() && photoBackgroundUrl.isEmpty()) video else videoBackgroundUrl
+            photoBackgroundUrl =
+                if (photoBackgroundUrl.isEmpty() && videoBackgroundUrl.isEmpty()) photo else photoBackgroundUrl
 
             val backupAvatar = prefs.getString("AVATAR", "") ?: ""
             val currentAvatar = if (avatarUrl != "") avatarUrl else backupAvatar
 
-            val backupEnd = prefs.getString("END", "") ?: ""
+            val backupEnd = prefs.getString("CANCEL", "") ?: ""
             val currentEnd = if (endCall != "") endCall else backupEnd
 
-            val backupStart = prefs.getString("START", "") ?: ""
+            val backupStart = prefs.getString("ANSWER", "") ?: ""
             val currentStart = if (startCall != "") startCall else backupStart
+            println("currentEnd and currentStart 123: $currentEnd ------ $currentStart")
+            startCall = if (startCall.isEmpty()) currentStart else startCall
+            endCall = if (endCall.isEmpty()) currentEnd else endCall
 
-            Glide.with(ctx)
-                .load(currentBackground)
-                .placeholder(R.drawable.default_callscreen)
-                .error(R.drawable.default_callscreen)
-                .into(binding.currentCallScreen)
+
+            displayIcon(endCall, startCall)
+
+            if (videoBackgroundUrl.isNotEmpty()) {
+                currentCallScreen.gone()
+                playerContainer.visible()
+                displayVideoBackground(videoBackgroundUrl)
+            } else {
+                currentCallScreen.visible()
+                playerContainer.gone()
+                displayCallScreen(photoBackgroundUrl)
+            }
+
+
             Glide.with(ctx)
                 .load(currentAvatar)
                 .placeholder(R.drawable.default_cs_avt)
                 .error(R.drawable.default_cs_avt)
                 .into(binding.defaultAvatar)
-
-            Glide.with(ctx)
-                .load(currentEnd)
-                .placeholder(R.drawable.icon_end_call)
-                .error(R.drawable.icon_end_call)
-                .into(binding.end)
-
-            Glide.with(ctx)
-                .load(currentStart)
-                .placeholder(R.drawable.icon_start_call)
-                .error(R.drawable.icon_start_call)
-                .into(binding.start)
 
             connectionViewModel.isConnectedLiveData.observe(viewLifecycleOwner) { isConnected ->
                 checkInternetConnected(isConnected)
@@ -166,16 +209,7 @@ class CallScreenFragment :
                 if (items.size >= 2) {
                     endCall = items.first().url.full
                     startCall = items.last().url.full
-                    Glide.with(ctx)
-                        .load(endCall)
-                        .placeholder(R.drawable.icon_end_call)
-                        .error(R.drawable.icon_end_call)
-                        .into(binding.end)
-                    Glide.with(ctx)
-                        .load(startCall)
-                        .placeholder(R.drawable.icon_start_call)
-                        .error(R.drawable.icon_start_call)
-                        .into(binding.start)
+                    displayIcon(endCallIcon = endCall, startCallIcon = startCall)
                 }
             }
             contentViewModel.backgroundContent.observe(viewLifecycleOwner) { items ->
@@ -232,26 +266,119 @@ class CallScreenFragment :
         }
     }
 
-    private fun triggerCallScreenPermission(ctx: Context) {
-        if (!ctx.isAlreadyDefaultDialer()) {
-            launchSetDefaultDialerIntent(ctx) { _ ->
-                if (ctx.isAlreadyDefaultDialer()) {
-                    Toast.makeText(ctx, getString(R.string.successful_setup), Toast.LENGTH_SHORT).show()
-                    checkAndRequestPermissions()
-                } else {
-                    Toast.makeText(ctx,getString(R.string.error_setup), Toast.LENGTH_SHORT).show()
+    @OptIn(UnstableApi::class)
+    private fun displayVideoBackground(videoBackgroundUrl: String) {
+        androidx.media3.common.util.Log.d(
+            "PlayerViewHolder",
+            "attachPlayer() called with url: $videoBackgroundUrl"
+        )
+        val ctx = context ?: return
+        val player = PlayerManager.getPlayer(ctx)
+        val simpleCache = CacheUtil.getSimpleCache(ctx)
+
+        val dataSourceFactory = DefaultDataSource.Factory(ctx)
+        val cacheDataSourceFactory = CacheDataSource.Factory()
+            .setCache(simpleCache)
+            .setUpstreamDataSourceFactory(dataSourceFactory)
+            .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+
+        val mediaItem = MediaItem.fromUri(Uri.parse(videoBackgroundUrl))
+        val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+            .createMediaSource(mediaItem)
+
+        player.apply {
+            stop()
+            clearMediaItems()
+            setMediaSource(mediaSource)
+            repeatMode = Player.REPEAT_MODE_ONE
+            playWhenReady = true
+
+            // 👇 Delay prepare() to ensure playerView is ready
+            binding.playerView.player = this
+            binding.playerView.post {
+                androidx.media3.common.util.Log.d(
+                    "PlayerViewHolder",
+                    "Calling prepare() after post"
+                )
+                prepare()
+            }
+
+            currentListener?.let { removeListener(it) }
+            currentListener = object : Player.Listener {
+                override fun onPlaybackStateChanged(state: Int) {
+                    androidx.media3.common.util.Log.d("ExoPlayer", "player state = $state")
+                    if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
+                        binding.progressBar2.visibility = View.VISIBLE
+                        binding.playerView.alpha = 0f
+                        binding.playerView.visibility = View.VISIBLE
+                    }
+                }
+
+                override fun onRenderedFirstFrame() {
+                    if (!hasRenderedFirstFrame) {
+                        hasRenderedFirstFrame = true
+                        binding.progressBar2.visibility = View.GONE
+                        binding.playerView.visibility = View.VISIBLE
+                        binding.playerView.alpha = 1f
+                    }
+                }
+
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    if (isPlaying) {
+                        binding.progressBar2.visibility = View.GONE
+                    }
                 }
             }
+
+            addListener(currentListener!!)
+        }
+    }
+
+    private fun triggerCallScreenPermission(ctx: Context) {
+        if (!ctx.isAlreadyDefaultDialer()) {
+            callScreenSetupInProgress = true
+            launchSetDefaultDialerIntent(ctx) { granted ->
+                if (granted) openOverlayPermissionSettings()
+            }
         } else {
-            saveCallScreenPreference("BACKGROUND", backgroundUrl)
-            saveCallScreenPreference("CANCEL", endCall)
-            saveCallScreenPreference("ANSWER", startCall)
-            saveCallScreenPreference("AVATAR", avatarUrl)
+            openOverlayPermissionSettings()
+        }
+    }
+
+    private fun runDownloadStep(ctx: Context) {
+        val input = if (videoBackgroundUrl.isEmpty()) photoBackgroundUrl else videoBackgroundUrl
+        println("saveCallScreenPreference: $photoBackgroundUrl and $videoBackgroundUrl")
+        println("saveCallScreenPreference 123: $endCall and $startCall")
+
+        lifecycleScope.launch {
+            Toast.makeText(ctx, getString(R.string.processing), Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.IO) {
+                val result = Utils.downloadCallScreenFile(ctx, fileUrl = input)
+                saveCallScreenPreference("BACKGROUND", result?.backgroundPath ?: "")
+
+                val result2 =
+                    Utils.downloadCallScreenFile(ctx, fileUrl = endCall, folderName = "endCall")
+                saveCallScreenPreference("CANCEL", result2?.backgroundPath ?: "")
+
+                val result3 =
+                    Utils.downloadCallScreenFile(ctx, fileUrl = startCall, folderName = "startCall")
+                saveCallScreenPreference("ANSWER", result3?.backgroundPath ?: "")
+
+                saveCallScreenPreference("AVATAR", avatarUrl)
+            }
+
             Toast.makeText(ctx, getString(R.string.successful_setup), Toast.LENGTH_SHORT).show()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        if (callScreenSetupInProgress && requireContext().isAlreadyDefaultDialer()) {
+            callScreenSetupInProgress = false
+            runDownloadStep(requireContext().applicationContext)
+        }
+    }
 
     @SuppressLint("InlinedApi")
     fun launchSetDefaultDialerIntent(context: Context, callback: (granted: Boolean) -> Unit) {
@@ -365,9 +492,9 @@ class CallScreenFragment :
     private fun displayCallScreen(background: String) {
         val ctx = context ?: return
         Log.d(TAG, "displayCallScreen: $background")
-        backgroundUrl = background
+        photoBackgroundUrl = background
         Glide.with(ctx)
-            .load(backgroundUrl)
+            .load(photoBackgroundUrl)
             .placeholder(R.drawable.default_callscreen)
             .error(R.drawable.default_callscreen)
             .into(binding.currentCallScreen)
@@ -375,8 +502,9 @@ class CallScreenFragment :
 
     private fun saveCallScreenPreference(tag: String, value: String) {
         Log.d(TAG, "saveCallScreenPreference: $tag and $value")
-        val prefs = requireContext().getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
-        prefs.edit { putString(tag, value) }
+        val appCtx = requireContext().applicationContext
+        val prefs = appCtx.getSharedPreferences("callscreen_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putString(tag, value).apply()
     }
 
     private fun checkInternetConnected(isConnected: Boolean) {
@@ -390,10 +518,49 @@ class CallScreenFragment :
         }
     }
 
+
+    private fun displayIcon(endCallIcon: String, startCallIcon: String) {
+        binding.apply {
+            setIcon(endCallIcon, endImage, endCallLottie, R.drawable.icon_end_call)
+            setIcon(startCallIcon, startImage, startCallLottie, R.drawable.icon_start_call)
+        }
+
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("callScreenSetupInProgress", callScreenSetupInProgress)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        callScreenSetupInProgress =
+            savedInstanceState?.getBoolean("callScreenSetupInProgress", false) ?: false
+
+        if (callScreenSetupInProgress) {
+            triggerCallScreenPermission(requireContext())
+        }
+    }
+
+    override fun onDestroyView() {
+        currentListener?.let {
+            PlayerManager.getPlayer(requireContext()).removeListener(it)
+        }
+        currentListener = null
+        super.onDestroyView()
+    }
+
+
     companion object {
         @JvmStatic
         fun newInstance() = CallScreenFragment()
+        var photoBackgroundUrl: String = ""
+        var videoBackgroundUrl: String = ""
+        var avatarUrl: String = ""
 
+        var endCall: String = ""
+        var startCall: String = ""
         private val TAG = CallScreenFragment.javaClass.name
 
         private const val REQUEST_CODE_PERMISSIONS = 101
@@ -407,6 +574,37 @@ class CallScreenFragment :
         )
 
         const val REQUEST_CODE_SET_DEFAULT_DIALER = 1007
+
+
+        fun setIcon(
+            url: String,
+            imageView: ImageView,
+            lottieView: LottieAnimationView,
+            placeholder: Int
+        ) {
+            if (url.endsWith(".json", true)) {
+                imageView.gone()
+                lottieView.visible()
+                val file = File(url)
+                if (file.exists()) {
+                    val json = file.readText()
+                    lottieView.setAnimationFromJson(json, file.name)
+                } else {
+                    lottieView.setAnimationFromUrl(url)
+                }
+                lottieView.progress = 0f
+                lottieView.playAnimation()
+            } else {
+                imageView.visible()
+                lottieView.gone()
+                Glide.with(imageView.context)
+                    .load(url)
+                    .placeholder(placeholder)
+                    .error(placeholder)
+                    .into(imageView)
+            }
+        }
+
     }
 }
 
