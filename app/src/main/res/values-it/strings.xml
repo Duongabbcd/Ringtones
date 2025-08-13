@@ -22,6 +22,7 @@
 
     <string name="call_screen_feedback_1">Vuoi più personalizzazioni</string>
     <string name="call_screen_feedback_2">La schermata delle chiamate non funziona dopo essere stata impostata come schermata delle chiamate</string>
+    <string name="preview">Anteprima</string>
 
     <string name="reset_wallpaper_question">Vuoi davvero reimpostare lo sfondo attuale?</string>
     <string name="reset_ringtone_question">Vuoi davvero reimpostare la suoneria attuale?</string>

@@ -6,6 +6,7 @@ import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -46,6 +47,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.service.RingtonePlayerS
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import com.ezt.ringify.ringtonewallpaper.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
@@ -837,6 +839,24 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 101) {
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                val defaultRingtone = Utils.getFirstRingtone(this, RingtoneManager.TYPE_RINGTONE)
+                val defaultNotification =
+                    Utils.getFirstRingtone(this, RingtoneManager.TYPE_NOTIFICATION)
+
+                defaultRingtone?.uri?.let { value ->
+                    RingtoneManager.setActualDefaultRingtoneUri(
+                        this,
+                        RingtoneManager.TYPE_RINGTONE,
+                        value
+                    )
+                }
+                defaultNotification?.uri?.let { value ->
+                    RingtoneManager.setActualDefaultRingtoneUri(
+                        this,
+                        RingtoneManager.TYPE_NOTIFICATION,
+                        value
+                    )
+                }
                 Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this,getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()

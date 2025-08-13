@@ -205,4 +205,5 @@
 
     <string name="wallpaper_1">Wallpaper reset to default</string>
     <string name="wallpaper_2">Failed to reset wallpaper</string>
+    <string name="preview">Preview</string>
 </resources>

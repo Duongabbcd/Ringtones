@@ -10,7 +10,8 @@ import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemContentBackgroundBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
-import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 
 
 class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
@@ -56,7 +57,13 @@ class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
                     println("AllBackgroundViewHolder: ${it.url}")
                 }
                 val input =
-                    if (imageContent.contents.size >= 2) allContents.last() else allContents.first()
+                    if (imageContent.contents.size >= 2) {
+                        video.visible()
+                        allContents.last()
+                    } else {
+                        video.gone()
+                        allContents.first()
+                    }
 
                 Glide.with(context).load(input.url.medium)
                     .placeholder(R.drawable.default_callscreen)

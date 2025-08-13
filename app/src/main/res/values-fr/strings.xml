@@ -25,6 +25,7 @@
     <string name="icon">Icône</string>
     <string name="quick_theme">Thème rapide</string>
     <string name="customize">Personnaliser</string>
+    <string name="preview">Aperçu</string>
 
     <string name="phone_setting">Paramètres du téléphone</string>
     <string name="clear_caches">Vider le cache</string>

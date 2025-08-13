@@ -1,8 +1,11 @@
 package com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,18 +19,27 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
-import androidx.core.content.edit
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
-import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllAvatarAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackgroundAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.avatarUrl
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.endCall
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.photoBackgroundUrl
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.setIcon
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.startCall
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.videoBackgroundUrl
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
 
 @AndroidEntryPoint
 class CallScreenEditorActivity :
@@ -36,25 +48,42 @@ class CallScreenEditorActivity :
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val allBackgroundAdapter: AllBackgroundAdapter by lazy {
         AllBackgroundAdapter { input ->
-            println("AllBackgroundAdapter: $input")
             if (input.contents.isEmpty()) {
                 return@AllBackgroundAdapter
             }
 
-
+            hasRenderedFirstFrame = false
+            currentListener?.let {
+                PlayerManager.getPlayer(this).removeListener(it)
+                currentListener = null
+            }
             val allContents = input.contents
-            val result = if (allContents.size >= 2) allContents.last() else allContents.first()
+            val result = if (allContents.size >= 2) "" else allContents.first().url.medium
             val currentUrl = if (allContents.size >= 2) allContents.first().url.full else ""
-            backgroundUrl = result.url.medium
-            currentBackgroundUrl = currentUrl
-            displayBackground(backgroundUrl)
+            photoBackgroundUrl = result
+            videoBackgroundUrl = currentUrl
+
+            println("AllBackgroundAdapter: $photoBackgroundUrl ----- $videoBackgroundUrl")
+            if (videoBackgroundUrl.isNotEmpty()) {
+                binding.playerContainer.visible()
+                binding.currentCallScreen.gone()
+                displayVideoBackground(videoBackgroundUrl)
+            } else {
+                binding.playerContainer.gone()
+                binding.currentCallScreen.visible()
+                displayPhotoBackground(photoBackgroundUrl)
+            }
+
         }
     }
-
+    private var player: Player? = null
+    private var currentVideoUrl: String? = null
+    private var currentListener: Player.Listener? = null
+    private var hasRenderedFirstFrame = false
     private val allAvatarAdapter: AllAvatarAdapter by lazy {
         AllAvatarAdapter { input ->
             println("AllBackgroundAdapter: $input")
-            if (input.isNullOrEmpty()) {
+            if (input.isEmpty()) {
                 return@AllAvatarAdapter
             }
             avatarUrl = input
@@ -78,8 +107,74 @@ class CallScreenEditorActivity :
         intent.getIntExtra("editorType", 0)
     }
 
+    @OptIn(UnstableApi::class)
+    private fun displayVideoBackground(videoBackgroundUrl: String) {
+        androidx.media3.common.util.Log.d(
+            "PlayerViewHolder",
+            "attachPlayer() called with url: $videoBackgroundUrl"
+        )
+        val player = PlayerManager.getPlayer(this)
+        val simpleCache = CacheUtil.getSimpleCache(this)
 
-    private fun displayBackground(input: String) {
+        val dataSourceFactory = DefaultDataSource.Factory(this)
+        val cacheDataSourceFactory = CacheDataSource.Factory()
+            .setCache(simpleCache)
+            .setUpstreamDataSourceFactory(dataSourceFactory)
+            .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+
+        val mediaItem = MediaItem.fromUri(Uri.parse(videoBackgroundUrl))
+        val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+            .createMediaSource(mediaItem)
+
+        player.apply {
+            stop()
+            clearMediaItems()
+            setMediaSource(mediaSource)
+            repeatMode = Player.REPEAT_MODE_ONE
+            playWhenReady = true
+
+            // 👇 Delay prepare() to ensure playerView is ready
+            binding.playerView.player = this
+            binding.playerView.post {
+                androidx.media3.common.util.Log.d(
+                    "PlayerViewHolder",
+                    "Calling prepare() after post"
+                )
+                prepare()
+            }
+
+            currentListener?.let { removeListener(it) }
+            currentListener = object : Player.Listener {
+                override fun onPlaybackStateChanged(state: Int) {
+                    androidx.media3.common.util.Log.d("ExoPlayer", "player state = $state")
+                    if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
+                        binding.progressBar2.visibility = View.VISIBLE
+                        binding.playerView.alpha = 0f
+                        binding.playerView.visibility = View.VISIBLE
+                    }
+                }
+
+                override fun onRenderedFirstFrame() {
+                    if (!hasRenderedFirstFrame) {
+                        hasRenderedFirstFrame = true
+                        binding.progressBar2.visibility = View.GONE
+                        binding.playerView.visibility = View.VISIBLE
+                        binding.playerView.alpha = 1f
+                    }
+                }
+
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    if (isPlaying) {
+                        binding.progressBar2.visibility = View.GONE
+                    }
+                }
+            }
+
+            addListener(currentListener!!)
+        }
+    }
+
+    private fun displayPhotoBackground(input: String) {
         Glide.with(this@CallScreenEditorActivity).load(input)
             .placeholder(R.drawable.default_callscreen).error(R.drawable.default_callscreen)
             .into(binding.currentCallScreen)
@@ -91,50 +186,22 @@ class CallScreenEditorActivity :
             .into(binding.defaultAvatar)
     }
 
-    private fun displayIcon(end: String, start: String) {
-        Glide.with(this@CallScreenEditorActivity).load(end)
-            .placeholder(R.drawable.icon_end_call).error(R.drawable.icon_end_call)
-            .into(binding.end)
-        Glide.with(this@CallScreenEditorActivity).load(start)
-            .placeholder(R.drawable.icon_start_call).error(R.drawable.icon_start_call)
-            .into(binding.start)
+    private fun displayIcon(endCallIcon: String, startCallIcon: String) {
+        binding.apply {
+            setIcon(endCallIcon, endImage, endCallLottie, R.drawable.icon_end_call)
+            setIcon(startCallIcon, startImage, startCallLottie, R.drawable.icon_start_call)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val prefs = getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
-//        if (background.isNotEmpty()) {
-//            backgroundUrl = background
-//        }
 
-        val start = prefs.getString("ANSWER", "") ?: ""
-        if (start.isNotEmpty()) {
-            startCall = start
-        }
-        val end = prefs.getString("CANCEL", "") ?: ""
-        if (end.isNotEmpty()) {
-            endCall = end
-        }
-        val avatar = prefs.getString("AVATAR", "") ?: ""
-        if (avatar.isNotEmpty()) {
-            avatarUrl = avatar
-        }
-
-        Glide.with(this@CallScreenEditorActivity).load(backgroundUrl)
-            .placeholder(R.drawable.default_callscreen).error(R.drawable.default_callscreen)
-            .into(binding.currentCallScreen)
 
         Glide.with(this@CallScreenEditorActivity).load(avatarUrl)
             .placeholder(R.drawable.default_cs_avt).error(R.drawable.default_cs_avt)
             .into(binding.defaultAvatar)
 
-        Glide.with(this@CallScreenEditorActivity).load(startCall)
-            .placeholder(R.drawable.icon_end_call).error(R.drawable.icon_end_call)
-            .into(binding.start)
-
-        Glide.with(this@CallScreenEditorActivity).load(endCall)
-            .placeholder(R.drawable.icon_start_call).error(R.drawable.icon_start_call)
-            .into(binding.end)
+        displayIcon(endCallIcon = endCall, startCallIcon = startCall)
 
         connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
             checkInternetConnected(isConnected)
@@ -178,7 +245,7 @@ class CallScreenEditorActivity :
                     false
                 )
 
-            displayBackground(backgroundUrl)
+            displayPhotoBackground(photoBackgroundUrl)
 
             contentViewModel.backgroundContent.observe(this@CallScreenEditorActivity) { items ->
                 println("allBackgroundAdapter: $items")
@@ -206,16 +273,9 @@ class CallScreenEditorActivity :
             }
 
             applyBtn.setOnClickListener {
-                saveCallScreenPreference("BACKGROUND", backgroundUrl)
                 SearchRingtoneActivity.backToScreen(this@CallScreenEditorActivity)
             }
         }
-    }
-
-    private fun saveCallScreenPreference(tag: String, value: String) {
-        println("saveCallScreenPreference: $tag and $value")
-        val prefs = this.getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
-        prefs.edit { putString(tag, value) }
     }
 
     private fun checkInternetConnected(isConnected: Boolean) {
@@ -267,20 +327,29 @@ class CallScreenEditorActivity :
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_CALLSCREEN, InterAds.INTER_CALLSCREEN)
         loadBanner(this, BANNER_HOME)
+
+        if (videoBackgroundUrl.isNotEmpty()) {
+            binding.playerContainer.visible()
+            binding.currentCallScreen.gone()
+            displayVideoBackground(videoBackgroundUrl)
+        } else {
+            binding.playerContainer.gone()
+            binding.currentCallScreen.visible()
+            displayPhotoBackground(photoBackgroundUrl)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        player?.playWhenReady = false
+        binding.playerView.player = null  // Detach view safely
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@CallScreenEditorActivity, "INTER_CALLSCREEN")
     }
 
-    companion object {
-        var backgroundUrl: String = ""
-        var currentBackgroundUrl: String = ""
-        var avatarUrl: String = ""
 
-        var endCall: String = ""
-        var startCall: String = ""
-    }
 
 
 }

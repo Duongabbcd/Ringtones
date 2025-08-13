@@ -4,10 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieCompositionFactory
+import com.airbnb.lottie.LottieDrawable
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemContentIconBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 
 class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
     RecyclerView.Adapter<AllIConAdapter.AllIconViewHolder>() {
@@ -50,10 +54,43 @@ class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
                 val endCallIcon = imageContent.first.url.full
                 val startCallIcon = imageContent.second.url.full
 
-                Glide.with(context).load(endCallIcon).placeholder(R.drawable.icon_end_call)
-                    .error(R.drawable.icon_end_call).into(endCall)
-                Glide.with(context).load(startCallIcon).placeholder(R.drawable.icon_start_call)
-                    .error(R.drawable.icon_start_call).into(startCall)
+                println("startCallIcon: $startCallIcon")
+                println("endCallIcon: $endCallIcon")
+
+                if (startCallIcon.endsWith(".json", true)) {
+                    gifIcon.visible()
+                } else {
+                    gifIcon.gone()
+                }
+
+                if (startCallIcon.endsWith(".json", true)) {
+                    LottieCompositionFactory.fromUrl(context, startCallIcon)
+                        .addListener { composition ->
+                            val lottieDrawable = LottieDrawable().apply {
+                                setComposition(composition)
+                                progress = 0f // First frame only
+                            }
+                            startCall.setImageDrawable(lottieDrawable)
+                        }
+                } else {
+                    Glide.with(context).load(startCallIcon).placeholder(R.drawable.icon_start_call)
+                        .error(R.drawable.icon_start_call).into(startCall)
+                }
+
+                if (endCallIcon.endsWith(".json", true)) {
+                    LottieCompositionFactory.fromUrl(context, endCallIcon)
+                        .addListener { composition ->
+                            val lottieDrawable = LottieDrawable().apply {
+                                setComposition(composition)
+                                progress = 0f // First frame only
+                            }
+                            endCall.setImageDrawable(lottieDrawable)
+                        }
+                } else {
+                    Glide.with(context).load(endCallIcon).placeholder(R.drawable.icon_end_call)
+                        .error(R.drawable.icon_end_call).into(endCall)
+                }
+
                 // Highlight stroke if selected
                 if (position == selectedPosition) {
                     container.setBackgroundResource(R.drawable.background_radius_16_purple)

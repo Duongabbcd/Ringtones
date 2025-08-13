@@ -30,6 +30,7 @@
     <string name="reset_wallpaper">Сбросить обои</string>
     <string name="reset_ringtone">Сбросить рингтон</string>
     <string name="reset_cache">Очистить кэш</string>
+    <string name="preview">Предварительный просмотр</string>
 
     <string name="cache_1">Кэш успешно очищен</string>
     <string name="cache_2">Не удалось очистить кэш</string>

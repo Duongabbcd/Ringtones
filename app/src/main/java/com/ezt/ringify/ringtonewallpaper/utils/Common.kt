@@ -406,10 +406,14 @@ object Common {
         preferences.edit().putBoolean("KEY_NOTIF_ENABLE", isEnable).apply()
     }
 
+    private val isTiramisuOrAbove by lazy {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    }
 
     fun getNotificationEnable(context: Context): Boolean {
         val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
-        return preferences.getBoolean("KEY_NOTIF_ENABLE", false)
+        val defaultValue = if (isTiramisuOrAbove) true else false
+        return preferences.getBoolean("KEY_NOTIF_ENABLE", defaultValue)
     }
 
 }
