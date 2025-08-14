@@ -12,29 +12,29 @@ import com.admob.max.dktlibrary.AppOpenManager
 import com.admob.max.dktlibrary.cmp.GoogleMobileAdsConsentManager
 import com.admob.max.dktlibrary.utils.admod.callback.MobileAdsListener
 import com.ezt.ringify.ringtonewallpaper.MyApplication
-import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity2
-import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySplashBinding
-import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common
-import com.ezt.ringify.ringtonewallpaper.utils.Common.inVisible
-import com.google.android.ump.FormError
+import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isDebug
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isTestDevice
+import com.ezt.ringify.ringtonewallpaper.ads.FireBaseConfig
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SCREEN_INTRO_070625
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.NATIVE_FULL_SPLASH_070625
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig.REMOTE_SPLASH_070625
+import com.ezt.ringify.ringtonewallpaper.ads.helper.GDPRRequestable
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.ads.new.OpenAds
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity2
+import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySplashBinding
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
+import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.utils.Common.inVisible
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import com.google.android.ump.FormError
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.exitProcess
-import com.ezt.ringify.ringtonewallpaper.ads.FireBaseConfig
-import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
-import com.ezt.ringify.ringtonewallpaper.ads.helper.GDPRRequestable
-import com.ezt.ringify.ringtonewallpaper.ads.new.OpenAds
 
 class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
@@ -107,6 +107,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                 R.xml.remote_config_default,
                 object : FireBaseConfig.CompleteListener {
                     override fun onComplete() {
+                        RemoteConfig.BANNER_ALL = FireBaseConfig.getValue("BANNER_ALL")
                         RemoteConfig.INTER_LANGUAGE = FireBaseConfig.getValue("INTER_LANGUAGE")
                         RemoteConfig.INTER_DOWNLOAD = FireBaseConfig.getValue("INTER_DOWNLOAD")
                         RemoteConfig.INTER_RINGTONE = FireBaseConfig.getValue("INTER_RINGTONE")
@@ -162,7 +163,13 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             return
         }
         isMobileAdsInitializeCalled.set(true)
-        initAdmob()
+        if (RemoteConfig.INTER_LANGUAGE != "0") {
+            InterAds.preloadInterAds(
+                this@SplashActivity,
+                alias = InterAds.ALIAS_INTER_LANGUAGE,
+                adUnit = InterAds.INTER_LANGUAGE
+            )
+        }
     }
 
     private fun initAdmob() {
@@ -206,13 +213,6 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                         }
                     }
 
-                    if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        InterAds.preloadInterAds(
-                            this@SplashActivity,
-                            alias = InterAds.ALIAS_INTER_LANGUAGE,
-                            adUnit = InterAds.INTER_LANGUAGE
-                        )
-                    }
 
                 }
             })

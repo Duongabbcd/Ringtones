@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.media3.common.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFavouriteWallpaperBinding
@@ -33,7 +33,7 @@ class FavouriteWallpaperActivity :
 
     private val liveAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(
                 Intent(
                     this@FavouriteWallpaperActivity,
@@ -47,7 +47,7 @@ class FavouriteWallpaperActivity :
 
     private val slideAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
                 putExtra("wallpaperCategoryId", -3)
             })
@@ -56,7 +56,7 @@ class FavouriteWallpaperActivity :
 
     private val singleAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
                 putExtra("wallpaperCategoryId", -3)
             })
@@ -66,7 +66,7 @@ class FavouriteWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadBanner(this)
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(
@@ -75,7 +75,7 @@ class FavouriteWallpaperActivity :
                 )
             }
             connectionViewModel.isConnectedLiveData.observe(this@FavouriteWallpaperActivity) { isConnected ->
-                println("isConnected: $isConnected")
+                Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
             }
             allTrending.adapter = liveAdapter
@@ -200,11 +200,14 @@ class FavouriteWallpaperActivity :
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this)
+    }
+
+    companion object {
+        val TAG = FavouriteWallpaperActivity::class.java.name
     }
 
 }

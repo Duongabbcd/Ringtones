@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,11 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
-import dagger.hilt.android.AndroidEntryPoint
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
@@ -29,13 +29,14 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
+import com.ezt.ringify.ringtonewallpaper.utils.Utils.hideKeyBoard
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import kotlin.toString
-import com.ezt.ringify.ringtonewallpaper.utils.Utils.hideKeyBoard
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
+import kotlin.toString
 
 @AndroidEntryPoint
 class SearchRingtoneActivity :
@@ -56,13 +57,13 @@ class SearchRingtoneActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadBanner(this, BANNER_HOME)
         binding.apply {
             backBtn.setOnClickListener {
                 backToScreen(this@SearchRingtoneActivity)
             }
             connectionViewModel.isConnectedLiveData.observe(this@SearchRingtoneActivity) { isConnected ->
-                println("isConnected: $isConnected")
+                Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
             }
 
@@ -191,7 +192,6 @@ class SearchRingtoneActivity :
             alias = InterAds.ALIAS_INTER_RINGTONE,
             adUnit = InterAds.INTER_RINGTONE
         )
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
@@ -199,6 +199,8 @@ class SearchRingtoneActivity :
     }
 
     companion object {
+        val TAG = SearchRingtoneActivity::class.java.name
+        
         fun backToScreen(activity: AppCompatActivity, title: String = "INTER_RINGTONE") {
             val inter = when (title) {
                 "INTER_LANGUAGE" -> InterAds.ALIAS_INTER_LANGUAGE
@@ -221,11 +223,11 @@ class SearchRingtoneActivity :
                     activity = activity,
                     alias = inter,
                     onLoadDone = {
-                        println("onLoadDone")
+                        Log.d(TAG, "onLoadDone")
                         activity.finish()
                     },
                     onLoadFailed = {
-                        println("onLoadFailed")
+                        Log.d(TAG, "onLoadFailed")
                         activity.finish()
                     })
             } else {

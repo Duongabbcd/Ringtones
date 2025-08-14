@@ -7,7 +7,6 @@ import com.adjust.sdk.AdjustAdRevenue
 import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -56,18 +55,18 @@ object OpenAds {
                             }
                         }
                         loadTimeOpenAd = Date().time
-                        callback?.invoke()
+                        callback.invoke()
                     }
 
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         println("onAdFailedToLoad: $loadAdError")
                         appOpenAd = null
-                        callback?.invoke()
+                        callback.invoke()
                     }
                 }
             )
         } else {
-            callback?.invoke()
+            callback.invoke()
         }
     }
 

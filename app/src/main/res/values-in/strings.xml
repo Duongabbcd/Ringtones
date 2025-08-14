@@ -17,6 +17,9 @@
     <string name="desc_3">Tema Layar Panggilan Dinamis</string>
     <string name="high_light_3">Layar Panggilan</string>
 
+    <string name="unknwon_title">Judul tidak diketahui</string>
+    <string name="unknwon_author">Penulis tidak diketahui</string>
+
     <string name="call_screen_feedback_1">Ingin lebih banyak penyesuaian</string>
     <string name="call_screen_feedback_2">Layar panggilan tidak berfungsi setelah diatur sebagai layar panggilan</string>
     <string name="up_three">Anda hanya dapat memilih hingga 3</string>

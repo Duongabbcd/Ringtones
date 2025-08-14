@@ -45,6 +45,9 @@
     <string name="wallpaper_1">Fondo de pantalla restablecido a predeterminado</string>
     <string name="wallpaper_2">Error al restablecer el fondo de pantalla</string>
 
+    <string name="unknwon_title">Título desconocido</string>
+    <string name="unknwon_author">Autor desconocido</string>
+
     <string name="phone_setting">Configuración del teléfono</string>
     <string name="clear_caches">Borrar cachés</string>
     <string name="reset_ringtones">Restablecer todos los tonos a los predeterminados</string>

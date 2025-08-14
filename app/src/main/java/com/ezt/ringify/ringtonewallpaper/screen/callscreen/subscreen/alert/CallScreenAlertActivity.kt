@@ -4,11 +4,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
-import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenAlertBinding
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
+import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenAlertBinding
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
@@ -35,7 +35,7 @@ class CallScreenAlertActivity :
         super.onCreate(savedInstanceState)
         flashVibrationManager = FlashVibrationManager(this)
         prefs = getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
-
+        loadBanner(this, BANNER_HOME)
         loadInitialSettings()
 
         binding.apply {
@@ -79,7 +79,6 @@ class CallScreenAlertActivity :
         super.onResume()
         updateUIFromValues()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_CALLSCREEN, InterAds.INTER_CALLSCREEN)
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {

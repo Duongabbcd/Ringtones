@@ -2,6 +2,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,12 +27,13 @@ import kotlin.getValue
 
 @AndroidEntryPoint
 class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
-    ActivityPremiumWallpaperBinding::inflate){
+    ActivityPremiumWallpaperBinding::inflate
+) {
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val liveAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(
                 Intent(
                     this@PremiumWallpaperActivity,
@@ -44,7 +46,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
 
     private val singleAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
                 putExtra("wallpaperCategoryId", 75)
                 putExtra("type", 3)
@@ -53,7 +55,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     }
     private val slideAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
                 putExtra("wallpaperCategoryId", 75)
                 putExtra("type", 2)
@@ -63,7 +65,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadBanner(this@PremiumWallpaperActivity, BANNER_HOME)
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(
@@ -72,16 +74,19 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
                 )
             }
             connectionViewModel.isConnectedLiveData.observe(this@PremiumWallpaperActivity) { isConnected ->
-                println("isConnected: $isConnected")
+                Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
             }
             allTrending.adapter = liveAdapter
             allNewWallpaper.adapter = slideAdapter
             allSub1.adapter = singleAdapter
 
-            allTrending.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
-            allNewWallpaper.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
-            allSub1.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
+            allTrending.layoutManager =
+                LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
+            allNewWallpaper.layoutManager =
+                LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
+            allSub1.layoutManager =
+                LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
 
             openAll1.setOnClickListener {
@@ -96,17 +101,25 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             }
 
             openAll2.setOnClickListener {
-                startActivity(Intent(this@PremiumWallpaperActivity, PreviewWallpaperActivity::class.java).apply {
-                    putExtra("wallpaperCategoryId", 75)
-                    putExtra("type", 2)
-                })
+                startActivity(
+                    Intent(
+                        this@PremiumWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("wallpaperCategoryId", 75)
+                        putExtra("type", 2)
+                    })
             }
 
             openAll3.setOnClickListener {
-                startActivity(Intent(this@PremiumWallpaperActivity, PreviewWallpaperActivity::class.java).apply {
-                    putExtra("wallpaperCategoryId", 75)
-                    putExtra("type", 3)
-                })
+                startActivity(
+                    Intent(
+                        this@PremiumWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("wallpaperCategoryId", 75)
+                        putExtra("type", 3)
+                    })
             }
 
             wallPaperViewModel.loading1.observe(this@PremiumWallpaperActivity) { isLoading ->
@@ -188,11 +201,14 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@PremiumWallpaperActivity, "INTER_WALLPAPER")
 
+    }
+
+    companion object {
+        val TAG = PreviewWallpaperActivity::class.java.name
     }
 }

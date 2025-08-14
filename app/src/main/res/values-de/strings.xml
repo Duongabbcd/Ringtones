@@ -17,6 +17,9 @@
     <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
     <string name="high_light_3">Anrufbildschirm</string>
 
+    <string name="unknwon_title">Unbekannter Titel</string>
+    <string name="unknwon_author">Unbekannter Autor</string>
+
     <string name="phone_setting">Telefoneinstellungen</string>
     <string name="clear_caches">Cache leeren</string>
     <string name="reset_ringtones">Alle Klingeltöne auf Standard zurücksetzen</string>

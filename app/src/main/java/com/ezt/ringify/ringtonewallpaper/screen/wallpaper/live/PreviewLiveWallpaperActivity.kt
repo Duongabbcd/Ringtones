@@ -86,6 +86,7 @@ class PreviewLiveWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this, BANNER_HOME)
         checkDownloadPermissions()
         Log.d("PreviewLive", "savedInstanceState: $savedInstanceState")
         if (savedInstanceState != null) {
@@ -106,7 +107,7 @@ class PreviewLiveWallpaperActivity :
 
         addedWallpaperIds.addAll(allWallpapers.map { it.id })
         connectionViewModel.isConnectedLiveData.observe(this@PreviewLiveWallpaperActivity) { isConnected ->
-            println("isConnected: $isConnected")
+            Log.d(TAG, "isConnected: $isConnected")
             checkInternetConnected(isConnected)
         }
         when (type) {
@@ -133,13 +134,13 @@ class PreviewLiveWallpaperActivity :
 
     private fun appendNewRingtones(newItems: List<Wallpaper>) {
         val oldSize = allWallpapers.size
-        println("appendNewRingtones 0: ${newItems.size}")
+        Log.d(TAG, "appendNewRingtones 0: ${newItems.size}")
         val distinctItems = newItems.filter { it.id !in addedWallpaperIds }
 
         if (distinctItems.isNotEmpty()) {
             allWallpapers.addAll(distinctItems)
             distinctItems.forEach { addedWallpaperIds.add(it.id) }
-            println("appendNewRingtones 1: ${allWallpapers.size}")
+            Log.d(TAG, "appendNewRingtones 1: ${allWallpapers.size}")
             playSlideWallpaperAdapter.submitList(allWallpapers.toList())
             playSlideWallpaperAdapter.notifyItemRangeInserted(oldSize, distinctItems.size)
         }
@@ -526,7 +527,6 @@ class PreviewLiveWallpaperActivity :
 
     override fun onResume() {
         super.onResume()
-        loadBanner(this, BANNER_HOME)
         RewardAds.initRewardAds(this)
     }
 

@@ -23,6 +23,9 @@
     <string name="call_screen_feedback_1">अधिक अनुकूलन चाहते हैं</string>
     <string name="call_screen_feedback_2">कॉल स्क्रीन को कॉल स्क्रीन के रूप में सेट करने के बाद काम नहीं कर रही है</string>
 
+    <string name="unknwon_title">अज्ञात शीर्षक</string>
+    <string name="unknwon_author">अज्ञात लेखक</string>
+
     <string name="reset_wallpaper_question">क्या आप वास्तव में अपने वर्तमान वॉलपेपर को रीसेट करना चाहते हैं?</string>
     <string name="reset_ringtone_question">क्या आप वास्तव में अपनी वर्तमान रिंगटोन को रीसेट करना चाहते हैं?</string>
     <string name="reset_cache_question">क्या आप वास्तव में कैश साफ़ करना चाहते हैं?</string>

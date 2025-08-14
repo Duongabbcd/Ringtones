@@ -11,16 +11,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPhoneSettingBinding
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.databinding.DialogResetBinding
-import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Utils
@@ -38,7 +37,8 @@ class PhoneSettingActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println(
+        Log.d(
+            TAG,
             "PhoneSettingActivity: ${
                 ContextCompat.checkSelfPermission(
                     this@PhoneSettingActivity, Manifest.permission.POST_NOTIFICATIONS
@@ -94,8 +94,8 @@ class PhoneSettingActivity :
                             RingtoneManager.TYPE_NOTIFICATION
                         )
 
-                        println("resetRingtoneBtn 1: $defaultRingtone")
-                        println("resetRingtoneBtn 2: $defaultNotification")
+                        Log.d(TAG, "resetRingtoneBtn 1: $defaultRingtone")
+                        Log.d(TAG, "resetRingtoneBtn 2: $defaultNotification")
 
                         RingtoneHelper.setAsSystemRingtone(
                             this@PhoneSettingActivity,
@@ -226,13 +226,8 @@ class PhoneSettingActivity :
         finish()
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadBanner(this, BANNER_HOME)
-    }
-
     companion object {
-        private const val STORAGE_PERMISSION_CODE = 1001
+        val TAG = PhoneSettingActivity::class.java.name
     }
 }
 

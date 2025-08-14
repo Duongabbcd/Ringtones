@@ -2,26 +2,26 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
-import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBinding
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
+import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.GridWallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -65,7 +65,7 @@ class PreviewWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadBanner(this@PreviewWallpaperActivity)
         if (AdmobUtils.isNetworkConnected(this)) {
             displayItems()
         }
@@ -89,8 +89,6 @@ class PreviewWallpaperActivity :
         connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
             checkInternetConnected(isConnected)
         }
-
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
@@ -302,7 +300,7 @@ class PreviewWallpaperActivity :
             }
 
             allWallpapers.observe(this@PreviewWallpaperActivity) { items ->
-                println("items: $items")
+                Log.d(TAG, "items: $items")
                 if (items.isEmpty()) {
                     allCategories.gone()
                     noDataLayout.visible()
@@ -326,5 +324,9 @@ class PreviewWallpaperActivity :
         wallPaperViewModel.premiumWallpapers.removeObservers(this)
         wallPaperViewModel.subWallpaper1.removeObservers(this)
         categoryViewModel.category.removeObservers(this)
+    }
+
+    companion object {
+        val TAG = PreviewWallpaperActivity::class.java.name
     }
 }

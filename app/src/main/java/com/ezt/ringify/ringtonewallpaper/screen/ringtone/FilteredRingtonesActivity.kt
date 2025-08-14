@@ -2,23 +2,21 @@ package com.ezt.ringify.ringtonewallpaper.screen.ringtone
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFilteredCategoryBinding
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
-import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
@@ -57,6 +55,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this@FilteredRingtonesActivity, BANNER_HOME)
         sortOrder = Common.getSortOrder(this)
         binding.apply {
             backBtn.setOnClickListener {
@@ -64,12 +63,12 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             }
 
             connectionViewModel.isConnectedLiveData.observe(this@FilteredRingtonesActivity) { isConnected ->
-                println("isConnected: $isConnected")
+                Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
             }
 
 
-            println("category: $categoryId")
+            Log.d(TAG, "category: $categoryId")
             allCategories.adapter = ringtoneAdapter
 
             sortIcon.setOnClickListener {
@@ -83,17 +82,19 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 dialog.show()
             }
 
+            ringtoneViewModel.loading1.observe(this@FilteredRingtonesActivity) { isLoading ->
+                if (isLoading) {
+                    val allData = List(10) { Ringtone.EMPTY_RINGTONE }
+                    handleDataResult(allData)
+                }
+            }
+
             ringtoneViewModel.popular.observe(this@FilteredRingtonesActivity) { items ->
                 handleDataResult(items)
             }
 
             ringtoneViewModel.customRingtones.observe(this@FilteredRingtonesActivity) { items ->
                 handleDataResult(items)
-            }
-
-            ringtoneViewModel.loading1.observe(this@FilteredRingtonesActivity) { isLoading ->
-                progressBar.isVisible = isLoading
-                allCategories.isVisible = !isLoading
             }
 
             favourite.allRingtones.observe(this@FilteredRingtonesActivity) { items ->
@@ -219,10 +220,13 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             alias = InterAds.ALIAS_INTER_RINGTONE,
             adUnit = InterAds.INTER_RINGTONE
         )
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@FilteredRingtonesActivity)
+    }
+
+    companion object {
+        val TAG = FilteredRingtonesActivity::class.java.name
     }
 }

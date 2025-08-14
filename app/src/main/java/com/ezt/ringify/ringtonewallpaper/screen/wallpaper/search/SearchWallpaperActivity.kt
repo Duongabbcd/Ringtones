@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,7 +35,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     private val tagViewModel: TagViewModel by viewModels()
     private val wallpaperAdapter: TagTrendingAdapter by lazy {
         TagTrendingAdapter { tag ->
-            println("TagTrendingAdapter: $tag")
+            Log.d(TAG, "TagTrendingAdapter: $tag")
             binding.searchText.setText(tag.name)
             binding.searchText.setSelection(tag.name.length)
             binding.trendingIcon.gone()
@@ -61,15 +62,15 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        loadBanner(this, BANNER_HOME)
+        
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(this@SearchWallpaperActivity, "INTER_WALLPAPER")
             }
 
             connectionViewModel.isConnectedLiveData.observe(this@SearchWallpaperActivity) { isConnected ->
-                println("isConnected: $isConnected")
+                Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
             }
 
@@ -188,11 +189,14 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@SearchWallpaperActivity, "INTER_WALLPAPER")
 
+    }
+
+    companion object {
+        val TAG = SearchWallpaperActivity::class.java.name
     }
 }

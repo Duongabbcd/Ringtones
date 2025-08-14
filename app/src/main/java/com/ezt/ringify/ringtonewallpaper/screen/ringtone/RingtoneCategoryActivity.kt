@@ -37,6 +37,8 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this, BANNER_HOME)
+
         binding.apply {
             allCategories.adapter = categoryDetailAdapter
             connectionViewModel.isConnectedLiveData.observe(this@RingtoneCategoryActivity) { isConnected ->
@@ -105,7 +107,7 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
             alias = InterAds.ALIAS_INTER_RINGTONE,
             adUnit = InterAds.INTER_RINGTONE
         )
-        loadBanner(this, BANNER_HOME)
+
     }
 
     override fun onBackPressed() {

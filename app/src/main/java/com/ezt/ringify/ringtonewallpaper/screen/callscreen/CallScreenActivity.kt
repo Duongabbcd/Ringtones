@@ -21,8 +21,8 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.airbnb.lottie.LottieAnimationView
-import com.ezt.ringify.ringtonewallpaper.R
 import com.bumptech.glide.Glide
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallScreenBinding
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
@@ -95,7 +95,7 @@ class CallScreenActivity :
             vibrationType
         )
         Log.d(
-            "CallScreenActivity",
+            TAG,
             "Intent received -> background: $backgroundUrl, cancel: $cancelImage, answer: $answerImage"
         )
         countPhoneCallingTime()
@@ -110,7 +110,7 @@ class CallScreenActivity :
                     call.disconnect()
                     finish()
                 } else {
-                    Log.e("CallScreen", "No active call to reject")
+                    Log.e(TAG, "No active call to reject")
                 }
             }
 
@@ -119,7 +119,7 @@ class CallScreenActivity :
                 if (call != null) {
                     call.answer(VideoProfile.STATE_AUDIO_ONLY)
                 } else {
-                    Log.e("CallScreen", "No active call to answer")
+                    Log.e(TAG, "No active call to answer")
                 }
             }
 
@@ -174,7 +174,7 @@ class CallScreenActivity :
 
     @OptIn(UnstableApi::class)
     fun attachPlayer(videoUrl: String) {
-        androidx.media3.common.util.Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
+        Log.d(TAG, "attachPlayer() called with url: $videoUrl")
         val player = PlayerManager.getPlayer(this)
         val simpleCache = CacheUtil.getSimpleCache(this)
 
@@ -198,7 +198,7 @@ class CallScreenActivity :
             // 👇 Delay prepare() to ensure playerView is ready
             binding.playerView.player = this
             binding.playerView.post {
-                androidx.media3.common.util.Log.d("PlayerViewHolder", "Calling prepare() after post")
+                Log.d(TAG, "Calling prepare() after post")
                 prepare()
             }
         }
@@ -293,6 +293,8 @@ class CallScreenActivity :
     }
 
     companion object {
+        val TAG = CallScreenActivity::class.java.name
+
         fun getStartIntent(
             context: Context,
             background: String?,

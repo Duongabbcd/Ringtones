@@ -208,4 +208,6 @@
     <string name="preview">Preview</string>
 
     <string name="up_three">You can select up to 3 only</string>
+    <string name="unknwon_title">Unknown title</string>
+    <string name="unknwon_author">Unknown author</string>
 </resources>

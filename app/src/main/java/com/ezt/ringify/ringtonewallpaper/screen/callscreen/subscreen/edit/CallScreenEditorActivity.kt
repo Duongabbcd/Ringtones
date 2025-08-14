@@ -7,33 +7,28 @@ import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenBackgroundBinding
-import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview.PreviewCallScreenActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
-import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
-import dagger.hilt.android.AndroidEntryPoint
-import kotlin.getValue
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
-import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
+import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenBackgroundBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllAvatarAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackgroundAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview.PreviewCallScreenActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.endCall
@@ -44,6 +39,10 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallSc
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
 @AndroidEntryPoint
 class CallScreenEditorActivity :
@@ -67,7 +66,7 @@ class CallScreenEditorActivity :
             photoBackgroundUrl = result
             videoBackgroundUrl = currentUrl
 
-            println("AllBackgroundAdapter: $photoBackgroundUrl ----- $videoBackgroundUrl")
+            Log.d(TAG, "AllBackgroundAdapter: $photoBackgroundUrl ----- $videoBackgroundUrl")
             if (videoBackgroundUrl.isNotEmpty()) {
                 binding.playerContainer.visible()
                 binding.currentCallScreen.gone()
@@ -85,7 +84,7 @@ class CallScreenEditorActivity :
     private var hasRenderedFirstFrame = false
     private val allAvatarAdapter: AllAvatarAdapter by lazy {
         AllAvatarAdapter { input ->
-            println("AllBackgroundAdapter: $input")
+            Log.d(TAG, "AllBackgroundAdapter: $input")
             if (input.isEmpty()) {
                 return@AllAvatarAdapter
             }
@@ -96,7 +95,7 @@ class CallScreenEditorActivity :
 
     private val allIconAdapter: AllIConAdapter by lazy {
         AllIConAdapter { end, start ->
-            println("AllBackgroundAdapter: $end and $start")
+            Log.d(TAG, "AllBackgroundAdapter: $end and $start")
             if (end.isEmpty() || start.isEmpty()) {
                 return@AllIConAdapter
             }
@@ -112,7 +111,7 @@ class CallScreenEditorActivity :
 
     @OptIn(UnstableApi::class)
     private fun displayVideoBackground(videoBackgroundUrl: String) {
-        androidx.media3.common.util.Log.d(
+        Log.d(
             "PlayerViewHolder",
             "attachPlayer() called with url: $videoBackgroundUrl"
         )
@@ -139,7 +138,7 @@ class CallScreenEditorActivity :
             // 👇 Delay prepare() to ensure playerView is ready
             binding.playerView.player = this
             binding.playerView.post {
-                androidx.media3.common.util.Log.d(
+                Log.d(
                     "PlayerViewHolder",
                     "Calling prepare() after post"
                 )
@@ -149,7 +148,7 @@ class CallScreenEditorActivity :
             currentListener?.let { removeListener(it) }
             currentListener = object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
-                    androidx.media3.common.util.Log.d("ExoPlayer", "player state = $state")
+                    Log.d("ExoPlayer", "player state = $state")
                     if (state == Player.STATE_READY && !hasRenderedFirstFrame) {
                         binding.progressBar2.visibility = View.VISIBLE
                         binding.playerView.alpha = 0f
@@ -198,8 +197,7 @@ class CallScreenEditorActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        loadBanner(this)
         Glide.with(this@CallScreenEditorActivity).load(avatarUrl)
             .placeholder(R.drawable.default_cs_avt).error(R.drawable.default_cs_avt)
             .into(binding.defaultAvatar)
@@ -262,7 +260,7 @@ class CallScreenEditorActivity :
                     )
                 } else {
                     contentViewModel.selectCallScreenContent.value?.let { items ->
-                        println("allBackgroundAdapter: $items")
+                        Log.d(TAG, "allBackgroundAdapter: $items")
                         allBackgroundAdapter.submitList(items)
                     }
 
@@ -285,7 +283,7 @@ class CallScreenEditorActivity :
                     )
                 } else {
                     contentViewModel.backgroundContent.value?.let { items ->
-                        println("allAvatarAdapter: $items")
+                        Log.d(TAG, "allAvatarAdapter: $items")
                         allAvatarAdapter.submitList(items)
                     }
                     // Re-enable touch
@@ -310,7 +308,7 @@ class CallScreenEditorActivity :
                     )
                 } else {
                     contentViewModel.iconContent.value?.let { items ->
-                        println("allIconAdapter: $items")
+                        Log.d(TAG, "allIconAdapter: $items")
                         allIconAdapter.submitList(items)
                     }
                     // Re-enable touch
@@ -381,7 +379,6 @@ class CallScreenEditorActivity :
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_CALLSCREEN, InterAds.INTER_CALLSCREEN)
-        loadBanner(this, BANNER_HOME)
 
         if (videoBackgroundUrl.isNotEmpty()) {
             binding.playerContainer.visible()
@@ -404,7 +401,8 @@ class CallScreenEditorActivity :
         SearchRingtoneActivity.backToScreen(this@CallScreenEditorActivity, "INTER_CALLSCREEN")
     }
 
-
-
+    companion object {
+        val TAG = CallScreenEditorActivity::class.java.name
+    }
 
 }

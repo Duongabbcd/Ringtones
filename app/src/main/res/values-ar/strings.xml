@@ -195,4 +195,6 @@
     <string name="wallpaper_2">فشل في إعادة تعيين الخلفية</string>
 
     <string name="up_three">يمكنك اختيار ما يصل إلى 3 فقط</string>
+    <string name="unknwon_title">عنوان غير معروف</string>
+    <string name="unknwon_author">مؤلف غير معروف</string>
 </resources>

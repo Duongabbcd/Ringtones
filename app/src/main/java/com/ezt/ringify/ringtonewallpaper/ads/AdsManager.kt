@@ -22,13 +22,13 @@ import com.admob.max.dktlibrary.utils.admod.callback.AdsInterCallBack
 import com.admob.max.dktlibrary.utils.admod.callback.NativeAdmobCallback
 import com.applovin.sdk.AppLovinSdkUtils
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
-import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils.isNetworkConnected
 
 object AdsManager {
     var isDebug = true
@@ -50,11 +50,6 @@ object AdsManager {
     var BANNER_COLLAP_HOME = BannerHolderAdmob("")
     var NATIVE_COLLAP_HOME = NativeHolderAdmob("")
     var NATIVE_CUSTOM_HOME = NativeHolderAdmob("")
-
-    var INTER_LANGUAGE = InterHolderAdmob("")
-    var INTER_RINGTONE = InterHolderAdmob("")
-    var INTER_WALLPAPER = InterHolderAdmob("")
-    var INTER_CALLSCREEN = InterHolderAdmob("")
 
     var BANNER_PLAY_SONG = ""
     var BANNER_COLLAP_PLAY_SONG = BannerHolderAdmob("")
@@ -995,7 +990,7 @@ object AdsManager {
 //    }
 
     fun loadAdInter(context: Context, interHolder: InterHolderAdmob) {
-        if (isNetworkConnected(context) || AdsManager.isTestDevice) {
+        if (isNetworkConnected(context) || isTestDevice) {
             return
         }
 
@@ -1057,7 +1052,7 @@ object AdsManager {
             nativeHolder,
             MediaAspectRatio.SQUARE,
             object :
-                AdmobUtils.NativeAdCallbackNew {
+                NativeAdCallbackNew {
 
                 override fun onAdFail(error: String) {
                     println("onAdFail: $error")

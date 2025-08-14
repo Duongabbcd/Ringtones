@@ -2,14 +2,14 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLiveWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
@@ -31,7 +31,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     private val wallpaperViewModel: WallpaperViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter {
-            println("Wallpaper: $it")
+            Log.d(TAG, "Wallpaper: $it")
             startActivity(
                 Intent(
                     this@LiveWallpaperActivity,
@@ -46,10 +46,11 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this)
         sortOrder = Common.getSortWppOrder(this)
 
         connectionViewModel.isConnectedLiveData.observe(this@LiveWallpaperActivity) { isConnected ->
-            println("isConnected: $isConnected and $sortOrder")
+            Log.d(TAG, "isConnected: $isConnected and $sortOrder")
             checkInternetConnected(isConnected)
         }
 
@@ -91,7 +92,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     }
 
     private fun displayItems() {
-        println("displayItems 123: $sortOrder")
+        Log.d(TAG, "displayItems 123: $sortOrder")
         when (sortOrder) {
             "Default" -> wallpaperViewModel.loadLiveWallpapers(0)
             "Trending" -> wallpaperViewModel.loadLiveWallpapers(1)
@@ -140,10 +141,13 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
-        loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@LiveWallpaperActivity, "INTER_WALLPAPER")
+    }
+
+    companion object {
+        val TAG = LiveWallpaperActivity::class.java.name
     }
 }

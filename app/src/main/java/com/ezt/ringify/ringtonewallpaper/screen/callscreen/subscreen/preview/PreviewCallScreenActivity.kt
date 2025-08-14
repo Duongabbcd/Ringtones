@@ -9,18 +9,18 @@ import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewCallscreenBinding
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.endCall
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.photoBackgroundUrl
-import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.videoBackgroundUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.setIcon
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.startCall
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.videoBackgroundUrl
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
@@ -32,6 +32,7 @@ class PreviewCallScreenActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this)
         binding.apply {
             Glide.with(this@PreviewCallScreenActivity).load(avatarUrl)
                 .placeholder(R.drawable.default_cs_avt).error(R.drawable.default_cs_avt)
@@ -46,7 +47,7 @@ class PreviewCallScreenActivity :
                 )
             }
 
-            println("videoBackgroundUrl: $videoBackgroundUrl")
+            Log.d(TAG, "videoBackgroundUrl: $videoBackgroundUrl")
             if (videoBackgroundUrl.isNotEmpty()) {
                 playerView.visible()
                 callScreenImage.gone()
@@ -71,7 +72,7 @@ class PreviewCallScreenActivity :
 
     @OptIn(UnstableApi::class)
     fun attachPlayer(videoUrl: String) {
-        Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
+        Log.d(TAG, "attachPlayer() called with url: $videoUrl")
         val player = PlayerManager.getPlayer(this)
         val simpleCache = CacheUtil.getSimpleCache(this)
 
@@ -119,5 +120,9 @@ class PreviewCallScreenActivity :
         if (videoBackgroundUrl.isNotEmpty()) {
             attachPlayer(videoBackgroundUrl)
         }
+    }
+
+    companion object {
+        val TAG = PreviewCallScreenActivity::class.java.name
     }
 }

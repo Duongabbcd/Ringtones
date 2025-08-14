@@ -105,16 +105,18 @@ class SlideWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this, BANNER_HOME)
+        
         checkDownloadPermissions()
         connectionViewModel.isConnectedLiveData.observe(this@SlideWallpaperActivity) { isConnected ->
-            println("isConnected: $isConnected")
+            Log.d(TAG, "isConnected: $isConnected")
             checkInternetConnected(isConnected)
         }
 
         if (savedInstanceState != null) {
 
             index = savedInstanceState.getInt("wallpaper_index", 0)
-            println("savedInstanceState 0: $index")
+            Log.d(TAG, "savedInstanceState 0: $index")
         } else {
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
             index = allRingtones.indexOf(currentWallpaper)
@@ -124,7 +126,7 @@ class SlideWallpaperActivity :
                     layoutManager.scrollToPosition(index)
                 }
             }
-            println("savedInstanceState 1: $index")
+            Log.d(TAG, "savedInstanceState 1: $index")
         }
 
     }
@@ -153,7 +155,6 @@ class SlideWallpaperActivity :
         }
 
     }
-
 
     private var returnedFromSettings = false
     private fun showGoToSettingsDialog() {
@@ -300,7 +301,7 @@ class SlideWallpaperActivity :
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val uri = result.data?.getParcelableExtra<Uri>("croppedImageUri")
-            println("cropLauncher: $uri")
+            Log.d(TAG, "cropLauncher: $uri")
             if (uri != null) {
                 val bitmap = loadBitmapFromUri(this, uri)
                 if (bitmap != null) {
@@ -311,7 +312,7 @@ class SlideWallpaperActivity :
     }
 
     private fun continueAfterCrop(bitmap: Bitmap) {
-        println("continueAfterCrop: $bitmap and $settingOption")
+        Log.d(TAG, "continueAfterCrop: $bitmap and $settingOption")
         lifecycleScope.launch {
             val bottomSheet = DownloadWallpaperBottomSheet(this@SlideWallpaperActivity)
             bottomSheet.apply {
@@ -382,7 +383,7 @@ class SlideWallpaperActivity :
 
 
     private fun setUpPhotoByCondition(imageUrl: List<ImageContent>) {
-        println("setUpPhotoByCondition: ${imageUrl.size}")
+        Log.d(TAG, "setUpPhotoByCondition: ${imageUrl.size}")
         if (imageUrl.size == 1) {
             InterAds.preloadInterAds(
                 this,
@@ -411,7 +412,7 @@ class SlideWallpaperActivity :
 
     private suspend fun setUpLiveWallpaperByCondition(imageUrls: List<ImageContent>) {
         val bitmap = urlToBitmap(imageUrls.first().url.full) ?: return
-        println("setUpLiveWallpaperByCondition: $bitmap")
+        Log.d(TAG, "setUpLiveWallpaperByCondition: $bitmap")
         lifecycleScope.launch {
             startLiveWallpaper(imageUrls)
         }
@@ -556,9 +557,9 @@ class SlideWallpaperActivity :
                     MotionEvent.ACTION_UP -> {
                         isUserTouch = true
                         if (duration > 100) {
-                            println("horizontalRingtones: $duration and $index")
+                            Log.d(TAG, "horizontalRingtones: $duration and $index")
                             binding.horizontalWallpapers.stopScroll()
-                            println("Tracking RecyclerView.ACTION_UP 0 $index")
+                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 0 $index")
                             setUpNewPlayer(index)
                             return@setOnTouchListener false
                         }
@@ -572,14 +573,14 @@ class SlideWallpaperActivity :
 
                         // 👇 Update only if actual index changes
                         if (newIndex != index) {
-                            println("Tracking RecyclerView.ACTION_UP 1 $index and $newIndex")
+                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 1 $index and $newIndex")
                             updateIndex(newIndex, "onPositionChange")
                             handler.postDelayed({
                                 setUpNewPlayer(index)
                             }, 300)
                         } else {
                             // stay on current\
-                            println("Tracking RecyclerView.ACTION_UP 2 $index and $newIndex")
+                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 2 $index and $newIndex")
                             setUpNewPlayer(index)
                         }
 
@@ -600,7 +601,7 @@ class SlideWallpaperActivity :
                     when (newState) {
                         RecyclerView.SCROLL_STATE_DRAGGING -> {
                             previousIndex = index
-                            println("🎯 Drag started at index $previousIndex")
+                            Log.d(TAG, "🎯 Drag started at index $previousIndex")
                         }
 
                         RecyclerView.SCROLL_STATE_IDLE -> {
@@ -609,7 +610,10 @@ class SlideWallpaperActivity :
                             }
 
                             val distanceJumped = abs(newIndex - previousIndex)
-                            println("🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)")
+                            Log.d(
+                                TAG,
+                                "🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)"
+                            )
 
                             if (distanceJumped >= 2) {
                                 Log.d("PlayerActivity", "🛑 Too fast! Jumped $distanceJumped items")
@@ -617,7 +621,7 @@ class SlideWallpaperActivity :
                             }
 
                             index = newIndex
-                            println("Tracking RecyclerView.SCROLL_STATE_IDLE $index")
+                            Log.d(TAG, "Tracking RecyclerView.SCROLL_STATE_IDLE $index")
                             setUpNewPlayer(index)
                         }
                     }
@@ -630,7 +634,7 @@ class SlideWallpaperActivity :
     private fun setUpNewPlayer(position: Int) {
         binding.horizontalWallpapers.smoothScrollToPosition(position)
         currentWallpaper = allRingtones[position]
-        println("setUpNewPlayer: $position and $currentWallpaper")
+        Log.d(TAG, "setUpNewPlayer: $position and $currentWallpaper")
 
         playSlideWallpaperAdapter.setCurrentPlayingPosition(position)
         viewModel.loadWallpaperById(currentWallpaper.id)
@@ -707,7 +711,7 @@ class SlideWallpaperActivity :
                         "INTER_WALLPAPER"
                     )
                 }
-                println("onCreate: $index")
+                Log.d(TAG, "onCreate: $index")
                 viewModel.loadWallpaperById(currentWallpaper.id)
                 viewModel.loadSlideWallpaperById(currentWallpaper.id)
                 observeRingtoneFromDb()
@@ -740,12 +744,10 @@ class SlideWallpaperActivity :
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
-        loadBanner(this, BANNER_HOME)
         RewardAds.initRewardAds(this)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@SlideWallpaperActivity, "INTER_WALLPAPER")
-
     }
 }

@@ -2,13 +2,19 @@ package com.ezt.ringify.ringtonewallpaper.screen.language
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.admob.max.dktlibrary.AppOpenManager
 import com.admob.max.dktlibrary.utils.admod.NativeHolderAdmob
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLanguageBinding
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
 import com.ezt.ringify.ringtonewallpaper.screen.language.adapter.Language
 import com.ezt.ringify.ringtonewallpaper.screen.language.adapter.LanguageAdapter
@@ -17,11 +23,6 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.GlobalConstant
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
-import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
-import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
     private var adapter2: LanguageAdapter? = null
@@ -82,16 +83,19 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        println("changeLanguageDone: $selectedLanguage and $selectedLanguageName")
+                        Log.d(
+                            TAG,
+                            "changeLanguageDone: $selectedLanguage and $selectedLanguageName"
+                        )
                         InterAds.showPreloadInter(
                             activity = this@LanguageActivity,
                             InterAds.ALIAS_INTER_LANGUAGE,
                             onLoadDone = {
-                                println("onLoadDone")
+                                Log.d(TAG, "onLoadDone")
                                 nextScreenByCondition()
                             },
                             onLoadFailed = {
-                                println("onLoadFailed")
+                                Log.d(TAG, "onLoadFailed")
                                 nextScreenByCondition()
                             })
                     } else {
@@ -148,7 +152,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
 
 
     private fun showAds(nativeHolderAdmob: NativeHolderAdmob = AdsManager.NATIVE_LANGUAGE) {
-        println("LanguageActivity: ${RemoteConfig.NATIVE_LANGUAGE_070625}")
+        Log.d(TAG, "LanguageActivity: ${RemoteConfig.NATIVE_LANGUAGE_070625}")
         try {
             when(RemoteConfig.NATIVE_LANGUAGE_070625) {
                 "1" -> {
@@ -174,6 +178,8 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     companion object {
         var selectedLanguage = ""
         var selectedLanguageName = ""
+
+        val TAG = LanguageActivity::class.java.name
     }
 
 }

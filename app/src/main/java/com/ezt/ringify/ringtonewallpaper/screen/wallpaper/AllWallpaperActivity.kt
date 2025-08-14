@@ -3,16 +3,14 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityAllWallpaperBinding
@@ -23,9 +21,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
@@ -39,7 +35,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
     private val categoryWallpaperAdapter: CategoryWallpaperAdapter by lazy {
         CategoryWallpaperAdapter { category->
             startActivity(Intent(this, PreviewWallpaperActivity::class.java).apply {
-                println("AllWallpaperActivity: $category")
+                Log.d(TAG, "AllWallpaperActivity: $category")
                 putExtra("wallpaperCategoryId", category.id)
             })
         }
@@ -47,7 +43,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        MainActivity.loadBanner(this, BANNER_HOME)
 
         binding.apply {
             backBtn.setOnClickListener {
@@ -55,7 +51,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
             }
 
             connectionViewModel.isConnectedLiveData.observe(this@AllWallpaperActivity) { isConnected ->
-                println("isConnected: $isConnected")
+                Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
             }
 
@@ -115,12 +111,15 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
     override fun onResume() {
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
-        MainActivity.loadBanner(this, BANNER_HOME)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@AllWallpaperActivity, "INTER_WALLPAPER")
 
+    }
+
+    companion object {
+        val TAG = AllWallpaperActivity::class.java.name
     }
 }
 
@@ -163,7 +162,7 @@ class CategoryWallpaperAdapter(
         wallpapersMap.putAll(map)
 
         map.keys.forEach { item ->
-            println("submitWallpapersMap: $item and ${map[item]?.firstOrNull()}")
+            Log.d(TAG, "submitWallpapersMap: $item and ${map[item]?.firstOrNull()}")
         }
         // Notify only updated categories to redraw their wallpaper lists
         map.keys.forEach { categoryId ->
@@ -201,7 +200,7 @@ class CategoryWallpaperAdapter(
         fun bind(position: Int) {
             val category = allCategories[position]
             val data = wallpapersMap[category.id]?.take(5)
-            println("CategoryWallpaperViewHolder: ${category.name} and ${data?.first()}")
+            Log.d(TAG, "CategoryWallpaperViewHolder: ${category.name} and ${data?.first()}")
 
             val wallpapers = data ?: emptyList()
             val isLoading = loadingCategoryIds.contains(category.id)
@@ -226,5 +225,9 @@ class CategoryWallpaperAdapter(
                 }
             }
         }
+    }
+
+    companion object {
+        val TAG = CategoryWallpaperAdapter::class.java.name
     }
 }

@@ -17,6 +17,9 @@
     <string name="desc_3">Thèmes d’écran d’appel dynamiques</string>
     <string name="high_light_3">Écran d\'appel</string>
 
+    <string name="unknwon_title">Titre inconnu</string>
+    <string name="unknwon_author">Auteur inconnu</string>
+
     <string name="callscreen_setting">Définir comme écran d\'appel</string>
     <string name="no_connection">Toujours pas de connexion Internet</string>
     <string name="avatar">Avatar</string>

@@ -1,17 +1,15 @@
 package com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
-import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
-import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -65,6 +63,11 @@ class RingtoneAdapter(private val onClickListener: (Ringtone) -> Unit) :
                 println("RingtoneViewHolder: $ringTone")
                 ringToneName.text = ringTone.name
                 ringToneAuthor.text = ringTone.author.name ?: ""
+
+                if (ringTone == Ringtone.EMPTY_RINGTONE) {
+                    ringToneName.text = context.resources.getString(R.string.unknwon_title)
+                    ringToneAuthor.text = context.resources.getString(R.string.unknwon_author)
+                }
 
                 if(ringTone.trend == 1) {
                     marker.visible()

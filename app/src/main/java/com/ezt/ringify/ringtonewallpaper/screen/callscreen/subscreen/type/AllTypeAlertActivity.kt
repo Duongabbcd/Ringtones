@@ -1,26 +1,20 @@
 package com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.applovin.impl.a7
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityAllTypeAlertBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemTypeAlertBinding
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.flashTypeValue
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.vibrationValue
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview.PreviewCallScreenActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
@@ -49,7 +43,7 @@ class AllTypeAlertActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadBanner(this)
         binding.backBtn.setOnClickListener {
             flashVibrationManager.stopFlashAndVibration()
             SearchRingtoneActivity.backToScreen(
@@ -72,11 +66,6 @@ class AllTypeAlertActivity :
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadBanner(this, BANNER_HOME)
-    }
-
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@AllTypeAlertActivity, "INTER_CALLSCREEN")
     }
@@ -88,7 +77,7 @@ class TypeAlertAdapter(private val onClickListener: (String) -> Unit) :
     RecyclerView.Adapter<TypeAlertAdapter.TypeAlertViewHolder>() {
     private val allTypeAlerts: MutableList<String> = mutableListOf()
     private var selectedPosition: Int = RecyclerView.NO_POSITION
-
+    private val TAG = TypeAlertAdapter::class.java.name
     private lateinit var context: Context
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -111,7 +100,7 @@ class TypeAlertAdapter(private val onClickListener: (String) -> Unit) :
         allTypeAlerts.clear()
         allTypeAlerts.addAll(list)
         selectedPosition = list.indexOf(currentValue)
-        println("submitList: $list and $currentValue")
+        Log.d(TAG, "submitList: $list and $currentValue")
         notifyDataSetChanged()
     }
 
@@ -134,7 +123,7 @@ class TypeAlertAdapter(private val onClickListener: (String) -> Unit) :
 
 
                 root.setOnClickListener {
-                    println("AllIconViewHolder: $item")
+                    Log.d(TAG, "AllIconViewHolder: $item")
                     val previousPosition = selectedPosition
                     selectedPosition = adapterPosition
                     notifyItemChanged(previousPosition)

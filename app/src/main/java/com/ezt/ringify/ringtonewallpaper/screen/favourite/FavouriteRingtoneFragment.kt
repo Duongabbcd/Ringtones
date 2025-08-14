@@ -2,6 +2,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.favourite
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,7 @@ class FavouriteRingtoneFragment : Fragment() {
     private val binding by lazy { ViewpagerFavouriteItempageBinding.inflate(layoutInflater) }
     private lateinit var callbackIntro: CallbackIntro
     private var position = 0
-
+    private val TAG = FavouriteRingtoneFragment::class.java.name
     private val categoryViewModel: CategoryViewModel by viewModels()
     private var allFavRingtones: MutableList<Int> = mutableListOf()
     private val ringtoneAdapter: SelectingFavouriteAdapter by lazy {
@@ -36,7 +37,7 @@ class FavouriteRingtoneFragment : Fragment() {
             allFavRingtones.clear()
             allFavRingtones.addAll(list)
 
-            println("ringtoneAdapter: $allFavRingtones")
+            Log.d(TAG, "ringtoneAdapter: $allFavRingtones")
             binding.currentItem.text = "(${allFavRingtones.size}/3)"
         }
     }

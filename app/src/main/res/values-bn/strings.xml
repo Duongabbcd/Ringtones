@@ -52,6 +52,9 @@
     <string name="retry">পুনরায় চেষ্টা করুন</string>
     <string name="send">পাঠান</string>
 
+    <string name="unknwon_title">অজানা শিরোনাম</string>
+    <string name="unknwon_author">অজানা লেখক</string>
+
     <string name="ringTone">রিংটোন</string>
     <string name="ringTones">রিংটোনসমূহ</string>
     <string name="wallPaper">ওয়ালপেপার</string>

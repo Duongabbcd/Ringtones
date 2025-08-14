@@ -23,6 +23,9 @@
     <string name="call_screen_feedback_1">Хотите больше настроек</string>
     <string name="call_screen_feedback_2">Экран вызова не работает после установки в качестве экрана вызова</string>
 
+    <string name="unknwon_title">Неизвестное название</string>
+    <string name="unknwon_author">Неизвестный автор</string>
+
     <string name="reset_wallpaper_question">Вы действительно хотите сбросить текущие обои?</string>
     <string name="reset_ringtone_question">Вы действительно хотите сбросить текущий рингтон?</string>
     <string name="reset_cache_question">Вы действительно хотите очистить кэш?</string>

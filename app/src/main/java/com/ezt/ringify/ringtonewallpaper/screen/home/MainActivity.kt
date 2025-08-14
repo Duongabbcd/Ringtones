@@ -3,27 +3,25 @@ package com.ezt.ringify.ringtonewallpaper.screen.home
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
-import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
-import kotlin.system.exitProcess
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.BannerAds
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
+import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.RingtoneFragment
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.wallpaper.WallpaperFragment
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.FeedbackDialog
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.SettingActivity
@@ -32,15 +30,20 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
-import com.ezt.ringify.ringtonewallpaper.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import javax.inject.Inject
+import kotlin.system.exitProcess
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this, BANNER_HOME)
         var countOpen = Common.getCountOpenApp(this)
 
         if (countOpen < 1) {
@@ -57,8 +60,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         RingtonePlayerRemote.currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
         binding.searchButton.setOnClickListener {
             if(selectedTab == 0) {
+                analyticsLogger.logTagClick(100, "Search Ringtone", "search_ringtone_clicked")
                 startActivity(Intent(this, SearchRingtoneActivity::class.java))
             } else {
+                analyticsLogger.logTagClick(101, "Search Wallpaper", "search_wallpaper_clicked")
                 startActivity(Intent(this, SearchWallpaperActivity::class.java))
             }
 
@@ -122,7 +127,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             Common.setAllEditorChoices(this, list = emptyList())
             Common.setAllWeeklyTrendingRingtones(this, list = emptyList())
             // It's a new week!
-            println("✅ New week started!")
+            Log.d(TAG, "✅ New week started!")
 
             // Save current week and year
             prefs.edit()
@@ -130,7 +135,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 .putInt("last_year", currentYear)
                 .apply()
         } else {
-            println("📅 Still the same week.")
+            Log.d(TAG, "📅 Still the same week.")
         }
     }
 
@@ -165,12 +170,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onResume() {
         super.onResume()
         displayScreen()
-        loadBanner(this, BANNER_HOME)
     }
 
 
     private fun displayScreen() {
-        println("displayScreen: $selectedTab")
+        Log.d(TAG, "displayScreen: $selectedTab")
         when (selectedTab) {
             0 -> {
                 binding.appName.setImageResource(R.drawable.icon_app_name)
@@ -232,12 +236,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     companion object {
         var selectedTab = 0
         var isChangeTheme = false
-        var count = 0
-        var displayMode = DisplayMode.WALLPAPER
+        private var TAG = MainActivity::class.java.name
 
         fun loadBanner(activity: AppCompatActivity, banner: String = BANNER_HOME) {
-            println("RemoteConfig.BANNER_COLLAP_ALL_070625: ${RemoteConfig.BANNER_COLLAP_ALL_070625}")
-            if (RemoteConfig.BANNER_COLLAP_ALL_070625 != "0") {
+            println("RemoteConfig.BANNER_COLLAP_ALL_070625: ${RemoteConfig.BANNER_ALL}")
+            if (RemoteConfig.BANNER_ALL != "0") {
                 BannerAds.initBannerAds(activity, banner)
             }
 
@@ -248,11 +251,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onBackPressed()
         exitProcess(-1)
     }
-}
-
-enum class DisplayMode() {
-    WALLPAPER,
-    SETTING,
-    CALLSCREEN,
-    RINGTONE
 }

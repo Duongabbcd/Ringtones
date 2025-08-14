@@ -7,14 +7,12 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import kotlin.apply
-import com.ezt.ringify.ringtonewallpaper.R
 import com.adjust.sdk.Adjust
 import com.adjust.sdk.AdjustAdRevenue
 import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
@@ -22,6 +20,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
+import kotlin.apply
 
 
 @SuppressLint("StaticFieldLeak")
