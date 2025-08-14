@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_purchase_app"
+        android:paddingBottom="@dimen/_17sdp">
+
+
+        <ImageView
+            android:id="@+id/topPurchase"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_220sdp"
+            android:contentDescription="@string/imageview"
+            android:scaleType="centerCrop"
+            android:src="@drawable/top_purchase"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_black_gradient"
+            android:contentDescription="@string/imageview" />
+
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginTop="@dimen/_26sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_close_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/bottomTitle1"
+            style="@style/CustomTextStyleSemiBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customize your"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toTopOf="@id/bottomTitle2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/bottomTitle2"
+            style="@style/CustomTextStyleBold20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:text="Ring tone &amp; wallpaper"
+            android:textAllCaps="true"
+            android:textColor="#BC47FF"
+            app:layout_constraintBottom_toBottomOf="@id/topPurchase"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/noAdd"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginStart="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_no_add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topPurchase" />
+
+        <ImageView
+            android:id="@+id/noLimit"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginStart="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_no_limited"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/noAdd" />
+
+
+        <ImageView
+            android:id="@+id/dynamicCallScreen"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginStart="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_dynamic_call"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/noLimit" />
+
+        <ImageView
+            android:id="@+id/exclusiveContent"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginStart="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:contentDescription="@string/imageview"
+            android:src="@drawable/icon_exclusive"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dynamicCallScreen" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/_126sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@drawable/icon_best_deal"
+            android:contentDescription="@string/imageview"
+            app:layout_constraintEnd_toEndOf="@id/yearlyPackage"
+            app:layout_constraintStart_toStartOf="@+id/yearlyPackage"
+            app:layout_constraintTop_toBottomOf="@id/exclusiveContent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/yearlyPackage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_90sdp"
+            android:layout_marginHorizontal="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_23sdp"
+            android:background="@drawable/background_radius_12_dark_purple_stroke"
+            app:layout_constraintTop_toBottomOf="@id/exclusiveContent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/weeklyPackage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_90sdp"
+            android:layout_marginHorizontal="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@drawable/background_radius_12_dark_purple_stroke"
+            app:layout_constraintTop_toBottomOf="@id/yearlyPackage">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/continueBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_52sdp"
+            android:layout_marginHorizontal="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@drawable/background_continue"
+            app:layout_constraintTop_toBottomOf="@id/weeklyPackage">
+
+            <TextView
+                style="@style/CustomTextStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Continue"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
