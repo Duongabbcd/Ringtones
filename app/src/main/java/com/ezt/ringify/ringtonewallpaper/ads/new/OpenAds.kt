@@ -7,6 +7,7 @@ import com.adjust.sdk.AdjustAdRevenue
 import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -18,7 +19,8 @@ import java.util.Date
 object OpenAds {
 
     private const val OPEN_TEST_ID = "ca-app-pub-3940256099942544/9257395921"
-    private const val OPEN_ID_DEFAULT = "your-ad-id"
+
+    private const val OPEN_ID_DEFAULT = "ca-app-pub-8048589936179473/9817013711"
 
     private var appOpenAd: AppOpenAd? = null
     private var isOpenShowingAd = false

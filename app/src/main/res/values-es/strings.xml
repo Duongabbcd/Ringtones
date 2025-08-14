@@ -51,7 +51,7 @@
     <string name="reset_wallpapers">Restablecer todos los fondos a los predeterminados</string>
     <string name="set_wallpaper_title">Establecer fondo de pantalla</string>
     <string name="exit">Salir</string>
-
+    <string name="up_three">Solo puedes seleccionar hasta 3</string>
 
     <string name="english">Alemán</string>
     <string name = "hindi">Alemán</string>

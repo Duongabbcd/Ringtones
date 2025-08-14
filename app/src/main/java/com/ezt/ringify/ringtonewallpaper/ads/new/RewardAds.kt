@@ -23,7 +23,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 object RewardAds {
 
     private const val REWARDED_INTER_TEST_ID = "ca-app-pub-3940256099942544/5224354917"
-    private const val REWARDED_INTER_ID_DEFAULT = "your_id_here"
+    private const val REWARDED_INTER_ID_DEFAULT = "ca-app-pub-8048589936179473/2130095382"
     private val TAG = RewardAds::class.java.canonicalName
 
     private var mRewardAds: RewardedAd? = null

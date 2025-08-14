@@ -110,7 +110,7 @@ class CallScreenFragment :
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 Toast.makeText(
                     requireContext(),
-                    "Setup complete. You can now use call screen.",
+                    requireContext().getString(R.string.setup_complete),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -454,7 +454,7 @@ class CallScreenFragment :
         } else {
             Toast.makeText(
                 requireContext(),
-                "Please grant all permissions to continue.",
+                requireContext().getString(R.string.grant_all_permissions),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -468,7 +468,7 @@ class CallScreenFragment :
             e.printStackTrace()
             Toast.makeText(
                 requireContext(),
-                "Can't open default apps settings.",
+                requireContext().getString(R.string.can_not_open_default),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -484,7 +484,7 @@ class CallScreenFragment :
             ex.printStackTrace()
             Toast.makeText(
                 requireContext(),
-                "Can't open overlay permission settings.",
+                requireContext().getString(R.string.can_not_overlay),
                 Toast.LENGTH_SHORT
             ).show()
         }

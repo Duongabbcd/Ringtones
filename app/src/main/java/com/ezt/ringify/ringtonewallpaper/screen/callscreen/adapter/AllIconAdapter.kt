@@ -63,6 +63,33 @@ class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
                     gifIcon.gone()
                 }
 
+                if (imageContent.first == ImageContent.IMAGE_EMPTY) {
+                    startCall.setImageResource(R.drawable.icon_start_call)
+                    endCall.setImageResource(R.drawable.icon_end_call)
+                } else {
+                    displayIcons(startCallIcon, endCallIcon)
+                }
+
+                // Highlight stroke if selected
+                if (position == selectedPosition) {
+                    container.setBackgroundResource(R.drawable.background_radius_16_purple)
+                } else {
+                    container.setBackgroundResource(R.drawable.background_radius_16_gray)
+                }
+
+                root.setOnClickListener {
+                    println("AllIconViewHolder: $endCallIcon and $startCallIcon")
+                    val previousPosition = selectedPosition
+                    selectedPosition = adapterPosition
+                    notifyItemChanged(previousPosition)
+                    notifyItemChanged(selectedPosition)
+                    onClickListener(endCallIcon, startCallIcon)
+                }
+            }
+        }
+
+        private fun displayIcons(startCallIcon: String, endCallIcon: String) {
+            binding.apply {
                 if (startCallIcon.endsWith(".json", true)) {
                     LottieCompositionFactory.fromUrl(context, startCallIcon)
                         .addListener { composition ->
@@ -90,24 +117,10 @@ class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
                     Glide.with(context).load(endCallIcon).placeholder(R.drawable.icon_end_call)
                         .error(R.drawable.icon_end_call).into(endCall)
                 }
-
-                // Highlight stroke if selected
-                if (position == selectedPosition) {
-                    container.setBackgroundResource(R.drawable.background_radius_16_purple)
-                } else {
-                    container.setBackgroundResource(R.drawable.background_radius_16_gray)
-                }
-
-                root.setOnClickListener {
-                    println("AllIconViewHolder: $endCallIcon and $startCallIcon")
-                    val previousPosition = selectedPosition
-                    selectedPosition = adapterPosition
-                    notifyItemChanged(previousPosition)
-                    notifyItemChanged(selectedPosition)
-                    onClickListener(endCallIcon, startCallIcon)
-                }
             }
         }
+
+
     }
 
 }

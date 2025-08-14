@@ -98,6 +98,8 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     lateinit var exoPlayer: ExoPlayer
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
 
+    private var isNotification = false
+
     private var returnedFromSettings = false
 
     // Update play/pause click to use service instead of ExoPlayer directly
@@ -432,12 +434,14 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
             ringTone.setOnClickListener {
                 checkPayBeforeUsingRingtone {
+                    isNotification = false
                     setupRingtone()
                 }
             }
 
             notification.setOnClickListener {
                 checkPayBeforeUsingRingtone {
+                    isNotification = true
                     setupRingtone(true)
                 }
             }
@@ -800,6 +804,11 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         loadBanner(this, BANNER_HOME)
         RewardAds.initRewardAds(this)
 
+        if (returnedFromSettings) {
+            returnedFromSettings = false
+            setupRingtone(isNotification)
+        }
+
         if (!serviceBound) return
 
         val servicePlaying = playerService?.isPlaying() ?: false
@@ -873,6 +882,17 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         super.onSaveInstanceState(outState)
         outState.putInt("currentId", currentId)
         outState.putBoolean("isPlaying", isPlaying)
+
+        outState.putBoolean("isReturnFromSetting", returnedFromSettings)
+        outState.putBoolean("isNotification", isNotification)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        returnedFromSettings =
+            savedInstanceState.getBoolean("isReturnFromSetting", false)
+        isNotification =
+            savedInstanceState.getBoolean("isNotification", false)
     }
 
     companion object {

@@ -193,4 +193,6 @@
     <string name="ringtone_2">فشل في إعادة تعيين نغمة الرنين</string>
     <string name="wallpaper_1">تم إعادة تعيين الخلفية إلى الافتراضي</string>
     <string name="wallpaper_2">فشل في إعادة تعيين الخلفية</string>
+
+    <string name="up_three">يمكنك اختيار ما يصل إلى 3 فقط</string>
 </resources>

@@ -30,8 +30,6 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 class PreviewCallScreenActivity :
     BaseActivity<ActivityPreviewCallscreenBinding>(ActivityPreviewCallscreenBinding::inflate) {
 
-    private var player: ExoPlayer? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {

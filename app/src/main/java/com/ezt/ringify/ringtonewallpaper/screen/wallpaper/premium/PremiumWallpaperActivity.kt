@@ -3,7 +3,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
@@ -11,6 +10,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPremiumWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
@@ -83,17 +83,6 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             allNewWallpaper.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
             allSub1.layoutManager = LinearLayoutManager(this@PremiumWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
-            wallPaperViewModel.premiumWallpapers.observe(this@PremiumWallpaperActivity) { items ->
-                liveAdapter.submitList(items, true)
-            }
-
-            wallPaperViewModel.slideWallpaper.observe(this@PremiumWallpaperActivity) { items ->
-                slideAdapter.submitList(items, true)
-            }
-
-            wallPaperViewModel.singleWallpapers.observe(this@PremiumWallpaperActivity) { items ->
-                singleAdapter.submitList(items, true)
-            }
 
             openAll1.setOnClickListener {
                 startActivity(
@@ -120,20 +109,63 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
                 })
             }
 
-            wallPaperViewModel.loading1.observe(this@PremiumWallpaperActivity) {
-                loading1.isVisible = it
-                newWallpaperCount.isVisible = !it
+            wallPaperViewModel.loading1.observe(this@PremiumWallpaperActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+                    openAll1.isEnabled = false
+                    allTrending.isEnabled = false
+                    liveAdapter.submitList(loadingItems)
 
+                } else {
+                    wallPaperViewModel.premiumWallpapers.observe(this@PremiumWallpaperActivity) { items ->
+                        liveAdapter.submitList(items, true)
+                    }
+                    openAll1.isEnabled = true
+                    allTrending.isEnabled = true
+                }
             }
 
-            wallPaperViewModel.loading2.observe(this@PremiumWallpaperActivity) {
-                loading2.isVisible = it
-                trendingCount.isVisible = !it
+            wallPaperViewModel.loading2.observe(this@PremiumWallpaperActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll2.isEnabled = false
+                    allNewWallpaper.isEnabled = false
+                    slideAdapter.submitList(loadingItems)
+
+                } else {
+                    wallPaperViewModel.slideWallpaper.observe(this@PremiumWallpaperActivity) { items ->
+                        slideAdapter.submitList(items, true)
+                    }
+
+                    openAll2.isEnabled = true
+                    allNewWallpaper.isEnabled = true
+                }
             }
 
-            wallPaperViewModel.loading3.observe(this@PremiumWallpaperActivity) {
-                loading3.isVisible = it
-                sub1Count.isVisible = !it
+
+            wallPaperViewModel.loading3.observe(this@PremiumWallpaperActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Wallpaper.EMPTY_WALLPAPER
+                    }
+
+                    openAll3.isEnabled = false
+                    allSub1.isEnabled = false
+                    singleAdapter.submitList(loadingItems)
+
+                } else {
+                    wallPaperViewModel.singleWallpapers.observe(this@PremiumWallpaperActivity) { items ->
+                        singleAdapter.submitList(items, true)
+                    }
+
+                    openAll3.isEnabled = true
+                    allSub1.isEnabled = true
+                }
             }
 
         }

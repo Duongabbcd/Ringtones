@@ -169,7 +169,11 @@ class SelectingFavouriteAdapter(private val onSelectionChanged: (List<Int>) -> U
                         onSelectionChanged(selectedCategories)
                     } else {
                         // ❌ Do nothing or show a toast
-                        Toast.makeText(context, "You can select up to 3 only", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.resources.getString(R.string.up_three),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">Ringify</string>
 
-    <string name="admob_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="adjust_token_key" translatable="false"> </string>
+    <string name="admob_id" translatable="false">ca-app-pub-8048589936179473~9730782609</string>
+    <string name="adjust_token_key" translatable="false">npox3vcg6qkg</string>
     <string name="facebook_id" translatable="false"> </string>
     <string name="facebook_client_token" translatable="false"> </string>
 
@@ -206,4 +206,6 @@
     <string name="wallpaper_1">Wallpaper reset to default</string>
     <string name="wallpaper_2">Failed to reset wallpaper</string>
     <string name="preview">Preview</string>
+
+    <string name="up_three">You can select up to 3 only</string>
 </resources>

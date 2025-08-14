@@ -31,6 +31,7 @@
     <string name="reset_ringtone">रिंगटोन रीसेट करें</string>
     <string name="reset_cache">कैश साफ़ करें</string>
     <string name="preview">पूर्वावलोकन</string>
+    <string name="up_three">आप केवल अधिकतम 3 चुन सकते हैं</string>
 
     <string name="cache_1">कैश सफलतापूर्वक साफ़ किया गया</string>
     <string name="cache_2">कैश साफ़ करने में विफल</string>

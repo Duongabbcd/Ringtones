@@ -37,11 +37,11 @@ import java.util.Date
 object InterAds {
 
     val TIME_DELAY = if (BuildConfig.DEBUG) 10_000L else 60_000L
-    const val INTER_LANGUAGE = "inter_language"
-    const val INTER_RINGTONE = "inter_ringtone"
-    const val INTER_WALLPAPER = "inter_wallpaper"
-    const val INTER_CALLSCREEN = "inter_callscreen"
-    const val INTER_DOWNLOAD = "inter_download"
+    const val INTER_LANGUAGE = "ca-app-pub-8048589936179473/1006114778"
+    const val INTER_RINGTONE = "ca-app-pub-8048589936179473/1006114778"
+    const val INTER_WALLPAPER = "ca-app-pub-8048589936179473/1006114778"
+    const val INTER_CALLSCREEN = "ca-app-pub-8048589936179473/1006114778"
+    const val INTER_DOWNLOAD = "ca-app-pub-8048589936179473/1006114778"
 
     private const val INTER_TEST_ID = "ca-app-pub-3940256099942544/1033173712"
     private const val INTER_ID_DEFAULT = "your-ad-id"

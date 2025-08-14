@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemContentBackgroundBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 
@@ -57,17 +58,30 @@ class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
                     println("AllBackgroundViewHolder: ${it.url}")
                 }
                 val input =
-                    if (imageContent.contents.size >= 2) {
-                        video.visible()
-                        allContents.last()
-                    } else {
-                        video.gone()
-                        allContents.first()
+                    when {
+                        imageContent.contents.size >= 2 -> {
+                            video.visible()
+                            allContents.last()
+                        }
+
+                        imageContent.contents.size == 1 -> {
+                            video.gone()
+                            allContents.first()
+                        }
+
+                        else -> {
+                            ImageContent.IMAGE_EMPTY
+                        }
                     }
 
-                Glide.with(context).load(input.url.medium)
-                    .placeholder(R.drawable.default_callscreen)
-                    .error(R.drawable.default_callscreen).into(callScreenBackground)
+                if (input == ImageContent.IMAGE_EMPTY) {
+                    callScreenBackground.setImageResource(R.drawable.default_callscreen)
+                } else {
+
+                    Glide.with(context).load(input.url.medium)
+                        .placeholder(R.drawable.default_callscreen)
+                        .error(R.drawable.default_callscreen).into(callScreenBackground)
+                }
 
                 // Highlight stroke if selected
                 if (position == selectedPosition) {

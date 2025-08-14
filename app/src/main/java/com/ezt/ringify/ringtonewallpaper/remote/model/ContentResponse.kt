@@ -66,7 +66,11 @@ data class ImageContent(
     val path: String,
     val size: ImageSize,
     val url: ImageUrls
-)
+) {
+    companion object {
+        val IMAGE_EMPTY = ImageContent("", ImageSize(0, 0), ImageUrls("", "", "", ""))
+    }
+}
 
 data class ImageSize(
     val width: Int,

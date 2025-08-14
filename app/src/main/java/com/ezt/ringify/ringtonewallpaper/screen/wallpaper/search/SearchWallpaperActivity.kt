@@ -36,6 +36,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
         TagTrendingAdapter { tag ->
             println("TagTrendingAdapter: $tag")
             binding.searchText.setText(tag.name)
+            binding.searchText.setSelection(tag.name.length)
             binding.trendingIcon.gone()
             binding.trendingTitle.gone()
             binding.trendingRecyclerView.gone()
@@ -80,7 +81,20 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             allResults.layoutManager = GridLayoutManager(this@SearchWallpaperActivity, 3)
 
             tagViewModel.tag.observe(this@SearchWallpaperActivity) { items ->
-                wallpaperAdapter.submitList(items)
+                if (items.isEmpty()) {
+                    trendingTitle.gone()
+                    trendingIcon.gone()
+                    trendingRecyclerView.gone()
+                    noDataLayout.visible()
+                } else {
+                    trendingTitle.visible()
+                    trendingIcon.visible()
+                    trendingRecyclerView.visible()
+                    noDataLayout.gone()
+
+                    wallpaperAdapter.submitList(items)
+                }
+
             }
 
             wallpaperViewModel.searchWallpapers.observe(this@SearchWallpaperActivity) { items ->
@@ -100,6 +114,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                         tagViewModel.loadAllTags()
                     } else {
                         tagViewModel.searchTag(s.toString())
+                        allResults.gone()
                     }
                 }
 

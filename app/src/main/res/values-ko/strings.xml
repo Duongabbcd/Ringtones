@@ -31,8 +31,8 @@
 
     <string name="fav_1">좋아하는 음악 장르 3가지를 선택하세요</string>
     <string name="selection_title">최대 3개만 선택할 수 있습니다</string>
-    <string name="preview">미리보기</string> <!-- Korean -->
-
+    <string name="preview">미리보기</string>
+    <string name="up_three">최대 3개만 선택할 수 있습니다</string>
     <string name="fav_light_1">음악 장르</string>
     <string name="fav_2">좋아하는 배경화면을 선택하세요</string>
     <string name="fav_light_2">선호 배경화면</string>

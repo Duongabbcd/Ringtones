@@ -51,6 +51,12 @@ class AllAvatarAdapter(private val onClickListener: (String) -> Unit) :
             binding.apply {
                 val input = imageContent.url.medium
 
+                if (imageContent == ImageContent.IMAGE_EMPTY) {
+                    circleImage.setImageResource(R.drawable.default_cs_avt)
+                } else {
+                    Glide.with(context).load(input).placeholder(R.drawable.default_cs_avt)
+                        .error(R.drawable.default_cs_avt).into(circleImage)
+                }
 
                 // Highlight stroke if selected
                 if (position == selectedPosition) {
@@ -68,9 +74,6 @@ class AllAvatarAdapter(private val onClickListener: (String) -> Unit) :
                     )
                     binding.circleImage.strokeWidth = 0f
                 }
-
-                Glide.with(context).load(input).placeholder(R.drawable.default_callscreen)
-                    .error(R.drawable.default_callscreen).into(circleImage)
 
                 root.setOnClickListener {
                     println("AllIconViewHolder: $input")

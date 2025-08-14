@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.airbnb.lottie.animation.content.Content
-import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
@@ -24,6 +22,9 @@ class ContentViewModel @Inject constructor(
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
+
+    private val _loading1 = MutableLiveData<Boolean>()
+    val loading1: LiveData<Boolean> = _loading1
 
     private val _loading2 = MutableLiveData<Boolean>()
     val loading2: LiveData<Boolean> = _loading2
@@ -115,8 +116,8 @@ class ContentViewModel @Inject constructor(
 
 
     fun getAllCallScreenAvatars() = viewModelScope.launch {
-        if (!hasMorePages1 || _loading.value == true) return@launch
-        _loading.value = true
+        if (!hasMorePages1 || _loading1.value == true) return@launch
+        _loading1.value = true
         try {
             println("currentPage1: $currentPage1")
             val result = repository.getAllAvatarContent(currentPage1)
@@ -140,15 +141,15 @@ class ContentViewModel @Inject constructor(
             println("loadCallScreens: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading1.value = false
             isLoadingMore = false // ✅ RESET HERE
         }
     }
 
 
     fun getAllCallScreenIcons() = viewModelScope.launch {
-        if (!hasMorePages1 || _loading.value == true) return@launch
-        _loading.value = true
+        if (!hasMorePages1 || _loading2.value == true) return@launch
+        _loading2.value = true
         try {
             println("currentPage1: $currentPage1")
             val result = repository.getAllIconContent(currentPage1)
@@ -173,12 +174,10 @@ class ContentViewModel @Inject constructor(
             println("loadCallScreens: ${e.message}")
             _error.value = e.localizedMessage
         } finally {
-            _loading.value = false
+            _loading2.value = false
             isLoadingMore = false // ✅ RESET HERE
         }
     }
-
-
 
 
 }

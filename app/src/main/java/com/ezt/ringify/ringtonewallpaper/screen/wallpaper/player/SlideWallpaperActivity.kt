@@ -97,6 +97,12 @@ class SlideWallpaperActivity :
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
     private var downloadedUri: Uri? = null
 
+    private var isUserTouch = false
+
+    private val selectedType by lazy {
+        intent.getIntExtra("type", -1)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkDownloadPermissions()
@@ -507,7 +513,10 @@ class SlideWallpaperActivity :
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
-        playSlideWallpaperAdapter.submitList(allRingtones)
+        playSlideWallpaperAdapter.submitList(
+            allRingtones,
+            isPremium = selectedType in listOf<Int>(2, 3)
+        )
 
         carousel = Carousel(this, binding.horizontalWallpapers, playSlideWallpaperAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
@@ -536,6 +545,7 @@ class SlideWallpaperActivity :
                 duration = event.eventTime - event.downTime
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
+                        isUserTouch = false
                         Log.d("PlayerActivity", "Touch DOWN")
                     }
 
@@ -544,9 +554,11 @@ class SlideWallpaperActivity :
                     }
 
                     MotionEvent.ACTION_UP -> {
+                        isUserTouch = true
                         if (duration > 100) {
                             println("horizontalRingtones: $duration and $index")
                             binding.horizontalWallpapers.stopScroll()
+                            println("Tracking RecyclerView.ACTION_UP 0 $index")
                             setUpNewPlayer(index)
                             return@setOnTouchListener false
                         }
@@ -560,12 +572,14 @@ class SlideWallpaperActivity :
 
                         // 👇 Update only if actual index changes
                         if (newIndex != index) {
+                            println("Tracking RecyclerView.ACTION_UP 1 $index and $newIndex")
                             updateIndex(newIndex, "onPositionChange")
                             handler.postDelayed({
                                 setUpNewPlayer(index)
                             }, 300)
                         } else {
-                            // stay on current
+                            // stay on current\
+                            println("Tracking RecyclerView.ACTION_UP 2 $index and $newIndex")
                             setUpNewPlayer(index)
                         }
 
@@ -590,6 +604,9 @@ class SlideWallpaperActivity :
                         }
 
                         RecyclerView.SCROLL_STATE_IDLE -> {
+                            if (!isUserTouch) {
+                                return
+                            }
 
                             val distanceJumped = abs(newIndex - previousIndex)
                             println("🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)")
@@ -600,6 +617,7 @@ class SlideWallpaperActivity :
                             }
 
                             index = newIndex
+                            println("Tracking RecyclerView.SCROLL_STATE_IDLE $index")
                             setUpNewPlayer(index)
                         }
                     }

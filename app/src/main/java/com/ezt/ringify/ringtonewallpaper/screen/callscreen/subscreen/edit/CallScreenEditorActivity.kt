@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,9 @@ import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllAvatarAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackgroundAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
@@ -73,11 +77,10 @@ class CallScreenEditorActivity :
                 binding.currentCallScreen.visible()
                 displayPhotoBackground(photoBackgroundUrl)
             }
-
         }
     }
+
     private var player: Player? = null
-    private var currentVideoUrl: String? = null
     private var currentListener: Player.Listener? = null
     private var hasRenderedFirstFrame = false
     private val allAvatarAdapter: AllAvatarAdapter by lazy {
@@ -236,8 +239,6 @@ class CallScreenEditorActivity :
                 }
             }
 
-
-
             allBackground.layoutManager =
                 LinearLayoutManager(
                     this@CallScreenEditorActivity,
@@ -247,21 +248,75 @@ class CallScreenEditorActivity :
 
             displayPhotoBackground(photoBackgroundUrl)
 
-            contentViewModel.backgroundContent.observe(this@CallScreenEditorActivity) { items ->
-                println("allBackgroundAdapter: $items")
-                allAvatarAdapter.submitList(items)
+            contentViewModel.loading.observe(this@CallScreenEditorActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        ContentItem.CONTENT_EMPTY
+                    }
+                    allBackgroundAdapter.submitList(loadingItems)
 
+                    // Disable scrolling
+                    this@CallScreenEditorActivity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    contentViewModel.selectCallScreenContent.value?.let { items ->
+                        println("allBackgroundAdapter: $items")
+                        allBackgroundAdapter.submitList(items)
+                    }
+
+                    // Re-enable touch
+                    this@CallScreenEditorActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
             }
 
-            contentViewModel.selectCallScreenContent.observe(this@CallScreenEditorActivity) { items ->
-                println("allBackgroundAdapter: $items")
-                allBackgroundAdapter.submitList(items)
+            contentViewModel.loading1.observe(this@CallScreenEditorActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        ImageContent.IMAGE_EMPTY
+                    }
+                    allAvatarAdapter.submitList(loadingItems)
+
+                    // Disable scrolling
+                    this@CallScreenEditorActivity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    contentViewModel.backgroundContent.value?.let { items ->
+                        println("allAvatarAdapter: $items")
+                        allAvatarAdapter.submitList(items)
+                    }
+                    // Re-enable touch
+                    this@CallScreenEditorActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
             }
 
-            contentViewModel.iconContent.observe(this@CallScreenEditorActivity) { items ->
-                allIconAdapter.submitList(items)
-            }
+            contentViewModel.loading2.observe(this@CallScreenEditorActivity) { isLoading ->
+                if (isLoading) {
+                    val loadingItems = List(5) {
+                        Pair<ImageContent, ImageContent>(
+                            ImageContent.IMAGE_EMPTY,
+                            ImageContent.IMAGE_EMPTY
+                        )
+                    }
+                    allIconAdapter.submitList(loadingItems)
 
+                    // Disable scrolling
+                    this@CallScreenEditorActivity.window.setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    )
+                } else {
+                    contentViewModel.iconContent.value?.let { items ->
+                        println("allIconAdapter: $items")
+                        allIconAdapter.submitList(items)
+                    }
+                    // Re-enable touch
+                    this@CallScreenEditorActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
 
             previewBtn.setOnClickListener {
                 startActivity(

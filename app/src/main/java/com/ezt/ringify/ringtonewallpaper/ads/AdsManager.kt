@@ -34,7 +34,7 @@ object AdsManager {
     var isDebug = true
     var isTestDevice = false
 
-    var AOA_SPLASH = ""
+    var AOA_SPLASH = "ca-app-pub-8048589936179473/9817013711"
     var INTER_SPLASH = InterHolderAdmob("")
     var BANNER_SPLASH = ""
     var NATIVE_SPLASH = NativeHolderAdmob("")
@@ -46,7 +46,7 @@ object AdsManager {
     var NATIVE_FULL_SCREEN_INTRO = NativeHolderAdmob("")
 
     var INTER_INTRO = InterHolderAdmob("")
-    var BANNER_HOME = ""
+    var BANNER_HOME = "ca-app-pub-8048589936179473/3632278117"
     var BANNER_COLLAP_HOME = BannerHolderAdmob("")
     var NATIVE_COLLAP_HOME = NativeHolderAdmob("")
     var NATIVE_CUSTOM_HOME = NativeHolderAdmob("")

@@ -91,13 +91,16 @@ class SearchRingtoneActivity :
                     // Text is changing
                     val searchText = s.toString()
                     inputText = searchText
+                    if (inputText.isEmpty()) {
+                        displayByCondition("")
+                    }
+
                     ringtoneViewModel.searchRingtonesByName(inputText)
                     ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
                         if (result.isEmpty()) {
                             noDataLayout.visible()
                             allResults.gone()
                         } else {
-
                             noDataLayout.gone()
                             allResults.visible()
                             ringToneAdapter.submitList1(result)

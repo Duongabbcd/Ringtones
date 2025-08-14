@@ -28,9 +28,10 @@ import com.google.android.gms.ads.LoadAdError
 object BannerAds {
 
     private const val BANNER_TEST_ID = "ca-app-pub-3940256099942544/9214589741"
-    private val BANNER_ID_DEFAULT = AdsManager.BANNER_HOME
-    private const val BANNER_ID_COLLAPSIBLE = "ad-id-here"
-    private const val BANNER_HOME_COLLAPSIBLE = "ad-id-here"
+
+    private val BANNER_ID_DEFAULT = "ca-app-pub-8048589936179473/3632278117"
+    private const val BANNER_ID_COLLAPSIBLE = "ca-app-pub-8048589936179473/3443177052"
+    private const val BANNER_HOME_COLLAPSIBLE = "ca-app-pub-8048589936179473/3443177052"
 
     private var isInitBanner = false
 
