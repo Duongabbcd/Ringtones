@@ -49,7 +49,13 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
 
    suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
 
-   suspend fun getWallPapersByTag(tagId: Int) = apiService.getWallpapersByTag(tagId = tagId)
+    suspend fun getAllWallPapersByTag(tagId: Int) = apiService.getAllWallpapersByTag(tagId = tagId)
+    suspend fun getWallPapersByTag(tagId: Int, typeNumber: Int = 1, isActive: Int = 0, page: Int) =
+        apiService.getWallpapersByTag(
+            tagId = tagId,
+            where = "type+$typeNumber, private+$isActive",
+            page = page
+        )
 
     suspend fun getPremiumWallpaper() = apiService.getPremiumWallpaper()
    suspend fun getCategoryById(categoryId: Int) = apiService.getCategoryById(where = "type 1,id $categoryId")

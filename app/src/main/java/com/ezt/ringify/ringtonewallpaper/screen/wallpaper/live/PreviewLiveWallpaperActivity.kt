@@ -66,6 +66,9 @@ class PreviewLiveWallpaperActivity :
     private val type by lazy {
         intent.getIntExtra("type", -1)
     }
+    private val tagId by lazy {
+        intent.getIntExtra("tagId", -1)
+    }
 
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
@@ -88,7 +91,7 @@ class PreviewLiveWallpaperActivity :
         super.onCreate(savedInstanceState)
         loadBanner(this, BANNER_HOME)
         checkDownloadPermissions()
-        Log.d("PreviewLive", "savedInstanceState: $savedInstanceState")
+        Log.d("PreviewLive", "savedInstanceState: $type and $tagId")
         if (savedInstanceState != null) {
             currentIndex = savedInstanceState.getInt("current_index", 0)
             index = currentIndex
@@ -111,6 +114,10 @@ class PreviewLiveWallpaperActivity :
             checkInternetConnected(isConnected)
         }
         when (type) {
+            -10 -> wallpaperViewModel.searchWallpapers3.observe(this@PreviewLiveWallpaperActivity) { items ->
+                appendNewRingtones(items)
+            }
+
             1 -> {
                 favouriteViewModel.allLiveWallpapers.observe(this@PreviewLiveWallpaperActivity) { items ->
                     appendNewRingtones(items)
@@ -461,7 +468,6 @@ class PreviewLiveWallpaperActivity :
                         "INTER_WALLPAPER"
                     )
                 }
-
                 favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
                 favouriteViewModel.loadLiveAllWallpapers()
 
@@ -491,6 +497,7 @@ class PreviewLiveWallpaperActivity :
                 if (isAtEnd && !isLoadingMore && type != 1) {
                     isLoadingMore = true
                     when (type) {
+                        -10 -> wallpaperViewModel.searchVideoWallpaperByTag(tagId = tagId)
                         2 -> wallpaperViewModel.loadLiveWallpapers()
 
                         4 -> wallpaperViewModel.loadPremiumVideoWallpaper()

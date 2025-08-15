@@ -119,8 +119,8 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                             FireBaseConfig.getValue("totalFreeWallpapers")
 
                         AdsManager.countClickRingtone = 0
-                        AdsManager.countClickWallpaper = 0
-                        AdsManager.countClickCallscreen = 0
+//                        AdsManager.countClickWallpaper = 0
+//                        AdsManager.countClickCallscreen = 0
 
 
                         if (isInitAds.get()) {

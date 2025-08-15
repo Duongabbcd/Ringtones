@@ -18,10 +18,7 @@ import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.countClickCallscreen
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.countClickRingtone
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.countClickWallpaper
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isTestDevice
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
@@ -576,8 +573,8 @@ object InterAds {
                     onLoadFailed?.invoke()
                     return false
                 }
-                countClickWallpaper++
-                if (countClickWallpaper % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
+                countClickRingtone++
+                if (countClickRingtone % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
                     onLoadFailed?.invoke()
                     return false
                 }
@@ -588,8 +585,8 @@ object InterAds {
                     onLoadFailed?.invoke()
                     return false
                 }
-                countClickCallscreen++
-                if (countClickCallscreen % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
+                countClickRingtone++
+                if (countClickRingtone % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
                     onLoadFailed?.invoke()
                     return false
 
@@ -602,7 +599,7 @@ object InterAds {
             return false
         }
 
-        if (AdsManager.isTestDevice) {
+        if (isTestDevice) {
             onLoadFailed?.invoke()
             return false
         }

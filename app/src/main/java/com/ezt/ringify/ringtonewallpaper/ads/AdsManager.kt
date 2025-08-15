@@ -58,8 +58,8 @@ object AdsManager {
     var ONRESUME = ""
 
     var countClickRingtone = 0
-    var countClickWallpaper = 0
-    var countClickCallscreen = 0
+//    var countClickWallpaper = 0
+//    var countClickCallscreen = 0
 
 //    fun checkAdsTest(ad: NativeAd?) {
 //        try {
@@ -698,7 +698,7 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                     return
                 }
-                countClickWallpaper++
+                countClickRingtone++
                 if (countClickRingtone % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
                     callback.onAdClosedOrFailed()
                     return
@@ -711,7 +711,7 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                     return
                 }
-                countClickCallscreen++
+                countClickRingtone++
 
                 if (countClickRingtone % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
                     callback.onAdClosedOrFailed()
@@ -807,7 +807,7 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                     return
                 }
-                countClickWallpaper++
+                countClickRingtone++
                 if (countClickRingtone % RemoteConfig.INTER_WALLPAPER.toInt() != 0) {
                     callback.onAdClosedOrFailed()
                     return
@@ -819,7 +819,7 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                     return
                 }
-                countClickCallscreen++
+                countClickRingtone++
 
                 if (countClickRingtone % RemoteConfig.INTER_CALLSCREEN.toInt() != 0) {
                     callback.onAdClosedOrFailed()

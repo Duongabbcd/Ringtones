@@ -20,6 +20,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPhoneSettingBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.DialogResetBinding
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Utils
@@ -31,12 +32,13 @@ class PhoneSettingActivity :
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     }
 
-    private var isNotifEnabled: Boolean = false
+    private var isNotificationEnabled: Boolean = false
     private lateinit var settingsResultLauncher: ActivityResultLauncher<Intent>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadBanner(this)
         Log.d(
             TAG,
             "PhoneSettingActivity: ${
@@ -69,7 +71,7 @@ class PhoneSettingActivity :
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         // Toggle normally
-                        isNotifEnabled = !isNotifEnabled
+                        isNotificationEnabled = !isNotificationEnabled
                         saveAndUpdateSwitchUI()
                     } else {
                         // Show dialog
@@ -77,7 +79,7 @@ class PhoneSettingActivity :
                     }
                 } else {
                     // OS < Android 13 → toggle normally
-                    isNotifEnabled = !isNotifEnabled
+                    isNotificationEnabled = !isNotificationEnabled
                     saveAndUpdateSwitchUI()
                 }
             }
@@ -216,9 +218,9 @@ class PhoneSettingActivity :
     }
 
     private fun saveAndUpdateSwitchUI() {
-        Common.setNotificationEnable(this, isNotifEnabled)
+        Common.setNotificationEnable(this, isNotificationEnabled)
         binding.notificationSwitcher.setImageResource(
-            if (isNotifEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
+            if (isNotificationEnabled) R.drawable.switch_enabled else R.drawable.switch_disabled
         )
     }
 

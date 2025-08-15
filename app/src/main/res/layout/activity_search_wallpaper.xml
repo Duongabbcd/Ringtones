@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="@dimen/_30sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,37 +116,96 @@
             app:layout_constraintStart_toStartOf="parent"
             android:clipToPadding="false"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/allResults"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/searchResult"
             android:visibility="gone"
-            android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/_12sdp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_24sdp"
-            android:layout_marginBottom="@dimen/_8sdp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/searchText"
-            app:layout_constraintBottom_toTopOf="@+id/frBanner"
-            app:layout_constraintStart_toStartOf="parent"
-            android:clipToPadding="false"/>
+            android:layout_marginTop="@dimen/_8sdp"
+            app:layout_constraintBottom_toTopOf="@id/frBanner"
+            app:layout_constraintTop_toBottomOf="@id/searchText">
 
-        <ProgressBar
-            android:id="@+id/loading1"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:indeterminateTint="@color/main_color"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/singleWallpaper"
+                    style="@style/CustomTextStyleSemiBold14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:text="@string/single"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allResults1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:clipToPadding="false"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/singleWallpaper" />
+
+                <TextView
+                    android:id="@+id/slideWallpaper"
+                    style="@style/CustomTextStyleSemiBold14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:text="@string/slide"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/allResults1" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allResults2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:clipToPadding="false"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/slideWallpaper" />
+
+
+                <TextView
+                    android:id="@+id/videoWallpaper"
+                    style="@style/CustomTextStyleSemiBold14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:text="@string/video"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/allResults2" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allResults3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:clipToPadding="false"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/videoWallpaper" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/noDataLayout"
-            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
             android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/searchText"

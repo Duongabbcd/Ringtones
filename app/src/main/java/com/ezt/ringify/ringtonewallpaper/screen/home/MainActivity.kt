@@ -5,9 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
@@ -43,11 +47,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestNotificationPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    Common.setNotificationEnable(this, true)
+                } else {
+                    Toast.makeText(
+                        this,
+                        resources.getString(R.string.permission_denied),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
         loadBanner(this, BANNER_HOME)
         var countOpen = Common.getCountOpenApp(this)
 
         if (countOpen < 1) {
-            showNotificationDialog(countOpen)
+            showNotificationDialog()
             countOpen++
             Common.setCountOpenApp(this, countOpen)
         }
@@ -139,36 +157,56 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    private fun showNotificationDialog(countOpen: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && countOpen == 1) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                return
+    private lateinit var requestNotificationPermissionLauncher: ActivityResultLauncher<String>
+    private var openedNotificationSettings = false
+
+    private fun showNotificationDialog() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ → runtime permission check
+            val granted = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (granted) {
+                Common.setNotificationEnable(this, true)
             } else {
                 val dialog = NotificationDialog(this) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                        100
-                    )
+                    requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
-                dialog.show()
+                if (!dialog.isShowing) dialog.show()
             }
+
         } else {
-            val dialog = NotificationDialog(this) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    100
-                )
+            // Android < 13 → system setting check
+            val notificationsEnabled =
+                NotificationManagerCompat.from(this).areNotificationsEnabled()
+            if (notificationsEnabled) {
+                Common.setNotificationEnable(this, true)
+            } else {
+                val dialog = NotificationDialog(this) {
+                    openedNotificationSettings = true
+                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                    }
+                    startActivity(intent)
+                }
+                if (!dialog.isShowing) dialog.show()
             }
-            dialog.show()
         }
     }
 
     override fun onResume() {
         super.onResume()
+        // If we just came back from settings, check again before showing dialog
+        if (openedNotificationSettings) {
+            openedNotificationSettings = false
+            val notificationsEnabled =
+                NotificationManagerCompat.from(this).areNotificationsEnabled()
+            if (notificationsEnabled) {
+                Common.setNotificationEnable(this, true)
+            }
+        }
         displayScreen()
     }
 

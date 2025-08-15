@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ezt.ringify.ringtonewallpaper.remote.api.SearchRequest
-import com.ezt.ringify.ringtonewallpaper.remote.model.Tag
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.model.WallpaperResponse
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
@@ -38,6 +36,15 @@ class WallpaperViewModel @Inject constructor(
 
     private val _searchWallpapers = MutableLiveData<List<Wallpaper>>()
     val searchWallpapers: LiveData<List<Wallpaper>> = _searchWallpapers
+
+    private val _searchWallpapers1 = MutableLiveData<List<Wallpaper>>()
+    val searchWallpapers1: LiveData<List<Wallpaper>> = _searchWallpapers1
+
+    private val _searchWallpapers2 = MutableLiveData<List<Wallpaper>>()
+    val searchWallpapers2: LiveData<List<Wallpaper>> = _searchWallpapers2
+
+    private val _searchWallpapers3 = MutableLiveData<List<Wallpaper>>()
+    val searchWallpapers3: LiveData<List<Wallpaper>> = _searchWallpapers3
 
     private val _liveWallpapers = MutableLiveData<List<Wallpaper>>()
     val liveWallpapers: LiveData<List<Wallpaper>> = _liveWallpapers
@@ -267,22 +274,6 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-
-    fun searchWallpaperByTag(tagId: Int) = viewModelScope.launch {
-        _loading1.value = true
-        try {
-            val result = repository.getWallPapersByTag(tagId)
-            _searchWallpapers.value = result.data.data
-
-            _error.value = null
-        } catch (e: Exception) {
-            println("loadWallpapers: ${e.message}")
-            _error.value = e.localizedMessage
-        } finally {
-            _loading1.value = false
-        }
-    }
-
     fun loadPremiumVideoWallpaper() = viewModelScope.launch {
         if (!hasMorePages1 || _loading1.value == true) return@launch
         _loading1.value = true
@@ -300,6 +291,96 @@ class WallpaperViewModel @Inject constructor(
         } finally {
             _loading1.value = false
         }
+    }
+
+    fun searchWallpaperByTag(tagId: Int) = viewModelScope.launch {
+        try {
+            val result = repository.getAllWallPapersByTag(tagId)
+
+            _searchWallpapers.value = result.data.data
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
+    fun searchSingleWallpaperByTag(tagId: Int) = viewModelScope.launch {
+
+        if (!hasMorePages1 || _loading1.value == true) return@launch
+        _loading1.value = true
+        try {
+            val result1 = repository.getWallPapersByTag(tagId, 1, page = currentPage1)
+            val result2 = repository.getWallPapersByTag(tagId, 3, isActive = 1, currentPage1)
+            hasMorePages1 = result1.data.nextPageUrl != null && result2.data.nextPageUrl != null
+            currentPage1++
+
+            allWallpapers1.addAll(result1.data.data)
+            allWallpapers1.addAll(result2.data.data)
+            println("searchSingleWallpaperByTag: $allWallpapers1")
+            _searchWallpapers1.value = allWallpapers1
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading1.value = false
+        }
+    }
+
+    fun searchSlideWallpaperByTag(tagId: Int) = viewModelScope.launch {
+        if (!hasMorePages2 || _loading2.value == true) return@launch
+        _loading2.value = true
+        try {
+            val result1 = repository.getWallPapersByTag(tagId, 3, page = currentPage2)
+            hasMorePages2 = result1.data.nextPageUrl != null
+            currentPage2++
+
+            allWallpapers2.addAll(result1.data.data)
+            _searchWallpapers2.value = allWallpapers1
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading2.value = false
+        }
+    }
+
+    fun searchVideoWallpaperByTag(tagId: Int) = viewModelScope.launch {
+        if (!hasMorePages3 || _loading3.value == true) return@launch
+        _loading3.value = true
+        try {
+            val result1 = repository.getWallPapersByTag(tagId, 2, page = currentPage3)
+            val result2 = repository.getWallPapersByTag(tagId, 4, page = currentPage3)
+
+            hasMorePages3 = result1.data.nextPageUrl != null && result2.data.nextPageUrl != null
+            currentPage3++
+
+            allWallpapers3.addAll(result1.data.data)
+            allWallpapers3.addAll(result2.data.data)
+            _searchWallpapers3.value = allWallpapers3
+            _error.value = null
+        } catch (e: Exception) {
+            println("loadWallpapers: ${e.message}")
+            _error.value = e.localizedMessage
+        } finally {
+            _loading3.value = false
+        }
+    }
+
+    fun resetSearchPaging() {
+        currentPage1 = 1
+        currentPage2 = 1
+        currentPage3 = 1
+        hasMorePages1 = true
+        hasMorePages2 = true
+        hasMorePages3 = true
+        allWallpapers1.clear()
+        allWallpapers2.clear()
+        allWallpapers3.clear()
     }
 
 }

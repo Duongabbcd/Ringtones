@@ -5,7 +5,6 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.CategoriesResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.model.RingtoneResponse
-import com.ezt.ringify.ringtonewallpaper.remote.model.Tag
 import com.ezt.ringify.ringtonewallpaper.remote.model.TagResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.TagSearchingResponse
 import com.ezt.ringify.ringtonewallpaper.remote.model.WallpaperResponse
@@ -103,10 +102,19 @@ interface ApiService {
 
 
     @GET("api/v1/wallpapers?app=1")
-    suspend fun getWallpapersByTag(
+    suspend fun getAllWallpapersByTag(
         @Query("with") with: String = "tags+id,name-apps+id,name",
         @Query("tag") tagId: Int
     ): WallpaperResponse
+
+    @GET("api/v1/wallpapers?app=1")
+    suspend fun getWallpapersByTag(
+        @Query("with") with: String = "tags+id,name-apps+id,name",
+        @Query("tag") tagId: Int,
+        @Query("where") where: String = "type+4, private+1",
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
+
 
     @GET("api/v1/wallpapers?app=1&where=type+2")
     suspend fun getLiveWallpaper(

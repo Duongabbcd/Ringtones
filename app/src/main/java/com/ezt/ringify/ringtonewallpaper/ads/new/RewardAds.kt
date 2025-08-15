@@ -6,19 +6,19 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
+import com.adjust.sdk.Adjust
+import com.adjust.sdk.AdjustAdRevenue
+import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
+import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.adjust.sdk.Adjust
-import com.adjust.sdk.AdjustAdRevenue
-import com.adjust.sdk.AdjustConfig
-import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
-import com.ezt.ringify.ringtonewallpaper.R
 
 object RewardAds {
 
@@ -33,7 +33,7 @@ object RewardAds {
     var mLoadingDialog: Dialog? = null
 
     fun initRewardAds(context: Context) {
-        if (!isCanLoadAds()) return
+        if (mRewardAds != null || !isCanLoadAds()) return
 
         mRewardAds = null
         isLoading = true
@@ -61,7 +61,7 @@ object RewardAds {
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.d(TAG, error.toString())
+                    Log.d(TAG, "onAdFailedToLoad: $error")
                     mRewardAds = null
                     isLoading = false
                 }
@@ -74,7 +74,7 @@ object RewardAds {
     private fun isCanLoadAds(): Boolean = !isLoading && !isShowing
 
     private fun isCanShowAds(): Boolean {
-        println("isLoading $isLoading and isShowing $isShowing")
+        Log.d(TAG, "isLoading $isLoading and isShowing $isShowing")
 //        if (isLoading || isShowing) return false
         Log.e(TAG, "mInterstitialAd == null")
         return mRewardAds != null
@@ -93,7 +93,7 @@ object RewardAds {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        println("isCanShowAds: ${isCanShowAds()}")
+        Log.d(TAG, "isCanShowAds: $mRewardAds")
         if (isCanShowAds()) {
             try {
                 showAdsFull(activity, callback)
@@ -123,7 +123,6 @@ object RewardAds {
             override fun onAdDismissedFullScreenContent() {
                 isShowing = false
                 mRewardAds = null
-                initRewardAds(context)
                 callback.onAdDismiss()
             }
         }
@@ -191,13 +190,13 @@ object RewardAds {
                             override fun onAdShowedFullScreenContent() {
                                 dismissAdsDialog()
                                 isShowing = true
+                                initRewardAds(context)
                                 callback.onAdShowed()
                             }
 
                             override fun onAdDismissedFullScreenContent() {
                                 isShowing = false
                                 mRewardAds = null
-                                initRewardAds(context)
                                 callback.onAdDismiss()
                             }
                         }

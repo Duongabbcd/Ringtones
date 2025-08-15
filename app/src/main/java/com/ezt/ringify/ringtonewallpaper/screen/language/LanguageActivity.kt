@@ -9,7 +9,6 @@ import com.admob.max.dktlibrary.AppOpenManager
 import com.admob.max.dktlibrary.utils.admod.NativeHolderAdmob
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.NATIVE_LANGUAGE_ID2
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
@@ -45,7 +44,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
 
         start = intent.getBooleanExtra("fromSplash", false)
         binding.apply {
-            showAds()
             if(RemoteConfig.NATIVE_INTRO_070625 != "0") {
                 AdsManager.loadNative(this@LanguageActivity, AdsManager.NATIVE_INTRO)
             } else {
@@ -138,7 +136,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                 adapter2?.updatePosition(selectedLanguage)
                 if(isFirstTime && start) {
                     isFirstTime = false
-                    showAds(NATIVE_LANGUAGE_ID2)
                 }
             }
 
