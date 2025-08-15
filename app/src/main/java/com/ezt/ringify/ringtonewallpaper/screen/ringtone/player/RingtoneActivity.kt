@@ -59,7 +59,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private var downloadedUri: Uri? = null
 
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
-
+    private var isPlayerReleased = false
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
     private val playRingtoneAdapter: PlayRingtoneAdapter by lazy {
@@ -149,6 +149,31 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             }
         }
     }
+
+    private fun releasePlayer() {
+        if (::exoPlayer.isInitialized) {
+            exoPlayer.release()
+            isPlayerReleased = true
+        }
+    }
+
+    private fun releasePlayerAndResetUI() {
+        exoPlayer.stop()
+        exoPlayer.clearMediaItems()
+        releasePlayer()
+        playRingtoneAdapter.updateProgress(0f)
+        playRingtoneAdapter.setCurrentPlayingPosition(index, false) // -1 means no item is playing
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        if (::exoPlayer.isInitialized) {
+            exoPlayer.release()
+            isPlayerReleased = true
+        }
+    }
+
 
 
     private var currentRingtone = RingtonePlayerRemote.currentPlayingRingtone
@@ -355,6 +380,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             download.setOnClickListener {
                 checkPayBeforeUsingRingtone {
                     downloadRingtone()
+
+                    if(returnedFromSettings) {
+                        returnedFromSettings = false
+                        RingtonePlayerRemote.setCurrentRingtone(currentRingtone)
+                        startActivity(Intent(this@RingtoneActivity, RingtoneActivity::class.java))
+                    }
                 }
             }
 
@@ -362,6 +393,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 checkPayBeforeUsingRingtone {
                     isNotification = false
                     setupRingtone()
+
+                    if(returnedFromSettings) {
+                        returnedFromSettings = false
+                        RingtonePlayerRemote.setCurrentRingtone(currentRingtone)
+                        startActivity(Intent(this@RingtoneActivity, RingtoneActivity::class.java))
+                    }
                 }
             }
 
@@ -369,6 +406,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 checkPayBeforeUsingRingtone {
                     isNotification = true
                     setupRingtone(true)
+
+                    if(returnedFromSettings) {
+                        returnedFromSettings = false
+                        RingtonePlayerRemote.setCurrentRingtone(currentRingtone)
+                        startActivity(Intent(this@RingtoneActivity, RingtoneActivity::class.java))
+                    }
                 }
             }
         }
@@ -380,6 +423,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         listName.addAll(origin)
         if (!listName.contains(currentRingtone.name)) {
             val rewardBottomSheet = RewardBottomSheet(this@RingtoneActivity) {
+                returnedFromSettings = true
                 RewardAds.showAds(this@RingtoneActivity, object : RewardAds.RewardCallback {
                     override fun onAdShowed() {
                         Log.d(TAG, "onAdShowed")
@@ -392,6 +436,8 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                         }
                         listName.add(currentRingtone.name)
                         Common.setAllFreeRingtones(this@RingtoneActivity, listName)
+
+                        setUpNewPlayer(index)
                         onClickListener()
                     }
 
@@ -738,6 +784,14 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private fun updateIndex(newIndex: Int, caller: String) {
         Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
         index = newIndex
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(returnedFromSettings) {
+            releasePlayerAndResetUI()
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

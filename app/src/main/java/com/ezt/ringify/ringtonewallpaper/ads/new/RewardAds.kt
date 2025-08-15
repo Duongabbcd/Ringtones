@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Looper
 import android.util.Log
 import com.adjust.sdk.Adjust
 import com.adjust.sdk.AdjustAdRevenue
@@ -19,6 +20,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import java.util.logging.Handler
 
 object RewardAds {
 
@@ -32,46 +34,9 @@ object RewardAds {
 
     var mLoadingDialog: Dialog? = null
 
-    fun initRewardAds(context: Context) {
-        if (mRewardAds != null || !isCanLoadAds()) return
-
-        mRewardAds = null
-        isLoading = true
-
-        RewardedAd.load(
-            context,
-            if (BuildConfig.DEBUG) REWARDED_INTER_TEST_ID else REWARDED_INTER_ID_DEFAULT,
-            AdRequest.Builder().build(),
-            object : RewardedAdLoadCallback() {
-                override fun onAdLoaded(ad: RewardedAd) {
-                    Log.d(TAG, "Load OK")
-                    mRewardAds = ad
-                    ad.setOnPaidEventListener { adValue ->
-                        try {
-                            MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
-                            val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
-                                setRevenue(adValue.valueMicros / 1_000_000.0, adValue.currencyCode)
-                            }
-                            Adjust.trackAdRevenue(adRevenue)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                    isLoading = false
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.d(TAG, "onAdFailedToLoad: $error")
-                    mRewardAds = null
-                    isLoading = false
-                }
-            }
-        )
-    }
 
     private fun getAdRequest(): AdRequest = AdRequest.Builder().build()
 
-    private fun isCanLoadAds(): Boolean = !isLoading && !isShowing
 
     private fun isCanShowAds(): Boolean {
         Log.d(TAG, "isLoading $isLoading and isShowing $isShowing")
@@ -80,31 +45,6 @@ object RewardAds {
         return mRewardAds != null
     }
 
-    fun showAds(activity: Activity, callback: RewardCallback) {
-        MyApplication.trackingEvent("user_get_reward")
-        try {
-            val isPro = Prefs(activity).premium
-            val isSub = Prefs(activity).isRemoveAd
-            if (isPro || isSub) {
-                callback.onPremium()
-                Log.e(TAG, "pro/subbed")
-                return
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        Log.d(TAG, "isCanShowAds: $mRewardAds")
-        if (isCanShowAds()) {
-            try {
-                showAdsFull(activity, callback)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                callback.onAdFailedToShow()
-            }
-        } else {
-            callback.onAdFailedToShow()
-        }
-    }
 
     private fun showAdsFull(context: Activity, callback: RewardCallback) {
         mRewardAds?.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -122,7 +62,7 @@ object RewardAds {
 
             override fun onAdDismissedFullScreenContent() {
                 isShowing = false
-                mRewardAds = null
+                initRewardAds(context)
                 callback.onAdDismiss()
             }
         }
@@ -231,6 +171,87 @@ object RewardAds {
 
     fun dismissAdsDialog() {
         mLoadingDialog?.dismiss()
+    }
+
+    fun showAds(activity: Activity, callback: RewardCallback) {
+        val ad = mRewardAds
+        if (ad != null) {
+            // Ad is ready — show immediately
+            ad.show(activity) { rewardItem ->
+                Log.d("RewardAds", "Reward earned: ${rewardItem.amount} ${rewardItem.type}")
+                callback.onEarnedReward()
+            }
+            ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdShowedFullScreenContent() {
+                    callback.onAdShowed()
+                }
+
+                override fun onAdDismissedFullScreenContent() {
+                    mRewardAds = null // Release reference
+                    callback.onAdDismiss()
+                    initRewardAds(activity.applicationContext) // Preload next ad
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    mRewardAds = null
+                    callback.onAdFailedToShow()
+                    initRewardAds(activity.applicationContext) // Retry loading
+                }
+            }
+        } else {
+            // Ad not ready — try loading, then show
+            Log.d("RewardAds", "Ad not ready, loading first...")
+            initRewardAds(activity.applicationContext)
+
+            // Small delay to give loading a chance; ideally you’d chain the load callback
+            android.os.Handler(Looper.getMainLooper()).postDelayed({
+                if (mRewardAds != null) {
+                    showAds(activity, callback) // Try again
+                } else {
+                    callback.onAdFailedToShow()
+                }
+            }, 1500)
+        }
+    }
+
+    fun initRewardAds(context: Context) {
+        if (mRewardAds != null || isLoading || !isCanLoadAds()) return
+
+        isLoading = true
+        RewardedAd.load(
+            context,
+            if (BuildConfig.DEBUG) REWARDED_INTER_TEST_ID else REWARDED_INTER_ID_DEFAULT,
+            AdRequest.Builder().build(),
+            object : RewardedAdLoadCallback() {
+                override fun onAdLoaded(ad: RewardedAd) {
+                    Log.d("RewardAds", "Load OK")
+                    mRewardAds = ad
+                    ad.setOnPaidEventListener { adValue ->
+                        try {
+                            MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
+                            val adRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
+                                setRevenue(adValue.valueMicros / 1_000_000.0, adValue.currencyCode)
+                            }
+                            Adjust.trackAdRevenue(adRevenue)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    isLoading = false
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    Log.d("RewardAds", "onAdFailedToLoad: $error")
+                    mRewardAds = null
+                    isLoading = false
+                }
+            }
+        )
+    }
+
+    private fun isCanLoadAds(): Boolean {
+        // your logic here
+        return true
     }
 
     interface RewardCallback {
