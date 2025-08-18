@@ -96,7 +96,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
                         PreviewWallpaperActivity::class.java
                     ).apply {
                         putExtra("wallpaperCategoryId", 75)
-                        putExtra("type", 1)
+                        putExtra("type", 4)
                     })
             }
 

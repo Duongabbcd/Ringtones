@@ -38,11 +38,11 @@ class PreviewWallpaperActivity :
 
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter { wallpaper ->
-            if (selectedType in listOf<Int>(1, -3)) {
+            if (selectedType in listOf<Int>(4, -3)) {
                 startActivity(
                     Intent(this, PreviewLiveWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", categoryId)
-                        putExtra("type", if (selectedType == 1) 4 else type)
+                        putExtra("type", type)
                     }
                 )
             } else {
@@ -126,6 +126,7 @@ class PreviewWallpaperActivity :
                                 when (selectedType) {
                                     2 -> wallPaperViewModel.loadSlideWallpaper()
                                     3 -> wallPaperViewModel.loadSingleWallpaper()
+                                    4 -> wallPaperViewModel.loadPremiumVideoWallpaper()
                                     else -> wallPaperViewModel.loadPremiumVideoWallpaper()
                                 }
                             }
@@ -202,7 +203,7 @@ class PreviewWallpaperActivity :
                                 )
                             }
 
-                            1 -> {
+                            4 -> {
                                 nameScreen.text = getString(R.string.video)
                                 wallPaperViewModel.loadPremiumVideoWallpaper()
                                 previewSelectItems(
