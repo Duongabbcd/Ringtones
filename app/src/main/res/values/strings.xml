@@ -210,4 +210,12 @@
     <string name="up_three">You can select up to 3 only</string>
     <string name="unknwon_title">Unknown title</string>
     <string name="unknwon_author">Unknown author</string>
+
+    <string name="set_alarm">Set Alarm</string>
+    <string name="five_seconds">5 seconds</string>
+    <string name="fifteen_seconds">15 seconds</string>
+    <string name="one_minute">1 minute</string>
+    <string name="five_minutes">5 minute</string>
+    <string name="one_hour">1 hour</string>
+    <string name="one_day">1 day</string>
 </resources>

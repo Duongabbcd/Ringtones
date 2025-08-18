@@ -115,6 +115,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _trendingWallpaper.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -134,6 +135,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _newWallpaper.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading2.value = false
@@ -154,6 +156,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _subWallpaper1.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading3.value = false
@@ -173,6 +176,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _subWallpaper2.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading4.value = false
@@ -192,6 +196,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _subWallpaper3.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading5.value = false
@@ -228,6 +233,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _liveWallpapers.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -248,6 +254,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _slideWallpaper.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading2.value = false
@@ -268,6 +275,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _singleWallpapers.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading3.value = false
@@ -287,6 +295,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _premiumWallpapers.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -301,6 +310,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _searchWallpapers.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -324,6 +334,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _searchWallpapers1.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -343,6 +354,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _searchWallpapers2.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading2.value = false
@@ -365,6 +377,7 @@ class WallpaperViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadWallpapers: ${e.message}")
+            _searchWallpapers3.value = emptyList<Wallpaper>()
             _error.value = e.localizedMessage
         } finally {
             _loading3.value = false

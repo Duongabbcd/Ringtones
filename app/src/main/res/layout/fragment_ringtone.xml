@@ -179,6 +179,34 @@
                     app:layout_constraintTop_toBottomOf="@id/popular"
                     tools:listitem="@layout/item_ringtone" />
 
+                <LinearLayout
+                    android:id="@+id/noDataLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@id/popular"
+                    app:layout_constraintStart_toStartOf="@id/popular"
+                    app:layout_constraintTop_toTopOf="@id/popular">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_120sdp"
+                        android:layout_height="@dimen/_120sdp"
+                        android:contentDescription="@string/imageview"
+                        android:src="@drawable/no_data" />
+
+                    <TextView
+                        style="@style/CustomTextStyle14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/no_data_desc" />
+
+                </LinearLayout>
+
                 <ProgressBar
                     android:id="@+id/loading1"
                     android:layout_width="@dimen/_24sdp"

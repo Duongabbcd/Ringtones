@@ -28,10 +28,6 @@ import java.io.IOException
 
 class PhoneSettingActivity :
     BaseActivity<ActivityPhoneSettingBinding>(ActivityPhoneSettingBinding::inflate) {
-    private val isTiramisuOrAbove by lazy {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-    }
-
     private var isNotificationEnabled: Boolean = false
     private lateinit var settingsResultLauncher: ActivityResultLauncher<Intent>
 
@@ -230,6 +226,10 @@ class PhoneSettingActivity :
 
     companion object {
         val TAG = PhoneSettingActivity::class.java.name
+
+        val isTiramisuOrAbove by lazy {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+        }
     }
 }
 

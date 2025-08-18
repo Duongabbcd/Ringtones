@@ -77,7 +77,8 @@ class RingtoneViewModel @Inject constructor(
 
             _error.value = null
         } catch (e: Exception) {
-            println("loadRingtones: ${e.message}")
+            println("loadPopular error: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -97,6 +98,7 @@ class RingtoneViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -137,6 +139,7 @@ class RingtoneViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -153,6 +156,7 @@ class RingtoneViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -187,6 +191,7 @@ class RingtoneViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -221,6 +226,7 @@ class RingtoneViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -255,6 +261,7 @@ class RingtoneViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
+            _customRingtones.value = emptyList<Ringtone>()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false

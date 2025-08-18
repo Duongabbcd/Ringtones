@@ -83,6 +83,7 @@ class FavouriteWallpaperViewModel @Inject constructor(
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
+                _allWallpapers.value = emptyList<Wallpaper>()
                 _error.value = e.localizedMessage
             } finally {
                 _loading1.value = false
@@ -98,6 +99,7 @@ class FavouriteWallpaperViewModel @Inject constructor(
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
+                _allWallpapers.value = emptyList<Wallpaper>()
                 _error.value = e.localizedMessage
             } finally {
                 _loading2.value = false
@@ -113,6 +115,7 @@ class FavouriteWallpaperViewModel @Inject constructor(
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
+                _allWallpapers.value = emptyList<Wallpaper>()
                 _error.value = e.localizedMessage
             } finally {
                 _loading3.value = false

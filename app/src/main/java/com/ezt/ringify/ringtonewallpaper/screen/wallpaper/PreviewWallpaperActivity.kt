@@ -38,11 +38,11 @@ class PreviewWallpaperActivity :
 
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter { wallpaper ->
-            if (type == -3) {
+            if (selectedType in listOf<Int>(1, -3)) {
                 startActivity(
                     Intent(this, PreviewLiveWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", categoryId)
-                        putExtra("type", 1)
+                        putExtra("type", if (selectedType == 1) 4 else type)
                     }
                 )
             } else {
@@ -61,7 +61,7 @@ class PreviewWallpaperActivity :
     }
 
     private val categoryId by lazy { intent.getIntExtra("wallpaperCategoryId", -1) }
-    private val type by lazy { intent.getIntExtra("type", 1) }
+    private val selectedType by lazy { intent.getIntExtra("type", 1) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,7 +123,7 @@ class PreviewWallpaperActivity :
                         -1 -> wallPaperViewModel.loadNewWallpapers()
                         else -> {
                             if (categoryId == 75) {
-                                when (type) {
+                                when (selectedType) {
                                     2 -> wallPaperViewModel.loadSlideWallpaper()
                                     3 -> wallPaperViewModel.loadSingleWallpaper()
                                     else -> wallPaperViewModel.loadPremiumVideoWallpaper()
@@ -158,6 +158,7 @@ class PreviewWallpaperActivity :
                     favourite.loadSlideAllWallpapers()
                     previewLiveFavouriteItems(favourite.loading2, favourite.allSlideWallpapers)
                 }
+
                 -3 -> {
                     nameScreen.text = getString(R.string.favourite)
                     // Attach observer only once
@@ -182,7 +183,7 @@ class PreviewWallpaperActivity :
 
                 else -> {
                     if (categoryId == 75) {
-                        when (type) {
+                        when (selectedType) {
                             2 -> {
                                 nameScreen.text = getString(R.string.slide)
                                 wallPaperViewModel.loadSlideWallpaper()

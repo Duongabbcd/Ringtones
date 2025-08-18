@@ -18,6 +18,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.BannerAds
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
+import com.ezt.ringify.ringtonewallpaper.ads.new.RewardAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
 import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
@@ -71,6 +72,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
 
         checkIfNewWeek()
+        RewardAds.initRewardAds(this)
 
 
         selectedTab = savedInstanceState?.getInt("selectedTab") ?: 0

@@ -20,7 +20,6 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import java.util.logging.Handler
 
 object RewardAds {
 
@@ -195,7 +194,6 @@ object RewardAds {
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                     mRewardAds = null
                     callback.onAdFailedToShow()
-                    initRewardAds(activity.applicationContext) // Retry loading
                 }
             }
         } else {

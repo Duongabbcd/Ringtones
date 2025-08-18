@@ -149,14 +149,17 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                     when(categoryId) {
                         -101 -> {
                             binding.nameScreen.text = getString(R.string.new_ringtones)
+                            ringtoneViewModel.loadNewRingtones()
                         }
 
                         -102 -> {
                             binding.nameScreen.text = getString(R.string.weekly_trending)
+                            ringtoneViewModel.loadWeeklyTrendingRingtones()
                         }
 
                         -103 -> {
                             binding.nameScreen.text = getString(R.string.editor_s_choices)
+                            ringtoneViewModel.loadEditorChoicesRingtones()
                         }
                         -100 -> {
                             ringtoneViewModel.loadPopular(sortOrder)

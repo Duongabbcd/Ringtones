@@ -10,6 +10,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.emptyList
 
 @HiltViewModel
 class TagViewModel @Inject constructor(
@@ -43,6 +44,7 @@ class TagViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("Exception: ${e.message}")
+            _tag.value = emptyList<Tag>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false

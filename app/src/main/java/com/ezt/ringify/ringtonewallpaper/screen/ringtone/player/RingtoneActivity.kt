@@ -364,7 +364,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private fun showGoToSettingsDialog() {
         Common.showDialogGoToSetting(this@RingtoneActivity) { result ->
             if (result) {
-                returnedFromSettings = true
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
@@ -392,26 +391,14 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             ringTone.setOnClickListener {
                 checkPayBeforeUsingRingtone {
                     isNotification = false
-                    setupRingtone()
-
-                    if(returnedFromSettings) {
-                        returnedFromSettings = false
-                        RingtonePlayerRemote.setCurrentRingtone(currentRingtone)
-                        startActivity(Intent(this@RingtoneActivity, RingtoneActivity::class.java))
-                    }
+                    setupRingtone(isNotification)
                 }
             }
 
             notification.setOnClickListener {
                 checkPayBeforeUsingRingtone {
                     isNotification = true
-                    setupRingtone(true)
-
-                    if(returnedFromSettings) {
-                        returnedFromSettings = false
-                        RingtonePlayerRemote.setCurrentRingtone(currentRingtone)
-                        startActivity(Intent(this@RingtoneActivity, RingtoneActivity::class.java))
-                    }
+                    setupRingtone(isNotification)
                 }
             }
         }
@@ -423,7 +410,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         listName.addAll(origin)
         if (!listName.contains(currentRingtone.name)) {
             val rewardBottomSheet = RewardBottomSheet(this@RingtoneActivity) {
-                returnedFromSettings = true
                 RewardAds.showAds(this@RingtoneActivity, object : RewardAds.RewardCallback {
                     override fun onAdShowed() {
                         Log.d(TAG, "onAdShowed")
@@ -544,6 +530,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     private fun setupRingtone(isNotification: Boolean = false) {
+        this.isNotification = isNotification
         if (!RingtoneHelper.hasWriteSettingsPermission(this)) {
             // Ask the user to grant WRITE_SETTINGS
             returnedFromSettings = true
@@ -553,6 +540,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
         // Now permission is granted—set the ringtone
         setRingtoneAfterPermission(isNotification)
+
     }
 
     private fun setRingtoneAfterPermission(isNotification: Boolean = false) {
@@ -789,7 +777,10 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     override fun onResume() {
         super.onResume()
         if(returnedFromSettings) {
-            releasePlayerAndResetUI()
+            returnedFromSettings = false
+            if (RingtoneHelper.hasWriteSettingsPermission(this)) {
+                setRingtoneAfterPermission(isNotification)
+            }
         }
 
     }

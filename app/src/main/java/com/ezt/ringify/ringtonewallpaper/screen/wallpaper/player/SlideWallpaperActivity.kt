@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player
 import alirezat775.lib.carouselview.Carousel
 import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
+import android.R.attr.type
 import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.content.ComponentName
@@ -22,6 +23,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +46,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.WallpaperTarget
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.crop.CropActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.AlarmDialog
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.dialog.SetWallpaperDialog
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.SlideshowWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -98,7 +101,9 @@ class SlideWallpaperActivity :
     private var downloadedUri: Uri? = null
 
     private var isUserTouch = false
-
+    private val wallpaperCategoryId by lazy {
+        intent.getIntExtra("wallpaperCategoryId", -1)
+    }
     private val selectedType by lazy {
         intent.getIntExtra("type", -1)
     }
@@ -114,7 +119,6 @@ class SlideWallpaperActivity :
         }
 
         if (savedInstanceState != null) {
-
             index = savedInstanceState.getInt("wallpaper_index", 0)
             Log.d(TAG, "savedInstanceState 0: $index")
         } else {
@@ -175,6 +179,16 @@ class SlideWallpaperActivity :
     private fun setupButtons() {
 
         binding.apply {
+            println("selectedType is: $type")
+            alarm.isVisible = selectedType == 2
+            alarm.setOnClickListener {
+                val dialog = AlarmDialog(this@SlideWallpaperActivity) { totalTime ->
+                    SlideshowWallpaperService.setupSlideShowInterval = totalTime
+                    playSlideWallpaperAdapter.setSlideshowInterval(totalTime)
+                }
+                dialog.show()
+            }
+
             share.setOnClickListener {
                 val total = currentWallpaper.contents.size
                 if (total == 1) {
@@ -218,7 +232,31 @@ class SlideWallpaperActivity :
 
             wallpaper.setOnClickListener {
                 val imageUrl = currentWallpaper.contents
-                setUpPhotoByCondition(imageUrl)
+                if (imageUrl.size == 1 && wallpaperCategoryId != 75) {
+                    checkPayBeforeNormalWallpaper {
+                        val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
+                            settingOption = result
+                            checkPayBeforeNormalWallpaper {
+                                val intent =
+                                    Intent(
+                                        this@SlideWallpaperActivity,
+                                        CropActivity::class.java
+                                    ).apply {
+                                        putExtra("imageUrl", imageUrl.first().url.full)
+                                    }
+                                cropLauncher.launch(intent)
+                            }
+                        }
+                        dialog.show()
+                    }
+
+                } else {
+                    checkPayBeforeSpecialWallpaper {
+                        lifecycleScope.launch {
+                            setUpLiveWallpaperByCondition(imageUrl)
+                        }
+                    }
+                }
             }
 
         }
@@ -381,34 +419,6 @@ class SlideWallpaperActivity :
         }
     }
 
-
-    private fun setUpPhotoByCondition(imageUrl: List<ImageContent>) {
-        Log.d(TAG, "setUpPhotoByCondition: ${imageUrl.size}")
-        if (imageUrl.size == 1) {
-            InterAds.preloadInterAds(
-                this,
-                alias = InterAds.ALIAS_INTER_DOWNLOAD,
-                adUnit = InterAds.INTER_DOWNLOAD
-            )
-            val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
-                settingOption = result
-                checkPayBeforeNormalWallpaper {
-                    val intent =
-                        Intent(this@SlideWallpaperActivity, CropActivity::class.java).apply {
-                            putExtra("imageUrl", imageUrl.first().url.full)
-                        }
-                    cropLauncher.launch(intent)
-                }
-            }
-            dialog.show()
-        } else {
-            checkPayBeforeSpecialWallpaper {
-                lifecycleScope.launch {
-                    setUpLiveWallpaperByCondition(imageUrl)
-                }
-            }
-        }
-    }
 
     private suspend fun setUpLiveWallpaperByCondition(imageUrls: List<ImageContent>) {
         val bitmap = urlToBitmap(imageUrls.first().url.full) ?: return
@@ -743,7 +753,7 @@ class SlideWallpaperActivity :
 
     override fun onResume() {
         super.onResume()
-        InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_WALLPAPER, InterAds.INTER_WALLPAPER)
+        InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_DOWNLOAD, InterAds.INTER_DOWNLOAD)
         RewardAds.initRewardAds(this)
     }
 

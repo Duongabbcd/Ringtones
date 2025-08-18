@@ -12,6 +12,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.CategoryWallpaperAdapt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.emptyMap
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
@@ -66,6 +67,7 @@ class CategoryViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")
+            _ringtoneCategory.value = emptyList<Category>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -85,6 +87,7 @@ class CategoryViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("Exception: ${e.message}")
+            _wallpaperCategory.value = emptyList<Category>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -165,7 +168,7 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 var page = currentPageMap[categoryId] ?: 1
-                var hasMorePages = hasMorePagesMap[categoryId] ?: true
+                var hasMorePages = hasMorePagesMap[categoryId] != false
                 val wallpapersForCategory =
                     wallpaperCache[categoryId]?.toMutableList() ?: mutableListOf()
 
@@ -193,6 +196,7 @@ class CategoryViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 Log.e("ViewModel", "Failed: ${e.message}")
+                _wallpapersMap.value = emptyMap<Int, List<Wallpaper>>()
                 _error.value = e.message
             } finally {
                 loadingCategories.remove(categoryId)

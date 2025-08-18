@@ -16,6 +16,7 @@ class SlideshowWallpaperService : WallpaperService() {
 
     companion object {
         var imageUrls: List<String> = emptyList()
+        var setupSlideShowInterval: Long? = null
     }
 
     override fun onCreateEngine(): Engine {
@@ -26,7 +27,7 @@ class SlideshowWallpaperService : WallpaperService() {
         private var currentImageIndex = 0
         private val handler = Handler(Looper.getMainLooper())
         private var running = true
-        private val slideshowInterval = 5000L // 5 seconds
+        private var slideshowInterval = 5000L // 5 seconds
 
         private var currentBitmap: Bitmap? = null
         private var previousBitmap: Bitmap? = null
@@ -39,6 +40,7 @@ class SlideshowWallpaperService : WallpaperService() {
         }
 
         private fun startSlideshow() {
+            slideshowInterval = setupSlideShowInterval ?: 5000L
             handler.post(object : Runnable {
                 override fun run() {
                     if (!running || imageUrls.isEmpty()) return

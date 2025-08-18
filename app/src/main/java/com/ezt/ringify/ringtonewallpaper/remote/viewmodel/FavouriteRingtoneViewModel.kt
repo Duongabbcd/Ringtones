@@ -24,10 +24,25 @@ class FavouriteRingtoneViewModel @Inject constructor(
     private val _allRingtones = MutableLiveData<List<Ringtone>>()
     val allRingtones: LiveData<List<Ringtone>> get() = _allRingtones
 
+    private val _loading1 = MutableLiveData<Boolean>()
+    val loading1: LiveData<Boolean> = _loading1
+
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
     fun loadAllRingtones() {
         viewModelScope.launch {
-            _allRingtones.value = repository.getAllRingtones()
-            println("loadRingtoneById: ${_allRingtones.value}")
+            _loading1.value = true
+            try {
+                _allRingtones.value = repository.getAllRingtones()
+                _error.value = null
+            } catch (e: Exception) {
+                println("loadAllRingtones: ${e.message}")
+                _allRingtones.value = emptyList<Ringtone>()
+                _error.value = e.localizedMessage
+            } finally {
+                _loading1.value = false
+            }
         }
     }
 

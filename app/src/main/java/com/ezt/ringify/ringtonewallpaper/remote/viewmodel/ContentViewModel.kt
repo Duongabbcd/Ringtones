@@ -62,6 +62,7 @@ class ContentViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")
+            _callScreenContent.value = emptyList<ImageContent>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -77,6 +78,7 @@ class ContentViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")
+            _callScreenContent.value = emptyList<ImageContent>()
             _error.value = e.localizedMessage
         } finally {
             _loading2.value = false
@@ -107,6 +109,7 @@ class ContentViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")
+            _callScreenContent.value = emptyList<ImageContent>()
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
@@ -139,6 +142,8 @@ class ContentViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")
+            _callScreenContent.value = emptyList<ImageContent>()
+
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
@@ -172,6 +177,8 @@ class ContentViewModel @Inject constructor(
             _error.value = null
         } catch (e: Exception) {
             println("loadCallScreens: ${e.message}")
+            _callScreenContent.value = emptyList<ImageContent>()
+
             _error.value = e.localizedMessage
         } finally {
             _loading2.value = false
