@@ -24,7 +24,7 @@ data class Ringtone(
     val id: Int,
     val name: String,
     val contents: RingtoneContents,
-    var author: Author = Author(-1, "", 0),
+    var author: Author? = Author(-1, "", 0),
 
     @SerializedName("categories")
     val categories: List<Category>,

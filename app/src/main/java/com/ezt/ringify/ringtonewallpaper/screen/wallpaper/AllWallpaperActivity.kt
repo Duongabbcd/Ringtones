@@ -119,7 +119,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
     }
 
     companion object {
-        val TAG = AllWallpaperActivity::class.java.name
+        val TAG = AllWallpaperActivity.javaClass.simpleName
     }
 }
 
@@ -228,6 +228,6 @@ class CategoryWallpaperAdapter(
     }
 
     companion object {
-        val TAG = CategoryWallpaperAdapter::class.java.name
+        val TAG = CategoryWallpaperAdapter.javaClass.simpleName
     }
 }

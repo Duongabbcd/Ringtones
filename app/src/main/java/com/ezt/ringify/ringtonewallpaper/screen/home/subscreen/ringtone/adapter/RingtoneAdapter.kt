@@ -62,7 +62,8 @@ class RingtoneAdapter(private val onClickListener: (Ringtone) -> Unit) :
             binding.apply {
                 println("RingtoneViewHolder: $ringTone")
                 ringToneName.text = ringTone.name
-                ringToneAuthor.text = ringTone.author.name ?: ""
+                ringToneAuthor.text =
+                    ringTone.author?.name ?: context.resources.getString(R.string.unknwon_author)
 
                 if (ringTone == Ringtone.EMPTY_RINGTONE) {
                     ringToneName.text = context.resources.getString(R.string.unknwon_title)

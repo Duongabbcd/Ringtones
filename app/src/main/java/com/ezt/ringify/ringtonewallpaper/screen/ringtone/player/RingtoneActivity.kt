@@ -628,7 +628,8 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         playRingtoneAdapter.setCurrentPlayingPosition(position)
         viewModel.loadRingtoneById(currentRingtone.id)
         binding.currentRingtoneName.text = currentRingtone.name
-        binding.currentRingtoneAuthor.text = currentRingtone.author.name
+        binding.currentRingtoneAuthor.text =
+            currentRingtone.author?.name ?: resources.getString(R.string.unknwon_author)
         exoPlayer.release()
         exoPlayer = ExoPlayer.Builder(this).build()
         handler.removeCallbacks(progressUpdater)
@@ -803,7 +804,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     companion object {
-        private val TAG = RingtoneActivity::class.java.name
+        private val TAG = RingtoneActivity.javaClass.simpleName
     }
 }
 

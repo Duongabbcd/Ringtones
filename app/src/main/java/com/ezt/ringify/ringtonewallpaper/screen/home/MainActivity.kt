@@ -200,6 +200,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onResume() {
         super.onResume()
+
         // If we just came back from settings, check again before showing dialog
         if (openedNotificationSettings) {
             openedNotificationSettings = false
@@ -276,7 +277,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     companion object {
         var selectedTab = 0
         var isChangeTheme = false
-        private var TAG = MainActivity::class.java.name
+        private var TAG = MainActivity.javaClass.simpleName
 
         fun loadBanner(activity: AppCompatActivity, banner: String = BANNER_HOME) {
             println("RemoteConfig.BANNER_COLLAP_ALL_070625: ${RemoteConfig.BANNER_ALL}")

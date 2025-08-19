@@ -8,19 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
-import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemVideoBinding
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.CreditDialog
-import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 
 @OptIn(UnstableApi::class)
 class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter() {
@@ -85,7 +85,7 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
         fun bind(wallpaper: Wallpaper, isCurrent: Boolean) {
             val videoUrl = wallpaper.contents.firstOrNull()?.url?.full
 
-            binding.premiumIcon.visible()
+            binding.premiumIcon.gone()
 
             binding.ccIcon.setOnClickListener {
                 val dialog = CreditDialog(context)

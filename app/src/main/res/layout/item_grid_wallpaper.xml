@@ -17,6 +17,7 @@
 
     <ImageView
         android:id="@+id/liveIcon"
+        android:visibility="gone"
         android:contentDescription="@string/imageview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,6 +30,7 @@
     <ImageView
         android:id="@+id/premiumIcon"
         android:contentDescription="@string/imageview"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/icon_premium"

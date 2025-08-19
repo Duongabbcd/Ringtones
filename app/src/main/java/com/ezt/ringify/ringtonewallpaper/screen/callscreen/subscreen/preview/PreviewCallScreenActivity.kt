@@ -123,6 +123,6 @@ class PreviewCallScreenActivity :
     }
 
     companion object {
-        val TAG = PreviewCallScreenActivity::class.java.name
+        val TAG = PreviewCallScreenActivity.javaClass.simpleName
     }
 }

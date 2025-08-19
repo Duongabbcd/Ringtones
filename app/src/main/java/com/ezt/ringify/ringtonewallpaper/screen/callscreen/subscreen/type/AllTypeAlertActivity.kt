@@ -71,13 +71,11 @@ class AllTypeAlertActivity :
     }
 }
 
-
-
 class TypeAlertAdapter(private val onClickListener: (String) -> Unit) :
     RecyclerView.Adapter<TypeAlertAdapter.TypeAlertViewHolder>() {
     private val allTypeAlerts: MutableList<String> = mutableListOf()
     private var selectedPosition: Int = RecyclerView.NO_POSITION
-    private val TAG = TypeAlertAdapter::class.java.name
+    private val TAG = "TypeAlertAdapter"
     private lateinit var context: Context
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -120,7 +118,6 @@ class TypeAlertAdapter(private val onClickListener: (String) -> Unit) :
                 } else {
                     binding.selectButton.setImageResource(R.drawable.icon_unselect_circle)
                 }
-
 
                 root.setOnClickListener {
                     Log.d(TAG, "AllIconViewHolder: $item")

@@ -9,24 +9,22 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.RingtoneCategoryActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.CategoryAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.FilteredRingtonesActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.RingtoneCategoryActivity
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
-import com.ezt.ringify.ringtonewallpaper.remote.model.Category
-import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -103,7 +101,7 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
 
             noInternet.tryAgain.setOnClickListener {
                 withSafeContext { ctx ->
-                    val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                    val connected = connectionViewModel.isConnectedLiveData.value == true
                     if (connected) {
                         origin.visible()
                         noInternet.root.visibility = View.VISIBLE
@@ -166,9 +164,21 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 }
             }
 
+            ringtoneViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+                loading2.isVisible = isLoading
+            }
+
             ringtoneViewModel.popular.observe(viewLifecycleOwner) { items ->
-                RingtonePlayerRemote.setRingtoneQueue(items)
-                ringToneAdapter.submitList(items.take(5))
+                if (items.isEmpty()) {
+                    noDataLayout.visible()
+                    allPopular.gone()
+                } else {
+                    noDataLayout.gone()
+                    allPopular.visible()
+                    RingtonePlayerRemote.setRingtoneQueue(items)
+                    ringToneAdapter.submitList(items.take(5))
+                }
+
             }
         }
     }

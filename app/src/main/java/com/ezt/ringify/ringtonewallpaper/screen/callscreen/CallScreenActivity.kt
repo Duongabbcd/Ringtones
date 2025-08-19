@@ -293,7 +293,7 @@ class CallScreenActivity :
     }
 
     companion object {
-        val TAG = CallScreenActivity::class.java.name
+        val TAG = CallScreenActivity.javaClass.simpleName
 
         fun getStartIntent(
             context: Context,

@@ -9,14 +9,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.databinding.ItemBigCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
@@ -57,7 +54,7 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
         limitedWallpapers.clear()
         limitedWallpapers.addAll(list.take(10))
 
-        premium = isPremium
+//        premium = isPremium
         println("WallpaperAdapter: ${list.firstOrNull()}")
         notifyDataSetChanged()
     }

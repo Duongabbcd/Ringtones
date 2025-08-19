@@ -209,6 +209,6 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     }
 
     companion object {
-        val TAG = PreviewWallpaperActivity::class.java.name
+        val TAG = PreviewWallpaperActivity.javaClass.simpleName
     }
 }

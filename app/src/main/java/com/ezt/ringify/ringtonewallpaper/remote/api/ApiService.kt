@@ -23,17 +23,17 @@ interface ApiService {
         @Query("where", encoded = true) where: String
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1&order_by=name+asc")
+    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1,active+1&order_by=name+asc")
     suspend fun getPopularRingtones(
         @Query("page") page: Int = 1,
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1")
+    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1,active+1")
     suspend fun getTrendingRingtones(
         @Query("page")page: Int = 1
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=private+1")
+    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=private+1,active+1")
     suspend fun fetchPrivateRingtones(
         @Query("page") page: Int = 1
     ): RingtoneResponse
@@ -50,16 +50,20 @@ interface ApiService {
 
     @GET("api/v1/ringtones?app=1")
     suspend fun getRingtonesByCategory(
-        @Query("    category") categoryId: Int,
+        @Query("category") categoryId: Int,
         @Query("with") with: String = "author+id,name,active-categories+id,name,thumbnail,active,content_count",
         @Query("order_by") orderBy: String,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("where") where: String = "where=active+1",
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&where=type+1&order_by=updated_at+desc")
+    @GET("api/v1/ringtones")
     suspend fun getNewRingtones(
-        @Query("with") with: String = "author+id,name,active-categories+id,name,thumbnail,active,content_count",
-        @Query("page") page: Int = 1
+        @Query("app") app: Int = 1,
+        @Query("order_by") orderBy: String = "updated_at desc",
+        @Query("with") with: String = "...",
+        @Query("page") page: Int = 1,
+        @Query("where") where: String = "type 1,active 1"
     ): RingtoneResponse
 
     //Wallpaper

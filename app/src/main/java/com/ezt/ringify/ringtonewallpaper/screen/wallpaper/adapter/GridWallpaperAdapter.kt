@@ -112,8 +112,8 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
             val wallpaper = allWallpapers.getOrNull(position) ?: return
 
             binding.apply {
-                liveIcon.visibility = if (isLive) View.VISIBLE else View.GONE
-                premiumIcon.visibility = if (isPremium) View.VISIBLE else View.GONE
+//                liveIcon.visibility = if (isLive) View.VISIBLE else View.GONE
+//                premiumIcon.visibility = if (isPremium) View.VISIBLE else View.GONE
 
                 val url = wallpaper.thumbnail?.url?.medium
                     ?: wallpaper.contents.firstOrNull()?.url?.full

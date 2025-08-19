@@ -199,7 +199,7 @@ class SearchRingtoneActivity :
     }
 
     companion object {
-        val TAG = SearchRingtoneActivity::class.java.name
+        val TAG = SearchRingtoneActivity.javaClass.simpleName
         
         fun backToScreen(activity: AppCompatActivity, title: String = "INTER_RINGTONE") {
             val inter = when (title) {

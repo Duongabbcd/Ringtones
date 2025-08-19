@@ -52,7 +52,6 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initAds()
         isLoadAdsDone = false
     }
 
@@ -74,6 +73,10 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
     }
 
     private fun initAds() {
+        if (RemoteConfig.AOA_SPLASH == "0") {
+            showAds()
+            return
+        }
         OpenAds.initOpenAds(this) {
             isLoadAdsDone = true
             handler.removeCallbacks(runnable)
@@ -108,6 +111,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                 object : FireBaseConfig.CompleteListener {
                     override fun onComplete() {
                         RemoteConfig.BANNER_ALL = FireBaseConfig.getValue("BANNER_ALL")
+                        RemoteConfig.AOA_SPLASH = FireBaseConfig.getValue("AOA_SPLASH")
                         RemoteConfig.INTER_LANGUAGE = FireBaseConfig.getValue("INTER_LANGUAGE")
                         RemoteConfig.INTER_DOWNLOAD = FireBaseConfig.getValue("INTER_DOWNLOAD")
                         RemoteConfig.INTER_RINGTONE = FireBaseConfig.getValue("INTER_RINGTONE")
@@ -127,6 +131,7 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                             return
                         }
                         isInitAds.set(true)
+                        initAds()
                         setupCMP()
 
                     }

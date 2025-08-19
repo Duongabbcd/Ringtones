@@ -101,9 +101,7 @@ class SlideWallpaperActivity :
     private var downloadedUri: Uri? = null
 
     private var isUserTouch = false
-    private val wallpaperCategoryId by lazy {
-        intent.getIntExtra("wallpaperCategoryId", -1)
-    }
+    private val wallpaperCategoryId by lazy { intent.getIntExtra("wallpaperCategoryId", -1) }
     private val selectedType by lazy {
         intent.getIntExtra("type", -1)
     }
@@ -180,7 +178,7 @@ class SlideWallpaperActivity :
 
         binding.apply {
             println("selectedType is: $type")
-            alarm.isVisible = selectedType == 2
+            alarm.isVisible = currentWallpaper.contents.size > 1
             alarm.setOnClickListener {
                 val dialog = AlarmDialog(this@SlideWallpaperActivity) { totalTime ->
                     SlideshowWallpaperService.setupSlideShowInterval = totalTime
@@ -444,7 +442,7 @@ class SlideWallpaperActivity :
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
-                ComponentName(packageName, SlideshowWallpaperService::class.java.name)
+                ComponentName(packageName, SlideshowWallpaperService.javaClass.simpleName)
             )
         }
         startActivity(intent)
@@ -547,7 +545,7 @@ class SlideWallpaperActivity :
 
                 override fun onScroll(dx: Int, dy: Int) {
                     lastDx = dx // ⬅️ Save dx for later use
-                    Log.d("PlayerActivity", "Scrolling... dx = $dx")
+                    Log.d(TAG, "Scrolling... dx = $dx")
                 }
             })
 
@@ -557,11 +555,11 @@ class SlideWallpaperActivity :
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         isUserTouch = false
-                        Log.d("PlayerActivity", "Touch DOWN")
+                        Log.d(TAG, "Touch DOWN")
                     }
 
                     MotionEvent.ACTION_MOVE -> {
-                        Log.d("PlayerActivity", "Touch MOVE")
+                        Log.d(TAG, "Touch MOVE")
                     }
 
                     MotionEvent.ACTION_UP -> {
@@ -594,7 +592,7 @@ class SlideWallpaperActivity :
                             setUpNewPlayer(index)
                         }
 
-                        Log.d("PlayerActivity", "Touch UP - Scrolled to index=$index (dx=$lastDx)")
+                        Log.d(TAG, "Touch UP - Scrolled to index=$index (dx=$lastDx)")
                     }
                 }
                 false
@@ -626,7 +624,7 @@ class SlideWallpaperActivity :
                             )
 
                             if (distanceJumped >= 2) {
-                                Log.d("PlayerActivity", "🛑 Too fast! Jumped $distanceJumped items")
+                                Log.d(TAG, "🛑 Too fast! Jumped $distanceJumped items")
                                 recyclerView.stopScroll()
                             }
 
@@ -738,14 +736,6 @@ class SlideWallpaperActivity :
         }
     }
 
-    companion object {
-        var settingOption = 0
-        var currentIndex = 0
-
-        private val TAG = SlideWallpaperActivity::class.java.name
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("wallpaper_index", index)
@@ -755,9 +745,23 @@ class SlideWallpaperActivity :
         super.onResume()
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_DOWNLOAD, InterAds.INTER_DOWNLOAD)
         RewardAds.initRewardAds(this)
+
+        binding.horizontalWallpapers.suppressLayout(false)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.horizontalWallpapers.suppressLayout(true)
     }
 
     override fun onBackPressed() {
         SearchRingtoneActivity.backToScreen(this@SlideWallpaperActivity, "INTER_WALLPAPER")
+    }
+
+    companion object {
+        var settingOption = 0
+        var currentIndex = 0
+
+        private const val TAG = "SlideWallpaperActivity"
     }
 }

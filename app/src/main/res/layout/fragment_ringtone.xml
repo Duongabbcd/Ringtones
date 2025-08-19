@@ -186,7 +186,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@id/popular"
                     app:layout_constraintStart_toStartOf="@id/popular"
                     app:layout_constraintTop_toTopOf="@id/popular">

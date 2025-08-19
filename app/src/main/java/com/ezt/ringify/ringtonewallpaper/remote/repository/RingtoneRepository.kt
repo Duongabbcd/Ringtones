@@ -18,7 +18,7 @@ class RingtoneRepository @Inject constructor(
     private val apiService: ApiService
 ) {
     suspend fun getRingtoneById(ringtoneId: Int): RingtoneResponse =
-        apiService.getRingtoneById(where = "id+$ringtoneId")
+        apiService.getRingtoneById(where = "id+$ringtoneId,active+1")
     suspend fun fetchPopularRingtones(page: Int): RingtoneResponse = apiService.getPopularRingtones(page)
     suspend fun fetchTrendingRingtones(currentPage2: Int): RingtoneResponse = apiService.getTrendingRingtones(currentPage2)
     suspend fun fetchPrivateRingtones(currentPage2: Int): RingtoneResponse =

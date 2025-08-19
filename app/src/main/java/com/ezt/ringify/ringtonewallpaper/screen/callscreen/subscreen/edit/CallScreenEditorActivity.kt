@@ -402,7 +402,7 @@ class CallScreenEditorActivity :
     }
 
     companion object {
-        val TAG = CallScreenEditorActivity::class.java.name
+        val TAG = CallScreenEditorActivity.javaClass.simpleName
     }
 
 }

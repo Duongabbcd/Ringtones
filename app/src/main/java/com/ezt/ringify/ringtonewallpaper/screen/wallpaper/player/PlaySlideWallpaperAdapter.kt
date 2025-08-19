@@ -43,7 +43,7 @@ class PlaySlideWallpaperAdapter(
 
     fun submitList(new: List<Wallpaper>, isPremium: Boolean = false) {
         println("PlaySlideWallpaperAdapter: ${new.firstOrNull()}")
-        isPremiumType = isPremium
+//        isPremiumType = isPremium
         items.clear()
         items.addAll(new)
         notifyDataSetChanged()

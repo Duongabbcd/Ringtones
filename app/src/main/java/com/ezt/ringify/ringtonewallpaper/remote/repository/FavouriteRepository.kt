@@ -8,6 +8,7 @@ import com.ezt.ringify.ringtonewallpaper.local.dao.LiveWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.RingtoneDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.SlideWallpaperDao
 import com.ezt.ringify.ringtonewallpaper.local.dao.WallpaperDao
+import com.ezt.ringify.ringtonewallpaper.remote.model.Author
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.model.WallpaperContent.Companion.OBJECT_EMPTY
@@ -89,7 +90,7 @@ class FavouriteRepository @Inject constructor(
 
 fun Ringtone.toEntity() : RingtoneEntity =
     RingtoneEntity( id = id, name = name, contents = contents,
-        author = author, category = categories,
+        author = author ?: Author(-1, "", 0), category = categories,
         active = active, alertLicense = alertLicense, order = order,
         isPrivate = isPrivate, trend = trend, popular = popular,
         dailyRating = dailyRating, weeklyRating = weeklyRating,

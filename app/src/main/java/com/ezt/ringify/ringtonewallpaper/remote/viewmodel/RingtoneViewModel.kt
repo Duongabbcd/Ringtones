@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class RingtoneViewModel @Inject constructor(
@@ -166,44 +167,53 @@ class RingtoneViewModel @Inject constructor(
     fun loadNewRingtones() = viewModelScope.launch {
         _loading1.value = true
         try {
+            val backupRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
+            val allNewRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
+
             val backupList = Common.getAllNewRingtones(contexts)
             if (backupList.isNotEmpty()) {
-                val backupRingtones = mutableListOf<Ringtone>()
-                backupList.onEach { id ->
-                    backupRingtones.addAll(repository.getRingtoneById(id).data.data)
+                backupRingtones.clear()
+                val backupRingtones = backupList.flatMap { id ->
+                    repository.getRingtoneById(id).data.data
                 }
                 _customRingtones.value = backupRingtones
-
                 _error.value = null
                 return@launch
             }
-            println("searchRingtonesByName")
-            val result = repository.fetchNewRingtones(1)
-            val totalPage = if (result.data.total / 30 < 1) 1 else result.data.total / 30
-            val randomNumbers = (1..totalPage).shuffled().take(1)
-            val allNewRingtones = mutableListOf<Ringtone>()
-            println("randomNumbers: $randomNumbers")
-            allNewRingtones.addAll(repository.fetchNewRingtones(randomNumbers.first()).data.data)
-            val fixedRingtoneId = allNewRingtones.map { it.id }
-            Common.setAllNewRingtones(context = contexts, fixedRingtoneId)
-            _customRingtones.value = allNewRingtones
 
+            val firstPage = repository.fetchNewRingtones(1)
+            val totalPage = maxOf(1, (firstPage.data.total + 29) / 30)
+            val randomPage = (1..totalPage).random()
+
+            allNewRingtones.clear()
+            allNewRingtones.addAll(repository.fetchNewRingtones(randomPage).data.data)
+            Common.setAllNewRingtones(contexts, allNewRingtones.map { it.id })
+
+            _customRingtones.value = allNewRingtones
             _error.value = null
+
+        } catch (e: CancellationException) {
+            println("loadNewRingtones cancelled")
+            throw e
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
-            _customRingtones.value = emptyList<Ringtone>()
+            _customRingtones.value = emptyList()
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
         }
     }
 
+
     fun loadWeeklyTrendingRingtones() = viewModelScope.launch {
         _loading1.value = true
         try {
+            val backupRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
+            val allNewRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
+
             val backupList = Common.getAllTrendingRingtones(contexts)
             if (backupList.isNotEmpty()) {
-                val backupRingtones = mutableListOf<Ringtone>()
+                backupRingtones.clear()
                 backupList.onEach { id ->
                     backupRingtones.addAll(repository.getRingtoneById(id).data.data)
                 }
@@ -212,18 +222,22 @@ class RingtoneViewModel @Inject constructor(
                 _error.value = null
                 return@launch
             }
-            println("searchRingtonesByName")
             val result = repository.fetchTrendingRingtones(1)
-            val totalPage = if (result.data.total / 30 < 1) 1 else result.data.total / 30
+            val totalPage = maxOf(1, (result.data.total + 29) / 30)
             val randomNumbers = (1..totalPage).shuffled().take(1)
-            val allNewRingtones = mutableListOf<Ringtone>()
+
             println("randomNumbers: $randomNumbers")
+            allNewRingtones.clear()
             allNewRingtones.addAll(repository.fetchTrendingRingtones(randomNumbers.first()).data.data)
             val fixedRingtoneId = allNewRingtones.map { it.id }
             Common.setAllWeeklyTrendingRingtones(context = contexts, fixedRingtoneId)
             _customRingtones.value = allNewRingtones
 
             _error.value = null
+        } catch (e: CancellationException) {
+            // coroutine was cancelled (normal lifecycle), don't mark as error
+            println("loadNewRingtones cancelled")
+            throw e // always rethrow cancellation so coroutine can stop properly
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
             _customRingtones.value = emptyList<Ringtone>()
@@ -236,9 +250,12 @@ class RingtoneViewModel @Inject constructor(
     fun loadEditorChoicesRingtones() = viewModelScope.launch {
         _loading1.value = true
         try {
+            val backupRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
+            val allNewRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
+
             val backupList = Common.getAllEditorChoices(contexts)
             if (backupList.isNotEmpty()) {
-                val backupRingtones = mutableListOf<Ringtone>()
+                backupRingtones.clear()
                 backupList.onEach { id ->
                     backupRingtones.addAll(repository.getRingtoneById(id).data.data)
                 }
@@ -247,18 +264,22 @@ class RingtoneViewModel @Inject constructor(
                 _error.value = null
                 return@launch
             }
-            println("searchRingtonesByName")
+
             val result = repository.fetchPrivateRingtones(1)
-            val totalPage = if (result.data.total / 30 < 1) 1 else result.data.total / 30
+            val totalPage = maxOf(1, (result.data.total + 29) / 30)
             val randomNumbers = (1..totalPage).shuffled().take(1)
-            val allNewRingtones = mutableListOf<Ringtone>()
             println("randomNumbers: $randomNumbers")
+            allNewRingtones.clear()
             allNewRingtones.addAll(repository.fetchPrivateRingtones(randomNumbers.first()).data.data)
             val fixedRingtoneId = allNewRingtones.map { it.id }
             Common.setAllEditorChoices(context = contexts, fixedRingtoneId)
             _customRingtones.value = allNewRingtones
 
             _error.value = null
+        } catch (e: CancellationException) {
+            // coroutine was cancelled (normal lifecycle), don't mark as error
+            println("loadNewRingtones cancelled")
+            throw e // always rethrow cancellation so coroutine can stop properly
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
             _customRingtones.value = emptyList<Ringtone>()

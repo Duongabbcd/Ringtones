@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
@@ -83,10 +84,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             }
 
             ringtoneViewModel.loading1.observe(this@FilteredRingtonesActivity) { isLoading ->
-                if (isLoading) {
-                    val allData = List(10) { Ringtone.EMPTY_RINGTONE }
-                    handleDataResult(allData)
-                }
+                progressBar.isVisible = isLoading
             }
 
             ringtoneViewModel.popular.observe(this@FilteredRingtonesActivity) { items ->
@@ -105,7 +103,6 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 println("selectedRingtone: $items")
                 handleDataResult(items)
             }
-
 
         }
     }
@@ -145,22 +142,22 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                 val isAtBottom = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
-                if (isAtBottom) {
+                if (isAtBottom && categoryId !in listOf<Int>(-101, -102, -103)) {
                     when(categoryId) {
-                        -101 -> {
-                            binding.nameScreen.text = getString(R.string.new_ringtones)
-                            ringtoneViewModel.loadNewRingtones()
-                        }
-
-                        -102 -> {
-                            binding.nameScreen.text = getString(R.string.weekly_trending)
-                            ringtoneViewModel.loadWeeklyTrendingRingtones()
-                        }
-
-                        -103 -> {
-                            binding.nameScreen.text = getString(R.string.editor_s_choices)
-                            ringtoneViewModel.loadEditorChoicesRingtones()
-                        }
+//                        -101 -> {
+//                            binding.nameScreen.text = getString(R.string.new_ringtones)
+//                            ringtoneViewModel.loadNewRingtones()
+//                        }
+//
+//                        -102 -> {
+//                            binding.nameScreen.text = getString(R.string.weekly_trending)
+//                            ringtoneViewModel.loadWeeklyTrendingRingtones()
+//                        }
+//
+//                        -103 -> {
+//                            binding.nameScreen.text = getString(R.string.editor_s_choices)
+//                            ringtoneViewModel.loadEditorChoicesRingtones()
+//                        }
                         -100 -> {
                             ringtoneViewModel.loadPopular(sortOrder)
                             binding.nameScreen.text = getString(R.string.popular)
@@ -230,6 +227,6 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     }
 
     companion object {
-        val TAG = FilteredRingtonesActivity::class.java.name
+        private const val TAG = "FilteredRingtonesActivity"
     }
 }

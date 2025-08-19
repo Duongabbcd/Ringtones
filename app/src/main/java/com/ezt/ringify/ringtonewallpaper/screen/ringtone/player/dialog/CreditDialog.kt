@@ -3,9 +3,9 @@ package com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.DialogCreditBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
-import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew
 
 class CreditDialog(
@@ -22,11 +22,11 @@ class CreditDialog(
         val creditWeb = "https://creativecommons.org/licenses/by/3.0/"
         val full =  context.getString(
             R.string.credits_desc,
-            ringtone.author.name,
+            ringtone.author?.name ?: context.resources.getString(R.string.unknwon_author),
             creditWeb
         )
 
-        val target = ringtone.author.name ?: ""
+        val target = ringtone.author?.name ?: context.resources.getString(R.string.unknwon_author)
         val target2 =  ringtone.name
         IntroFragmentNew.setSpannableString(full, listOf(target, target2), binding.creditDesc)
     }
