@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.media3.common.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFavouriteWallpaperBinding
@@ -66,6 +67,10 @@ class FavouriteWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
+
         loadBanner(this)
         binding.apply {
             backBtn.setOnClickListener {

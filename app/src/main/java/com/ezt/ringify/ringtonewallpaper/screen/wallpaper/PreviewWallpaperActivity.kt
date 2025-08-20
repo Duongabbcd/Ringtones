@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBinding
@@ -65,6 +66,9 @@ class PreviewWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
         loadBanner(this@PreviewWallpaperActivity)
         if (AdmobUtils.isNetworkConnected(this)) {
             displayItems()

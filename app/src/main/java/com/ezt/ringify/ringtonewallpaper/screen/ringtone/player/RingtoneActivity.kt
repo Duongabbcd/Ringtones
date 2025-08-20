@@ -184,6 +184,9 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
 
         loadBanner(this)
         RewardAds.initRewardAds(this)
@@ -408,6 +411,10 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         val listName = mutableListOf<String>()
         val origin = Common.getAllFreeRingtones(this@RingtoneActivity)
         listName.addAll(origin)
+        if (RemoteConfig.INTER_RINGTONE == "0") {
+            onClickListener()
+            return
+        }
         if (!listName.contains(currentRingtone.name)) {
             val rewardBottomSheet = RewardBottomSheet(this@RingtoneActivity) {
                 RewardAds.showAds(this@RingtoneActivity, object : RewardAds.RewardCallback {

@@ -482,6 +482,17 @@ object InterAds {
     private var currentAdUnit = ""
 
     fun preloadInterAds(context: Activity, alias: String, adUnit: String) {
+        val interCondition = when (adUnit) {
+            INTER_RINGTONE -> RemoteConfig.INTER_RINGTONE
+            INTER_WALLPAPER -> RemoteConfig.INTER_WALLPAPER
+            INTER_CALLSCREEN -> RemoteConfig.INTER_CALLSCREEN
+            INTER_LANGUAGE -> RemoteConfig.INTER_LANGUAGE
+            INTER_DOWNLOAD -> RemoteConfig.INTER_DOWNLOAD
+            else -> RemoteConfig.INTER_RINGTONE
+        }
+        if (RemoteConfig.ADS_DISABLE == "0" || interCondition == "0") {
+            return
+        }
         currentAlias = alias
         currentAdUnit = adUnit
         val mutableLiveData = MutableLiveData(InterAdWrapper(null))

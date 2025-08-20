@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityAllTypeAlertBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemTypeAlertBinding
@@ -17,6 +18,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallS
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity.Companion.vibrationValue
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 
 class AllTypeAlertActivity :
     BaseActivity<ActivityAllTypeAlertBinding>(ActivityAllTypeAlertBinding::inflate) {
@@ -43,6 +45,9 @@ class AllTypeAlertActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
         loadBanner(this)
         binding.backBtn.setOnClickListener {
             flashVibrationManager.stopFlashAndVibration()

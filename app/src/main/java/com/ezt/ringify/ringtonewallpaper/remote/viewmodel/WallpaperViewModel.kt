@@ -106,11 +106,13 @@ class WallpaperViewModel @Inject constructor(
         _loading1.value = true
         try {
             val result = repository.fetchTrendingWallpapers(currentPage1)
+            val result2 = repository.fetchTrendingSpecialWallpapers(currentPage1)
             _total1.value = result.data.total
 
-            hasMorePages1 = result.data.nextPageUrl != null
+            hasMorePages1 = result.data.nextPageUrl != null && result2.data.nextPageUrl != null
             currentPage1++
             allWallpapers1.addAll(result.data.data)
+            allWallpapers1.addAll(result2.data.data)
             _trendingWallpaper.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {

@@ -74,7 +74,7 @@ class RingtoneViewModel @Inject constructor(
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
             allWallpapers1.addAll(result.data.data)
-            _popular.value = allWallpapers1
+            _popular.value = allWallpapers1.filter { it.duration > 0 }
 
             _error.value = null
         } catch (e: Exception) {
@@ -95,7 +95,7 @@ class RingtoneViewModel @Inject constructor(
             hasMorePages2 = result.data.nextPageUrl != null
             currentPage2++
             allWallpapers2.addAll(result.data.data)
-            _trending.value = allWallpapers2
+            _trending.value = allWallpapers2.filter { it.duration > 0 }
             _error.value = null
         } catch (e: Exception) {
             println("loadRingtones: ${e.message}")
@@ -135,7 +135,7 @@ class RingtoneViewModel @Inject constructor(
             allWallpapers3.addAll(newItems)
             println("allWallpapers3: $allWallpapers3")
 
-            _selectedRingtone.value = allWallpapers3.toList()
+            _selectedRingtone.value = allWallpapers3.filter { it.duration > 0 }.toList()
             _total.value = _selectedRingtone.value?.size ?: 0
             _error.value = null
         } catch (e: Exception) {
@@ -153,7 +153,7 @@ class RingtoneViewModel @Inject constructor(
         try {
             println("searchRingtonesByName $input")
             val result = repository.searchRingtonesByName(input)
-            _search.value = result.data
+            _search.value = result.data.filter { it.duration > 0 }
             _error.value = null
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
@@ -176,7 +176,7 @@ class RingtoneViewModel @Inject constructor(
                 val backupRingtones = backupList.flatMap { id ->
                     repository.getRingtoneById(id).data.data
                 }
-                _customRingtones.value = backupRingtones
+                _customRingtones.value = backupRingtones.filter { it.duration > 0 }
                 _error.value = null
                 return@launch
             }
@@ -189,7 +189,7 @@ class RingtoneViewModel @Inject constructor(
             allNewRingtones.addAll(repository.fetchNewRingtones(randomPage).data.data)
             Common.setAllNewRingtones(contexts, allNewRingtones.map { it.id })
 
-            _customRingtones.value = allNewRingtones
+            _customRingtones.value = allNewRingtones.filter { it.duration > 0 }
             _error.value = null
 
         } catch (e: CancellationException) {
@@ -217,7 +217,7 @@ class RingtoneViewModel @Inject constructor(
                 backupList.onEach { id ->
                     backupRingtones.addAll(repository.getRingtoneById(id).data.data)
                 }
-                _customRingtones.value = backupRingtones
+                _customRingtones.value = backupRingtones.filter { it.duration > 0 }
 
                 _error.value = null
                 return@launch
@@ -229,7 +229,7 @@ class RingtoneViewModel @Inject constructor(
             println("randomNumbers: $randomNumbers")
             allNewRingtones.clear()
             allNewRingtones.addAll(repository.fetchTrendingRingtones(randomNumbers.first()).data.data)
-            val fixedRingtoneId = allNewRingtones.map { it.id }
+            val fixedRingtoneId = allNewRingtones.filter { it.duration > 0 }.map { it.id }
             Common.setAllWeeklyTrendingRingtones(context = contexts, fixedRingtoneId)
             _customRingtones.value = allNewRingtones
 
@@ -259,7 +259,7 @@ class RingtoneViewModel @Inject constructor(
                 backupList.onEach { id ->
                     backupRingtones.addAll(repository.getRingtoneById(id).data.data)
                 }
-                _customRingtones.value = backupRingtones
+                _customRingtones.value = backupRingtones.filter { it.duration > 0 }
 
                 _error.value = null
                 return@launch
@@ -271,7 +271,7 @@ class RingtoneViewModel @Inject constructor(
             println("randomNumbers: $randomNumbers")
             allNewRingtones.clear()
             allNewRingtones.addAll(repository.fetchPrivateRingtones(randomNumbers.first()).data.data)
-            val fixedRingtoneId = allNewRingtones.map { it.id }
+            val fixedRingtoneId = allNewRingtones.filter { it.duration > 0 }.map { it.id }
             Common.setAllEditorChoices(context = contexts, fixedRingtoneId)
             _customRingtones.value = allNewRingtones
 

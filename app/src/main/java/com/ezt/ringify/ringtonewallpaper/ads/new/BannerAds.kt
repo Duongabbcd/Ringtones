@@ -13,7 +13,10 @@ import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -28,7 +31,7 @@ object BannerAds {
 
     private const val BANNER_TEST_ID = "ca-app-pub-3940256099942544/9214589741"
 
-    private val BANNER_ID_DEFAULT = "ca-app-pub-8048589936179473/3632278117"
+    private val BANNER_ID_DEFAULT = AdsManager.BANNER_HOME
     private const val BANNER_ID_COLLAPSIBLE = "ca-app-pub-8048589936179473/3443177052"
     private const val BANNER_HOME_COLLAPSIBLE = "ca-app-pub-8048589936179473/3443177052"
 
@@ -55,6 +58,9 @@ object BannerAds {
     }
 
     fun initBannerAds(ctx: Activity, adUnitId: String = BANNER_ID_DEFAULT) {
+        if (RemoteConfig.ADS_DISABLE == "0" || RemoteConfig.BANNER_ALL == "0") {
+            return
+        }
         try {
             val adBanner: ViewGroup? = ctx.findViewById(R.id.frBanner)
             val prefs = Prefs(MyApplication.getInstance())

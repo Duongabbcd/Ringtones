@@ -5,8 +5,10 @@ import android.app.AlertDialog
 import android.app.Application.MODE_MULTI_PROCESS
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
@@ -15,9 +17,11 @@ import android.widget.Toast
 import com.ezt.ringify.ringtonewallpaper.R
 import java.util.Locale
 import android.provider.Settings
+import android.util.Log
 import com.admob.max.dktlibrary.AppOpenManager
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.example.ratingdialog.RateButtonCallback
 import com.example.ratingdialog.RatingDialog
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
@@ -123,7 +127,7 @@ object Common {
         val ratingDialog1 = RatingDialog.Builder(context).session(1).date(1).ignoreRated(false)
             .setNameApp(context.resources.getString(R.string.app_name))
             .setIcon(R.drawable.icon_app_round)
-            .setEmail("namkutethanhhoa@gmail.com")
+            .setEmail("linhnguyen.ezt@gmail.com")
             .isShowButtonLater(true).isClickLaterDismiss(true)
             .setTextButtonLater("Maybe Later").setOnlickMaybeLate {
                 AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)

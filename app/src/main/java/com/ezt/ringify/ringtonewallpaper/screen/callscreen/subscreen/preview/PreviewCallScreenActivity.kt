@@ -12,6 +12,7 @@ import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.bumptech.glide.Glide
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewCallscreenBinding
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
@@ -32,7 +33,6 @@ class PreviewCallScreenActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadBanner(this)
         binding.apply {
             Glide.with(this@PreviewCallScreenActivity).load(avatarUrl)
                 .placeholder(R.drawable.default_cs_avt).error(R.drawable.default_cs_avt)

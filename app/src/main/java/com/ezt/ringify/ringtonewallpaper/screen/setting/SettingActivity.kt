@@ -1,6 +1,7 @@
 package com.ezt.ringify.ringtonewallpaper.screen.setting
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySettingBinding
@@ -19,6 +20,10 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
+
         loadBanner(this, BANNER_HOME)
         binding.apply {
             backBtn.setOnClickListener {
@@ -40,8 +45,17 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
             }
 
             rateOption.setOnClickListener {
-//                Common.showRate(this@SettingActivity)
+                Common.showRate(this@SettingActivity)
             }
+
+            policyOption.setOnClickListener {
+                val url =
+                    "https://docs.google.com/document/d/1EvfTdc4DOEw2ybeeTc-Wl-mM4w7GISbVY5oPWuMeSqI/edit?tab=t.0#heading=h.7un33z5h3dtf"
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            }
+
+
 
 //            rateOption.gone()
 //            feedbackOption.gone()

@@ -14,8 +14,11 @@ object RemoteConfig {
     var ONRESUME_070625 = "0"
 
     //My current app
+    var ADS_DISABLE = "0"
+
     var BANNER_ALL = "0"
     var AOA_SPLASH = "0"
+    var REWARD_ADS = "0"
     var INTER_RINGTONE = "0"
     var INTER_WALLPAPER = "0"
     var INTER_CALLSCREEN = "0"

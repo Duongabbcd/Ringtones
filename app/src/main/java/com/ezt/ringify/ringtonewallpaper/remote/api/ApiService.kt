@@ -80,6 +80,11 @@ interface ApiService {
         @Query("page") page: Int = 1
     ): WallpaperResponse
 
+    @GET("api/v1/wallpapers?app=1&where=trend+1,type+3,private+1")
+    suspend fun getTrendingSpecialWallpapers(
+        @Query("page") page: Int = 1
+    ): WallpaperResponse
+
     @GET("api/v1/wallpapers?app=1&where=type+1&order_by=updated_at+desc")
     suspend fun getNewWallpapers(
         @Query("page") page: Int = 1

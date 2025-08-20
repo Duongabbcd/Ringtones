@@ -13,6 +13,7 @@ import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
 import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -213,6 +214,7 @@ object RewardAds {
     }
 
     fun initRewardAds(context: Context) {
+        if (RemoteConfig.ADS_DISABLE == "0" || RemoteConfig.REWARD_ADS == "0") return
         if (mRewardAds != null || isLoading || !isCanLoadAds()) return
 
         isLoading = true
@@ -249,7 +251,7 @@ object RewardAds {
 
     private fun isCanLoadAds(): Boolean {
         // your logic here
-        return true
+        return RemoteConfig.REWARD_ADS != "0"
     }
 
     interface RewardCallback {

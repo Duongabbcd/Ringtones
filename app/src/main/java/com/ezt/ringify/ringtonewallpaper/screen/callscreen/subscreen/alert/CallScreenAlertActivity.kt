@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenAlertBinding
@@ -15,6 +16,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTypeAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 
 class CallScreenAlertActivity :
     BaseActivity<ActivityCallscreenAlertBinding>(ActivityCallscreenAlertBinding::inflate) {
@@ -35,6 +37,9 @@ class CallScreenAlertActivity :
         super.onCreate(savedInstanceState)
         flashVibrationManager = FlashVibrationManager(this)
         prefs = getSharedPreferences("callscreen_prefs", MODE_PRIVATE)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
         loadBanner(this, BANNER_HOME)
         loadInitialSettings()
 

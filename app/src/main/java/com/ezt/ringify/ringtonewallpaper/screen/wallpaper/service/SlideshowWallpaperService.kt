@@ -40,6 +40,7 @@ class SlideshowWallpaperService : WallpaperService() {
         }
 
         private fun startSlideshow() {
+            println("startSlideshow")
             slideshowInterval = setupSlideShowInterval ?: 5000L
             handler.post(object : Runnable {
                 override fun run() {

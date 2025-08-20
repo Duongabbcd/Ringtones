@@ -27,6 +27,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.ads.new.OpenAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity2
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySplashBinding
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
 import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -103,15 +104,16 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
             return
         }
 
-        Common.setPreLanguage(this, "en")
         handler.postDelayed(runnable, 20000)
         if (isNetworkConnected(this)) {
             FireBaseConfig.initRemoteConfig(
                 R.xml.remote_config_default,
                 object : FireBaseConfig.CompleteListener {
                     override fun onComplete() {
+                        RemoteConfig.ADS_DISABLE = FireBaseConfig.getValue("ADS_DISABLE")
                         RemoteConfig.BANNER_ALL = FireBaseConfig.getValue("BANNER_ALL")
                         RemoteConfig.AOA_SPLASH = FireBaseConfig.getValue("AOA_SPLASH")
+                        RemoteConfig.REWARD_ADS = FireBaseConfig.getValue("REWARD_ADS")
                         RemoteConfig.INTER_LANGUAGE = FireBaseConfig.getValue("INTER_LANGUAGE")
                         RemoteConfig.INTER_DOWNLOAD = FireBaseConfig.getValue("INTER_DOWNLOAD")
                         RemoteConfig.INTER_RINGTONE = FireBaseConfig.getValue("INTER_RINGTONE")
@@ -131,9 +133,16 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
                             return
                         }
                         isInitAds.set(true)
-                        initAds()
-                        setupCMP()
 
+                        if (RemoteConfig.ADS_DISABLE != "0") {
+                            initAds()
+                            setupCMP()
+                        } else {
+                            binding.tvStart.inVisible()
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                nextScreen()
+                            }, 3000)
+                        }
                     }
                 })
         } else {
@@ -145,10 +154,21 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
     }
 
     private fun nextScreen() {
-        val intent = Intent(this@SplashActivity, LanguageActivity::class.java)
-        intent.putExtra("fromSplash", true)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
+        val countOpen = Common.getCountOpenApp(this)
+        if (countOpen == 0) {
+            Common.setPreLanguage(this, "en")
+            val intent = Intent(this@SplashActivity, LanguageActivity::class.java)
+            intent.putExtra("fromSplash", true)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        } else {
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            intent.putExtra("fromSplash", true)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        }
+
+
     }
 
     private fun setupCMP() {

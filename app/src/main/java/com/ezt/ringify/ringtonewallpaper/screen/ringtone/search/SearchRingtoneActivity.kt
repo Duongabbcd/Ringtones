@@ -57,6 +57,10 @@ class SearchRingtoneActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
+
         loadBanner(this, BANNER_HOME)
         binding.apply {
             backBtn.setOnClickListener {

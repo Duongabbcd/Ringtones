@@ -86,6 +86,10 @@ class PreviewLiveWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
+
         loadBanner(this, BANNER_HOME)
         checkDownloadPermissions()
         Log.d("PreviewLive", "savedInstanceState: $type and $tagId")
@@ -217,7 +221,7 @@ class PreviewLiveWallpaperActivity :
         val listName = mutableListOf<Int>()
         val origin = Common.getAllFreeWallpapers(this@PreviewLiveWallpaperActivity)
         listName.addAll(origin)
-        if (!listName.contains(currentWallpaper.id)) {
+        if (!listName.contains(currentWallpaper.id) && RemoteConfig.INTER_WALLPAPER != "0") {
             val rewardBottomSheet = RewardBottomSheet(this@PreviewLiveWallpaperActivity) {
                 RewardAds.showAds(
                     this@PreviewLiveWallpaperActivity,

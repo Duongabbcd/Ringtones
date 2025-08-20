@@ -87,7 +87,7 @@ class SlideWallpaperActivity :
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
 
-    private var index = 0
+    private var imageWallpaperIndex = 0
 
     private var currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
 
@@ -108,6 +108,10 @@ class SlideWallpaperActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (RemoteConfig.BANNER_ALL == "0") {
+            binding.frBanner.root.gone()
+        }
+
         loadBanner(this, BANNER_HOME)
         
         checkDownloadPermissions()
@@ -117,18 +121,18 @@ class SlideWallpaperActivity :
         }
 
         if (savedInstanceState != null) {
-            index = savedInstanceState.getInt("wallpaper_index", 0)
-            Log.d(TAG, "savedInstanceState 0: $index")
+            imageWallpaperIndex = savedInstanceState.getInt("wallpaper_index", 0)
+            Log.d(TAG, "savedInstanceState 0: $imageWallpaperIndex")
         } else {
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
-            index = allRingtones.indexOf(currentWallpaper)
+            imageWallpaperIndex = allRingtones.indexOf(currentWallpaper)
             binding.horizontalWallpapers.post {
                 val layoutManager = binding.horizontalWallpapers.layoutManager
                 if (layoutManager is LinearLayoutManager) {
-                    layoutManager.scrollToPosition(index)
+                    layoutManager.scrollToPosition(imageWallpaperIndex)
                 }
             }
-            Log.d(TAG, "savedInstanceState 1: $index")
+            Log.d(TAG, "savedInstanceState 1: $imageWallpaperIndex")
         }
 
     }
@@ -230,7 +234,7 @@ class SlideWallpaperActivity :
 
             wallpaper.setOnClickListener {
                 val imageUrl = currentWallpaper.contents
-                if (imageUrl.size == 1 && wallpaperCategoryId != 75) {
+                if (imageUrl.size == 1) {
                     checkPayBeforeNormalWallpaper {
                         val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
                             settingOption = result
@@ -250,6 +254,7 @@ class SlideWallpaperActivity :
 
                 } else {
                     checkPayBeforeSpecialWallpaper {
+                        println("checkPayBeforeSpecialWallpaper 0")
                         lifecycleScope.launch {
                             setUpLiveWallpaperByCondition(imageUrl)
                         }
@@ -264,6 +269,11 @@ class SlideWallpaperActivity :
         val listName = mutableListOf<Int>()
         val origin = Common.getAllFreeWallpapers(this@SlideWallpaperActivity)
         listName.addAll(origin)
+        if (RemoteConfig.INTER_WALLPAPER == "0") {
+            println("checkPayBeforeSpecialWallpaper 1")
+            onClickListener()
+            return
+        }
         if (!listName.contains(currentWallpaper.id)) {
             val rewardBottomSheet = RewardBottomSheet(this@SlideWallpaperActivity) {
                 RewardAds.showAds(this@SlideWallpaperActivity, object : RewardAds.RewardCallback {
@@ -438,11 +448,11 @@ class SlideWallpaperActivity :
 
     private fun startLiveWallpaper(contents: List<ImageContent>) {
         SlideshowWallpaperService.imageUrls = contents.map { it.url.full }
-
+        println("startLiveWallpaper is here")
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
-                ComponentName(packageName, SlideshowWallpaperService.javaClass.simpleName)
+                ComponentName(this@SlideWallpaperActivity, SlideshowWallpaperService::class.java)
             )
         }
         startActivity(intent)
@@ -535,7 +545,7 @@ class SlideWallpaperActivity :
 
         binding.apply {
             horizontalWallpapers.adapter = playSlideWallpaperAdapter
-            horizontalWallpapers.initialPosition = index
+            horizontalWallpapers.initialPosition = imageWallpaperIndex
 
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
@@ -565,40 +575,46 @@ class SlideWallpaperActivity :
                     MotionEvent.ACTION_UP -> {
                         isUserTouch = true
                         if (duration > 100) {
-                            Log.d(TAG, "horizontalRingtones: $duration and $index")
+                            Log.d(TAG, "horizontalRingtones: $duration and $imageWallpaperIndex")
                             binding.horizontalWallpapers.stopScroll()
-                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 0 $index")
-                            setUpNewPlayer(index)
+                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 0 $imageWallpaperIndex")
+                            setUpNewPlayer(imageWallpaperIndex)
                             return@setOnTouchListener false
                         }
 
                         // 👇 Decide scroll direction (and clamp to ±1)
                         val newIndex = when {
-                            lastDx > 0 && index < allRingtones.size - 1 -> index + 1
-                            lastDx < 0 && index > 0 -> index - 1
-                            else -> index
+                            lastDx > 0 && imageWallpaperIndex < allRingtones.size - 1 -> imageWallpaperIndex + 1
+                            lastDx < 0 && imageWallpaperIndex > 0 -> imageWallpaperIndex - 1
+                            else -> imageWallpaperIndex
                         }
 
                         // 👇 Update only if actual index changes
-                        if (newIndex != index) {
-                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 1 $index and $newIndex")
+                        if (newIndex != imageWallpaperIndex) {
+                            Log.d(
+                                TAG,
+                                "Tracking RecyclerView.ACTION_UP 1 $imageWallpaperIndex and $newIndex"
+                            )
                             updateIndex(newIndex, "onPositionChange")
                             handler.postDelayed({
-                                setUpNewPlayer(index)
+                                setUpNewPlayer(imageWallpaperIndex)
                             }, 300)
                         } else {
                             // stay on current\
-                            Log.d(TAG, "Tracking RecyclerView.ACTION_UP 2 $index and $newIndex")
-                            setUpNewPlayer(index)
+                            Log.d(
+                                TAG,
+                                "Tracking RecyclerView.ACTION_UP 2 $imageWallpaperIndex and $newIndex"
+                            )
+                            setUpNewPlayer(imageWallpaperIndex)
                         }
 
-                        Log.d(TAG, "Touch UP - Scrolled to index=$index (dx=$lastDx)")
+                        Log.d(TAG, "Touch UP - Scrolled to index=$imageWallpaperIndex (dx=$lastDx)")
                     }
                 }
                 false
             }
 
-            var previousIndex = index
+            var previousIndex = imageWallpaperIndex
 
             horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -608,7 +624,7 @@ class SlideWallpaperActivity :
 
                     when (newState) {
                         RecyclerView.SCROLL_STATE_DRAGGING -> {
-                            previousIndex = index
+                            previousIndex = imageWallpaperIndex
                             Log.d(TAG, "🎯 Drag started at index $previousIndex")
                         }
 
@@ -628,9 +644,12 @@ class SlideWallpaperActivity :
                                 recyclerView.stopScroll()
                             }
 
-                            index = newIndex
-                            Log.d(TAG, "Tracking RecyclerView.SCROLL_STATE_IDLE $index")
-                            setUpNewPlayer(index)
+                            imageWallpaperIndex = newIndex
+                            Log.d(
+                                TAG,
+                                "Tracking RecyclerView.SCROLL_STATE_IDLE $imageWallpaperIndex"
+                            )
+                            setUpNewPlayer(imageWallpaperIndex)
                         }
                     }
                 }
@@ -640,13 +659,35 @@ class SlideWallpaperActivity :
     }
 
     private fun setUpNewPlayer(position: Int) {
-        binding.horizontalWallpapers.smoothScrollToPosition(position)
+        val layoutManager =
+            binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
+
+        // Measure item width (can also use a fixed dimension if all items same width)
+        val child =
+            binding.horizontalWallpapers.findViewHolderForAdapterPosition(position)?.itemView
+        val itemWidth = child?.width ?: 0
+
+        // Calculate offset so item is centered
+        val offset = (binding.horizontalWallpapers.width - itemWidth) / 2
+//        layoutManager.scrollToPositionWithOffset(position, offset)
+        carousel.setCurrentPosition(position, false)
+
+        // Update current state
         currentWallpaper = allRingtones[position]
         Log.d(TAG, "setUpNewPlayer: $position and $currentWallpaper")
 
         playSlideWallpaperAdapter.setCurrentPlayingPosition(position)
         viewModel.loadWallpaperById(currentWallpaper.id)
         viewModel.loadSlideWallpaperById(currentWallpaper.id)
+    }
+
+
+    // Helper function to center a given item
+    private fun centerItem(position: Int) {
+        binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
+        val child = binding.horizontalWallpapers.getChildAt(position)
+        (binding.horizontalWallpapers.width / 2) - (child?.width ?: 0) / 2
+        carousel.setCurrentPosition(imageWallpaperIndex, true) // true = smooth scroll
     }
 
     private val snapHelper: OneItemSnapHelper by lazy {
@@ -698,8 +739,11 @@ class SlideWallpaperActivity :
     }
 
     private fun updateIndex(newIndex: Int, caller: String) {
-        Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
-        index = newIndex
+        Log.d(
+            "WallpaperActivity",
+            "Index changed from $imageWallpaperIndex to $newIndex by $caller"
+        )
+        imageWallpaperIndex = newIndex
     }
 
     private fun checkInternetConnected(isConnected: Boolean = true) {
@@ -711,7 +755,7 @@ class SlideWallpaperActivity :
 
             handler = Handler(Looper.getMainLooper())
             binding.apply {
-                index = allRingtones.indexOf(currentWallpaper)
+                imageWallpaperIndex = allRingtones.indexOf(currentWallpaper)
                 observeRingtoneFromDb()
                 backBtn.setOnClickListener {
                     SearchRingtoneActivity.backToScreen(
@@ -719,7 +763,7 @@ class SlideWallpaperActivity :
                         "INTER_WALLPAPER"
                     )
                 }
-                Log.d(TAG, "onCreate: $index")
+                Log.d(TAG, "onCreate: $imageWallpaperIndex")
                 viewModel.loadWallpaperById(currentWallpaper.id)
                 viewModel.loadSlideWallpaperById(currentWallpaper.id)
                 observeRingtoneFromDb()
@@ -729,7 +773,7 @@ class SlideWallpaperActivity :
                 }
 
                 initViewPager()
-                setUpNewPlayer(index)
+                setUpNewPlayer(imageWallpaperIndex)
                 setupButtons()
             }
             binding.noInternet.root.gone()
@@ -738,7 +782,7 @@ class SlideWallpaperActivity :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("wallpaper_index", index)
+        outState.putInt("wallpaper_index", imageWallpaperIndex)
     }
 
     override fun onResume() {
@@ -746,12 +790,12 @@ class SlideWallpaperActivity :
         InterAds.preloadInterAds(this, InterAds.ALIAS_INTER_DOWNLOAD, InterAds.INTER_DOWNLOAD)
         RewardAds.initRewardAds(this)
 
-        binding.horizontalWallpapers.suppressLayout(false)
+        binding.horizontalWallpapers.isEnabled = true
     }
 
     override fun onPause() {
         super.onPause()
-        binding.horizontalWallpapers.suppressLayout(true)
+        binding.horizontalWallpapers.isEnabled = false
     }
 
     override fun onBackPressed() {
@@ -760,8 +804,6 @@ class SlideWallpaperActivity :
 
     companion object {
         var settingOption = 0
-        var currentIndex = 0
-
         private const val TAG = "SlideWallpaperActivity"
     }
 }

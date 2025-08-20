@@ -7,6 +7,7 @@ import com.adjust.sdk.AdjustAdRevenue
 import com.adjust.sdk.AdjustConfig
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -28,6 +29,9 @@ object OpenAds {
     private var loadTimeOpenAd: Long = 0
 
     fun initOpenAds(context: Context, callback: () -> Unit) {
+        if (RemoteConfig.ADS_DISABLE == "0" || RemoteConfig.AOA_SPLASH == "0") {
+            return
+        }
         println("initOpenAds: $appOpenAd and isOpenAdsCanUse:  $${isOpenAdsCanUse()}")
         if (appOpenAd == null || !isOpenAdsCanUse()) {
             appOpenAd = null
