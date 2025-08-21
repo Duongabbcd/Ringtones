@@ -135,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/notification"
                         android:textColor="@color/main_color"
-                        style="@style/CustomTextStyleMedium14sp"
+                        style="@style/CustomTextStyleMedium12sp"
                         android:layout_marginTop="@dimen/_8sdp"/>
 
                 </LinearLayout>
@@ -159,11 +159,12 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_32sdp"
                         android:text="@string/set_ringtone"
                         android:gravity="center"
+                        android:maxLines="2"
                         android:textColor="@color/main_color"
-                        style="@style/CustomTextStyleMedium14sp"
+                        style="@style/CustomTextStyleMedium12sp"
                         android:layout_marginTop="@dimen/_8sdp"/>
 
                 </LinearLayout>
@@ -190,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/download"
                         android:textColor="@color/main_color"
-                        style="@style/CustomTextStyleMedium14sp"
+                        style="@style/CustomTextStyleMedium12sp"
                         android:layout_marginTop="@dimen/_8sdp"/>
 
                 </LinearLayout>

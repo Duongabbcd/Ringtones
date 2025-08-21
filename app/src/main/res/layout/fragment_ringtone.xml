@@ -53,7 +53,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                style="@style/CustomTextStyleSemiBold16sp"
+                                style="@style/CustomTextStyleSemiBold14sp"
                                 android:layout_width="@dimen/_96sdp"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
@@ -75,7 +75,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                style="@style/CustomTextStyleSemiBold16sp"
+                                style="@style/CustomTextStyleSemiBold14sp"
                                 android:layout_width="@dimen/_96sdp"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
@@ -97,7 +97,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                style="@style/CustomTextStyleSemiBold16sp"
+                                style="@style/CustomTextStyleSemiBold14sp"
                                 android:layout_width="@dimen/_96sdp"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
