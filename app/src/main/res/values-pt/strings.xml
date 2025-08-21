@@ -25,6 +25,9 @@
     <string name="unknwon_title">Título desconhecido</string>
     <string name="unknwon_author">Autor desconhecido</string>
 
+    <string name="set_alarm">Duração da transição</string>
+    <string name="email_feedback_title">Feedback sobre a versão do tema de chamada: %1$s</string>
+
     <string name="reset_wallpaper_question">Você realmente quer redefinir seu papel de parede atual?</string>
     <string name="reset_ringtone_question">Você realmente quer redefinir seu toque atual?</string>
     <string name="reset_cache_question">Você realmente quer limpar o cache?</string>
@@ -80,7 +83,7 @@
     <string name="find_wallpaper">Encontrar papel de parede</string>
     <string name="notification">Notificação</string>
     <string name="download">Baixar</string>
-    <string name="set_ringotne">Definir como Tom</string>
+    <string name="set_ringtone">Definir como Tom</string>
     <string name="set_wallpaper">Definir como Papel de Parede</string>
     <string name="no_data_desc">Não encontra a música que procura?</string>
     <string name="phone_settings">Configurações do telefone</string>

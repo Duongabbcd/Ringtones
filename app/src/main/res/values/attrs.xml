@@ -41,4 +41,14 @@
         <attr name="cs_hide_progress_when_empty" format="boolean" />
         <attr name="cs_thumb_drawable" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="CustomRatingBar">
+        <attr name="maxRating" format="integer" />
+        <attr name="emptyStarDrawable" format="reference" />
+        <attr name="filledStarDrawable" format="reference" />
+        <attr name="emptyLastStarDrawable" format="reference" />
+        <attr name="filledLastStarDrawable" format="reference" />
+        <attr name="starSpacing" format="dimension" />
+    </declare-styleable>
+
 </resources>

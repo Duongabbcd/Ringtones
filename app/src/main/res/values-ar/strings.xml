@@ -63,7 +63,7 @@
     <string name="find_wallpaper">البحث عن خلفية الشاشة</string>
     <string name="notification">إشعار</string>
     <string name="download">تنزيل</string>
-    <string name="set_ringotne">تعيين كـ Ringotne</string>
+    <string name="set_ringtone">تعيين كـ Ringtone</string>
     <string name="set_wallpaper">تعيين كخلفية</string>
     <string name="no_data_desc">هل لا تستطيع العثور على الموسيقى التي تبحث عنها؟</string>
 
@@ -197,4 +197,7 @@
     <string name="up_three">يمكنك اختيار ما يصل إلى 3 فقط</string>
     <string name="unknwon_title">عنوان غير معروف</string>
     <string name="unknwon_author">مؤلف غير معروف</string>
+
+    <string name="set_alarm">مدة الانتقال</string>
+    <string name="email_feedback_title">ملاحظات حول إصدار سمة الاتصال: %1$s</string>
 </resources>

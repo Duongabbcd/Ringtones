@@ -17,6 +17,9 @@
     <string name="desc_3">Динамические темы экрана звонка</string>
     <string name="high_light_3">Экран звонка</string>
 
+    <string name="set_alarm">Длительность перехода</string>
+    <string name="email_feedback_title">Отзыв о версии темы вызова: %1$s</string>
+
     <string name="fav_1">Выберите 3 музыкальных жанра, которые вам нравятся</string>
     <string name="selection_title">Вы можете выбрать только до 3</string>
 
@@ -81,7 +84,7 @@
     <string name="find_wallpaper">Найти обои</string>
     <string name="notification">Уведомление</string>
     <string name="download">Загрузить</string>
-    <string name="set_ringotne">Установить как рингтон</string>
+    <string name="set_ringtone">Установить как рингтон</string>
     <string name="set_wallpaper">Установить как обои</string>
     <string name="no_data_desc">Не можете найти нужную музыку?</string>
     <string name="phone_settings">Настройки телефона</string>

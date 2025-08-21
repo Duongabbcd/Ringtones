@@ -1,6 +1,7 @@
 package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live
 
 import alirezat775.lib.carouselview.Carousel
+import alirezat775.lib.carouselview.CarouselListener
 import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
 import android.app.WallpaperManager
@@ -9,6 +10,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.provider.Settings
 import android.util.Log
@@ -84,6 +87,11 @@ class PreviewLiveWallpaperActivity :
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
     private var downloadedUri: Uri? = null
 
+    private var lastDx = 0
+    private var duration = 0L
+    private lateinit var handler: Handler
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (RemoteConfig.BANNER_ALL == "0") {
@@ -91,6 +99,7 @@ class PreviewLiveWallpaperActivity :
         }
 
         loadBanner(this, BANNER_HOME)
+        handler = Handler(Looper.getMainLooper())
         checkDownloadPermissions()
         Log.d("PreviewLive", "savedInstanceState: $type and $tagId")
         if (savedInstanceState != null) {
@@ -100,10 +109,9 @@ class PreviewLiveWallpaperActivity :
             index = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
 
             binding.horizontalWallpapers.post {
-                val layoutManager = binding.horizontalWallpapers.layoutManager
-                if (layoutManager is LinearLayoutManager) {
-                    layoutManager.scrollToPosition(index)
-                }
+                centerItem(index)
+                playSlideWallpaperAdapter.setCurrentPlayingPosition(index)
+                setUpNewPlayer(index)
             }
         }
 
@@ -334,6 +342,7 @@ class PreviewLiveWallpaperActivity :
         }
     }
 
+
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
         playSlideWallpaperAdapter.submitList(allWallpapers)
@@ -344,7 +353,7 @@ class PreviewLiveWallpaperActivity :
         carousel.scaleView(true)
 
         binding.horizontalWallpapers.adapter = playSlideWallpaperAdapter
-        snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
+//        snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
 
         // Scroll to current index after layout
         binding.horizontalWallpapers.post {
@@ -353,15 +362,33 @@ class PreviewLiveWallpaperActivity :
             setUpNewPlayer(index)
         }
 
-        // Handle user touches to update index
-        var isScrolling = false
+        carousel.addCarouselListener(object : CarouselListener {
+            override fun onPositionChange(position: Int) {
+                updateIndex(index, "onPositionChange")
+                setUpNewPlayer(position)
+                playSlideWallpaperAdapter.setCurrentPlayingPosition(position)
+                // 🔁 force rebind to update playingHolder
+            }
+
+            override fun onScroll(dx: Int, dy: Int) {
+                lastDx = dx // ⬅️ Save dx for later use
+                Log.d("PlayerActivity", "Scrolling... dx = $dx")
+            }
+        })
+
         binding.horizontalWallpapers.setOnTouchListener { _, event ->
             when (event.action) {
-                MotionEvent.ACTION_DOWN -> isScrolling = true
+                MotionEvent.ACTION_DOWN -> {
+                    //do nothing
+                }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    isScrolling = false
                     println("setUpNewPlayer 4")
-                    updateIndexBySnap()
+                    val newIndex = when {
+                        lastDx > 0 && index < allWallpapers.size - 1 -> index + 1
+                        lastDx < 0 && index > 0 -> index - 1
+                        else -> index
+                    }
+                    updateIndexBySnap(newIndex)
                 }
             }
             false
@@ -370,12 +397,11 @@ class PreviewLiveWallpaperActivity :
         // Listen for scroll idle to update index
         binding.horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && isScrolling) {
-                    isScrolling = false
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     println("setUpNewPlayer 5")
-                    updateIndexBySnap()
+                    updateIndexBySnap(index)
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    isScrolling = true
+                    //do nothing
                 }
             }
         })
@@ -383,48 +409,42 @@ class PreviewLiveWallpaperActivity :
 
     // Helper function to center a given item
     private fun centerItem(position: Int) {
-        binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
-        val child = binding.horizontalWallpapers.getChildAt(position)
-        (binding.horizontalWallpapers.width / 2) - (child?.width ?: 0) / 2
-        carousel.setCurrentPosition(index, true) // true = smooth scroll
+        val layoutManager =
+            binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
+        val child =
+            binding.horizontalWallpapers.findViewHolderForAdapterPosition(position)?.itemView
+
+        if (child == null) {
+            layoutManager.scrollToPositionWithOffset(position, 0) // first bring it into view
+            binding.horizontalWallpapers.post { centerItem(position) } // re-center after layout
+            return
+        }
+
+        val itemWidth = child.width
+        val recyclerWidth = binding.horizontalWallpapers.width
+        val offset = (recyclerWidth - itemWidth) / 2
+
+        layoutManager.scrollToPositionWithOffset(position, offset)
     }
 
-    private fun updateIndexBySnap() {
+    private fun updateIndexBySnap(snapIndex: Int) {
         val layoutManager =
             binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
         val snapView = snapHelper.findSnapView(layoutManager) ?: return
         val snappedPosition = layoutManager.getPosition(snapView)
-        if (snappedPosition != index) {
-            updateIndex(snappedPosition, "SNAP")
-            println("setUpNewPlayer 6")
-            setUpNewPlayer(snappedPosition)
-            playSlideWallpaperAdapter.setCurrentPlayingPosition(snappedPosition)
-        }
+        updateIndex(snapIndex, "SNAP")
+        println("setUpNewPlayer 6")
+        setUpNewPlayer(snappedPosition)
+        playSlideWallpaperAdapter.setCurrentPlayingPosition(snappedPosition)
     }
 
     private fun setUpNewPlayer(position: Int, smooth: Boolean = false) {
-        val layoutManager =
-            binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
-
-        if (smooth) {
-            binding.horizontalWallpapers.smoothScrollToPosition(position)
-        } else {
-            layoutManager.scrollToPositionWithOffset(
-                position,
-                (binding.horizontalWallpapers.width - getItemWidth()) / 2
-            )
-        }
-
+        binding.horizontalWallpapers.smoothScrollToPosition(position)
 
         currentWallpaper = allWallpapers[position]
         Log.d(TAG, "setUpNewPlayer: position= $position wallpaper= $currentWallpaper")
         favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
         index = position
-    }
-
-    private fun getItemWidth(): Int {
-        val child = binding.horizontalWallpapers.getChildAt(0) ?: return 0
-        return child.width
     }
 
     private val snapHelper: OneItemSnapHelper by lazy {

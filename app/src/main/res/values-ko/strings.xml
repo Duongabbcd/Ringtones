@@ -17,6 +17,9 @@
     <string name="desc_3">동적 통화 화면 테마</string>
     <string name="high_light_3">통화 화면</string>
 
+    <string name="set_alarm">전환 시간</string>
+    <string name="email_feedback_title">통화 테마 버전에 대한 피드백: %1$s</string>
+
     <string name="call_screen_feedback_1">더 많은 사용자 지정을 원하십니까</string>
     <string name="call_screen_feedback_2">통화 화면으로 설정한 후 작동하지 않습니다</string>
 
@@ -74,7 +77,7 @@
     <string name="find_wallpaper">배경화면 찾기</string>
     <string name="notification">알림</string>
     <string name="download">다운로드</string>
-    <string name="set_ringotne">벨소리로 설정</string>
+    <string name="set_ringtone">벨소리로 설정</string>
     <string name="set_wallpaper">배경화면으로 설정</string>
     <string name="no_data_desc">찾고 있는 음악을 찾을 수 없나요?</string>
     <string name="phone_settings">전화 설정</string>

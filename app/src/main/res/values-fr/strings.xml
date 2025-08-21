@@ -20,6 +20,9 @@
     <string name="unknwon_title">Titre inconnu</string>
     <string name="unknwon_author">Auteur inconnu</string>
 
+    <string name="set_alarm">Durée de la transition</string>
+    <string name="email_feedback_title">Retour sur la version du thème d\'appel : %1$s</string>
+
     <string name="callscreen_setting">Définir comme écran d\'appel</string>
     <string name="no_connection">Toujours pas de connexion Internet</string>
     <string name="avatar">Avatar</string>
@@ -102,7 +105,7 @@
     <string name="find_wallpaper">Trouver un fond d’écran</string>
     <string name="notification">Notification</string>
     <string name="download">Télécharger</string>
-    <string name="set_ringotne">Définir comme sonnerie</string>
+    <string name="set_ringtone">Définir comme sonnerie</string>
     <string name="set_wallpaper">Définir comme fond d’écran</string>
     <string name="no_data_desc">Vous ne trouvez pas la musique recherchée ?</string>
 

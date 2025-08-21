@@ -17,6 +17,9 @@
     <string name="desc_3">Tema Layar Panggilan Dinamis</string>
     <string name="high_light_3">Layar Panggilan</string>
 
+    <string name="set_alarm">Durasi transisi</string>
+    <string name="email_feedback_title">Masukan untuk versi tema panggilan: %1$s</string>
+
     <string name="unknwon_title">Judul tidak diketahui</string>
     <string name="unknwon_author">Penulis tidak diketahui</string>
 
@@ -75,7 +78,7 @@
     <string name="find_wallpaper">Cari Wallpaper</string>
     <string name="notification">Pemberitahuan</string>
     <string name="download">Unduh</string>
-    <string name="set_ringotne">Tetapkan sebagai Nada Dering</string>
+    <string name="set_ringtone">Tetapkan sebagai Nada Dering</string>
     <string name="set_wallpaper">Tetapkan sebagai Wallpaper</string>
     <string name="no_data_desc">Tidak menemukan musik yang Anda cari?</string>
     <string name="phone_settings">Pengaturan telepon</string>

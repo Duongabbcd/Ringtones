@@ -3,6 +3,7 @@ package com.ezt.ringify.ringtonewallpaper.utils
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Application.MODE_MULTI_PROCESS
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,21 +11,19 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import com.ezt.ringify.ringtonewallpaper.R
-import java.util.Locale
-import android.provider.Settings
-import android.util.Log
 import com.admob.max.dktlibrary.AppOpenManager
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.example.ratingdialog.RateButtonCallback
 import com.example.ratingdialog.RatingDialog
 import com.ezt.ringify.ringtonewallpaper.BuildConfig
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
+import java.util.Locale
 
 object Common {
     var countDone = 0
@@ -61,13 +60,13 @@ object Common {
 
     fun getLang(mContext: Context): String {
         val preferences =
-            mContext.getSharedPreferences(mContext.packageName, Context.MODE_MULTI_PROCESS)
+            mContext.getSharedPreferences(mContext.packageName, MODE_MULTI_PROCESS)
         return preferences.getString("KEY_LANG", "en") ?: "English (UK)"
     }
 
     fun setLang(context: Context, open: String?) {
         val preferences =
-            context.getSharedPreferences(context.packageName, Context.MODE_MULTI_PROCESS)
+            context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
         preferences.edit().putString("KEY_LANG", open).apply()
     }
 
@@ -142,6 +141,50 @@ object Common {
         ratingDialog1.setCanceledOnTouchOutside(false)
         ratingDialog1.show()
     }
+
+    fun Context.openUrl(url: String) {
+        runCatching {
+            Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
+                this.startActivity(it)
+            }
+        }
+    }
+
+    fun Context.openPrivacy() {
+        openUrl("https://docs.google.com/document/d/1EvfTdc4DOEw2ybeeTc-Wl-mM4w7GISbVY5oPWuMeSqI/view")
+    }
+
+    fun Context.composeEmail(recipient: String, subject: String) {
+
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.data = Uri.parse("mailto:")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(recipient))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+
+        try {
+            this.startActivity(Intent.createChooser(emailIntent, "Send Email"))
+        } catch (e: ActivityNotFoundException) {
+            // Handle case where no email app is available
+        }
+    }
+
+    fun Context.rateApp() {
+        val applicationID = this.packageName
+        val playStoreUri = Uri.parse("market://details?id=$applicationID")
+
+        val rateIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
+        rateIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+
+        try {
+            this.startActivity(rateIntent)
+        } catch (e: ActivityNotFoundException) {
+            val webPlayStoreUri =
+                Uri.parse("https://play.google.com/store/apps/details?id=$applicationID")
+            val webRateIntent = Intent(Intent.ACTION_VIEW, webPlayStoreUri)
+            this.startActivity(webRateIntent)
+        }
+    }
+
 
     fun logEventFirebase(context: Context, eventName: String) {
 //        val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
@@ -315,7 +358,7 @@ object Common {
     fun setTheme(context: Context, selectedTheme: Int) {
         val preferences = context.getSharedPreferences(
             context.packageName,
-            Context.MODE_MULTI_PROCESS
+            MODE_MULTI_PROCESS
         )
         preferences.edit().putInt("KEY_UsedTheme", selectedTheme).apply()
     }
@@ -416,7 +459,7 @@ object Common {
 
     fun getNotificationEnable(context: Context): Boolean {
         val preferences = context.getSharedPreferences(context.packageName, MODE_MULTI_PROCESS)
-        val defaultValue = if (isTiramisuOrAbove) true else false
+        val defaultValue = isTiramisuOrAbove
         return preferences.getBoolean("KEY_NOTIF_ENABLE", defaultValue)
     }
 

@@ -160,7 +160,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/set_ringotne"
+                        android:text="@string/set_ringtone"
                         android:gravity="center"
                         android:textColor="@color/main_color"
                         style="@style/CustomTextStyleMedium14sp"

@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name" translatable="false">Ringify</string>
+    <string name="app_name" translatable="false">RingiVerse</string>
+    <string name="introduce" translatable="false">Ringtones &amp; Wallpapers - RingiVerse</string>
 
+    <string name="contact_email" translatable="false">linhnguyen.ezt@gmail.com</string>
     <string name="admob_id" translatable="false">ca-app-pub-8048589936179473~9730782609</string>
     <string name="adjust_token_key" translatable="false">npox3vcg6qkg</string>
     <string name="facebook_id" translatable="false"> </string>
@@ -20,7 +22,7 @@
     <string name="intro_title_1">Welcome to</string>
     <string name="intro_title_2">Get full</string>
     <string name="intro_title_3">Color phone</string>
-    <string name="desc_1">Ringtones &amp; Wallpaper - Ringify</string>
+    <string name="desc_1">Ringtones &amp; Wallpaper - RingiVerse</string>
     <string name="high_light_1">Ringify</string>
     <string name="desc_2">3D Parallax and 4K wallpapers</string>
     <string name="high_light_2">wallpapers</string>
@@ -71,7 +73,7 @@
     <string name="find_wallpaper">Find Wallpaper</string>
     <string name="notification">Notifications</string>
     <string name="download">Download</string>
-    <string name="set_ringotne">Set as Ringotne</string>
+    <string name="set_ringtone">Set as Ringtone</string>
     <string name="set_wallpaper">Set as Wallpaper</string>
     <string name="no_data_desc">Can\'t find the music you\'re looking for?</string>
 
@@ -211,11 +213,13 @@
     <string name="unknwon_title">Unknown title</string>
     <string name="unknwon_author">Unknown author</string>
 
-    <string name="set_alarm">Set Alarm</string>
     <string name="five_seconds">5 seconds</string>
     <string name="fifteen_seconds">15 seconds</string>
     <string name="one_minute">1 minute</string>
     <string name="five_minutes">5 minute</string>
     <string name="one_hour">1 hour</string>
     <string name="one_day">1 day</string>
+
+    <string name="set_alarm">Transition duration</string>
+    <string name="email_feedback_title">Feedback Call Theme version: %1$s</string>
 </resources>

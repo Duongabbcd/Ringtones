@@ -251,7 +251,7 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages2 = result.data.nextPageUrl != null
             currentPage2++
 
-            allWallpapers2.addAll(result.data.data)
+            allWallpapers2.addAll(result.data.data.filter { it.contents.size > 1 })
             _slideWallpaper.value = allWallpapers2
             _error.value = null
         } catch (e: Exception) {

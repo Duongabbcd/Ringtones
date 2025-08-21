@@ -17,6 +17,9 @@
     <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
     <string name="high_light_3">Anrufbildschirm</string>
 
+    <string name="set_alarm">Übergangsdauer</string>
+    <string name="email_feedback_title">Feedback zur Anruf-Theme-Version: %1$s</string>
+
     <string name="unknwon_title">Unbekannter Titel</string>
     <string name="unknwon_author">Unbekannter Autor</string>
 
@@ -102,7 +105,7 @@
     <string name="find_wallpaper">Hintergrundbild finden</string>
     <string name="notification">Benachrichtigung</string>
     <string name="download">Herunterladen</string>
-    <string name="set_ringotne">Als Klingelton festlegen</string>
+    <string name="set_ringtone">Als Klingelton festlegen</string>
     <string name="set_wallpaper">Als Hintergrund festlegen</string>
     <string name="no_data_desc">Kannst du die gesuchte Musik nicht finden?</string>
 

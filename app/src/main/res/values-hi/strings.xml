@@ -30,6 +30,9 @@
     <string name="reset_ringtone_question">क्या आप वास्तव में अपनी वर्तमान रिंगटोन को रीसेट करना चाहते हैं?</string>
     <string name="reset_cache_question">क्या आप वास्तव में कैश साफ़ करना चाहते हैं?</string>
 
+    <string name="set_alarm">ट्रांज़िशन की अवधि</string>
+    <string name="email_feedback_title">कॉल थीम संस्करण पर प्रतिक्रिया: %1$s</string>
+
     <string name="reset_wallpaper">वॉलपेपर रीसेट करें</string>
     <string name="reset_ringtone">रिंगटोन रीसेट करें</string>
     <string name="reset_cache">कैश साफ़ करें</string>
@@ -82,7 +85,7 @@
     <string name="find_wallpaper">वॉलपेपर खोजें</string>
     <string name="notification">नोटिफिकेशन</string>
     <string name="download">डाउनलोड</string>
-    <string name="set_ringotne">रिंगटोन के रूप में सेट करें</string>
+    <string name="set_ringtone">रिंगटोन के रूप में सेट करें</string>
     <string name="set_wallpaper">वॉलपेपर के रूप में सेट करें</string>
     <string name="no_data_desc">क्या आप उस संगीत को नहीं ढूंढ पा रहे हैं?</string>
     <string name="phone_settings">फोन सेटिंग्स</string>

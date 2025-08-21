@@ -17,6 +17,9 @@
     <string name="desc_3">ডায়নামিক কল স্ক্রিন থিম</string>
     <string name="high_light_3">কল স্ক্রিন</string>
 
+    <string name="set_alarm">ট্রানজিশন সময়কাল</string>
+    <string name="email_feedback_title">কল থিম সংস্করণ সম্পর্কে মতামত: %1$s</string>
+
     <string name="fav_1">আপনার পছন্দের ৩টি সঙ্গীত ধরণ নির্বাচন করুন</string>
     <string name="selection_title">আপনি সর্বোচ্চ ৩টি বেছে নিতে পারেন</string>
 
@@ -75,7 +78,7 @@
     <string name="find_wallpaper">ওয়ালপেপার খুঁজুন</string>
     <string name="notification">বিজ্ঞপ্তি</string>
     <string name="download">ডাউনলোড</string>
-    <string name="set_ringotne">রিংটোন হিসেবে সেট করুন</string>
+    <string name="set_ringtone">রিংটোন হিসেবে সেট করুন</string>
     <string name="set_wallpaper">ওয়ালপেপার হিসেবে সেট করুন</string>
     <string name="no_data_desc">আপনি যা খুঁজছেন তা কি পাচ্ছেন না?</string>
 

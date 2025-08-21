@@ -1,21 +1,20 @@
 package com.ezt.ringify.ringtonewallpaper.screen.setting
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import com.ezt.ringify.ringtonewallpaper.BuildConfig
+import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
+import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySettingBinding
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
-import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
-import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
-import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
-import com.ezt.ringify.ringtonewallpaper.screen.setting.PhoneSettingActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common
+import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
+import com.ezt.ringify.ringtonewallpaper.screen.setting.dialog.ShowRateDialog
+import com.ezt.ringify.ringtonewallpaper.utils.Common.composeEmail
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.openPrivacy
 
 class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,16 +44,20 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
             }
 
             rateOption.setOnClickListener {
-                Common.showRate(this@SettingActivity)
+                val dialog = ShowRateDialog(this@SettingActivity)
+                dialog.show()
             }
 
             policyOption.setOnClickListener {
-                val url =
-                    "https://docs.google.com/document/d/1EvfTdc4DOEw2ybeeTc-Wl-mM4w7GISbVY5oPWuMeSqI/edit?tab=t.0#heading=h.7un33z5h3dtf"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
+                this@SettingActivity.openPrivacy()
             }
 
+            feedbackOption.setOnClickListener {
+                this@SettingActivity.composeEmail(
+                    getString(R.string.contact_email),
+                    getString(R.string.email_feedback_title, BuildConfig.VERSION_NAME)
+                )
+            }
 
 
 //            rateOption.gone()
