@@ -107,7 +107,7 @@
     <string name="download">Télécharger</string>
     <string name="set_ringtone">Définir comme sonnerie</string>
     <string name="set_wallpaper">Définir comme fond d’écran</string>
-    <string name="no_data_desc">Vous ne trouvez pas la musique recherchée ?</string>
+    <string name="no_data_desc">Aucun contenu trouvé ?</string>
 
     <string name="phone_settings">Paramètres du téléphone</string>
     <string name="rate_us">Évaluez-nous</string>

@@ -46,6 +46,9 @@ class FavouriteWallpaperViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private val _allDataEmpty = MutableLiveData<Boolean>()
+    val allDataEmpty: LiveData<Boolean> = _allDataEmpty
+
     fun loadWallpaperById(id: Int) {
         println("loadWallpaperById 0: $id")
         viewModelScope.launch {
@@ -73,7 +76,14 @@ class FavouriteWallpaperViewModel @Inject constructor(
         }
         _loading1.value = false
     }
-    
+
+    private fun checkIfAllDataEmpty() {
+        _allDataEmpty.value = _allLiveWallpapers.value.isNullOrEmpty() &&
+                _allSlideWallpapers.value.isNullOrEmpty() &&
+                _allWallpapers.value.isNullOrEmpty()
+    }
+
+
 
     fun loadAllWallpapers() {
         viewModelScope.launch {
@@ -81,12 +91,15 @@ class FavouriteWallpaperViewModel @Inject constructor(
             try {
                 _allWallpapers.value = repository.getAllWallpapers()
                 _error.value = null
+
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
                 _allWallpapers.value = emptyList<Wallpaper>()
                 _error.value = e.localizedMessage
             } finally {
                 _loading1.value = false
+                // Check if all data are empty
+                checkIfAllDataEmpty()
             }
         }
     }
@@ -99,10 +112,12 @@ class FavouriteWallpaperViewModel @Inject constructor(
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
-                _allWallpapers.value = emptyList<Wallpaper>()
+                _allLiveWallpapers.value = emptyList<Wallpaper>()
                 _error.value = e.localizedMessage
             } finally {
                 _loading2.value = false
+                // Check if all data are empty
+                checkIfAllDataEmpty()
             }
         }
     }
@@ -115,10 +130,12 @@ class FavouriteWallpaperViewModel @Inject constructor(
                 _error.value = null
             } catch (e: Exception) {
                 println("loadWallpapers: ${e.message}")
-                _allWallpapers.value = emptyList<Wallpaper>()
+                _allSlideWallpapers.value = emptyList<Wallpaper>()
                 _error.value = e.localizedMessage
             } finally {
                 _loading3.value = false
+                // Check if all data are empty
+                checkIfAllDataEmpty()
             }
         }
     }

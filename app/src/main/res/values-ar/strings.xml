@@ -16,6 +16,7 @@
     <string name="high_light_2">خلفيات</string>
     <string name="desc_3">موضوعات شاشة الاتصال الديناميكية</string>
     <string name="high_light_3">فحص المكالمات</string>
+    <string name="no_data_desc">لا يمكن العثور على أي محتوى؟</string>
 
     <string name="fav_1">اختر 3 أنواع من الموسيقى التي تفضلها</string>
     <string name="selection_title">يمكنك اختيار 3 فقط</string>
@@ -65,7 +66,6 @@
     <string name="download">تنزيل</string>
     <string name="set_ringtone">تعيين كـ Ringtone</string>
     <string name="set_wallpaper">تعيين كخلفية</string>
-    <string name="no_data_desc">هل لا تستطيع العثور على الموسيقى التي تبحث عنها؟</string>
 
     <string name="phone_settings">إعدادات الهاتف</string>
     <string name="rate_us">قيّمنا</string>

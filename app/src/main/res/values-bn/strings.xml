@@ -80,7 +80,8 @@
     <string name="download">ডাউনলোড</string>
     <string name="set_ringtone">রিংটোন হিসেবে সেট করুন</string>
     <string name="set_wallpaper">ওয়ালপেপার হিসেবে সেট করুন</string>
-    <string name="no_data_desc">আপনি যা খুঁজছেন তা কি পাচ্ছেন না?</string>
+    <string name="no_data_desc">কোনো কনটেন্ট পাওয়া যায়নি?</string>
+
 
     <string name="phone_settings">ফোন সেটিংস</string>
     <string name="rate_us">আমাদের রেট করুন</string>

@@ -85,7 +85,8 @@
     <string name="download">Baixar</string>
     <string name="set_ringtone">Definir como Tom</string>
     <string name="set_wallpaper">Definir como Papel de Parede</string>
-    <string name="no_data_desc">Não encontra a música que procura?</string>
+    <string name="no_data_desc">Não foi possível encontrar nenhum conteúdo?</string>
+
     <string name="phone_settings">Configurações do telefone</string>
     <string name="rate_us">Avalie-nos</string>
     <string name="rate_desc">Apoie-nos aqui</string>

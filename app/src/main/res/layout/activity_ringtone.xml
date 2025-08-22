@@ -68,7 +68,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_300sdp"
                 android:paddingTop="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:paddingHorizontal="@dimen/_20sdp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
@@ -107,7 +106,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:gravity="bottom"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_12sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/currentRingtoneAuthor"
@@ -143,7 +142,7 @@
                 <LinearLayout
                     android:id="@+id/ringTone"
                     android:orientation="vertical"
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
                     app:layout_constraintEnd_toStartOf="@+id/notification"
                     app:layout_constraintStart_toEndOf="@+id/download"
                     app:layout_constraintTop_toTopOf="parent"
@@ -159,13 +158,12 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_32sdp"
+                        style="@style/CustomTextStyleMedium12sp"
                         android:text="@string/set_ringtone"
-                        android:gravity="center"
+                        android:layout_height="wrap_content"
                         android:maxLines="2"
                         android:textColor="@color/main_color"
-                        style="@style/CustomTextStyleMedium12sp"
-                        android:layout_marginTop="@dimen/_8sdp"/>
+                        android:gravity="bottom" />
 
                 </LinearLayout>
 

@@ -107,7 +107,7 @@
     <string name="download">Herunterladen</string>
     <string name="set_ringtone">Als Klingelton festlegen</string>
     <string name="set_wallpaper">Als Hintergrund festlegen</string>
-    <string name="no_data_desc">Kannst du die gesuchte Musik nicht finden?</string>
+    <string name="no_data_desc">Keine Inhalte gefunden?</string>
 
     <string name="phone_settings">Telefoneinstellungen</string>
     <string name="rate_us">Bewerte uns</string>

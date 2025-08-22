@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -149,6 +150,28 @@ class PreviewWallpaperActivity :
 
         binding.apply {
             allCategories.visible()
+            progressBar.visible()
+
+            favourite.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
+                progressBar.isVisible = isLoading
+            }
+
+            favourite.loading2.observe(this@PreviewWallpaperActivity) { isLoading ->
+                progressBar.isVisible = isLoading
+            }
+
+            wallPaperViewModel.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
+                progressBar.isVisible = isLoading
+            }
+
+            wallPaperViewModel.loading2.observe(this@PreviewWallpaperActivity) { isLoading ->
+                progressBar.isVisible = isLoading
+            }
+
+            wallPaperViewModel.loading3.observe(this@PreviewWallpaperActivity) { isLoading ->
+                progressBar.isVisible = isLoading
+            }
+
             when (categoryId) {
                 -5 -> {
                     nameScreen.text = getString(R.string.favourite)

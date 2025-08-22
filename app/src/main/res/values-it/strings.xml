@@ -81,7 +81,8 @@
     <string name="download">Scarica</string>
     <string name="set_ringtone">Imposta come suoneria</string>
     <string name="set_wallpaper">Imposta come wallpaper</string>
-    <string name="no_data_desc">Non trovi la musica che cerchi?</string>
+    <string name="no_data_desc">Nessun contenuto trovato?</string>
+
     <string name="phone_settings">Impostazioni telefono</string>
     <string name="rate_us">Valutaci</string>
     <string name="rate_desc">Supportaci qui</string>

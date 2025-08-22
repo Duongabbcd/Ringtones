@@ -92,6 +92,10 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
                 progressBar.isVisible = isLoading
             }
 
+            ringtoneViewModel.loading.observe(this@FilteredRingtonesActivity) { isLoading ->
+                progressBar.isVisible = isLoading
+            }
+
             ringtoneViewModel.popular.observe(this@FilteredRingtonesActivity) { items ->
                 handleDataResult(items)
             }

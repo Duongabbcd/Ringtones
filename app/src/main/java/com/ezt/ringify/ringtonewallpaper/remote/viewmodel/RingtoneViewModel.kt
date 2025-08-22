@@ -147,22 +147,30 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
-
     fun searchRingtonesByName(input: String) = viewModelScope.launch {
+        val trimmedInput = input.trim()
+        _search.value = emptyList()
+        if (trimmedInput.isEmpty()) {
+            _search.value = emptyList()
+            _error.value = null
+            return@launch
+        }
+
         _loading.value = true
         try {
-            println("searchRingtonesByName $input")
-            val result = repository.searchRingtonesByName(input)
-            _search.value = result.data 
+            println("searchRingtonesByName $trimmedInput")
+            val result = repository.searchRingtonesByName(trimmedInput)
+            _search.value = result.data
             _error.value = null
         } catch (e: Exception) {
             println("searchRingtonesByName Exception: ${e.message}")
-            _customRingtones.value = emptyList<Ringtone>()
+            _search.value = emptyList() // Clear on error
             _error.value = e.localizedMessage
         } finally {
             _loading.value = false
         }
     }
+
 
     fun loadNewRingtones() = viewModelScope.launch {
         _loading1.value = true

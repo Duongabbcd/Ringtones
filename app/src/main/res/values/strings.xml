@@ -75,7 +75,7 @@
     <string name="download">Download</string>
     <string name="set_ringtone">Set as Ringtone</string>
     <string name="set_wallpaper">Set as Wallpaper</string>
-    <string name="no_data_desc">Can\'t find the music you\'re looking for?</string>
+    <string name="no_data_desc">Can\'t find any content?</string>
 
     <string name="phone_settings">Phone settings</string>
     <string name="rate_us">Rate us</string>

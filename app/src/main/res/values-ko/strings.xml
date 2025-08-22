@@ -79,7 +79,8 @@
     <string name="download">다운로드</string>
     <string name="set_ringtone">벨소리로 설정</string>
     <string name="set_wallpaper">배경화면으로 설정</string>
-    <string name="no_data_desc">찾고 있는 음악을 찾을 수 없나요?</string>
+    <string name="no_data_desc">콘텐츠를 찾을 수 없나요?</string>
+
     <string name="phone_settings">전화 설정</string>
     <string name="rate_us">평가하기</string>
     <string name="rate_desc">여기서 지원해주세요</string>

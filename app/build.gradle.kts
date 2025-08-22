@@ -18,7 +18,7 @@ android {
         minSdk = 28
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0.a"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,6 +48,15 @@ android {
     bundle {
         language {
             enableSplit = false
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("keystore/piano2.jks")
+            storePassword = "12345678"
+            keyAlias = "piano2025"
+            keyPassword = "12345678"
         }
     }
 

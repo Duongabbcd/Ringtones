@@ -2,7 +2,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.media3.common.util.Log
@@ -95,12 +94,21 @@ class FavouriteWallpaperActivity :
             allSingleWallpaper.layoutManager =
                 LinearLayoutManager(this@FavouriteWallpaperActivity, RecyclerView.HORIZONTAL, false)
 
+            favouriteWallpaperViewModel.allDataEmpty.observe(this@FavouriteWallpaperActivity) { isEmpty ->
+                noDataLayout1.isVisible = isEmpty
+            }
+
             favouriteWallpaperViewModel.allLiveWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
                 allTrending.visible()
+                openAll1.visible()
+                trendingCount.visible()
+                trending.visible()
                 noDataLayout1.gone()
                 if (items.isNullOrEmpty()) {
-                    noDataLayout1.visible()
-                    allTrending.visibility = View.INVISIBLE
+                    openAll1.gone()
+                    trendingCount.gone()
+                    trending.gone()
+                    allTrending.gone()
                     allTrending.isEnabled = false
                     return@observe
                 }
@@ -110,10 +118,15 @@ class FavouriteWallpaperActivity :
 
             favouriteWallpaperViewModel.allWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
                 allSingleWallpaper.visible()
+                imageTitle.visible()
+                imageCount.visible()
+                openAll3.visible()
                 noDataLayout3.gone()
                 if (items.isNullOrEmpty()) {
-                    noDataLayout3.visible()
-                    allSingleWallpaper.visibility = View.INVISIBLE
+                    allSingleWallpaper.gone()
+                    imageTitle.gone()
+                    imageCount.gone()
+                    openAll3.gone()
                     allSingleWallpaper.isEnabled = false
                     return@observe
                 }
@@ -123,10 +136,15 @@ class FavouriteWallpaperActivity :
 
             favouriteWallpaperViewModel.allSlideWallpapers.observe(this@FavouriteWallpaperActivity) { items ->
                 allNewWallpaper.visible()
+                newWallpaper.visible()
+                newWallpaperCount.visible()
+                openAll2.visible()
                 noDataLayout2.gone()
                 if (items.isNullOrEmpty()) {
-                    noDataLayout2.visible()
-                    allNewWallpaper.visibility = View.INVISIBLE
+                    allNewWallpaper.gone()
+                    newWallpaper.gone()
+                    newWallpaperCount.gone()
+                    openAll2.gone()
                     allNewWallpaper.isEnabled = false
                     return@observe
                 }

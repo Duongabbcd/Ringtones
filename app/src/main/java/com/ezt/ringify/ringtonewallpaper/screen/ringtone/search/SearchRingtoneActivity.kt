@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
@@ -35,6 +36,9 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.toString
 
@@ -54,6 +58,7 @@ class SearchRingtoneActivity :
     }
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private var inputText = ""
+    private var searchJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,24 +98,17 @@ class SearchRingtoneActivity :
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Text is changing
                     val searchText = s.toString()
-                    inputText = searchText
-                    if (inputText.isEmpty()) {
-                        displayByCondition("")
-                    }
 
-                    ringtoneViewModel.searchRingtonesByName(inputText)
-                    ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
-                        if (result.isEmpty()) {
-                            noDataLayout.visible()
-                            allResults.gone()
+                    searchJob?.cancel() // Cancel previous job
+                    searchJob = lifecycleScope.launch {
+                        delay(300) // wait 300ms after user stops typing
+                        if (searchText.isEmpty()) {
+                            binding.noDataLayout.gone()
+                            binding.allResults.gone()
                         } else {
-                            noDataLayout.gone()
-                            allResults.visible()
-                            ringToneAdapter.submitList1(result)
+                            ringtoneViewModel.searchRingtonesByName(searchText)
                         }
-
                     }
                 }
 
@@ -147,12 +145,23 @@ class SearchRingtoneActivity :
                 noDataLayout.gone()
             }
 
+            ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
+                if (result.isEmpty()) {
+                    noDataLayout.gone()
+                    allResults.gone()
+                } else {
+                    noDataLayout.gone()
+                    allResults.visible()
+                    ringToneAdapter.submitList1(result)
+                }
+
+            }
+
         }
 
         ringtoneViewModel.trending.observe(this) { items ->
             ringtoneTrendingAdapter.submitList(items)
         }
-
 
     }
 

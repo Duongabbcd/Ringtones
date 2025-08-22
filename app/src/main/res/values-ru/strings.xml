@@ -86,7 +86,8 @@
     <string name="download">Загрузить</string>
     <string name="set_ringtone">Установить как рингтон</string>
     <string name="set_wallpaper">Установить как обои</string>
-    <string name="no_data_desc">Не можете найти нужную музыку?</string>
+    <string name="no_data_desc">Не удалось найти содержимое?</string>
+
     <string name="phone_settings">Настройки телефона</string>
     <string name="rate_us">Оцените нас</string>
     <string name="rate_desc">Поддержите нас здесь</string>

@@ -15,9 +15,11 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.CropImageView.CropResult
 import com.canhub.cropper.CropImageView.OnCropImageCompleteListener
 import com.canhub.cropper.CropImageView.OnSetImageUriCompleteListener
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCropBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import okhttp3.OkHttpClient
@@ -26,9 +28,6 @@ import okio.buffer
 import okio.sink
 import java.io.File
 import kotlin.getValue
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTypeAlertActivity
-import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 
 class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::inflate),
     OnSetImageUriCompleteListener,
@@ -90,6 +89,7 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
             Log.e("CropActivity", "Failed to load image by URI: $error")
             Toast.makeText(this, "Image load failed: " + error.message, Toast.LENGTH_LONG).show()
         } else {
+            binding.loading1.gone()
             binding.cropImageView.doOnLayout {
                 val screenWidth = resources.displayMetrics.widthPixels
                 val screenHeight = resources.displayMetrics.heightPixels

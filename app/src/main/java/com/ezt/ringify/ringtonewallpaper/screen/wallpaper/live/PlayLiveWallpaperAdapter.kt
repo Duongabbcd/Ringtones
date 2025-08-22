@@ -28,6 +28,8 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
     private var currentPos = RecyclerView.NO_POSITION
     private var playingHolder: PlayerViewHolder? = null
 
+    private val TAG = PlayLiveWallpaperAdapter::class.java.simpleName
+
     fun submitList(newList: List<Wallpaper>) {
         println("submitList: ${newList.size}")
         val start = items.size
@@ -165,7 +167,7 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
         }
 
         fun attachPlayer(videoUrl: String) {
-            Log.d("PlayerViewHolder", "attachPlayer() called with url: $videoUrl")
+            Log.d(TAG, "attachPlayer() called with url: $videoUrl")
             val player = PlayerManager.getPlayer(context.applicationContext)
             val simpleCache = CacheUtil.getSimpleCache(context.applicationContext)
 

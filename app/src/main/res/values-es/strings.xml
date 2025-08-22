@@ -99,7 +99,7 @@
     <string name = "download">Descargar</string>
     <string name="set_ringtone">Der Inhalt ist nicht mehr gültig</string>
     <string name = "set_wallpaper">Vorbereitung</string>
-    <string name="no_data_desc">Sie haben die Möglichkeit, eine nuevo Datenbank zu erstellen</string>
+    <string name="no_data_desc">¿No se encuentra ningún contenido?</string>
 
     <string name = "phone_settings">Einstellungen ändern</string>
     <string name = "rate_us">Tasa sin tasa</string>

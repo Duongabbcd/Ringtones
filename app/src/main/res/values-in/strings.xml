@@ -80,7 +80,8 @@
     <string name="download">Unduh</string>
     <string name="set_ringtone">Tetapkan sebagai Nada Dering</string>
     <string name="set_wallpaper">Tetapkan sebagai Wallpaper</string>
-    <string name="no_data_desc">Tidak menemukan musik yang Anda cari?</string>
+    <string name="no_data_desc">Tidak dapat menemukan konten?</string>
+
     <string name="phone_settings">Pengaturan telepon</string>
     <string name="rate_us">Nilai kami</string>
     <string name="rate_desc">Dukung kami di sini</string>
