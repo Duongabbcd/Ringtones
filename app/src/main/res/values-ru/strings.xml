@@ -17,6 +17,10 @@
     <string name="desc_3">Динамические темы экрана звонка</string>
     <string name="high_light_3">Экран звонка</string>
 
+    <string name="favourite1">Избранное изображение</string>
+    <string name="favourite2">Избранное видео</string>
+    <string name="favourite3">Избранный слайд</string>
+
     <string name="set_alarm">Длительность перехода</string>
     <string name="email_feedback_title">Отзыв о версии темы вызова: %1$s</string>
 

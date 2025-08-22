@@ -151,7 +151,7 @@ object Common {
     }
 
     fun Context.openPrivacy() {
-        openUrl("https://docs.google.com/document/d/1EvfTdc4DOEw2ybeeTc-Wl-mM4w7GISbVY5oPWuMeSqI/view")
+        openUrl("https://docs.google.com/document/d/1QXF3ntK3PG9uxOALSgkoChrpN80-hx6PZsXDNVRQzig/edit?pli=1&tab=t.0")
     }
 
     fun Context.composeEmail(recipient: String, subject: String) {

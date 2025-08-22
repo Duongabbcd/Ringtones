@@ -8,24 +8,24 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.AllWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.LiveWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.premium.PremiumWallpaperActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.favourite.FavouriteWallpaperActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -172,7 +172,7 @@ class WallpaperFragment :
 
             binding.noInternet.tryAgain.setOnClickListener {
                 withSafeContext { ctx ->
-                    val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                    val connected = connectionViewModel.isConnectedLiveData.value == true
                     if (connected) {
                         binding.origin.visible()
                         binding.noInternet.root.visibility = View.VISIBLE
@@ -402,23 +402,21 @@ class WallpaperFragment :
         }
     }
 
-    private fun checkInternetConnected(isConnected: Boolean = true) {
-        if (!isConnected) {
-            binding.origin.gone()
-            binding.noInternet.root.visible()
-        } else {
-            binding.origin.visible()
-            wallPaperViewModel.loadTrendingWallpapers()
-            wallPaperViewModel.loadNewWallpapers()
-            wallPaperViewModel.loadSubWallpapers1(resultList[0])
-            wallPaperViewModel.loadSubWallpapers2(resultList[1])
-            wallPaperViewModel.loadSubWallpapers3(resultList[2])
+    private fun checkInternetConnected(isConnected: Boolean = true) = if (!isConnected) {
+        binding.origin.gone()
+        binding.noInternet.root.visible()
+    } else {
+        binding.origin.visible()
+        wallPaperViewModel.loadTrendingWallpapers(5)
+        wallPaperViewModel.loadNewWallpapers(5)
+        wallPaperViewModel.loadSubWallpapers1(resultList[0], limit = 5)
+        wallPaperViewModel.loadSubWallpapers2(resultList[1], limit = 5)
+        wallPaperViewModel.loadSubWallpapers3(resultList[2], limit = 5)
 
-            categoryViewModel.getFirstCategory(resultList[0])
-            categoryViewModel.getSecondCategory(resultList[1])
-            categoryViewModel.getThirdCategory(resultList[2])
-            binding.noInternet.root.gone()
-        }
+        categoryViewModel.getFirstCategory(resultList[0])
+        categoryViewModel.getSecondCategory(resultList[1])
+        categoryViewModel.getThirdCategory(resultList[2])
+        binding.noInternet.root.gone()
     }
 
 

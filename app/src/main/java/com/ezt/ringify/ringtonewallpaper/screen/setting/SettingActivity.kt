@@ -63,7 +63,7 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
 //            rateOption.gone()
 //            feedbackOption.gone()
 //            policyOption.gone()
-//            shareOption.gone()
+            shareOption.gone()
         }
     }
 

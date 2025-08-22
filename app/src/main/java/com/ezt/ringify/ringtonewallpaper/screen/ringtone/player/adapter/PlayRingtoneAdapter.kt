@@ -121,9 +121,9 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
 
                 if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
 
-                if (pos > 0) {
-                    onRequestScrollToPosition(pos - 1)
-                }
+//                if (pos > 0) {
+//                    onRequestScrollToPosition(pos - 1)
+//                }
             }
 
             // Scroll to next
@@ -139,9 +139,9 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
 
                 if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
 
-                if (pos < items.lastIndex) {
-                    onRequestScrollToPosition(pos + 1)
-                }
+//                if (pos < items.lastIndex) {
+//                    onRequestScrollToPosition(pos + 1)
+//                }
             }
 
             if( !isPlaying) {

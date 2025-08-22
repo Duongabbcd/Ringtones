@@ -101,12 +101,12 @@ class WallpaperViewModel @Inject constructor(
     val allWallpapers5 = mutableListOf<Wallpaper>()
 
     private var currentSortOption: Int = -1
-    fun loadTrendingWallpapers() = viewModelScope.launch {
+    fun loadTrendingWallpapers(limit: Int = 21) = viewModelScope.launch {
         if (!hasMorePages1 || _loading1.value ==  true ) return@launch
         _loading1.value = true
         try {
-            val result = repository.fetchTrendingWallpapers(currentPage1)
-            val result2 = repository.fetchTrendingSpecialWallpapers(currentPage1)
+            val result = repository.fetchTrendingWallpapers(currentPage1, limit)
+            val result2 = repository.fetchTrendingSpecialWallpapers(currentPage1, limit)
             _total1.value = result.data.total
 
             hasMorePages1 = result.data.nextPageUrl != null && result2.data.nextPageUrl != null
@@ -124,11 +124,11 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadNewWallpapers() = viewModelScope.launch {
+    fun loadNewWallpapers(limit: Int = 21) = viewModelScope.launch {
         if (!hasMorePages2 || _loading2.value ==  true ) return@launch
         _loading2.value = true
         try {
-            val result = repository.fetchNewWallpapers(currentPage2)
+            val result = repository.fetchNewWallpapers(currentPage2, limit)
             _total2.value = result.data.total
             hasMorePages2 = result.data.nextPageUrl != null
             currentPage2++
@@ -144,11 +144,11 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadSubWallpapers1(categoryId: Int) = viewModelScope.launch {
+    fun loadSubWallpapers1(categoryId: Int, limit: Int = 21) = viewModelScope.launch {
         if (!hasMorePages3 || _loading3.value ==  true ) return@launch
         _loading3.value = true
         try {
-            val result = repository.fetchWallpaperByCategory(categoryId, currentPage3)
+            val result = repository.fetchWallpaperByCategory(categoryId, currentPage3, limit)
             _total3.value = result.data.total
             hasMorePages3 = result.data.nextPageUrl != null
             currentPage3++
@@ -165,11 +165,11 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadSubWallpapers2(pageId: Int) = viewModelScope.launch {
+    fun loadSubWallpapers2(pageId: Int, limit: Int = 21) = viewModelScope.launch {
         if (!hasMorePages4 || _loading4.value ==  true ) return@launch
         _loading4.value = true
         try {
-            val result = repository.fetchWallpaperByCategory(pageId, page = currentPage4)
+            val result = repository.fetchWallpaperByCategory(pageId, page = currentPage4, limit)
             _total4.value= result.data.total
             hasMorePages4 = result.data.nextPageUrl != null
             currentPage4++
@@ -185,11 +185,11 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun loadSubWallpapers3(pageId: Int) = viewModelScope.launch {
+    fun loadSubWallpapers3(pageId: Int, limit: Int = 21) = viewModelScope.launch {
         if (!hasMorePages5 || _loading5.value ==  true ) return@launch
         _loading5.value = true
         try {
-            val result = repository.fetchWallpaperByCategory(pageId, page=currentPage5)
+            val result = repository.fetchWallpaperByCategory(pageId, page = currentPage5, limit)
             _total5.value = result.data.total
             hasMorePages5 = result.data.nextPageUrl != null
             currentPage5++

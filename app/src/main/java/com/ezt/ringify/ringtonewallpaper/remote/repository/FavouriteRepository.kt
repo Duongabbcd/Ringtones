@@ -36,21 +36,21 @@ class FavouriteRepository @Inject constructor(
         ringtoneDao.delete(ringtone.toEntity())
 
 
-    suspend fun getAllWallpapers(): List<Wallpaper> {
-        val list = wallpaperDao.getAllWallpaper()
+    suspend fun getAllWallpapers(limit: Int = 5): List<Wallpaper> {
+        val list = wallpaperDao.getAllWallpaper(limit)
         println("getAllWallpapers: $list")
         return list?.map { it.toDomain() } ?: listOf()
     }
 
 
-    suspend fun getAllLiveWallpapers(): List<Wallpaper> {
-        val list = liveWallpaperDao.getAllWallpaper()
+    suspend fun getAllLiveWallpapers(limit: Int = 5): List<Wallpaper> {
+        val list = liveWallpaperDao.getAllWallpaper(limit)
         println("getAllLiveWallpapers: $list")
         return list?.map { it.toDomain() } ?: listOf()
     }
 
-    suspend fun getAllSlideWallpapers(): List<Wallpaper> {
-        val list = slideWallpaperDao.getAllWallpaper()
+    suspend fun getAllSlideWallpapers(limit: Int = 5): List<Wallpaper> {
+        val list = slideWallpaperDao.getAllWallpaper(limit)
         println("getAllSlideWallpapers: $list")
         return list?.map { it.toDomain() } ?: listOf()
     }

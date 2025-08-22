@@ -2,8 +2,8 @@
     <string name="app_name" translatable="false">RingiVerse</string>
     <string name="introduce" translatable="false">Ringtones &amp; Wallpapers - RingiVerse</string>
 
-    <string name="contact_email" translatable="false">linhnguyen.ezt@gmail.com</string>
-    <string name="admob_id" translatable="false">ca-app-pub-8048589936179473~9730782609</string>
+    <string name="contact_email" translatable="false">manager.muslim360@cdtgames.com </string>
+    <string name="admob_id" translatable="false">ca-app-pub-3607148519095421~2854861993</string>
     <string name="adjust_token_key" translatable="false">npox3vcg6qkg</string>
     <string name="facebook_id" translatable="false"> </string>
     <string name="facebook_client_token" translatable="false"> </string>
@@ -131,6 +131,9 @@
     <string name="trending">Trending</string>
     <string name="hot_search">Hot searches</string>
     <string name="favourite">Favourite</string>
+    <string name="favourite1">Favourite Image</string>
+    <string name="favourite2">Favourite Video</string>
+    <string name="favourite3">Favourite Slide</string>
     <string name="premiums">Premiums</string>
     <string name="new_wallpaper">New Wallpaper</string>
     <string name="no_internet_desc">Please connect to Wi-Fi or a mobile network to view this content</string>

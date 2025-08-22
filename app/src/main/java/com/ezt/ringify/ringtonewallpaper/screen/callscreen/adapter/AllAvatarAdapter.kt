@@ -11,7 +11,7 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemContentAvatarBinding
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 
-class AllAvatarAdapter(private val onClickListener: (String) -> Unit) :
+class AllAvatarAdapter(private val onClickListener: (ImageContent) -> Unit) :
     RecyclerView.Adapter<AllAvatarAdapter.AllIconViewHolder>() {
     private val allBackgrounds: MutableList<ImageContent> = mutableListOf()
     private var selectedPosition: Int = RecyclerView.NO_POSITION
@@ -33,10 +33,10 @@ class AllAvatarAdapter(private val onClickListener: (String) -> Unit) :
         holder.bind(position)
     }
 
-    fun submitList(list: List<ImageContent>) {
+    fun submitList(list: List<ImageContent>, index: Int? = null) {
         allBackgrounds.clear()
         allBackgrounds.addAll(list)
-        selectedPosition = RecyclerView.NO_POSITION
+        selectedPosition = index ?: RecyclerView.NO_POSITION
         notifyDataSetChanged()
     }
 
@@ -81,7 +81,7 @@ class AllAvatarAdapter(private val onClickListener: (String) -> Unit) :
                     selectedPosition = adapterPosition
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
-                    onClickListener(input)
+                    onClickListener(imageContent)
                 }
             }
         }

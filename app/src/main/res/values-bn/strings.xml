@@ -35,6 +35,10 @@
     <string name="reset_ringtone">রিংটোন রিসেট করুন</string>
     <string name="reset_cache">ক্যাশে মুছুন</string>
 
+    <string name="favourite1">পছন্দের ছবি</string>
+    <string name="favourite2">পছন্দের ভিডিও</string>
+    <string name="favourite3">পছন্দের স্লাইড</string>
+
     <string name="preview">পূর্বরূপ</string>
     <string name="up_three">আপনি সর্বোচ্চ ৩টি নির্বাচন করতে পারবেন</string>
     <string name="english">ইংরেজি</string>

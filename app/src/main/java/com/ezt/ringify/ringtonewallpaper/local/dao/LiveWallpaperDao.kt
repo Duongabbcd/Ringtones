@@ -9,8 +9,8 @@ import com.ezt.ringify.ringtonewallpaper.local.LiveWallpaperEntity
 
 @Dao
 interface LiveWallpaperDao {
-    @Query("SELECT * FROM live_wallpaper")
-    suspend fun getAllWallpaper(): List<LiveWallpaperEntity>?
+    @Query("SELECT * FROM live_wallpaper LIMIT :limit")
+    suspend fun getAllWallpaper(limit: Int = 100000): List<LiveWallpaperEntity>?
 
     @Query("SELECT * FROM live_wallpaper WHERE id = :id")
     suspend fun getById(id: Int): LiveWallpaperEntity?

@@ -174,21 +174,21 @@ class PreviewWallpaperActivity :
 
             when (categoryId) {
                 -5 -> {
-                    nameScreen.text = getString(R.string.favourite)
+                    nameScreen.text = getString(R.string.favourite1)
                     // Attach observer only once
                     favourite.loadAllWallpapers()
                     previewLiveFavouriteItems(favourite.loading1, favourite.allWallpapers)
                 }
 
                 -4 -> {
-                    nameScreen.text = getString(R.string.favourite)
+                    nameScreen.text = getString(R.string.favourite3)
                     // Attach observer only once
                     favourite.loadSlideAllWallpapers()
                     previewLiveFavouriteItems(favourite.loading2, favourite.allSlideWallpapers)
                 }
 
                 -3 -> {
-                    nameScreen.text = getString(R.string.favourite)
+                    nameScreen.text = getString(R.string.favourite2)
                     // Attach observer only once
                     favourite.loadLiveAllWallpapers()
                     previewLiveFavouriteItems(favourite.loading1, favourite.allLiveWallpapers)

@@ -13,7 +13,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 
-class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
+class AllIConAdapter(private val onClickListener: (ImageContent, ImageContent) -> Unit) :
     RecyclerView.Adapter<AllIConAdapter.AllIconViewHolder>() {
     private val allBackgrounds: MutableList<Pair<ImageContent, ImageContent>> = mutableListOf()
     private lateinit var context: Context
@@ -35,10 +35,10 @@ class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
         holder.bind(position)
     }
 
-    fun submitList(list: List<Pair<ImageContent, ImageContent>>) {
+    fun submitList(list: List<Pair<ImageContent, ImageContent>>, index: Int? = null) {
         allBackgrounds.clear()
         allBackgrounds.addAll(list)
-        selectedPosition = RecyclerView.NO_POSITION
+        selectedPosition = index ?: RecyclerView.NO_POSITION
         notifyDataSetChanged()
     }
 
@@ -83,7 +83,7 @@ class AllIConAdapter(private val onClickListener: (String, String) -> Unit) :
                     selectedPosition = adapterPosition
                     notifyItemChanged(previousPosition)
                     notifyItemChanged(selectedPosition)
-                    onClickListener(endCallIcon, startCallIcon)
+                    onClickListener(imageContent.first, imageContent.second)
                 }
             }
         }

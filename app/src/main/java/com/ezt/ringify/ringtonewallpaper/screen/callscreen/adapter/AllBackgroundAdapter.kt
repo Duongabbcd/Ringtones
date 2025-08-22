@@ -37,10 +37,10 @@ class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
         holder.bind(position)
     }
 
-    fun submitList(list: List<ContentItem>) {
+    fun submitList(list: List<ContentItem>, index: Int? = null) {
         allBackgrounds.clear()
         allBackgrounds.addAll(list)
-        selectedPosition = RecyclerView.NO_POSITION
+        selectedPosition = index ?: RecyclerView.NO_POSITION
         notifyDataSetChanged()
     }
 
@@ -105,7 +105,9 @@ class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
                     println("AllBackgroundViewHolder: $input")
                     val previousPosition = selectedPosition
                     selectedPosition = adapterPosition
-                    notifyItemChanged(previousPosition)
+                    if (previousPosition != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(previousPosition)
+                    }
                     notifyItemChanged(selectedPosition)
                     onClickListener(imageContent)
                 }

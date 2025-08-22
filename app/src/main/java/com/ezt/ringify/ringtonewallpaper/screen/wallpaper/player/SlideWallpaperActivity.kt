@@ -667,8 +667,14 @@ class SlideWallpaperActivity :
         binding.horizontalWallpapers.smoothScrollToPosition(position)
 
         currentWallpaper = allWallpapers[position]
-        Log.d(TAG, "setUpNewPlayer: position= $position wallpaper= $currentWallpaper")
-        favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
+        Log.d(TAG, "setUpNewPlayer: position= $position wallpaper= ${currentWallpaper.id}")
+        if (currentWallpaper.contents.size > 1) {
+            favouriteViewModel.loadSlideWallpaperById(currentWallpaper.id)
+        } else {
+            favouriteViewModel.loadWallpaperById(currentWallpaper.id)
+        }
+
+
         imageWallpaperIndex = position
     }
 
@@ -680,6 +686,7 @@ class SlideWallpaperActivity :
 
     private fun observeRingtoneFromDb() {
         favouriteViewModel.wallpaper.observe(this) { dbRingtone ->
+            println("wallpaper: ${dbRingtone.id} and ${dbRingtone.contents}")
             isFavorite = dbRingtone.id == currentWallpaper.id
             binding.favourite.setImageResource(
                 if (isFavorite) R.drawable.icon_favourite
@@ -748,7 +755,6 @@ class SlideWallpaperActivity :
                 Log.d(TAG, "onCreate: $imageWallpaperIndex and $selectedType")
                 favouriteViewModel.loadWallpaperById(currentWallpaper.id)
                 favouriteViewModel.loadSlideWallpaperById(currentWallpaper.id)
-                observeRingtoneFromDb()
 
                 favourite.setOnClickListener {
                     displayFavouriteIcon(true)

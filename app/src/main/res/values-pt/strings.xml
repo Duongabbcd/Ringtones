@@ -22,6 +22,10 @@
     <string name="call_screen_feedback_1">Quer mais personalizações</string>
     <string name="call_screen_feedback_2">A tela de chamada não funciona após definir como tela de chamada</string>
 
+    <string name="favourite1">Imagem favorita</string>
+    <string name="favourite2">Vídeo favorito</string>
+    <string name="favourite3">Slide favorito</string>
+
     <string name="unknwon_title">Título desconhecido</string>
     <string name="unknwon_author">Autor desconhecido</string>
 

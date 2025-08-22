@@ -89,19 +89,11 @@ class ContentViewModel @Inject constructor(
         if (!hasMorePages1 || _loading.value == true) return@launch
         _loading.value = true
         try {
-            println("currentPage1: $currentPage1")
             val result = repository.getAllBackgroundContent(currentPage1)
+            println("getAllCallScreenBackgrounds: $currentPage1 and ${result.data.nextPageUrl}")
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 
-//            val newItems = result.data.data.mapNotNull { item ->
-//                val imageContent = item.contents.firstOrNull { content ->
-//                    content.url.full.endsWith(".jpg", ignoreCase = true) ||
-//                            content.url.full.endsWith(".png", ignoreCase = true) ||
-//                            content.url.full.endsWith(".webp", ignoreCase = true)
-//                }
-//                imageContent
-//            }
             val newItems = result.data.data
 
             allCallScreen.addAll(newItems)
@@ -122,8 +114,8 @@ class ContentViewModel @Inject constructor(
         if (!hasMorePages1 || _loading1.value == true) return@launch
         _loading1.value = true
         try {
-            println("currentPage1: $currentPage1")
             val result = repository.getAllAvatarContent(currentPage1)
+            println("getAllCallScreenAvatars: $currentPage1 and ${result.data.nextPageUrl}")
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 
@@ -156,8 +148,8 @@ class ContentViewModel @Inject constructor(
         if (!hasMorePages1 || _loading2.value == true) return@launch
         _loading2.value = true
         try {
-            println("currentPage1: $currentPage1")
             val result = repository.getAllIconContent(currentPage1)
+            println("getAllCallScreenIcons: $currentPage1 and ${result.data.nextPageUrl}")
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 

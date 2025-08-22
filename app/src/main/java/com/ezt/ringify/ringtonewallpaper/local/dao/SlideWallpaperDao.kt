@@ -5,13 +5,12 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ezt.ringify.ringtonewallpaper.local.LiveWallpaperEntity
 import com.ezt.ringify.ringtonewallpaper.local.SlideWallpaperEntity
 
 @Dao
 interface SlideWallpaperDao {
-    @Query("SELECT * FROM slide_wallpaper")
-    suspend fun getAllWallpaper(): List<SlideWallpaperEntity>?
+    @Query("SELECT * FROM slide_wallpaper LIMIT :limit")
+    suspend fun getAllWallpaper(limit: Int = 100000): List<SlideWallpaperEntity>?
 
     @Query("SELECT * FROM slide_wallpaper WHERE id = :id")
     suspend fun getById(id: Int): SlideWallpaperEntity?

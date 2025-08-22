@@ -16,7 +16,6 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
-import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -33,7 +32,7 @@ object BannerAds {
 
     private val BANNER_ID_DEFAULT = AdsManager.BANNER_HOME
     private const val BANNER_ID_COLLAPSIBLE = "ca-app-pub-8048589936179473/3443177052"
-    private const val BANNER_HOME_COLLAPSIBLE = "ca-app-pub-8048589936179473/3443177052"
+    private const val BANNER_HOME_COLLAPSIBLE = "ca-app-pub-3607148519095421/9935275662"
 
     private var isInitBanner = false
 

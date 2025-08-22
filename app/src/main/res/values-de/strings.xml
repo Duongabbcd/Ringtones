@@ -17,6 +17,10 @@
     <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
     <string name="high_light_3">Anrufbildschirm</string>
 
+    <string name="favourite1">Lieblingsbild</string>
+    <string name="favourite2">Lieblingsvideo</string>
+    <string name="favourite3">Lieblingsfolie</string>
+
     <string name="set_alarm">Übergangsdauer</string>
     <string name="email_feedback_title">Feedback zur Anruf-Theme-Version: %1$s</string>
 

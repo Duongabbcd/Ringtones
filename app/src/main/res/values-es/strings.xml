@@ -17,6 +17,11 @@
     <string name = "desc_3">Más información encontrada aquí</string>
     <string name = "high_light_3">Más información</string>
 
+    <string name="favourite1">Imagen favorita</string>
+    <string name="favourite2">Video favorito</string>
+    <string name="favourite3">Diapositiva favorita</string>
+
+
     <string name="set_alarm">Duración de la transición</string>
     <string name="email_feedback_title">Comentarios sobre la versión del tema de llamada: %1$s</string>
 

@@ -31,12 +31,16 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllBackground
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.adapter.AllIConAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.preview.PreviewCallScreenActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.allAvatars
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.allBackgrounds
+import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.allIcons
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.avatarUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.endCall
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.photoBackgroundUrl
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.setIcon
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.startCall
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.callscreen.CallScreenFragment.Companion.videoBackgroundUrl
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
@@ -50,11 +54,19 @@ class CallScreenEditorActivity :
     BaseActivity<ActivityCallscreenBackgroundBinding>(ActivityCallscreenBackgroundBinding::inflate) {
     private val contentViewModel: ContentViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
+
+    private val addedWallpaperIds = mutableSetOf<Int>() // Track already added
+    private val addedAvatarIds = mutableSetOf<String>() // Track already added
+    private val addedIconIds =
+        mutableSetOf<Pair<ImageContent, ImageContent>>() // Track already added
+
     private val allBackgroundAdapter: AllBackgroundAdapter by lazy {
         AllBackgroundAdapter { input ->
             if (input.contents.isEmpty()) {
                 return@AllBackgroundAdapter
             }
+
+            selectedBackground = input
 
             hasRenderedFirstFrame = false
             currentListener?.let {
@@ -83,26 +95,36 @@ class CallScreenEditorActivity :
     private var player: Player? = null
     private var currentListener: Player.Listener? = null
     private var hasRenderedFirstFrame = false
+
+    private val snapHelper: OneItemSnapHelper by lazy {
+        OneItemSnapHelper()
+    }
+
     private val allAvatarAdapter: AllAvatarAdapter by lazy {
         AllAvatarAdapter { input ->
             Log.d(TAG, "AllBackgroundAdapter: $input")
-            if (input.isEmpty()) {
+            val result = input.url.medium
+            if (result.isEmpty()) {
                 return@AllAvatarAdapter
             }
-            avatarUrl = input
-            displayAvatar(input)
+            selectedAvatar = input
+            avatarUrl = result
+            displayAvatar(result)
         }
     }
 
     private val allIconAdapter: AllIConAdapter by lazy {
         AllIConAdapter { end, start ->
             Log.d(TAG, "AllBackgroundAdapter: $end and $start")
-            if (end.isEmpty() || start.isEmpty()) {
+            selectedIcon = Pair(end, start)
+            val result1 = end.url.medium
+            val result2 = start.url.medium
+            if (result1.isEmpty() || result2.isEmpty()) {
                 return@AllIConAdapter
             }
-            endCall = end
-            startCall = start
-            displayIcon(end, start)
+            endCall = result1
+            startCall = result2
+            displayIcon(result1, result2)
         }
     }
 
@@ -208,6 +230,8 @@ class CallScreenEditorActivity :
 
         displayIcon(endCallIcon = endCall, startCallIcon = startCall)
 
+        snapHelper.attachToRecyclerView(binding.allBackground)
+
         connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
             checkInternetConnected(isConnected)
         }
@@ -218,6 +242,13 @@ class CallScreenEditorActivity :
                     "INTER_CALLSCREEN"
                 )
             }
+
+            allBackground.layoutManager =
+                LinearLayoutManager(
+                    this@CallScreenEditorActivity,
+                    LinearLayoutManager.HORIZONTAL,
+                    false
+                )
 
             when (editorType) {
                 1 -> {
@@ -241,12 +272,7 @@ class CallScreenEditorActivity :
                 }
             }
 
-            allBackground.layoutManager =
-                LinearLayoutManager(
-                    this@CallScreenEditorActivity,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
+
 
             displayPhotoBackground(photoBackgroundUrl)
 
@@ -265,7 +291,7 @@ class CallScreenEditorActivity :
                 } else {
                     contentViewModel.selectCallScreenContent.value?.let { items ->
                         Log.d(TAG, "allBackgroundAdapter: $items")
-                        allBackgroundAdapter.submitList(items)
+                        appendNewRingtones(items)
                     }
 
                     // Re-enable touch
@@ -288,7 +314,7 @@ class CallScreenEditorActivity :
                 } else {
                     contentViewModel.backgroundContent.value?.let { items ->
                         Log.d(TAG, "allAvatarAdapter: $items")
-                        allAvatarAdapter.submitList(items)
+                        appendNewRingtones2(items)
                     }
                     // Re-enable touch
                     this@CallScreenEditorActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -313,7 +339,7 @@ class CallScreenEditorActivity :
                 } else {
                     contentViewModel.iconContent.value?.let { items ->
                         Log.d(TAG, "allIconAdapter: $items")
-                        allIconAdapter.submitList(items)
+                        appendNewRingtones3(items)
                     }
                     // Re-enable touch
                     this@CallScreenEditorActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -333,6 +359,65 @@ class CallScreenEditorActivity :
                 SearchRingtoneActivity.backToScreen(this@CallScreenEditorActivity)
             }
         }
+    }
+
+    private fun appendNewRingtones3(newItems: List<Pair<ImageContent, ImageContent>>) {
+        val oldSize = allIcons.size
+        android.util.Log.d(TAG, "appendNewRingtones 0: $oldSize")
+        val distinctItems = newItems.filter { !addedIconIds.contains(it) }
+
+        if (distinctItems.isNotEmpty()) {
+            allIcons.addAll(distinctItems)
+            val index = allIcons.indexOf(selectedIcon)
+            binding.allBackground.scrollToPosition(index)
+
+            distinctItems.forEach { addedIconIds.add(it) }
+            android.util.Log.d(TAG, "appendNewRingtones 1: $oldSize")
+            allIconAdapter.submitList(allIcons.toList(), index)
+            allIconAdapter.notifyItemInserted(oldSize - 1)
+        }
+
+        isLoadingMore = false
+    }
+
+    private fun appendNewRingtones2(newItems: List<ImageContent>) {
+        val oldSize = allAvatars.size
+        android.util.Log.d(TAG, "appendNewRingtones 0: $oldSize")
+        val distinctItems = newItems.filter { it.path !in addedAvatarIds }
+
+        if (distinctItems.isNotEmpty()) {
+            allAvatars.addAll(distinctItems)
+            val index = allAvatars.indexOf(selectedAvatar)
+            binding.allBackground.scrollToPosition(index)
+
+            distinctItems.forEach { addedAvatarIds.add(it.path) }
+            android.util.Log.d(TAG, "appendNewRingtones 1: $oldSize")
+            allAvatarAdapter.submitList(allAvatars.toList(), index)
+            allAvatarAdapter.notifyItemInserted(oldSize - 1)
+        }
+
+        isLoadingMore = false
+    }
+
+
+    private fun appendNewRingtones(newItems: List<ContentItem>) {
+        allBackgrounds.size
+        android.util.Log.d(TAG, "appendNewRingtones 0: ${newItems.size}")
+        val distinctItems = newItems.filter { it.id !in addedWallpaperIds }
+
+        if (distinctItems.isNotEmpty()) {
+            allBackgrounds.addAll(distinctItems)
+
+            val index = allBackgrounds.indexOf(selectedBackground)
+            binding.allBackground.scrollToPosition(index)
+
+            distinctItems.forEach { addedWallpaperIds.add(it.id) }
+            android.util.Log.d(TAG, "appendNewRingtones 1: ${allBackgrounds.size}")
+            allBackgroundAdapter.submitList(allBackgrounds.toList(), index)
+            allBackgroundAdapter.notifyItemInserted(allBackgrounds.size - 1)
+        }
+
+        isLoadingMore = false
     }
 
     private fun checkInternetConnected(isConnected: Boolean) {
@@ -376,7 +461,6 @@ class CallScreenEditorActivity :
                     }
                 }
             }
-
         })
     }
 
@@ -407,6 +491,11 @@ class CallScreenEditorActivity :
 
     companion object {
         val TAG = CallScreenEditorActivity.javaClass.simpleName
+
+        private var selectedBackground: ContentItem = ContentItem.CONTENT_EMPTY
+        private var selectedAvatar: ImageContent = ImageContent.IMAGE_EMPTY
+        private var selectedIcon: Pair<ImageContent, ImageContent> =
+            Pair(ImageContent.IMAGE_EMPTY, ImageContent.IMAGE_EMPTY)
     }
 
 }

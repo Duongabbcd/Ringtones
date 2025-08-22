@@ -24,26 +24,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.edit
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.bumptech.glide.Glide
-import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
-import com.ezt.ringify.ringtonewallpaper.databinding.FragmentCallscreenBinding
-import com.ezt.ringify.ringtonewallpaper.databinding.ItemCallscreenBinding
-import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
-import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CallScreenViewModel
-import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
-import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
-import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
-import dagger.hilt.android.AndroidEntryPoint
-import kotlin.apply
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -51,16 +35,34 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.airbnb.lottie.LottieAnimationView
+import com.bumptech.glide.Glide
+import com.ezt.ringify.ringtonewallpaper.R
+import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
+import com.ezt.ringify.ringtonewallpaper.databinding.FragmentCallscreenBinding
+import com.ezt.ringify.ringtonewallpaper.databinding.ItemCallscreenBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
+import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CallScreenViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
+import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import androidx.core.content.edit
+import kotlin.apply
 
 @AndroidEntryPoint
 class CallScreenFragment :
@@ -222,7 +224,7 @@ class CallScreenFragment :
             }
 
             noInternet.tryAgain.setOnClickListener {
-                val connected = connectionViewModel.isConnectedLiveData.value ?: false
+                val connected = connectionViewModel.isConnectedLiveData.value == true
                 if (connected) {
                     origin.visible()
                     noInternet.root.gone()
@@ -515,6 +517,9 @@ class CallScreenFragment :
         } else {
             binding.origin.visible()
             callScreenViewModel.loadCallScreens()
+//            contentViewModel.getAllCallScreenBackgrounds()
+//            contentViewModel.getAllCallScreenAvatars()
+//            contentViewModel.getAllCallScreenIcons()
             binding.noInternet.root.gone()
         }
     }
@@ -537,7 +542,7 @@ class CallScreenFragment :
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         callScreenSetupInProgress =
-            savedInstanceState?.getBoolean("callScreenSetupInProgress", false) ?: false
+            savedInstanceState?.getBoolean("callScreenSetupInProgress", false) == true
 
         if (callScreenSetupInProgress) {
             triggerCallScreenPermission(requireContext())
@@ -556,6 +561,10 @@ class CallScreenFragment :
     companion object {
         @JvmStatic
         fun newInstance() = CallScreenFragment()
+
+        val allBackgrounds = mutableListOf<ContentItem>()
+        val allAvatars = mutableListOf<ImageContent>()
+        val allIcons = mutableListOf<Pair<ImageContent, ImageContent>>()
         var photoBackgroundUrl: String = ""
         var videoBackgroundUrl: String = ""
         var avatarUrl: String = ""

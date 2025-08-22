@@ -25,6 +25,11 @@
     <string name="fav_light_2">خلفية الشاشة المفضلة</string>
     <string name="preview">معاينة</string> <!-- Arabic -->
 
+    <string name="favourite1">صورة مفضلة</string>
+    <string name="favourite2">فيديو مفضل</string>
+    <string name="favourite3">شريحة مفضلة</string>
+
+
     <string name="english">الإنجليزية</string>
     <string name="hindi">الهندية</string>
     <string name="spanish">الإسبانية</string>

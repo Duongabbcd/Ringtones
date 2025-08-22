@@ -17,6 +17,10 @@
     <string name="desc_3">동적 통화 화면 테마</string>
     <string name="high_light_3">통화 화면</string>
 
+    <string name="favourite1">즐겨찾는 이미지</string>
+    <string name="favourite2">즐겨찾는 비디오</string>
+    <string name="favourite3">즐겨찾는 슬라이드</string>
+
     <string name="set_alarm">전환 시간</string>
     <string name="email_feedback_title">통화 테마 버전에 대한 피드백: %1$s</string>
 

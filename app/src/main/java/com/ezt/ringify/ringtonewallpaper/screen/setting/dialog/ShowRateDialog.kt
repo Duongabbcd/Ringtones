@@ -18,7 +18,7 @@ class ShowRateDialog(context: Context) : Dialog(context) {
         window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
-    var userRate: Int = 0
+    var userRate: Int = 5
         set(value) {
             field = value
 
@@ -35,7 +35,9 @@ class ShowRateDialog(context: Context) : Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {
-
+            userRate = 5
+            ratingBar.setMaxRating(5)
+            ratingBar.setRating(5)
             ratingBar.setRatingChangeListener(object : CustomRatingBar.RatingChangeListener {
                 override fun onRatingChanged(rating: Int) {
                     userRate = rating
@@ -43,12 +45,12 @@ class ShowRateDialog(context: Context) : Dialog(context) {
             })
 
             rateUsButton.setOnClickListener {
-                if (userRate in 1..3) {
+                if (userRate in 1..4) {
                     context.composeEmail(
                         context.getString(R.string.contact_email),
                         context.getString(R.string.email_feedback_title, BuildConfig.VERSION_NAME)
                     )
-                } else if (userRate <= 5) {
+                } else {
                     requestReview()
                 }
                 dismiss()

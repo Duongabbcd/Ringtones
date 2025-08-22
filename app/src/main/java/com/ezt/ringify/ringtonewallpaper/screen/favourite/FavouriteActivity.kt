@@ -2,18 +2,24 @@ package com.ezt.ringify.ringtonewallpaper.screen.favourite
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import com.admob.max.dktlibrary.AdmobUtils
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFavouriteBinding
+import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
 
 @AndroidEntryPoint
 class FavouriteActivity : BaseActivity<ActivityFavouriteBinding>(ActivityFavouriteBinding::inflate),
     com.ezt.ringify.ringtonewallpaper.screen.intro.IntroFragmentNew.CallbackIntro {
 
+    private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private lateinit var introViewPagerAdapter: FavouriteAdapter
     var position: Int = 0
 
@@ -21,8 +27,26 @@ class FavouriteActivity : BaseActivity<ActivityFavouriteBinding>(ActivityFavouri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        viewPager()
+
+        connectionViewModel.isConnectedLiveData.observe(this@FavouriteActivity) { isConnected ->
+            println("isConnected: $isConnected")
+            checkInternetConnected(isConnected)
+        }
+
+
     }
+
+    private fun checkInternetConnected(isConnected: Boolean = true) {
+        if (!isConnected) {
+            binding.viewpager.gone()
+            binding.noInternet.root.visible()
+        } else {
+            binding.viewpager.visible()
+            viewPager()
+            binding.noInternet.root.gone()
+        }
+    }
+
     private fun viewPager() {
         if (!AdmobUtils.isNetworkConnected(this)) {
             if (!isIntroFullFail1) {
@@ -53,7 +77,8 @@ class FavouriteActivity : BaseActivity<ActivityFavouriteBinding>(ActivityFavouri
     }
 
     override fun onNext(position: Int, introPos: Int) {
-        if (position < numberPage - 1) {
+        println("onNext: $position and $introPos")
+        if (position <= numberPage - 1) {
             when (introPos) {
                 0 -> {
                     showAfterIntro1 {
