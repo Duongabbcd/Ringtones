@@ -168,6 +168,26 @@ class CarouselView
                     }
 
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+
+                        if (action == MotionEvent.ACTION_UP) {
+                            val child = rv.findChildViewUnder(e.x, e.y)
+
+                            if (child == null) {
+                                // Touch happened in empty space — consume it
+                                return true
+                            }
+
+                            // Check if inside actual bounds of the child
+                            val childLeft = child.left
+                            val childTop = child.top
+                            val childRight = child.right
+                            val childBottom = child.bottom
+
+                            if (e.x < childLeft || e.x > childRight || e.y < childTop || e.y > childBottom) {
+                                return true // Also consume if touch is on invisible padding
+                            }
+                        }
+
                         velocityTracker?.addMovement(e)
                         velocityTracker?.computeCurrentVelocity(1000)
 

@@ -97,7 +97,7 @@ class Carousel constructor(
      * @return CarouselLayoutManager
      */
     private fun getManager(): CarouselLayoutManager? {
-        if (manager == null) setOrientation(CarouselView.VERTICAL, false)
+        if (manager == null) setOrientation(CarouselView.VERTICAL, false,false)
         return manager
     }
 

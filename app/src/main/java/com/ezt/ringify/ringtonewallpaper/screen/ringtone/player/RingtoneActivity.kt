@@ -6,6 +6,7 @@ import alirezat775.lib.carouselview.CarouselView
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +14,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,7 +57,7 @@ import kotlin.math.abs
 
 @AndroidEntryPoint
 class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneBinding::inflate) {
-    private val viewModel: FavouriteRingtoneViewModel by viewModels()
+    private val favouriteRingtoneViewModel: FavouriteRingtoneViewModel by viewModels()
     private var downloadedUri: Uri? = null
 
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
@@ -64,6 +66,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private lateinit var carousel: Carousel
     private val playRingtoneAdapter: PlayRingtoneAdapter by lazy {
         PlayRingtoneAdapter(onRequestScrollToPosition = { newPosition ->
+            println("PlayRingtoneAdapter 0")
             carousel.scrollSpeed(200f)
             setUpNewPlayer(newPosition)
             handler.postDelayed({
@@ -74,6 +77,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             }, 300)
         }
         ) { result, id ->
+            println("PlayRingtoneAdapter 1: $result and $id")
             if (result) {
                 if (id != currentId) {
                     playRingtone(true)
@@ -227,7 +231,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             setupButtons()
             when (categoryId) {
                 -100 -> {
-                    favouriteViewModel.allRingtones.observe(this@RingtoneActivity) { items ->
+                    favouriteRingtoneViewModel.allRingtones.observe(this@RingtoneActivity) { items ->
                         appendNewRingtones(items)
                     }
 
@@ -255,7 +259,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            viewModel.loadRingtoneById(currentRingtone.id)
+            favouriteRingtoneViewModel.loadRingtoneById(currentRingtone.id)
             observeRingtoneFromDb()
             displayItems()
             playRingtone(false)
@@ -272,7 +276,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             }
 
             -99 -> {
-                favouriteViewModel.loadAllRingtones()
+                favouriteRingtoneViewModel.loadAllRingtones()
             }
 
             else -> {
@@ -326,7 +330,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                         }
 
                         -99 -> {
-                            favouriteViewModel.loadAllRingtones()
+                            favouriteRingtoneViewModel.loadAllRingtones()
                         }
 
                         else -> {
@@ -513,7 +517,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                     bottomSheet.showSuccess().also {
                         enableDismiss(bottomSheet)
                     }
-                    viewModel.increaseDownload(currentRingtone)
+                    favouriteRingtoneViewModel.increaseDownload(currentRingtone)
                 } else {
                     bottomSheet.showFailure().also {
                         enableDismiss(bottomSheet)
@@ -592,7 +596,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                     enableDismiss(dialog)
                 }}, 5000L)
 
-                viewModel.increaseSet(currentRingtone)
+                favouriteRingtoneViewModel.increaseSet(currentRingtone)
             } else {
                 dialog.showFailure().also {
                     enableDismiss(dialog)
@@ -604,7 +608,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private var isFavorite: Boolean = false  // ← track this in activity
 
     private fun observeRingtoneFromDb() {
-        viewModel.ringtone.observe(this) { dbRingtone ->
+        favouriteRingtoneViewModel.ringtone.observe(this) { dbRingtone ->
             isFavorite = dbRingtone.id == currentRingtone.id
             binding.favourite.setImageResource(
                 if (isFavorite) R.drawable.icon_favourite
@@ -616,13 +620,13 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private fun displayFavouriteIcon(isManualChange: Boolean = false) {
         if (isFavorite) {
             if (isManualChange) {
-                viewModel.deleteRingtone(currentRingtone)
+                favouriteRingtoneViewModel.deleteRingtone(currentRingtone)
                 binding.favourite.setImageResource(R.drawable.icon_unfavourite)
                 isFavorite = false
             }
         } else {
             if (isManualChange) {
-                viewModel.insertRingtone(currentRingtone)
+                favouriteRingtoneViewModel.insertRingtone(currentRingtone)
                 binding.favourite.setImageResource(R.drawable.icon_favourite)
                 isFavorite = true
             }
@@ -633,7 +637,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         binding.horizontalRingtones.smoothScrollToPosition(position)
         currentRingtone = allRingtones[position]
         playRingtoneAdapter.setCurrentPlayingPosition(position)
-        viewModel.loadRingtoneById(currentRingtone.id)
+        favouriteRingtoneViewModel.loadRingtoneById(currentRingtone.id)
         binding.currentRingtoneName.text = currentRingtone.name
         binding.currentRingtoneAuthor.text =
             currentRingtone.author?.name ?: resources.getString(R.string.unknwon_author)
@@ -651,6 +655,15 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         carousel = Carousel(this, binding.horizontalRingtones, playRingtoneAdapter)
         carousel.setOrientation(CarouselView.HORIZONTAL, false)
         carousel.scaleView(true)
+
+        binding.horizontalRingtones.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+            ) {
+                outRect.set(0, 0, 0, 0)
+            }
+        })
+
 
         snapHelper.attachToRecyclerView(binding.horizontalRingtones)
 
@@ -674,6 +687,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             })
 
             horizontalRingtones.setOnTouchListener { _, event ->
+                val childView = horizontalRingtones.findChildViewUnder(event.x, event.y)
+                if (childView == null) {
+                    // Handle touch on empty space
+                    return@setOnTouchListener true // Consume the event
+                }
+
                 carousel.scrollSpeed(300f)
                 duration = event.eventTime - event.downTime
                 when (event.action) {
@@ -686,37 +705,23 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                     }
 
                     MotionEvent.ACTION_UP -> {
-                        if(duration > 100) {
-                            println("horizontalRingtones: $duration and $index")
-                            binding.horizontalRingtones.stopScroll()
-                            setUpNewPlayer(index)
-                            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
-                            return@setOnTouchListener false
-                        }
+                        duration = event.eventTime - event.downTime
 
-                        // 👇 Decide scroll direction (and clamp to ±1)
-                        val newIndex = when {
-                            lastDx > 0 && index < allRingtones.size - 1 -> index + 1
-                            lastDx < 0 && index > 0 -> index - 1
-                            else -> index
-                        }
-
-                        // 👇 Update only if actual index changes
-                        if (newIndex != index) {
-                            updateIndex(newIndex, "onPositionChange")
-                            setUpNewPlayer(index)
-                            handler.postDelayed({
-                                playRingtoneAdapter.setCurrentPlayingPosition(index, false)
-                            }, 300)
+                        val touchedChild = horizontalRingtones.findChildViewUnder(event.x, event.y)
+                        if (touchedChild != null) {
+                            val position = horizontalRingtones.getChildAdapterPosition(touchedChild)
+                            if (position != RecyclerView.NO_POSITION) {
+                                Log.d("PlayerActivity", "Touch UP - Tapped on position=$position")
+                                updateIndex(position, "onTouch")
+                                setUpNewPlayer(position)
+                                playRingtoneAdapter.setCurrentPlayingPosition(position, false)
+                            }
                         } else {
-                            // stay on current
-                            setUpNewPlayer(index)
-                            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
+                            Log.d("PlayerActivity", "🚫 Touch UP - No valid item under touch")
                         }
-
-                        Log.d("PlayerActivity", "Touch UP - Scrolled to index=$index (dx=$lastDx)")
                     }
                 }
+
                 false
             }
 

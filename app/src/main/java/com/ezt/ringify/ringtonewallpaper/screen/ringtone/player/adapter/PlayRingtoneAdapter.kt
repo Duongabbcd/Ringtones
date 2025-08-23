@@ -49,7 +49,7 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
         val previous = currentPos
         currentPos = position
         isPlaying = playingSong
-        println("setCurrentPlayingPosition: $isPlaying")
+        println("setCurrentPlayingPosition: $position $isPlaying")
         if (previous != RecyclerView.NO_POSITION) notifyItemChanged(previous)
         notifyItemChanged(currentPos)
     }
@@ -120,10 +120,6 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
                 val position = bindingAdapterPosition
 
                 if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
-
-//                if (pos > 0) {
-//                    onRequestScrollToPosition(pos - 1)
-//                }
             }
 
             // Scroll to next
@@ -139,9 +135,6 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
 
                 if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
 
-//                if (pos < items.lastIndex) {
-//                    onRequestScrollToPosition(pos + 1)
-//                }
             }
 
             if( !isPlaying) {
@@ -167,21 +160,4 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
         }
     }
 
-
-}
-
-class RingtoneDiffCallback(
-    private val oldList: List<Ringtone>,
-    private val newList: List<Ringtone>
-) : DiffUtil.Callback() {
-    override fun getOldListSize() = oldList.size
-    override fun getNewListSize() = newList.size
-
-    override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean {
-        return oldList[oldPos].id == newList[newPos].id
-    }
-
-    override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean {
-        return oldList[oldPos] == newList[newPos]
-    }
 }

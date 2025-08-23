@@ -7,12 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 
-/**
- * Author:  Alireza Tizfahm Fard
- * Date:    12/7/17
- * Email:   alirezat775@gmail.com
- */
-class CarouselLayoutManager(context: Context?, orientation: Int, reverseLayout: Boolean) :
+class CarouselLayoutManager(private val context: Context?, orientation: Int, reverseLayout: Boolean) :
     LinearLayoutManager(context, orientation, reverseLayout) {
 
     private val shrinkAmount = 0.15f
@@ -125,9 +120,11 @@ class CarouselLayoutManager(context: Context?, orientation: Int, reverseLayout: 
      * @param position
      */
     override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State?, position: Int) {
-        smoothScroller!!.targetPosition = position
-        startSmoothScroll(smoothScroller)
+        val scroller = SmoothScroller(context)
+        scroller.targetPosition = position
+        startSmoothScroll(scroller)
     }
+
 
     inner class SmoothScroller(context: Context?, private var speed: Float = 150f) : LinearSmoothScroller(context) {
 

@@ -5,6 +5,8 @@
     android:layout_height="@dimen/_280sdp"
     android:backgroundTint="#F2EBFD"
     app:cardCornerRadius="@dimen/_20sdp"
+    android:clickable="true"
+    android:focusable="true"
     app:cardElevation="@dimen/_4sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
