@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -45,6 +46,7 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
+import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote.currentPlayingRingtone
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,35 +66,58 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private var isPlayerReleased = false
     private lateinit var handler: Handler
     private lateinit var carousel: Carousel
+
+    private var shouldAutoPlay = false
     private val playRingtoneAdapter: PlayRingtoneAdapter by lazy {
         PlayRingtoneAdapter(onRequestScrollToPosition = { newPosition ->
             println("PlayRingtoneAdapter 0")
             carousel.scrollSpeed(200f)
-            setUpNewPlayer(newPosition)
-            handler.postDelayed({
-                playRingtoneAdapter.setCurrentPlayingPosition(
-                    newPosition,
-                    false
-                )
-            }, 300)
-        }
-        ) { result, id ->
-            println("PlayRingtoneAdapter 1: $result and $id")
+            safeSetUpNewPlayer(newPosition, true)
+        }, onClickListener = {
+                result, id ->
+            println("PlayRingtoneAdapter 1: $result and $id and $currentId")
+            println("PlayRingtoneAdapter 2: ${exoPlayer.currentPosition} and ${exoPlayer.duration}")
+            shouldAutoPlay = result
             if (result) {
                 if (id != currentId) {
-                    playRingtone(true)
                     currentId = id
+                    shouldAutoPlay = true // ✅ Now it will auto play once ready
+                    safeSetUpNewPlayer(index, true)
                 } else {
-                    if (exoPlayer.currentPosition >= exoPlayer.duration) {
-                        exoPlayer.seekTo(0)
+
+                    if (exoPlayer.playbackState == Player.STATE_READY) {
+                        println("PlayRingtoneAdapter 4: ${exoPlayer.playbackState} and $index and $currentId")
+                        tryAutoPlayFromReady()
+                    } else {
+                        println("PlayRingtoneAdapter 5: ${exoPlayer.playbackState} and $index and $currentId")
+                        shouldAutoPlay = true
                     }
-                    exoPlayer.play()
                 }
             } else {
-                exoPlayer.pause()
+                if(exoPlayer.isPlaying) {
+                    exoPlayer.pause()
+                }
+
             }
+        },     onCurrentIdChanged = { id ->
+            currentId = id  // sync currentId immediately on position change
+        })
+    }
+
+    private fun tryAutoPlayFromReady() {
+        if (shouldAutoPlay) {
+            println("▶️ Playing from tryAutoPlayFromReady: ${exoPlayer.currentPosition} and ${exoPlayer.duration}")
+            if (exoPlayer.duration != C.TIME_UNSET && exoPlayer.currentPosition >= exoPlayer.duration) {
+                exoPlayer.seekTo(0)
+            }
+            exoPlayer.play()
+            shouldAutoPlay = false
+        } else {
+            println("🚫 Skipped auto-play in tryAutoPlayFromReady: shouldAutoPlay = false")
         }
     }
+
+
 
     private var currentId = -10
     private var isPlaying = false
@@ -110,39 +135,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     private var returnedFromSettings = false
 
-    private fun playRingtone(isPlaying: Boolean = false) {
-        exoPlayer = ExoPlayer.Builder(this).build()
-        // Prepare the media item
-        if (!isPlaying) return
-        val mediaItem = MediaItem.fromUri(currentRingtone.contents.url)
-        exoPlayer.setMediaItem(mediaItem)
-        // Prepare and start playback
-        exoPlayer.prepare()
-        exoPlayer.play()
-        println("▶️ Starting playback & posting progressUpdater")
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                println("🎧 onIsPlayingChanged: $isPlaying")
-                if (isPlaying) {
-                    handler.post(progressUpdater)
-                } else {
-                    handler.removeCallbacks(progressUpdater)
-                }
-            }
-
-            override fun onPlaybackStateChanged(state: Int) {
-                if (state == Player.STATE_ENDED) {
-                    println("🎵 Song ended")
-                    handler.postDelayed({ playRingtoneAdapter.onSongEnded() }, 300)
-
-                }
-            }
-        })
-    }
-
     private val progressUpdater = object : Runnable {
         override fun run() {
+            val exoPlayer = RingtonePlayerRemote.exoPlayer
+
             println("⏱ progressUpdater running...")
+
             if (exoPlayer.isPlaying) {
                 val progress = exoPlayer.currentPosition.toFloat()
                 println("⏳ Progress: $progress")
@@ -154,33 +152,19 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         }
     }
 
-    private fun releasePlayer() {
-        if (::exoPlayer.isInitialized) {
-            exoPlayer.release()
-            isPlayerReleased = true
-        }
-    }
 
-    private fun releasePlayerAndResetUI() {
-        exoPlayer.stop()
-        exoPlayer.clearMediaItems()
-        releasePlayer()
-        playRingtoneAdapter.updateProgress(0f)
-        playRingtoneAdapter.setCurrentPlayingPosition(index, false) // -1 means no item is playing
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         if (::exoPlayer.isInitialized) {
-            exoPlayer.release()
+            RingtonePlayerRemote.release()
             isPlayerReleased = true
         }
     }
 
-
-
-    private var currentRingtone = RingtonePlayerRemote.currentPlayingRingtone
+    private var currentRingtone = currentPlayingRingtone
 
     private val allRingtones by lazy {
         RingtonePlayerRemote.allSelectedRingtones
@@ -188,6 +172,38 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        RingtonePlayerRemote.initialize(this)
+        exoPlayer = RingtonePlayerRemote.exoPlayer
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_READY && exoPlayer.duration != C.TIME_UNSET) {
+                    println("🟢 Player is ready, duration: $shouldAutoPlay ${exoPlayer.duration}")
+                    if (shouldAutoPlay) {
+                        tryAutoPlayFromReady()
+                        shouldAutoPlay = false
+                    }
+                } else if (state == Player.STATE_ENDED) {
+                    println("🎵 Song ended")
+                    exoPlayer.seekTo(0)
+                    exoPlayer.playWhenReady = true
+                }
+            }
+
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                println("onIsPlayingChanged: isPlaying = $isPlaying and $index")
+                playRingtoneAdapter.setCurrentPlayingPosition(index, isPlaying)
+                if (isPlaying) {
+                    handler.post(progressUpdater)
+                } else {
+                    handler.removeCallbacks(progressUpdater)
+                    playRingtoneAdapter.updateProgress(exoPlayer.currentPosition.toFloat())
+                }
+            }
+        })
+
+
+
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
@@ -215,7 +231,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             initViewPager()
             binding.horizontalRingtones.post {
                 (binding.horizontalRingtones.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(index, 0)
-                setUpNewPlayer(index)
+                safeSetUpNewPlayer(index)
             }
 
             favourite.setOnClickListener {
@@ -262,7 +278,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             favouriteRingtoneViewModel.loadRingtoneById(currentRingtone.id)
             observeRingtoneFromDb()
             displayItems()
-            playRingtone(false)
             loadMoreData()
             binding.noInternet.root.gone()
         }
@@ -434,7 +449,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                         listName.add(currentRingtone.name)
                         Common.setAllFreeRingtones(this@RingtoneActivity, listName)
 
-                        setUpNewPlayer(index)
+                        safeSetUpNewPlayer(index)
                         onClickListener()
                     }
 
@@ -633,18 +648,50 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         }
     }
 
-    private fun setUpNewPlayer(position: Int) {
-        binding.horizontalRingtones.smoothScrollToPosition(position)
-        currentRingtone = allRingtones[position]
-        playRingtoneAdapter.setCurrentPlayingPosition(position)
-        favouriteRingtoneViewModel.loadRingtoneById(currentRingtone.id)
-        binding.currentRingtoneName.text = currentRingtone.name
-        binding.currentRingtoneAuthor.text =
-            currentRingtone.author?.name ?: resources.getString(R.string.unknwon_author)
-        exoPlayer.release()
-        exoPlayer = ExoPlayer.Builder(this).build()
-        handler.removeCallbacks(progressUpdater)
+    private var lastSetupTime = 0L
+    private var lastSetupPosition = -1
+
+    private fun safeSetUpNewPlayer(position: Int, autoplay: Boolean = false) {
+        val now = System.currentTimeMillis()
+
+        if (position == lastSetupPosition && now - lastSetupTime < 300) {
+            Log.d("RingtoneActivity", "⏳ Skipping duplicate setUpNewPlayer call at position=$position")
+            return
+        }
+
+        lastSetupTime = now
+        lastSetupPosition = position
+
+        setUpNewPlayer(position, autoplay)
     }
+
+
+    private fun setUpNewPlayer(position: Int, playingSong: Boolean = false) {
+        val exoPlayer = RingtonePlayerRemote.exoPlayer
+
+        Log.d(TAG, "🔄 setUpNewPlayer: position=$position, shouldAutoPlay=$shouldAutoPlay")
+        shouldAutoPlay = playingSong
+
+        binding.horizontalRingtones.smoothScrollToPosition(position)
+
+        val selectedRingtone = allRingtones[position]
+        currentRingtone = selectedRingtone
+        RingtonePlayerRemote.setCurrentRingtone(selectedRingtone)
+
+        playRingtoneAdapter.setCurrentPlayingPosition(position, shouldAutoPlay)
+
+        binding.currentRingtoneName.text = selectedRingtone.name
+        binding.currentRingtoneAuthor.text =
+            selectedRingtone.author?.name ?: getString(R.string.unknwon_author)
+
+        handler.removeCallbacks(progressUpdater)
+
+        val mediaItem = MediaItem.fromUri(selectedRingtone.contents.url)
+        exoPlayer.setMediaItem(mediaItem)
+        exoPlayer.prepare()
+    }
+
+
 
     private var lastDx: Int = 0
     private var duration = 0L
@@ -674,37 +721,30 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             carousel.addCarouselListener(object : CarouselListener {
                 override fun onPositionChange(position: Int) {
                     currentId = -10
+                    shouldAutoPlay = false
                     updateIndex(index, "onPositionChange")
-                    setUpNewPlayer(position)
-                    playRingtoneAdapter.setCurrentPlayingPosition(position, false)
                     // 🔁 force rebind to update playingHolder
                 }
 
                 override fun onScroll(dx: Int, dy: Int) {
                     lastDx = dx // ⬅️ Save dx for later use
-                    Log.d("PlayerActivity", "Scrolling... dx = $dx")
+                    shouldAutoPlay = false
+                    Log.d(TAG, "Scrolling... dx = $dx")
                 }
             })
 
             horizontalRingtones.setOnTouchListener { _, event ->
+
                 val childView = horizontalRingtones.findChildViewUnder(event.x, event.y)
                 if (childView == null) {
                     // Handle touch on empty space
                     return@setOnTouchListener true // Consume the event
                 }
-
+                shouldAutoPlay = false
                 carousel.scrollSpeed(300f)
                 duration = event.eventTime - event.downTime
                 when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        Log.d("PlayerActivity", "Touch DOWN")
-                    }
-
-                    MotionEvent.ACTION_MOVE -> {
-                        Log.d("PlayerActivity", "Touch MOVE")
-                    }
-
-                    MotionEvent.ACTION_UP -> {
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE , MotionEvent.ACTION_DOWN -> {
                         duration = event.eventTime - event.downTime
 
                         val touchedChild = horizontalRingtones.findChildViewUnder(event.x, event.y)
@@ -713,8 +753,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                             if (position != RecyclerView.NO_POSITION) {
                                 Log.d("PlayerActivity", "Touch UP - Tapped on position=$position")
                                 updateIndex(position, "onTouch")
-                                setUpNewPlayer(position)
-                                playRingtoneAdapter.setCurrentPlayingPosition(position, false)
                             }
                         } else {
                             Log.d("PlayerActivity", "🚫 Touch UP - No valid item under touch")
@@ -749,8 +787,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                             }
 
                             updateIndex(newIndex, "onPositionChange")
-                            setUpNewPlayer(index)
-                            playRingtoneAdapter.setCurrentPlayingPosition(index, false)
+                            safeSetUpNewPlayer(newIndex, false)
                         }
                     }
                 }
@@ -762,8 +799,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
     override fun onPause() {
         super.onPause()
-        handler.removeCallbacks(progressUpdater)
-        exoPlayer.release()
+        exoPlayer.pause()
     }
 
     // ✅ Handle permission result
@@ -783,7 +819,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     private fun updateIndex(newIndex: Int, caller: String) {
-        Log.d("WallpaperActivity", "Index changed from $index to $newIndex by $caller")
+        Log.d(TAG, "Index changed from $index to $newIndex by $caller")
         index = newIndex
     }
 

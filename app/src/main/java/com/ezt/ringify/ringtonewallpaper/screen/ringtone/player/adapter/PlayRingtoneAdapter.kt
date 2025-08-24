@@ -14,47 +14,53 @@ import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.dialog.CreditDialog
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import com.ezt.ringify.ringtonewallpaper.utils.Utils
-import kotlin.math.round
 
 
-class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, private val onClickListener: (Boolean, Int) -> Unit) : CarouselAdapter() {
+class PlayRingtoneAdapter(
+    private val onRequestScrollToPosition: (Int) -> Unit,
+    private val onClickListener: (Boolean, Int) -> Unit,
+    private val onCurrentIdChanged: (Int) -> Unit
+) : CarouselAdapter() {
 
     private val items = mutableListOf<Ringtone>()
     private var currentPos = RecyclerView.NO_POSITION
+    private var previousPos = RecyclerView.NO_POSITION
     private var playingHolder: PlayerViewHolder? = null
 
-    private  var isPlaying = false
-    private  var isEnded = false
+    private var isPlaying = false
 
     private lateinit var context: Context
 
-    fun updateProgress(progress: Float) {
-        val currentDuration = RingtonePlayerRemote.currentPlayingRingtone.duration.toFloat()
-        val result = round(progress) / 1000 % currentDuration
-        println("updateProgress: $progress and $currentDuration and ${round(result)} ")
-        playingHolder?.binding?.csb?.progress = round(result)
+    fun updateProgress(progressMs: Float) {
+        val durationSeconds = RingtonePlayerRemote.currentPlayingRingtone.duration.toFloat()
+
+        if (durationSeconds <= 0f) {
+            println("❌ Invalid duration: $durationSeconds")
+            return
+        }
+
+        val progressSeconds = (progressMs / 1000f).coerceAtMost(durationSeconds)
+        println("✅ updateProgress: $progressMs ms -> $progressSeconds sec of $durationSeconds sec")
+
+        playingHolder?.binding?.csb?.progress = progressSeconds
     }
 
     override fun getItemCount() = items.size
 
     fun submitList(new: List<Ringtone>) {
-        val start = items.size
-
         items.clear()
         items.addAll(new)
-        notifyItemRangeInserted(start, items.size)
+        notifyDataSetChanged()
     }
 
-    fun setCurrentPlayingPosition(position: Int, playingSong : Boolean = false) {
-        val previous = currentPos
+    fun setCurrentPlayingPosition(position: Int, playingSong: Boolean = false) {
+        previousPos = currentPos
         currentPos = position
         isPlaying = playingSong
-        println("setCurrentPlayingPosition: $position $isPlaying")
-        if (previous != RecyclerView.NO_POSITION) notifyItemChanged(previous)
+        println("setCurrentPlayingPosition: $position isPlaying=$isPlaying")
+        notifyItemChanged(previousPos)
         notifyItemChanged(currentPos)
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
         context = parent.context
@@ -70,88 +76,54 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
         }
     }
 
-    fun onSongEnded() {
-        isPlaying = false
-        isEnded = true
-        notifyItemChanged(currentPos)
-    }
-
-    fun isItemFullyVisible(recyclerView: RecyclerView, position: Int): Boolean {
-        val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return false
-        return( layoutManager.findFirstCompletelyVisibleItemPosition() == position ||
-                layoutManager.findLastCompletelyVisibleItemPosition() == position).also {
-                    println("isItemFullyVisible: $it")
-        }
-    }
-
     inner class PlayerViewHolder(val binding: ItemMusicBinding) : CarouselViewHolder(binding.root) {
         private var boundId: Int = -1
 
         @SuppressLint("ClickableViewAccessibility")
         fun bind(ringtone: Ringtone, pos: Int) {
-            // Avoid unnecessary rebind
+            println("boundId: $boundId and ${ringtone.id} and ${RingtonePlayerRemote.currentPlayingRingtone.id}")
             if (boundId != ringtone.id) {
                 boundId = ringtone.id
                 binding.tvTime.text = Utils.formatDuration(ringtone.duration.toLong())
                 binding.csb.max = ringtone.duration.toFloat()
-                binding.csb.progress = 0f
             }
-
-
-            // Disable touch on seekbar
+            // Disable manual seeking
             binding.csb.setOnTouchListener { _, _ -> true }
 
-            // Set playingHolder for external progress updates
+            val isCurrent = ringtone == RingtonePlayerRemote.currentPlayingRingtone
+            val currentProgressSec = if (isCurrent) {
+                RingtonePlayerRemote.exoPlayer?.currentPosition?.toFloat()?.div(1000f)?.coerceAtMost(ringtone.duration.toFloat()) ?: 0f
+            } else {
+                0f
+            }
+
+            binding.csb.progress = currentProgressSec
+
             if (ringtone == RingtonePlayerRemote.currentPlayingRingtone) {
                 playingHolder = this
             }
 
-
-            // Scroll to previous
+            // Previous / Next buttons
             binding.previous.setOnClickListener {
-
-                if (pos > 0) {
-                    onRequestScrollToPosition(pos - 1)
-                }
+                if (pos > 0) onRequestScrollToPosition(pos - 1)
             }
-
-            binding.leftView.setOnClickListener {
-                val recyclerView = itemView.parent as? RecyclerView ?: return@setOnClickListener
-                val position = bindingAdapterPosition
-
-                if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
-            }
-
-            // Scroll to next
             binding.next.setOnClickListener {
-                if (pos < items.lastIndex) {
-                    onRequestScrollToPosition(pos + 1)
-                }
+                if (pos < items.lastIndex) onRequestScrollToPosition(pos + 1)
             }
 
-            binding.rightView.setOnClickListener {
-                val recyclerView = itemView.parent as? RecyclerView ?: return@setOnClickListener
-                val position = bindingAdapterPosition
+            // Update play button icon based on isPlaying & currentPos
+            val currentlyPlayingThis = (pos == currentPos) && isPlaying
+            binding.play.setImageResource(
+                if (currentlyPlayingThis) R.drawable.icon_pause else R.drawable.icon_play
+            )
 
-                if (!isItemFullyVisible(recyclerView, position)) return@setOnClickListener
-
-            }
-
-            if( !isPlaying) {
-                binding.play.setImageResource(R.drawable.icon_play)
-                updateProgress(0f)
-            } else {
-                binding.play.setImageResource(R.drawable.icon_pause)
-            }
-
+            // Play button click: just notify activity; no local toggle here
             binding.play.setOnClickListener {
-                isPlaying = !isPlaying
-                binding.play.setImageResource(
-                    if (isPlaying) R.drawable.icon_pause else R.drawable.icon_play
-                )
-                onClickListener(isPlaying, ringtone.id)
+                onCurrentIdChanged(ringtone.id)
+                onClickListener(!currentlyPlayingThis, ringtone.id)
             }
 
+            // Credit dialog click
             binding.ccIcon.setOnClickListener {
                 val dialog = CreditDialog(context)
                 dialog.setCreditRingtone(ringtone)
@@ -159,5 +131,4 @@ class PlayRingtoneAdapter(private val onRequestScrollToPosition: (Int) -> Unit, 
             }
         }
     }
-
 }

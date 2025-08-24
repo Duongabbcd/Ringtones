@@ -1,19 +1,37 @@
 package com.ezt.ringify.ringtonewallpaper.utils
 
+import android.content.Context
+import androidx.media3.exoplayer.ExoPlayer
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 
 object RingtonePlayerRemote {
-    val allSelectedRingtones : MutableList<Ringtone> = mutableListOf()
+    private var _exoPlayer: ExoPlayer? = null
+    val exoPlayer: ExoPlayer
+        get() = _exoPlayer
+            ?: throw IllegalStateException("ExoPlayer not initialized. Call initialize(context) first.")
+
+    val allSelectedRingtones: MutableList<Ringtone> = mutableListOf()
     val allSelectedWallpapers: MutableList<Wallpaper> = mutableListOf()
+
     var currentPlayingRingtone = Ringtone.EMPTY_RINGTONE
     var currentPlayingWallpaper = Wallpaper.EMPTY_WALLPAPER
+
+    fun initialize(context: Context) {
+        if (_exoPlayer == null) {
+            _exoPlayer = ExoPlayer.Builder(context.applicationContext).build()
+        }
+    }
+
+    fun release() {
+        _exoPlayer?.release()
+        _exoPlayer = null
+    }
 
     fun setRingtoneQueue(list: List<Ringtone>) {
         allSelectedRingtones.clear()
         allSelectedRingtones.addAll(list)
     }
-
 
     fun setWallpaperQueue(list: List<Wallpaper>) {
         allSelectedWallpapers.clear()
