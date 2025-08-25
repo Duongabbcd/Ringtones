@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,6 +32,13 @@ class FavouriteWallpaperFragment : Fragment() {
 
             println("wallpaperAdapter: $allFavWallpaper")
             binding.currentItem.text = "(${allFavWallpaper.size}/3)"
+
+            if (allFavWallpaper.size >= 3) {
+                binding.nextBtn.setBackgroundResource(R.drawable.background_radius_12)
+            } else {
+                binding.nextBtn.setBackgroundResource(R.drawable.background_radius_12_gray)
+            }
+
         }
     }
 
@@ -56,6 +64,12 @@ class FavouriteWallpaperFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             val ctx = context ?: return@setOnClickListener
+            if (allFavWallpaper.size < 3) {
+                Toast.makeText(ctx, resources.getString(R.string.fav_desc), Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             Common.setAllFavouriteWallpaper(ctx, allFavWallpaper)
 
             val nextPage = position++

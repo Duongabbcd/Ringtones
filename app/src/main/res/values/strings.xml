@@ -29,6 +29,7 @@
     <string name="desc_3">Dynamic Call Screen Themes</string>
     <string name="high_light_3">Call Screen</string>
 
+    <string name="fav_desc">You must select 3 favourite items</string>
     <string name="fav_1">Select 3 music genres you like</string>
     <string name="fav_light_1">music genres</string>
     <string name="fav_2">Choose your favorite wallpaper</string>

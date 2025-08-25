@@ -21,6 +21,7 @@
     <string name="favourite2">Video favorito</string>
     <string name="favourite3">Diapositiva favorita</string>
 
+    <string name="fav_desc">Debes seleccionar 3 elementos favoritos</string>
 
     <string name="set_alarm">Duración de la transición</string>
     <string name="email_feedback_title">Comentarios sobre la versión del tema de llamada: %1$s</string>

@@ -20,6 +20,7 @@
     <string name="favourite1">पसंदीदा चित्र</string>
     <string name="favourite2">पसंदीदा वीडियो</string>
     <string name="favourite3">पसंदीदा स्लाइड</string>
+    <string name="fav_desc">आपको 3 पसंदीदा आइटम चुनने होंगे</string>
 
     <string name="fav_1">3 संगीत शैलियाँ चुनें जो आपको पसंद हों</string>
     <string name="selection_title">आप अधिकतम 3 ही चुन सकते हैं</string>

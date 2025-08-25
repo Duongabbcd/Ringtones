@@ -105,8 +105,16 @@ class WallpaperViewModel @Inject constructor(
         if (!hasMorePages1 || _loading1.value ==  true ) return@launch
         _loading1.value = true
         try {
-            val result = repository.fetchTrendingWallpapers(currentPage1, limit)
-            val result2 = repository.fetchTrendingSpecialWallpapers(currentPage1, limit)
+            val firstLimit = 2
+            val secondLimit = if (limit == 5) 3 else limit
+            val result = repository.fetchTrendingWallpapers(
+                currentPage1,
+                if (limit == 5) firstLimit else limit
+            )
+            val result2 = repository.fetchTrendingSpecialWallpapers(
+                currentPage1,
+                if (limit == 5) secondLimit else limit
+            )
             _total1.value = result.data.total
 
             hasMorePages1 = result.data.nextPageUrl != null && result2.data.nextPageUrl != null

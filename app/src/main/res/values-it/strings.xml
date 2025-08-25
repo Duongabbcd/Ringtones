@@ -17,6 +17,8 @@
     <string name="desc_3">Temi dinamici per schermata di chiamata</string>
     <string name="high_light_3">Schermata chiamata</string>
 
+    <string name="fav_desc">Devi selezionare 3 elementi preferiti</string>
+
     <string name="favourite1">Immagine preferita</string>
     <string name="favourite2">Video preferito</string>
     <string name="favourite3">Diapositiva preferita</string>

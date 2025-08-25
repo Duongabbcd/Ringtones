@@ -18,6 +18,8 @@
     <string name="high_light_3">فحص المكالمات</string>
     <string name="no_data_desc">لا يمكن العثور على أي محتوى؟</string>
 
+    <string name="fav_desc">يجب أن تختار 3 عناصر مفضلة</string>
+
     <string name="fav_1">اختر 3 أنواع من الموسيقى التي تفضلها</string>
     <string name="selection_title">يمكنك اختيار 3 فقط</string>
     <string name="fav_light_1">أنواع الموسيقى</string>

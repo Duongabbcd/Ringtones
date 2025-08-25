@@ -121,7 +121,6 @@ class PlaySlideWallpaperAdapter(
             stopSlideshow()
             val images = wallpaper.contents.map { it.url.medium }
 
-
             if (currentPos == position && wallpaper.contents.size > 1) {
                 startSlideshowCrossfade(images)
             } else {
@@ -181,6 +180,7 @@ class PlaySlideWallpaperAdapter(
         }
 
         private var isImageView1Visible = true
+
         private fun startSlideshowCrossfade(imageUrls: List<String>) {
             if (imageUrls.isEmpty()) return
             binding.progressBar.gone()

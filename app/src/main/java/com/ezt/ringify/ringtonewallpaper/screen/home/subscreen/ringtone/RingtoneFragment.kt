@@ -48,7 +48,9 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
         RingtoneAdapter { ringTone ->
             RingtonePlayerRemote.setCurrentRingtone(ringTone)
             val ctx = context ?: return@RingtoneAdapter
-            ctx.startActivity(Intent(ctx, RingtoneActivity::class.java))
+            ctx.startActivity(Intent(ctx, RingtoneActivity::class.java).apply {
+                putExtra("categoryId", -100)
+            })
         }
     }
 

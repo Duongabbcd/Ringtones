@@ -116,7 +116,11 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         }
     }
 
+    private lateinit var sortOrder: String
+    private val ringtoneViewModel: RingtoneViewModel by viewModels()
 
+    private var isLoadingMore = false
+    private val addedRingtoneIds = mutableSetOf<Int>() // Track already added
 
     private var currentId = -10
     private var isPlaying = false
@@ -150,9 +154,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             }
         }
     }
-
-
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -210,7 +211,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         loadBanner(this)
         RewardAds.initRewardAds(this)
         handler = Handler(Looper.getMainLooper())
-        println("onCreate: $categoryId")
+        Log.d(TAG, "categoryId: $categoryId")
         sortOrder = Common.getSortOrder(this)
         checkDownloadPermissions()
 
@@ -219,6 +220,26 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             checkInternetConnected(isConnected)
         }
 
+        when (categoryId) {
+            -99 -> {
+                favouriteRingtoneViewModel.allRingtones.observe(this@RingtoneActivity) { items ->
+                    appendNewRingtones(items)
+                }
+
+            }
+
+            -100 -> {
+                ringtoneViewModel.popular.observe(this@RingtoneActivity) { items ->
+                    appendNewRingtones(items)
+                }
+            }
+
+            else -> {
+                ringtoneViewModel.selectedRingtone.observe(this@RingtoneActivity) { items ->
+                    appendNewRingtones(items)
+                }
+            }
+        }
 
         binding.apply {
             currentRingtoneName.isSelected = true
@@ -244,27 +265,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 dialog.show()
             }
             setupButtons()
-            when (categoryId) {
-                -100 -> {
-                    favouriteRingtoneViewModel.allRingtones.observe(this@RingtoneActivity) { items ->
-                        appendNewRingtones(items)
-                    }
-
-                }
-
-                -99 -> {
-                    ringtoneViewModel.popular.observe(this@RingtoneActivity) { items ->
-                        appendNewRingtones(items)
-                    }
-                }
-
-                else -> {
-                    ringtoneViewModel.selectedRingtone.observe(this@RingtoneActivity) { items ->
-                        appendNewRingtones(items)
-                    }
-                }
-            }
-
         }
     }
 
@@ -315,12 +315,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         isLoadingMore = false
     }
 
-    private lateinit var sortOrder: String
-    private val ringtoneViewModel: RingtoneViewModel by viewModels()
-    private val favouriteViewModel: FavouriteRingtoneViewModel by viewModels()
 
-    private var isLoadingMore = false
-    private val addedRingtoneIds = mutableSetOf<Int>() // Track already added
 
     private fun loadMoreData() {
         binding.horizontalRingtones.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -337,14 +332,15 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
                 if (isAtEnd && !isLoadingMore) {
                     isLoadingMore = true
+                    println("horizontalRingtones: $categoryId")
                     when (categoryId) {
                         -100 -> {
-                            ringtoneViewModel.loadPopular(sortOrder)
-
+                            favouriteRingtoneViewModel.loadAllRingtones()
                         }
 
                         -99 -> {
-                            favouriteRingtoneViewModel.loadAllRingtones()
+                            ringtoneViewModel.loadPopular(sortOrder)
+
                         }
 
                         else -> {
@@ -693,7 +689,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         exoPlayer.prepare()
     }
 
-    private var lastDx: Int = 0
     private var duration = 0L
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
@@ -722,14 +717,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 override fun onPositionChange(position: Int) {
                     currentId = -10
                     shouldAutoPlay = false
-                    updateIndex(index, "onPositionChange")
+//                    updateIndex(index, "onPositionChange")
                     // 🔁 force rebind to update playingHolder
                 }
 
                 override fun onScroll(dx: Int, dy: Int) {
-                    lastDx = dx // ⬅️ Save dx for later use
                     shouldAutoPlay = false
-                    Log.d(TAG, "Scrolling... dx = $dx")
                 }
             })
 
@@ -751,11 +744,11 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                         if (touchedChild != null) {
                             val position = horizontalRingtones.getChildAdapterPosition(touchedChild)
                             if (position != RecyclerView.NO_POSITION) {
-                                Log.d("PlayerActivity", "Touch UP - Tapped on position=$position")
+                                Log.d(TAG, "Touch UP - Tapped on position=$position")
                                 updateIndex(position, "onTouch")
                             }
                         } else {
-                            Log.d("PlayerActivity", "🚫 Touch UP - No valid item under touch")
+                            Log.d(TAG, "🚫 Touch UP - No valid item under touch")
                         }
                     }
                 }
@@ -779,7 +772,10 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
 
                         RecyclerView.SCROLL_STATE_IDLE -> {
                             val distanceJumped = abs(newIndex - previousIndex)
-                            println("🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)")
+                            Log.d(
+                                TAG,
+                                "🟨 Scroll ended. Jumped: $distanceJumped (from $previousIndex to $newIndex)"
+                            )
 
                             if (distanceJumped >= 2) {
                                 Log.d("PlayerActivity", "🛑 Too fast! Jumped $distanceJumped items")

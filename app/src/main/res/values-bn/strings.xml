@@ -17,6 +17,8 @@
     <string name="desc_3">ডায়নামিক কল স্ক্রিন থিম</string>
     <string name="high_light_3">কল স্ক্রিন</string>
 
+    <string name="fav_desc">আপনাকে ৩টি পছন্দের আইটেম নির্বাচন করতে হবে</string>
+
     <string name="set_alarm">ট্রানজিশন সময়কাল</string>
     <string name="email_feedback_title">কল থিম সংস্করণ সম্পর্কে মতামত: %1$s</string>
 

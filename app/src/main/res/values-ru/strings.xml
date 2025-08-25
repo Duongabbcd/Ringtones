@@ -17,6 +17,8 @@
     <string name="desc_3">Динамические темы экрана звонка</string>
     <string name="high_light_3">Экран звонка</string>
 
+    <string name="fav_desc">Вы должны выбрать 3 избранных элемента</string>
+
     <string name="favourite1">Избранное изображение</string>
     <string name="favourite2">Избранное видео</string>
     <string name="favourite3">Избранный слайд</string>

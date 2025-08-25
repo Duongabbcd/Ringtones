@@ -16,9 +16,9 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/appLogo"
-        android:layout_width="@dimen/_86sdp"
-        android:layout_height="@dimen/_86sdp"
-        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:src="@drawable/icon_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         style="@style/CustomTextStyleSemiBold16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:gravity="center"
         android:text="@string/introduce"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,49 +48,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appName" />
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/loading"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appDesc">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/imageview"
-            android:src="@drawable/bottom_background" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
 
         <ImageView
             android:id="@+id/imageView4"
+            android:layout_height="@dimen/_320sdp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/imageview"
             android:src="@drawable/splash_bg" />
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/background_white_gradient"
-            android:contentDescription="@string/imageview"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guideline" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loading"
-        android:layout_width="@dimen/_62sdp"
-        android:layout_height="@dimen/_62sdp"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
         app:layout_constraintBottom_toTopOf="@+id/tvStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

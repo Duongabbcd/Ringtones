@@ -17,6 +17,8 @@
     <string name="desc_3">Thèmes d’écran d’appel dynamiques</string>
     <string name="high_light_3">Écran d\'appel</string>
 
+    <string name="fav_desc">Vous devez sélectionner 3 éléments préférés</string>
+
     <string name="favourite1">Image préférée</string>
     <string name="favourite2">Vidéo préférée</string>
     <string name="favourite3">Diapositive préférée</string>

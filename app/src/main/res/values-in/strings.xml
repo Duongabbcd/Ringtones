@@ -17,6 +17,8 @@
     <string name="desc_3">Tema Layar Panggilan Dinamis</string>
     <string name="high_light_3">Layar Panggilan</string>
 
+    <string name="fav_desc">Anda harus memilih 3 item favorit</string>
+
     <string name="favourite1">Gambar favorit</string>
     <string name="favourite2">Video favorit</string>
     <string name="favourite3">Slide favorit</string>

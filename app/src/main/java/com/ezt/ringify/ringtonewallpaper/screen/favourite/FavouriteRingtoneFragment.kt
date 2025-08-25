@@ -39,6 +39,13 @@ class FavouriteRingtoneFragment : Fragment() {
 
             Log.d(TAG, "ringtoneAdapter: $allFavRingtones")
             binding.currentItem.text = "(${allFavRingtones.size}/3)"
+            if (allFavRingtones.size >= 3) {
+                binding.nextBtn.setBackgroundResource(R.drawable.background_radius_12)
+            } else {
+                binding.nextBtn.setBackgroundResource(R.drawable.background_radius_12_gray)
+            }
+
+
         }
     }
 
@@ -64,6 +71,12 @@ class FavouriteRingtoneFragment : Fragment() {
 
         binding.nextBtn.setOnClickListener {
             val ctx = context ?: return@setOnClickListener
+            if (allFavRingtones.size < 3) {
+                Toast.makeText(ctx, resources.getString(R.string.fav_desc), Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             Common.setAllFavouriteGenres(ctx, allFavRingtones)
             val nextPage = position++
             callbackIntro.onNext(position, nextPage)
