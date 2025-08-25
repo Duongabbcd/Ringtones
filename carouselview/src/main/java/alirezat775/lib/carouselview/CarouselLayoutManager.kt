@@ -166,7 +166,7 @@ class CarouselLayoutManager(private val context: Context?, orientation: Int, rev
          * @return
          */
         override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-            return speed / displayMetrics.densityDpi;
+            return speed / displayMetrics.densityDpi
         }
     }
 }

@@ -24,7 +24,8 @@ class TouchInterceptorLayout(context: Context, attrs: AttributeSet) : FrameLayou
     private fun isTouchInsideView(view: View, event: MotionEvent): Boolean {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
-        val rect = Rect(location[0], location[1], location[0] + view.width, location[1] + view.height)
+        val rect =
+            Rect(location[0], location[1], location[0] + view.width, location[1] + view.height)
         return rect.contains(event.rawX.toInt(), event.rawY.toInt())
     }
 }

@@ -97,7 +97,7 @@ class CarouselView
      */
     private fun initSnap(initialPosition: Int = 0) {
         clipToPadding = false
-        overScrollMode = View.OVER_SCROLL_NEVER
+        overScrollMode = OVER_SCROLL_NEVER
         anchor = CENTER
         addOnItemTouchListener(onItemTouchListener())
         post {
@@ -211,9 +211,11 @@ class CarouselView
                                 VERTICAL -> {
                                     if (deltaY > minFlingDistance && Math.abs(yVelocity) > velocityThreshold) {
                                         if (yVelocity <= 0) {
-                                            if (manager.getReverseLayout()) scrolling(-1) else scrolling(1)
+                                            if (manager.reverseLayout) scrolling(-1) else scrolling(
+                                                1
+                                            )
                                         } else {
-                                            if (manager.getReverseLayout()) scrolling(1) else scrolling(-1)
+                                            if (manager.reverseLayout) scrolling(1) else scrolling(-1)
                                         }
                                     }
                                 }
@@ -325,7 +327,7 @@ class CarouselView
         val firstVisible = manager.findFirstVisibleItemPosition()
         val lastVisible = manager.findLastVisibleItemPosition()
 
-        if (firstVisible == RecyclerView.NO_POSITION || lastVisible == RecyclerView.NO_POSITION) return -1
+        if (firstVisible == NO_POSITION || lastVisible == NO_POSITION) return -1
 
         var closestPos = firstVisible
         var minDistance = Int.MAX_VALUE

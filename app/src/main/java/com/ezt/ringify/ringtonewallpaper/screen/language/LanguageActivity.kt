@@ -13,7 +13,6 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLanguageBinding
-import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
 import com.ezt.ringify.ringtonewallpaper.screen.language.adapter.Language
 import com.ezt.ringify.ringtonewallpaper.screen.language.adapter.LanguageAdapter
@@ -97,6 +96,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                                 nextScreenByCondition()
                             })
                     } else {
+                        println("is here")
                         nextScreenByCondition()
 
                     }
@@ -109,11 +109,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     }
 
     private fun nextScreenByCondition() {
-        val intent = if (Common.getCountOpenApp(this) == 0) {
-            Intent(this@LanguageActivity, IntroActivityNew::class.java)
-        } else {
-            Intent(this@LanguageActivity, MainActivity::class.java)
-        }
+        val intent = Intent(this@LanguageActivity, IntroActivityNew::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }

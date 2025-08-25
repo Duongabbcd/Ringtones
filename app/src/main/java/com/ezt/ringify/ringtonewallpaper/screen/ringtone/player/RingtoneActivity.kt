@@ -73,8 +73,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             println("PlayRingtoneAdapter 0")
             carousel.scrollSpeed(200f)
             safeSetUpNewPlayer(newPosition, true)
-        }, onClickListener = {
-                result, id ->
+        }, onClickListener = { result, id ->
             println("PlayRingtoneAdapter 1: $result and $id and $currentId")
             println("PlayRingtoneAdapter 2: ${exoPlayer.currentPosition} and ${exoPlayer.duration}")
             shouldAutoPlay = result
@@ -94,12 +93,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                     }
                 }
             } else {
-                if(exoPlayer.isPlaying) {
+                if (exoPlayer.isPlaying) {
                     exoPlayer.pause()
                 }
 
             }
-        },     onCurrentIdChanged = { id ->
+        }, onCurrentIdChanged = { id ->
             currentId = id  // sync currentId immediately on position change
         })
     }
@@ -655,7 +654,10 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         val now = System.currentTimeMillis()
 
         if (position == lastSetupPosition && now - lastSetupTime < 300) {
-            Log.d("RingtoneActivity", "⏳ Skipping duplicate setUpNewPlayer call at position=$position")
+            Log.d(
+                "RingtoneActivity",
+                "⏳ Skipping duplicate setUpNewPlayer call at position=$position"
+            )
             return
         }
 
@@ -690,8 +692,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.prepare()
     }
-
-
 
     private var lastDx: Int = 0
     private var duration = 0L
@@ -744,7 +744,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 carousel.scrollSpeed(300f)
                 duration = event.eventTime - event.downTime
                 when (event.action) {
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE , MotionEvent.ACTION_DOWN -> {
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
                         duration = event.eventTime - event.downTime
 
                         val touchedChild = horizontalRingtones.findChildViewUnder(event.x, event.y)

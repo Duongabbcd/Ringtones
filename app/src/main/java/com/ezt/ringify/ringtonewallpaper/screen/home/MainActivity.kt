@@ -69,10 +69,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         loadBanner(this, BANNER_HOME)
         var countOpen = Common.getCountOpenApp(this)
 
-        if (countOpen < 1) {
+        if (countOpen <= 1) {
             showNotificationDialog()
-            countOpen++
-            Common.setCountOpenApp(this, countOpen)
+            Common.setCountOpenApp(this, 2)
         }
 
         checkIfNewWeek()

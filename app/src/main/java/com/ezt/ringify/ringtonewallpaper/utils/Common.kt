@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Application.MODE_MULTI_PROCESS
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -197,7 +198,7 @@ object Common {
     fun getCountOpenApp(mContext: Context): Int {
         val preferences = mContext.getSharedPreferences(
             mContext.packageName,
-            MODE_MULTI_PROCESS
+            MODE_PRIVATE
         )
         return preferences.getInt("KEY_CountOpenApp", 0)
     }
@@ -205,7 +206,7 @@ object Common {
     fun setCountOpenApp(context: Context, flag: Int) {
         val preferences = context.getSharedPreferences(
             context.packageName,
-            MODE_MULTI_PROCESS
+            MODE_PRIVATE
         )
         preferences.edit().putInt("KEY_CountOpenApp", flag).apply()
     }

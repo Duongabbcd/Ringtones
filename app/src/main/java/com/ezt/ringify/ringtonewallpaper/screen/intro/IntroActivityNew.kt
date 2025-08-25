@@ -9,8 +9,6 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityIntroBinding
 import com.ezt.ringify.ringtonewallpaper.screen.favourite.FavouriteActivity
-import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
-import com.ezt.ringify.ringtonewallpaper.utils.Common
 import kotlin.jvm.java
 
 class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding::inflate), IntroFragmentNew.CallbackIntro {
@@ -63,19 +61,10 @@ class IntroActivityNew : BaseActivity<ActivityIntroBinding>(ActivityIntroBinding
     }
 
     private fun startAc() {
-        val countOpen = Common.getCountOpenApp(this)
-        if (countOpen == 0) {
-            startActivity(Intent(this, FavouriteActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            })
-            finish()
-        } else {
-            startActivity(Intent(this, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            })
-            finish()
-        }
-
+        startActivity(Intent(this, FavouriteActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        })
+        finish()
     }
 
     override fun onDestroy() {

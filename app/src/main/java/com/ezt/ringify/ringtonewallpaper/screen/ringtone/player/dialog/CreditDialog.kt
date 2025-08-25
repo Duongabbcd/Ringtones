@@ -42,7 +42,8 @@ class CreditDialog(
         )
 
         // Highlighted parts
-        val authorName = ringtone.author?.name ?: context.resources.getString(R.string.unknwon_author)
+        val authorName =
+            ringtone.author?.name ?: context.resources.getString(R.string.unknwon_author)
         val ringtoneName = ringtone.name
         val creditLabel = shorterCreditWeb
 

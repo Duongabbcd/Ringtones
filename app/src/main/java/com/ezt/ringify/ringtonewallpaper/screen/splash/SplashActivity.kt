@@ -155,7 +155,8 @@ class SplashActivity : BaseActivity2<ActivitySplashBinding>(ActivitySplashBindin
 
     private fun nextScreen() {
         val countOpen = Common.getCountOpenApp(this)
-        if (countOpen == 0) {
+        println("countOpen: $countOpen")
+        if (countOpen <= 1) {
             Common.setPreLanguage(this, "en")
             val intent = Intent(this@SplashActivity, LanguageActivity::class.java)
             intent.putExtra("fromSplash", true)

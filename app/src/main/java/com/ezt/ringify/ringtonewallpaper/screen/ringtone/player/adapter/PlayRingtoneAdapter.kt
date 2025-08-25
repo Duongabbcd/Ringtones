@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemMusicBinding
@@ -92,7 +90,8 @@ class PlayRingtoneAdapter(
 
             val isCurrent = ringtone == RingtonePlayerRemote.currentPlayingRingtone
             val currentProgressSec = if (isCurrent) {
-                RingtonePlayerRemote.exoPlayer?.currentPosition?.toFloat()?.div(1000f)?.coerceAtMost(ringtone.duration.toFloat()) ?: 0f
+                RingtonePlayerRemote.exoPlayer?.currentPosition?.toFloat()?.div(1000f)
+                    ?.coerceAtMost(ringtone.duration.toFloat()) ?: 0f
             } else {
                 0f
             }

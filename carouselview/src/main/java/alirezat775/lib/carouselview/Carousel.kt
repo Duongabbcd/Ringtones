@@ -4,7 +4,6 @@ import alirezat775.lib.carouselview.helper.EndlessListener
 import alirezat775.lib.carouselview.helper.ViewHelper
 import android.content.Context
 import androidx.annotation.NonNull
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
  * Email:   alirezat775@gmail.com
  */
 
-class Carousel constructor(
+class Carousel(
     private var context: Context,
     @NonNull private var carouselView: CarouselView,
     @NonNull private var adapter: CarouselAdapter
@@ -97,7 +96,7 @@ class Carousel constructor(
      * @return CarouselLayoutManager
      */
     private fun getManager(): CarouselLayoutManager? {
-        if (manager == null) setOrientation(CarouselView.VERTICAL, false,false)
+        if (manager == null) setOrientation(CarouselView.VERTICAL, false, false)
         return manager
     }
 
