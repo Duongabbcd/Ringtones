@@ -153,6 +153,6 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     }
 
     companion object {
-        val TAG = LiveWallpaperActivity.javaClass.simpleName
+        val TAG = LiveWallpaperActivity::class.java.simpleName
     }
 }

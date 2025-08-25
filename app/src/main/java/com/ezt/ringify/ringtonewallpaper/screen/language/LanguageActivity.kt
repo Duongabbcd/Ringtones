@@ -172,7 +172,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
         var selectedLanguage = ""
         var selectedLanguageName = ""
 
-        val TAG = LanguageActivity.javaClass.simpleName
+        val TAG = LanguageActivity::class.java.simpleName
     }
 
 }

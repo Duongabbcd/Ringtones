@@ -231,7 +231,7 @@ class PhoneSettingActivity :
     }
 
     companion object {
-        val TAG = PhoneSettingActivity.javaClass.simpleName
+        val TAG = PhoneSettingActivity::class.java.simpleName
 
         val isTiramisuOrAbove by lazy {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU

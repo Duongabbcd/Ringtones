@@ -99,11 +99,8 @@ class SlideWallpaperActivity :
     }
 
     private var lastDx: Int = 0
-    private var duration = 0L
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
     private var downloadedUri: Uri? = null
-
-    private var isUserTouch = false
 
     private val selectedType by lazy {
         intent.getIntExtra("type", -1)
@@ -218,7 +215,7 @@ class SlideWallpaperActivity :
 
     private fun setupButtons() {
         binding.apply {
-            println("selectedType is: $type")
+            Log.d(TAG, "selectedType is: $type")
             alarm.isVisible = currentWallpaper.contents.size > 1
             alarm.setOnClickListener {
                 val dialog = AlarmDialog(this@SlideWallpaperActivity) { totalTime ->
@@ -291,7 +288,7 @@ class SlideWallpaperActivity :
 
                 } else {
                     checkPayBeforeSpecialWallpaper {
-                        println("checkPayBeforeSpecialWallpaper 0")
+                        Log.d(TAG, "checkPayBeforeSpecialWallpaper 0")
                         lifecycleScope.launch {
                             setUpLiveWallpaperByCondition(imageUrl)
                         }
@@ -307,7 +304,7 @@ class SlideWallpaperActivity :
         val origin = Common.getAllFreeWallpapers(this@SlideWallpaperActivity)
         listName.addAll(origin)
         if (RemoteConfig.INTER_WALLPAPER == "0") {
-            println("checkPayBeforeSpecialWallpaper 1")
+            Log.d(TAG, "checkPayBeforeSpecialWallpaper 1")
             onClickListener()
             return
         }
@@ -484,7 +481,7 @@ class SlideWallpaperActivity :
 
     private fun startLiveWallpaper(contents: List<ImageContent>) {
         SlideshowWallpaperService.imageUrls = contents.map { it.url.full }
-        println("startLiveWallpaper is here")
+        Log.d(TAG, "startLiveWallpaper is here")
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
@@ -577,21 +574,10 @@ class SlideWallpaperActivity :
         carousel.scaleView(true)
 
         binding.horizontalWallpapers.adapter = playSlideWallpaperAdapter
-//        snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
-
-        // Scroll to current index after layout
-        binding.horizontalWallpapers.post {
-            centerItem(imageWallpaperIndex)
-            println("setUpNewPlayer 3")
-            setUpNewPlayer(imageWallpaperIndex)
-        }
 
         carousel.addCarouselListener(object : CarouselListener {
             override fun onPositionChange(position: Int) {
-                updateIndex(imageWallpaperIndex, "onPositionChange")
-                setUpNewPlayer(position)
-                playSlideWallpaperAdapter.setCurrentPlayingPosition(position, false)
-                // 🔁 force rebind to update playingHolder
+                //do nothing
             }
 
             override fun onScroll(dx: Int, dy: Int) {
@@ -602,18 +588,22 @@ class SlideWallpaperActivity :
 
         binding.horizontalWallpapers.setOnTouchListener { _, event ->
             when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    //do nothing
-                }
 
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    println("setUpNewPlayer 4")
-                    val newIndex = when {
-                        lastDx > 0 && imageWallpaperIndex < allWallpapers.size - 1 -> imageWallpaperIndex + 1
-                        lastDx < 0 && imageWallpaperIndex > 0 -> imageWallpaperIndex - 1
-                        else -> imageWallpaperIndex
+
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    Log.d(TAG, "setUpNewPlayer 4")
+                    val touchedChild =
+                        binding.horizontalWallpapers.findChildViewUnder(event.x, event.y)
+                    if (touchedChild != null) {
+                        val position =
+                            binding.horizontalWallpapers.getChildAdapterPosition(touchedChild)
+                        if (position != RecyclerView.NO_POSITION) {
+                            Log.d(TAG, "Touch UP - Tapped on position=$position")
+                            updateIndex(position, "onTouch")
+                        }
+                    } else {
+                        Log.d(TAG, "🚫 Touch UP - No valid item under touch")
                     }
-                    updateIndexBySnap(newIndex)
                 }
             }
             false
@@ -623,8 +613,9 @@ class SlideWallpaperActivity :
         binding.horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    println("setUpNewPlayer 5")
-                    updateIndexBySnap(imageWallpaperIndex)
+                    Log.d(TAG, "setUpNewPlayer 5")
+//                    updateIndex(imageWallpaperIndex, "SNAP")
+                    setUpNewPlayer(imageWallpaperIndex)
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     //do nothing
                 }
@@ -652,30 +643,26 @@ class SlideWallpaperActivity :
         layoutManager.scrollToPositionWithOffset(position, offset)
     }
 
-    private fun updateIndexBySnap(snapIndex: Int) {
-        val layoutManager =
-            binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
-        val snapView = snapHelper.findSnapView(layoutManager) ?: return
-        val snappedPosition = layoutManager.getPosition(snapView)
-        updateIndex(snapIndex, "SNAP")
-        println("setUpNewPlayer 6")
-        setUpNewPlayer(snappedPosition)
-        playSlideWallpaperAdapter.setCurrentPlayingPosition(snappedPosition)
-    }
+    private var isSetUpNewPlayerInProgress = false
 
     private fun setUpNewPlayer(position: Int) {
         binding.horizontalWallpapers.smoothScrollToPosition(position)
-
         currentWallpaper = allWallpapers[position]
         Log.d(TAG, "setUpNewPlayer: position= $position wallpaper= ${currentWallpaper.id}")
+
+        // Load wallpaper based on the type (single or slideshow)
         if (currentWallpaper.contents.size > 1) {
             favouriteViewModel.loadSlideWallpaperById(currentWallpaper.id)
         } else {
             favouriteViewModel.loadWallpaperById(currentWallpaper.id)
         }
 
-
         imageWallpaperIndex = position
+
+        // Reset the flag once the player setup completes
+        handler.postDelayed({
+            isSetUpNewPlayerInProgress = false
+        }, 200)  // Adjust delay as necessary
     }
 
     private val snapHelper: OneItemSnapHelper by lazy {
@@ -686,7 +673,7 @@ class SlideWallpaperActivity :
 
     private fun observeRingtoneFromDb() {
         favouriteViewModel.wallpaper.observe(this) { dbRingtone ->
-            println("wallpaper: ${dbRingtone.id} and ${dbRingtone.contents}")
+            Log.d(TAG, "wallpaper: ${dbRingtone.id} and ${dbRingtone.contents}")
             isFavorite = dbRingtone.id == currentWallpaper.id
             binding.favourite.setImageResource(
                 if (isFavorite) R.drawable.icon_favourite

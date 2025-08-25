@@ -29,7 +29,7 @@ class FavouriteRingtoneFragment : Fragment() {
     private val binding by lazy { ViewpagerFavouriteItempageBinding.inflate(layoutInflater) }
     private lateinit var callbackIntro: CallbackIntro
     private var position = 0
-    private val TAG = FavouriteRingtoneFragment.javaClass.simpleName
+    private val TAG = FavouriteRingtoneFragment::class.java.simpleName
     private val categoryViewModel: CategoryViewModel by viewModels()
     private var allFavRingtones: MutableList<Int> = mutableListOf()
     private val ringtoneAdapter: SelectingFavouriteAdapter by lazy {

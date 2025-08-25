@@ -190,7 +190,7 @@ object Common {
     fun logEventFirebase(context: Context, eventName: String) {
 //        val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
 //        val bundle = Bundle()
-//        bundle.putString("onEvent", context.javaClass.simpleName)
+//        bundle.putString("onEvent", context::class.java.simpleName)
 //        firebaseAnalytics.logEvent(eventName + "_" + BuildConfig.VERSION_CODE, bundle)
 //        Log.d("===Event", eventName + "_" + BuildConfig.VERSION_CODE)
     }

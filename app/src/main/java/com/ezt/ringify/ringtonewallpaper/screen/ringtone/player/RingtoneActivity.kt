@@ -848,7 +848,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     companion object {
-        private val TAG = RingtoneActivity.javaClass.simpleName
+        private val TAG = RingtoneActivity::class.java.simpleName
     }
 }
 

@@ -230,7 +230,7 @@ class FavouriteWallpaperActivity :
     }
 
     companion object {
-        val TAG = FavouriteWallpaperActivity.javaClass.simpleName
+        val TAG = FavouriteWallpaperActivity::class.java.simpleName
     }
 
 }

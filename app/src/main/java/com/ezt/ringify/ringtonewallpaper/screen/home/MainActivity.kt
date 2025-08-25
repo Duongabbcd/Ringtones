@@ -280,7 +280,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     companion object {
         var selectedTab = 0
         var isChangeTheme = false
-        private var TAG = MainActivity.javaClass.simpleName
+        private var TAG = MainActivity::class.java.simpleName
 
         fun loadBanner(activity: AppCompatActivity, banner: String = BANNER_HOME) {
             println("RemoteConfig.BANNER_COLLAP_ALL_070625: ${RemoteConfig.BANNER_ALL}")

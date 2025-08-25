@@ -356,6 +356,6 @@ class PreviewWallpaperActivity :
     }
 
     companion object {
-        val TAG = PreviewWallpaperActivity.javaClass.simpleName
+        val TAG = PreviewWallpaperActivity::class.java.simpleName
     }
 }

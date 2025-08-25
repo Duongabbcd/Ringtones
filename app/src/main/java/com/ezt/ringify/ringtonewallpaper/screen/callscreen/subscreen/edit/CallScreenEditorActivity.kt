@@ -490,7 +490,7 @@ class CallScreenEditorActivity :
     }
 
     companion object {
-        val TAG = CallScreenEditorActivity.javaClass.simpleName
+        val TAG = CallScreenEditorActivity::class.java.simpleName
 
         private var selectedBackground: ContentItem = ContentItem.CONTENT_EMPTY
         private var selectedAvatar: ImageContent = ImageContent.IMAGE_EMPTY

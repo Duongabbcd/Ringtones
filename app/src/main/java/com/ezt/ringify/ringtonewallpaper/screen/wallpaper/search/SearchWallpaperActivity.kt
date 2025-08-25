@@ -355,6 +355,6 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     }
 
     companion object {
-        val TAG = SearchWallpaperActivity.javaClass.simpleName
+        val TAG = SearchWallpaperActivity::class.java.simpleName
     }
 }
