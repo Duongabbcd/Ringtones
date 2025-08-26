@@ -62,7 +62,7 @@ object Common {
     fun getLang(mContext: Context): String {
         val preferences =
             mContext.getSharedPreferences(mContext.packageName, MODE_MULTI_PROCESS)
-        return preferences.getString("KEY_LANG", "en") ?: "English (UK)"
+        return preferences.getString("KEY_LANG", "English") ?: "English"
     }
 
     fun setLang(context: Context, open: String?) {

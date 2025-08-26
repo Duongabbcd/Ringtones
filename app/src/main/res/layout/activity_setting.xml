@@ -91,12 +91,11 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="English"
                     android:id="@+id/languageName"
                     android:layout_marginTop="@dimen/_4sdp"
                     android:textColor="#8F8F8F"
                     style="@style/CustomTextStyle12sp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>

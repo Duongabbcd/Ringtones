@@ -8,9 +8,11 @@ import android.os.Handler
 import android.os.Looper
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.ezt.ringify.ringtonewallpaper.R
 
 class SlideshowWallpaperService : WallpaperService() {
 
@@ -20,6 +22,11 @@ class SlideshowWallpaperService : WallpaperService() {
     }
 
     override fun onCreateEngine(): Engine {
+        Toast.makeText(
+            this@SlideshowWallpaperService,
+            resources.getString(R.string.successfully),
+            Toast.LENGTH_SHORT
+        ).show()
         return SlideshowEngine()
     }
 

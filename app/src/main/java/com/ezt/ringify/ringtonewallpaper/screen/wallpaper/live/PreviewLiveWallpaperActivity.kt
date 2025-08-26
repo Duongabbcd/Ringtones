@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
@@ -40,7 +39,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.reward.RewardBottomSheet
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.VideoWallpaperService
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service.LiveVideoWallpaperService
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
@@ -86,6 +85,7 @@ class PreviewLiveWallpaperActivity :
     private var downloadedUri: Uri? = null
 
     private var duration = 0L
+    private var isOpenActivity = false
     private lateinit var handler: Handler
 
 
@@ -98,10 +98,13 @@ class PreviewLiveWallpaperActivity :
         loadBanner(this, BANNER_HOME)
         handler = Handler(Looper.getMainLooper())
         checkDownloadPermissions()
-        Log.d("PreviewLive", "savedInstanceState: $type and $tagId")
+        Log.d(TAG, "savedInstanceState: ${savedInstanceState == null} and $type and $tagId")
         if (savedInstanceState != null) {
             liveWallpaperIndex = savedInstanceState.getInt("current_index", 0)
+            Log.d(TAG, "savedInstanceState 0: $liveWallpaperIndex")
         } else {
+            Log.d(TAG, "savedInstanceState 1: ${RingtonePlayerRemote.currentPlayingWallpaper}")
+            isOpenActivity = true
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
             liveWallpaperIndex = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
         }
@@ -151,6 +154,11 @@ class PreviewLiveWallpaperActivity :
             else -> wallpaperViewModel.liveWallpapers.observe(this@PreviewLiveWallpaperActivity) { items ->
                 appendNewRingtones(items)
             }
+        }
+
+        // initial centering (only once at startup)
+        binding.horizontalWallpapers.post {
+            centerItem(liveWallpaperIndex)
         }
 
     }
@@ -296,13 +304,12 @@ class PreviewLiveWallpaperActivity :
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
-                ComponentName(context, VideoWallpaperService::class.java)
+                ComponentName(context, LiveVideoWallpaperService::class.java)
             )
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
     }
-
 
     private fun downloadVideoWallpaper() {
         val missingPermissions = RingtoneHelper.getMissingPhotoPermissions(this)
@@ -392,28 +399,52 @@ class PreviewLiveWallpaperActivity :
         // 🔑 Listen for swipe + snapping
         binding.horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                Log.d(TAG, "Scroll State Changed: $newState")
-
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    setUpNewPlayer(liveWallpaperIndex, tag = "onScrollStateChanged")
+                    val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+
+                    val rvCenter = recyclerView.width / 2
+                    var closestPos = RecyclerView.NO_POSITION
+                    var minDistance = Int.MAX_VALUE
+
+                    for (i in 0 until lm.childCount) {
+                        val child = lm.getChildAt(i) ?: continue
+                        val childCenter = (child.left + child.right) / 2
+                        val distance = kotlin.math.abs(childCenter - rvCenter)
+
+                        if (distance < minDistance) {
+                            minDistance = distance
+                            closestPos = lm.getPosition(child)
+                        }
+                    }
+
+                    if (closestPos != RecyclerView.NO_POSITION && closestPos != liveWallpaperIndex) {
+                        Log.d(
+                            TAG,
+                            "Idle → new index = $isOpenActivity and $liveWallpaperIndex and $closestPos"
+                        )
+                        val selectedIndex = if (isOpenActivity) liveWallpaperIndex else closestPos
+                        isOpenActivity = false
+
+                        setUpNewPlayer(selectedIndex, tag = "idleScroll")
+                        playSlideWallpaperAdapter.setCurrentPlayingPosition(selectedIndex)
+                    }
                 }
             }
+
         })
 
     }
 
-    // Helper function to center a given item
+
+    // Helper function to center item (used at startup or programmatic jumps)
     private fun centerItem(position: Int) {
-        val layoutManager =
-            binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
+        val lm = binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
         val child =
             binding.horizontalWallpapers.findViewHolderForAdapterPosition(position)?.itemView
 
         if (child == null) {
-            layoutManager.scrollToPositionWithOffset(position, 0) // first bring it into view
-            binding.horizontalWallpapers.post { centerItem(position) } // re-center after layout
+            lm.scrollToPositionWithOffset(position, 0)
+            binding.horizontalWallpapers.post { centerItem(position) }
             return
         }
 
@@ -421,13 +452,12 @@ class PreviewLiveWallpaperActivity :
         val recyclerWidth = binding.horizontalWallpapers.width
         val offset = (recyclerWidth - itemWidth) / 2
 
-        layoutManager.scrollToPositionWithOffset(position, offset)
+        lm.scrollToPositionWithOffset(position, offset)
     }
 
 
     private fun setUpNewPlayer(position: Int, tag: String = "") {
         binding.horizontalWallpapers.smoothScrollToPosition(position)
-        // Only update if the wallpaper has actually changed
         if (currentWallpaper.id != allWallpapers[position].id) {
             currentWallpaper = allWallpapers[position]
             RingtonePlayerRemote.currentPlayingWallpaper = currentWallpaper
@@ -518,8 +548,8 @@ class PreviewLiveWallpaperActivity :
         CacheUtil.release(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         outState.putInt("current_index", liveWallpaperIndex)
         Log.d(TAG, "Saving currentIndex: $liveWallpaperIndex")
     }
@@ -528,7 +558,6 @@ class PreviewLiveWallpaperActivity :
         super.onResume()
         RewardAds.initRewardAds(this)
         binding.horizontalWallpapers.post {
-            centerItem(liveWallpaperIndex)
             playSlideWallpaperAdapter.setCurrentPlayingPosition(liveWallpaperIndex)
             setUpNewPlayer(liveWallpaperIndex)
         }

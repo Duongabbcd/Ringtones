@@ -12,6 +12,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.language.LanguageActivity
 import com.ezt.ringify.ringtonewallpaper.screen.setting.dialog.ShowRateDialog
+import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.composeEmail
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.openPrivacy
@@ -32,6 +33,11 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 })
             }
+
+            val currentLanguageFlag = Common.getPreLanguageflag(this@SettingActivity)
+            flag.setImageResource(currentLanguageFlag)
+            val lang = Common.getPreLanguage(this@SettingActivity)
+            languageName.text = displayLanguageInItsName(lang)
 
             languageOption.setOnClickListener {
                 startActivity(Intent(this@SettingActivity, LanguageActivity::class.java))
@@ -65,6 +71,25 @@ class SettingActivity: BaseActivity<ActivitySettingBinding>(ActivitySettingBindi
 //            policyOption.gone()
             shareOption.gone()
         }
+    }
+
+    private fun displayLanguageInItsName(string: String): String {
+        return when (string) {
+            "en" -> "English"
+            "ar" -> "العربية"
+            "bn" -> "বাংলা"
+            "de" -> "Deutsch"
+            "es" -> "Español"
+            "fr" -> "Français"
+            "hi" -> "हिन्दी"
+            "in" -> "Bahasa"
+            "pt" -> "Português"
+            "it" -> "Italiano"
+            "ru" -> "Русский"
+            "ko" -> "한국어"
+            else -> "English"
+        }
+
     }
 
     override fun onBackPressed() {

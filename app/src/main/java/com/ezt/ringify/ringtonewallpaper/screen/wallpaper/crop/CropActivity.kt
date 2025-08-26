@@ -129,6 +129,11 @@ class CropActivity : BaseActivity<ActivityCropBinding>(ActivityCropBinding::infl
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 setResult(RESULT_OK, resultIntent)
+                Toast.makeText(
+                    this@CropActivity,
+                    resources.getString(R.string.successfully),
+                    Toast.LENGTH_SHORT
+                ).show()
                 SearchRingtoneActivity.backToScreen(this@CropActivity, "INTER_WALLPAPER")
             } catch (e: Exception) {
                 e.printStackTrace()

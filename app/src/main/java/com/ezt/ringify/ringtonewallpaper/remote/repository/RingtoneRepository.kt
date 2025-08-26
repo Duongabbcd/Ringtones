@@ -19,41 +19,69 @@ class RingtoneRepository @Inject constructor(
 ) {
     suspend fun getRingtoneById(ringtoneId: Int): RingtoneResponse =
         apiService.getRingtoneById(where = "id+$ringtoneId,active+1")
-    suspend fun fetchPopularRingtones(page: Int): RingtoneResponse = apiService.getPopularRingtones(page)
-    suspend fun fetchTrendingRingtones(currentPage2: Int): RingtoneResponse = apiService.getTrendingRingtones(currentPage2)
-    suspend fun fetchPrivateRingtones(currentPage2: Int): RingtoneResponse =
-        apiService.fetchPrivateRingtones(currentPage2)
 
-    suspend fun fetchNewRingtones(currentPage2: Int): RingtoneResponse =
-        apiService.getNewRingtones(page = currentPage2)
+    suspend fun fetchPopularRingtones(page: Int, orderBy: String = "name+asc"): RingtoneResponse =
+        apiService.getPopularRingtones(page = page, orderBy = orderBy)
+
+    suspend fun fetchTrendingRingtones(
+        currentPage2: Int,
+        orderBy: String = "name+asc",
+        limit: Int = 15
+    ): RingtoneResponse =
+        apiService.getTrendingRingtones(currentPage2, orderBy = orderBy, limit = limit)
+
+    suspend fun fetchPrivateRingtones(
+        currentPage2: Int,
+        orderBy: String = "name+asc",
+        limit: Int = 15
+    ): RingtoneResponse =
+        apiService.fetchPrivateRingtones(currentPage2, orderBy, limit = limit)
+
+    suspend fun fetchNewRingtones(
+        currentPage2: Int,
+        sortOrder: String = "updated_at desc",
+        limit: Int = 15
+    ): RingtoneResponse =
+        apiService.getNewRingtones(page = currentPage2, orderBy = sortOrder, limit = limit)
 
     suspend fun fetchRingtoneCategories(page: Int): CategoriesResponse =
         apiService.getRingtoneCategory(page)
 
-    suspend fun fetchNewWallpapers(page: Int, limit: Int): WallpaperResponse =
+    suspend fun fetchNewWallpapers(page: Int, limit: Int = 15): WallpaperResponse =
         apiService.getNewWallpapers(page = page, limit)
-//    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
-suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
-    apiService.getAllWallpaperCategories(page)
-    suspend fun fetchTrendingWallpapers(page: Int, limit: Int = 21): WallpaperResponse =
+
+    //    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
+    suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
+        apiService.getAllWallpaperCategories(page)
+
+    suspend fun fetchTrendingWallpapers(page: Int, limit: Int = 15): WallpaperResponse =
         apiService.getTrendingWallpapers(page, limit)
 
-    suspend fun fetchTrendingSpecialWallpapers(page: Int, limit: Int = 21): WallpaperResponse =
+    suspend fun fetchTrendingSpecialWallpapers(page: Int, limit: Int = 15): WallpaperResponse =
         apiService.getTrendingSpecialWallpapers(page, limit)
 
     suspend fun fetchWallpaperByCategory(
         categoryId: Int,
         page: Int,
-        limit: Int = 21
+        limit: Int = 15
     ): WallpaperResponse =
         apiService.getWallpapersByCategory(categoryId = categoryId, page = page, limit = limit)
+
     suspend fun getAllExcludingCategory(): CategoriesResponse = apiService.getAllExcludingCategory()
 
-    suspend fun fetchRingtoneByCategory(categoryId: Int, orderBy: String, page: Int): RingtoneResponse = apiService.getRingtonesByCategory(categoryId, orderBy = orderBy, page = page)
-    suspend fun searchRingtonesByName(name: String): SearchResponse = apiService.searchRingtonesByName(
-        SearchRequest(name))
+    suspend fun fetchRingtoneByCategory(
+        categoryId: Int,
+        orderBy: String,
+        page: Int
+    ): RingtoneResponse =
+        apiService.getRingtonesByCategory(categoryId, orderBy = orderBy, page = page)
 
-   suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
+    suspend fun searchRingtonesByName(name: String): SearchResponse =
+        apiService.searchRingtonesByName(
+            SearchRequest(name)
+        )
+
+    suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
 
     suspend fun getAllWallPapersByTag(tagId: Int) = apiService.getAllWallpapersByTag(tagId = tagId)
     suspend fun getWallPapersByTag(tagId: Int, typeNumber: Int = 1, isActive: Int = 0, page: Int) =
@@ -64,7 +92,8 @@ suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
         )
 
     suspend fun getPremiumWallpaper() = apiService.getPremiumWallpaper()
-   suspend fun getCategoryById(categoryId: Int) = apiService.getCategoryById(where = "type 1,id $categoryId")
+    suspend fun getCategoryById(categoryId: Int) =
+        apiService.getCategoryById(where = "type 1,id $categoryId")
 
     //live wallpaper
     suspend fun getLiveWallpaper(page: Int) = apiService.getLiveWallpaper(page)

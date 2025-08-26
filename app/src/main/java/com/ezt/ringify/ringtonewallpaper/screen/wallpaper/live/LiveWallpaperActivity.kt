@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,6 +63,11 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         wallpaperViewModel.liveWallpapers.observe(this@LiveWallpaperActivity) { items ->
             wallpaperAdapter.submitList(items, live = true, premium = false)
         }
+
+        wallpaperViewModel.loading1.observe(this@LiveWallpaperActivity) { isLoading ->
+            binding.progressBar.isVisible = isLoading
+        }
+
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(this@LiveWallpaperActivity, "INTER_WALLPAPER")

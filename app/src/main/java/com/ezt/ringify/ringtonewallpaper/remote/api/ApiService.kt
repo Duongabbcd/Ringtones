@@ -23,21 +23,34 @@ interface ApiService {
         @Query("where", encoded = true) where: String
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=popular+1,active+1&order_by=name+asc")
+    @GET("api/v1/ringtones")
     suspend fun getPopularRingtones(
+        @Query("app") app: Int = 1,
+        @Query("with") with: String = "author:id,name;categories:id,name,thumbnail,active,content_count",
         @Query("page") page: Int = 1,
+        @Query("order_by") orderBy: String = "name+asc",
+        @Query("where") where: String = "popular+1;active+1"
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=trend+1,active+1")
+    @GET("api/v1/ringtones")
     suspend fun getTrendingRingtones(
-        @Query("page")page: Int = 1
+        @Query("app") app: Int = 1,
+        @Query("with") with: String = "author:id,name;categories:id,name,thumbnail,active,content_count",
+        @Query("page") page: Int = 1,
+        @Query("order_by") orderBy: String = "name+asc",
+        @Query("where") where: String = "trend+1;active+1",
+        @Query("limit") limit: Int = 30
     ): RingtoneResponse
 
-    @GET("api/v1/ringtones?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count&where=private+1,active+1")
+    @GET("api/v1/ringtones")
     suspend fun fetchPrivateRingtones(
-        @Query("page") page: Int = 1
+        @Query("app") app: Int = 1,
+        @Query("with") with: String = "author:id,name;categories:id,name,thumbnail,active,content_count",
+        @Query("page") page: Int = 1,
+        @Query("order_by") orderBy: String = "name+asc",
+        @Query("where") where: String = "private+1;active+1",
+        @Query("limit") limit: Int = 30
     ): RingtoneResponse
-
 
     //Categories
     @GET("api/v1/categories?app=1&with=author+id%2Cname%2Clink&type=2")
@@ -63,7 +76,8 @@ interface ApiService {
         @Query("order_by") orderBy: String = "updated_at desc",
         @Query("with") with: String = "...",
         @Query("page") page: Int = 1,
-        @Query("where") where: String = "type 1,active 1"
+        @Query("where") where: String = "type 1,active 1",
+        @Query("limit") limit: Int = 30
     ): RingtoneResponse
 
     //Wallpaper
@@ -110,7 +124,7 @@ interface ApiService {
     @POST("api/v1/ringtones/search?app=1&with=author+id,name,active-categories+id,name,thumbnail,active,content_count")
     suspend fun searchRingtonesByName(
         @Body request: SearchRequest
-    ):  SearchResponse
+    ): SearchResponse
 
 
     @GET("api/v1/wallpapers?app=1")
@@ -164,7 +178,8 @@ interface ApiService {
 
     @POST("api/v1/interactions?app=1")
     suspend fun updateStatus(
-        @Body request: InteractionRequest)
+        @Body request: InteractionRequest
+    )
 
 
     @GET("api/v1/categories?app=1")

@@ -73,7 +73,7 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
 
                 premiumIcon.isVisible = premium
                 progressBar.visible()
-                val url = wallpaper.thumbnail?.url?.small ?: content.url.small
+                val url = content.url.medium
                 url?.let {
                     Glide.with(context)
                         .load(url)

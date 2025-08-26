@@ -3,25 +3,30 @@ package com.ezt.ringify.ringtonewallpaper.screen.wallpaper.service
 import android.service.wallpaper.WallpaperService
 import android.util.Log
 import android.view.SurfaceHolder
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
+import com.ezt.ringify.ringtonewallpaper.R
 
-class VideoWallpaperService : WallpaperService() {
+class LiveVideoWallpaperService : WallpaperService() {
+    private val TAG = LiveVideoWallpaperService::class.java.simpleName
     override fun onCreate() {
         super.onCreate()
-        Log.d("VideoWallpaperService", "onCreate")
+        Log.d(TAG, "onCreate")
     }
     override fun onCreateEngine(): Engine {
-        Log.d("VideoWallpaperService", "onCreateEngine")
+        Toast.makeText(
+            this@LiveVideoWallpaperService,
+            resources.getString(R.string.successfully),
+            Toast.LENGTH_SHORT
+        ).show()
+        Log.d(TAG, "onCreateEngine")
         return VideoEngine()
     }
 
@@ -32,13 +37,13 @@ class VideoWallpaperService : WallpaperService() {
 
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
-            Log.d("VideoEngine", "onCreate")
+            Log.d(TAG, "onCreate")
         }
 
         override fun onSurfaceCreated(holder: SurfaceHolder) {
             super.onSurfaceCreated(holder)
             surfaceHolder = holder
-            Log.d("VideoEngine", "onSurfaceCreated")
+            Log.d(TAG, "onSurfaceCreated")
 
             stopVideo()
             startVideo()
@@ -50,7 +55,7 @@ class VideoWallpaperService : WallpaperService() {
         private fun startVideo() {
             val prefs = getSharedPreferences("video_wallpaper", MODE_PRIVATE)
             val videoUrl = prefs.getString("video_url", null)
-            Log.d("VideoWallpaperService", "Retrieved wallpaper URL: $videoUrl")
+            Log.d(TAG, "Retrieved wallpaper URL: $videoUrl")
 
             if (videoUrl.isNullOrEmpty()) return
             currentUrl = videoUrl
@@ -84,7 +89,7 @@ class VideoWallpaperService : WallpaperService() {
 
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
-            Log.d("VideoEngine", "onVisibilityChanged: $visible")
+            Log.d(TAG, "onVisibilityChanged: $visible")
 
             if (visible) {
                 val prefs = getSharedPreferences("video_wallpaper", MODE_PRIVATE)
@@ -102,7 +107,7 @@ class VideoWallpaperService : WallpaperService() {
 
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             super.onSurfaceDestroyed(holder)
-            Log.d("VideoEngine", "onSurfaceDestroyed")
+            Log.d(TAG, "onSurfaceDestroyed")
             stopVideo()
         }
 
@@ -116,7 +121,7 @@ class VideoWallpaperService : WallpaperService() {
 
         override fun onDestroy() {
             super.onDestroy()
-            Log.d("VideoEngine", "onDestroy")
+            Log.d(TAG, "onDestroy")
             stopVideo()
         }
 
@@ -127,7 +132,7 @@ class VideoWallpaperService : WallpaperService() {
             height: Int
         ) {
             super.onSurfaceChanged(holder, format, width, height)
-            Log.d("VideoEngine", "onSurfaceChanged: $width x $height")
+            Log.d(TAG, "onSurfaceChanged: $width x $height")
 
             holder?.let {
                 surfaceHolder = it

@@ -86,7 +86,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:src="@drawable/icon_fire"/>
 
 

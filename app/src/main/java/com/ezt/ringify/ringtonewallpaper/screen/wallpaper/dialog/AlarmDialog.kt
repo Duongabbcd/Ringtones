@@ -32,7 +32,7 @@ class AlarmDialog(
             fiveSecondOption.setOnClickListener {
                 slideTime = 5000L
                 updateDisplayIcons(
-                    fiveSecondIcon,
+                    listOf(fiveSecondIcon),
                     listOf(
                         fifteenSecondIcon,
                         oneMinuteIcon,
@@ -46,7 +46,7 @@ class AlarmDialog(
             fifteenSecondOption.setOnClickListener {
                 slideTime = 15000L
                 updateDisplayIcons(
-                    fifteenSecondIcon,
+                    listOf(fifteenSecondIcon),
                     listOf(fiveSecondIcon, oneMinuteIcon, fiveMinuteIcon, oneHourIcon, oneDayIcon)
                 )
             }
@@ -54,7 +54,7 @@ class AlarmDialog(
             oneMinuteOption.setOnClickListener {
                 slideTime = 60000L
                 updateDisplayIcons(
-                    oneMinuteIcon,
+                    listOf(oneMinuteIcon),
                     listOf(
                         fiveSecondIcon,
                         fifteenSecondIcon,
@@ -68,7 +68,7 @@ class AlarmDialog(
             fiveMinuteOption.setOnClickListener {
                 slideTime = 5 * 60000L
                 updateDisplayIcons(
-                    fiveMinuteIcon,
+                    listOf(fiveMinuteIcon),
                     listOf(
                         fiveSecondIcon,
                         fifteenSecondIcon,
@@ -82,7 +82,7 @@ class AlarmDialog(
             oneHourOption.setOnClickListener {
                 slideTime = 60 * 60000L
                 updateDisplayIcons(
-                    oneHourIcon,
+                    listOf(oneHourIcon),
                     listOf(
                         fiveSecondIcon,
                         fifteenSecondIcon,
@@ -96,7 +96,7 @@ class AlarmDialog(
             oneDayOption.setOnClickListener {
                 slideTime = 24 * 60 * 60000L
                 updateDisplayIcons(
-                    oneDayIcon,
+                    listOf(oneDayIcon),
                     listOf(
                         fiveSecondIcon,
                         fifteenSecondIcon,

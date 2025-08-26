@@ -76,14 +76,16 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
         binding.applyBtn.setOnClickListener {
             if (selectedLanguage != "") {
                 Common.setPreLanguage(this@LanguageActivity, selectedLanguage)
+                Common.setPreLanguageflag(this@LanguageActivity, selectedLanguageFlag)
+                Common.setLang(this@LanguageActivity, selectedLanguageName)
+                Log.d(
+                    TAG,
+                    "changeLanguageDone: $selectedLanguage and $selectedLanguageName"
+                )
                 if(!start) {
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
-                        Log.d(
-                            TAG,
-                            "changeLanguageDone: $selectedLanguage and $selectedLanguageName"
-                        )
                         InterAds.showPreloadInter(
                             activity = this@LanguageActivity,
                             InterAds.ALIAS_INTER_LANGUAGE,
@@ -96,7 +98,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                                 nextScreenByCondition()
                             })
                     } else {
-                        println("is here")
                         nextScreenByCondition()
 
                     }
@@ -127,6 +128,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                     binding.applyBtn.setBackgroundResource(R.drawable.background_radius_16_gray)
                 }
                 selectedLanguage = language.key
+                selectedLanguageFlag = language.img
                 selectedLanguageName = language.name
 
                 adapter2?.updatePosition(selectedLanguage)
@@ -171,6 +173,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     companion object {
         var selectedLanguage = ""
         var selectedLanguageName = ""
+        var selectedLanguageFlag = -1
 
         val TAG = LanguageActivity::class.java.simpleName
     }

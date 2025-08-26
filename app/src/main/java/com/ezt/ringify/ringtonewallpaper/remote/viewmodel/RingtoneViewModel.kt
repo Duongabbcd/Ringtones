@@ -49,12 +49,12 @@ class RingtoneViewModel @Inject constructor(
     private val _total = MutableLiveData<Int>()
     val total: LiveData<Int> = _total
 
-    private var currentPage1 = 1
-    private var hasMorePages1 = true
-    private var currentPage2 = 1
-    private var hasMorePages2 = true
-    private var currentPage3 = 1
-    private var hasMorePages3 = true
+    var currentPage1 = 1
+    var hasMorePages1 = true
+    var currentPage2 = 1
+    var hasMorePages2 = true
+    var currentPage3 = 1
+    var hasMorePages3 = true
 
     val allWallpapers1 = mutableListOf<Ringtone>()
     val allWallpapers2 = mutableListOf<Ringtone>()
@@ -63,13 +63,13 @@ class RingtoneViewModel @Inject constructor(
     private var currentSortOption: String = ""
 
     fun loadPopular(orderBy: String = "name+asc" ) = viewModelScope.launch {
+        println("hasMorePages1: $hasMorePages1 and ${_loading.value}")
         if (!hasMorePages1 || _loading.value ==  true ) return@launch
         _loading.value = true
         try {
-            val result = repository.fetchPopularRingtones(currentPage1)
-            result.data.data.filter { it.duration > 0 }.onEach {
-                println("loadPopular: $it")
-            }
+            println("loadPopular: $orderBy")
+            val result = repository.fetchPopularRingtones(currentPage1, orderBy)
+            result.data.data.filter { it.duration > 0 }
 
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
@@ -172,9 +172,10 @@ class RingtoneViewModel @Inject constructor(
     }
 
 
-    fun loadNewRingtones() = viewModelScope.launch {
+    fun loadNewRingtones(sortOrder: String = "name+asc") = viewModelScope.launch {
         _loading1.value = true
         try {
+            println("loadNewRingtones: $sortOrder")
             val backupRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
             val allNewRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
 
@@ -184,17 +185,22 @@ class RingtoneViewModel @Inject constructor(
                 val backupRingtones = backupList.flatMap { id ->
                     repository.getRingtoneById(id).data.data.filter { it.duration > 0 }
                 }
-                _customRingtones.value = backupRingtones 
+                val sorted = backupRingtones.sortByCondition(sortOrder)
+                _customRingtones.value = sorted
                 _error.value = null
                 return@launch
             }
 
-            val firstPage = repository.fetchNewRingtones(1)
+            val firstPage = repository.fetchNewRingtones(1, sortOrder)
             val totalPage = maxOf(1, (firstPage.data.total + 29) / 30)
             val randomPage = (1..totalPage).random()
 
             allNewRingtones.clear()
-            allNewRingtones.addAll(repository.fetchNewRingtones(randomPage).data.data.filter { it.duration > 0 })
+            allNewRingtones.addAll(
+                repository.fetchNewRingtones(
+                    randomPage,
+                    sortOrder
+                ).data.data.filter { it.duration > 0 })
             Common.setAllNewRingtones(contexts, allNewRingtones.map { it.id })
 
             _customRingtones.value = allNewRingtones 
@@ -213,7 +219,7 @@ class RingtoneViewModel @Inject constructor(
     }
 
 
-    fun loadWeeklyTrendingRingtones() = viewModelScope.launch {
+    fun loadWeeklyTrendingRingtones(sortOrder: String = "name+asc") = viewModelScope.launch {
         _loading1.value = true
         try {
             val backupRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
@@ -225,7 +231,8 @@ class RingtoneViewModel @Inject constructor(
                 backupList.onEach { id ->
                     backupRingtones.addAll(repository.getRingtoneById(id).data.data.filter { it.duration > 0 })
                 }
-                _customRingtones.value = backupRingtones 
+                val sorted = backupRingtones.sortByCondition(sortOrder)
+                _customRingtones.value = sorted
 
                 _error.value = null
                 return@launch
@@ -236,7 +243,11 @@ class RingtoneViewModel @Inject constructor(
 
             println("randomNumbers: $randomNumbers")
             allNewRingtones.clear()
-            allNewRingtones.addAll(repository.fetchTrendingRingtones(randomNumbers.first()).data.data.filter { it.duration > 0 })
+            allNewRingtones.addAll(
+                repository.fetchTrendingRingtones(
+                    randomNumbers.first(),
+                    sortOrder
+                ).data.data.filter { it.duration > 0 })
             val fixedRingtoneId = allNewRingtones.map { it.id }
             Common.setAllWeeklyTrendingRingtones(context = contexts, fixedRingtoneId)
             _customRingtones.value = allNewRingtones
@@ -255,7 +266,7 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
-    fun loadEditorChoicesRingtones() = viewModelScope.launch {
+    fun loadEditorChoicesRingtones(sortOrder: String = "name+asc") = viewModelScope.launch {
         _loading1.value = true
         try {
             val backupRingtones = List(5) { Ringtone.EMPTY_RINGTONE }.toMutableList()
@@ -267,7 +278,8 @@ class RingtoneViewModel @Inject constructor(
                 backupList.onEach { id ->
                     backupRingtones.addAll(repository.getRingtoneById(id).data.data.filter { it.duration > 0 })
                 }
-                _customRingtones.value = backupRingtones 
+                val sorted = backupRingtones.sortByCondition(sortOrder)
+                _customRingtones.value = sorted
 
                 _error.value = null
                 return@launch
@@ -278,7 +290,11 @@ class RingtoneViewModel @Inject constructor(
             val randomNumbers = (1..totalPage).shuffled().take(1)
             println("randomNumbers: $randomNumbers")
             allNewRingtones.clear()
-            allNewRingtones.addAll(repository.fetchPrivateRingtones(randomNumbers.first()).data.data.filter { it.duration > 0 })
+            allNewRingtones.addAll(
+                repository.fetchPrivateRingtones(
+                    randomNumbers.first(),
+                    sortOrder
+                ).data.data.filter { it.duration > 0 })
             val fixedRingtoneId = allNewRingtones.map { it.id }
             Common.setAllEditorChoices(context = contexts, fixedRingtoneId)
             _customRingtones.value = allNewRingtones
@@ -294,6 +310,16 @@ class RingtoneViewModel @Inject constructor(
             _error.value = e.localizedMessage
         } finally {
             _loading1.value = false
+        }
+    }
+
+    private fun List<Ringtone>.sortByCondition(sortOrder: String = ""): List<Ringtone> {
+        return when (sortOrder) {
+            "name+asc" -> this.sortedBy { it.name }
+            "name+desc" -> this.sortedByDescending { it.name }
+            "created_at+asc" -> this.sortedBy { it.createdAt }
+            "created_at+desc" -> this.sortedByDescending { it.createdAt }
+            else -> this.sortedBy { it.name }
         }
     }
 }

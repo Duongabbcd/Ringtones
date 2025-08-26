@@ -283,6 +283,9 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     }
 
     private fun displayItems() {
+        if (RingtonePlayerRemote.allSelectedRingtones.size <= 1) {
+            return
+        }
         when (categoryId) {
             -100 -> {
                 ringtoneViewModel.loadPopular(sortOrder)

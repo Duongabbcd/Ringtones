@@ -21,7 +21,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!-- For Android 8-12 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -34,7 +35,7 @@
 
 
     <!-- Required for setting wallpaper -->
-    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission
         android:name="android.permission.BIND_WALLPAPER"
         tools:ignore="ProtectedPermissions" />
@@ -64,16 +65,17 @@
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/icon_app_round"
+        android:supportsRtl="true"
         android:theme="@style/Theme.Ringtone"
         android:usesCleartextTraffic="true"
-        android:supportsRtl="true"
-        tools:targetApi="31"
-        tools:ignore="ExtraText">
+        tools:ignore="ExtraText"
+        tools:targetApi="31">
         <meta-data
             android:name="google_analytics_automatic_screen_reporting_enabled"
             android:value="false" />
 
-        <activity android:name=".screen.splash.SplashActivity"
+        <activity
+            android:name=".screen.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">
 
@@ -108,19 +110,55 @@
 
         </activity>
 
-        <activity android:name=".screen.intro.IntroActivityNew" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.language.LanguageActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.setting.SettingActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.intro.IntroActivityNew"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.language.LanguageActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.setting.SettingActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <!--using apis-->
-        <activity android:name=".screen.welcome.WelcomeActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.favourite.FavouriteActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.welcome.WelcomeActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.favourite.FavouriteActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <!--ringtone-->
-        <activity android:name=".screen.ringtone.search.SearchRingtoneActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.ringtone.RingtoneCategoryActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.ringtone.FilteredRingtonesActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.ringtone.player.RingtoneActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.ringtone.search.SearchRingtoneActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.ringtone.RingtoneCategoryActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.ringtone.FilteredRingtonesActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.ringtone.player.RingtoneActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <!--wallpaper-->
         <activity
@@ -128,10 +166,22 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".screen.wallpaper.PreviewWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.wallpaper.PreviewWallpaperActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".screen.wallpaper.AllWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
-        <activity android:name=".screen.wallpaper.premium.PremiumWallpaperActivity" android:exported="false" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.wallpaper.AllWallpaperActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.wallpaper.premium.PremiumWallpaperActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screen.wallpaper.player.SlideWallpaperActivity"
             android:exported="false"
@@ -146,7 +196,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".screen.wallpaper.crop.CropActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.wallpaper.crop.CropActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screen.wallpaper.favourite.FavouriteWallpaperActivity"
             android:exported="false"
@@ -155,25 +208,30 @@
         <!--  callscreen-->
         <activity
             android:name=".screen.callscreen.subscreen.edit.CallScreenEditorActivity"
+            android:configChanges="uiMode"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
 
         <activity
             android:name=".screen.callscreen.subscreen.preview.PreviewCallScreenActivity"
+            android:configChanges="uiMode"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".screen.callscreen.subscreen.alert.CallScreenAlertActivity"
+            android:configChanges="uiMode"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screen.callscreen.subscreen.type.AllTypeAlertActivity"
+            android:configChanges="uiMode"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screen.callscreen.CallScreenActivity"
+            android:configChanges="uiMode"
             android:exported="true"
             android:screenOrientation="portrait">
             <!-- Required to be recognized as a dialer -->
@@ -181,8 +239,10 @@
                 <action android:name="android.intent.action.DIAL" />
                 <action android:name="android.intent.action.CALL" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tel" />
             </intent-filter>
 
@@ -196,6 +256,7 @@
 
         <activity
             android:name=".screen.setting.PhoneSettingActivity"
+            android:configChanges="uiMode"
             android:exported="true"
             android:screenOrientation="portrait" />
 
@@ -228,7 +289,7 @@
         </service>
 
         <service
-            android:name=".screen.wallpaper.service.VideoWallpaperService"
+            android:name=".screen.wallpaper.service.LiveVideoWallpaperService"
             android:exported="true"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
@@ -273,7 +334,8 @@
             </intent-filter>
         </service>
 
-        <service android:name=".screen.ringtone.service.RingtonePlayerService"
+        <service
+            android:name=".screen.ringtone.service.RingtonePlayerService"
             android:foregroundServiceType="mediaPlayback"
             tools:ignore="ForegroundServicePermission" />
 

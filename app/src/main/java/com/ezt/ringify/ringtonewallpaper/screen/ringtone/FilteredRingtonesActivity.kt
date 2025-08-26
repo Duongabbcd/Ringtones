@@ -62,7 +62,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
         }
 
         loadBanner(this@FilteredRingtonesActivity, BANNER_HOME)
-        sortOrder = Common.getSortOrder(this)
+        sortOrder = "name+asc"
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(this@FilteredRingtonesActivity)
@@ -79,12 +79,24 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
             sortIcon.setOnClickListener {
                 val dialog = SortBottomSheet(this@FilteredRingtonesActivity) { newSort ->
-                    if (newSort != sortOrder) {
-                        Common.setSortOrder(this@FilteredRingtonesActivity, newSort)
-                        sortOrder = newSort
-                        displayItems()
+                    println("SortBottomSheet: $newSort and $sortOrder")
+                    // Reset pagination state before loading sorted data
+                    ringtoneViewModel.apply {
+                        hasMorePages1 = true
+                        hasMorePages2 = true
+                        hasMorePages3 = true
+                        currentPage1 = 1
+                        currentPage2 = 1
+                        currentPage3 = 1
+                        allWallpapers1.clear()
+                        allWallpapers2.clear()
+                        allWallpapers3.clear()
                     }
+                    sortOrder = newSort
+                    Common.setSortOrder(this@FilteredRingtonesActivity, newSort)
+                    displayItems(true)
                 }
+                dialog.currentSortOrder = ""
                 dialog.show()
             }
 
@@ -117,6 +129,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     }
 
     private fun handleDataResult(items: List<Ringtone>) {
+        println
         if (items.isEmpty()) {
             binding.noDataLayout.visible()
             binding.allCategories.gone()
@@ -186,21 +199,22 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
     }
 
-    private fun displayItems() {
+    private fun displayItems(isSortOrder: Boolean = false) {
+        println("displayItems: $categoryId and $sortOrder")
         binding.apply {
             when(categoryId) {
                 -101 -> {
-                    ringtoneViewModel.loadNewRingtones()
+                    ringtoneViewModel.loadNewRingtones(if (isSortOrder) sortOrder else "updated_at+desc")
                     nameScreen.text = getString(R.string.new_ringtones)
                 }
 
                 -102 -> {
-                    ringtoneViewModel.loadWeeklyTrendingRingtones()
+                    ringtoneViewModel.loadWeeklyTrendingRingtones(if (isSortOrder) sortOrder else "updated_at+desc")
                     nameScreen.text = getString(R.string.weekly_trending)
                 }
 
                 -103 -> {
-                    ringtoneViewModel.loadEditorChoicesRingtones()
+                    ringtoneViewModel.loadEditorChoicesRingtones(if (isSortOrder) sortOrder else "updated_at+desc")
                     nameScreen.text = getString(R.string.editor_s_choices)
                 }
 

@@ -54,17 +54,17 @@ class FeedbackDialog(
 
             feedback1.setOnClickListener {
                 title = firstTitle.text.toString()
-                SortBottomSheet.updateDisplayIcons(firstIcon, listOf(secondIcon, thirdIcon))
+                SortBottomSheet.updateDisplayIcons(listOf(firstIcon), listOf(secondIcon, thirdIcon))
             }
 
             feedback2.setOnClickListener {
                 title = secondTitle.text.toString()
-                SortBottomSheet.updateDisplayIcons(secondIcon, listOf(firstIcon, thirdIcon))
+                SortBottomSheet.updateDisplayIcons(listOf(secondIcon), listOf(firstIcon, thirdIcon))
             }
 
             feedback3.setOnClickListener {
                 title = thirdTitle.text.toString()
-                SortBottomSheet.updateDisplayIcons(thirdIcon, listOf(secondIcon, firstIcon))
+                SortBottomSheet.updateDisplayIcons(listOf(thirdIcon), listOf(secondIcon, firstIcon))
             }
         }
     }

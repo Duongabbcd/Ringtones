@@ -39,17 +39,17 @@ class SetWallpaperDialog(
             }
 
             wallpaperOption.setOnClickListener {
-                updateDisplayIcons(firstSortIcon, listOf(secondSortIcon, thirdSortIcon))
+                updateDisplayIcons(listOf(firstSortIcon), listOf(secondSortIcon, thirdSortIcon))
                 optionIndex = 1
             }
 
             homeScreenOption.setOnClickListener {
-                updateDisplayIcons(secondSortIcon, listOf(firstSortIcon, thirdSortIcon))
+                updateDisplayIcons(listOf(secondSortIcon), listOf(firstSortIcon, thirdSortIcon))
                 optionIndex = 2
             }
 
             bothOfThemOption.setOnClickListener {
-                updateDisplayIcons(thirdSortIcon, listOf(firstSortIcon, secondSortIcon))
+                updateDisplayIcons(listOf(thirdSortIcon), listOf(firstSortIcon, secondSortIcon))
                 optionIndex = 3
             }
         }

@@ -40,7 +40,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:contentDescription="@string/imageview"
                 android:gravity="center"
-                android:text="@string/categories"
+                android:text="@string/find_ringtone"
                 android:textColor="@color/main_color"
                 app:layout_constraintBottom_toBottomOf="@id/previousScreen"
                 app:layout_constraintStart_toEndOf="@id/previousScreen"
@@ -110,16 +110,16 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trendingRecyclerView"
-            android:layout_marginEnd="@dimen/_20sdp"
             android:layout_width="match_parent"
-            android:layout_marginStart="@dimen/_20sdp"
             android:layout_height="0dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="@dimen/_120sdp"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/trendingIcon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:clipToPadding="false"/>
+            app:layout_constraintTop_toBottomOf="@+id/trendingIcon"
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/allResults"
