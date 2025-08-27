@@ -274,8 +274,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            favouriteRingtoneViewModel.loadRingtoneById(currentRingtone.id)
-            observeRingtoneFromDb()
             displayItems()
             loadMoreData()
             binding.noInternet.root.gone()
@@ -621,6 +619,7 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
     private var isFavorite: Boolean = false  // ← track this in activity
 
     private fun observeRingtoneFromDb() {
+        println("observeRingtoneFromDb: ${currentRingtone.id}")
         favouriteRingtoneViewModel.ringtone.observe(this) { dbRingtone ->
             isFavorite = dbRingtone.id == currentRingtone.id
             binding.favourite.setImageResource(
@@ -674,11 +673,12 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         shouldAutoPlay = playingSong
 
         binding.horizontalRingtones.smoothScrollToPosition(position)
-
         val selectedRingtone = allRingtones[position]
         currentRingtone = selectedRingtone
-        RingtonePlayerRemote.setCurrentRingtone(selectedRingtone)
 
+        RingtonePlayerRemote.setCurrentRingtone(selectedRingtone)
+        favouriteRingtoneViewModel.loadRingtoneById(currentRingtone.id)
+        observeRingtoneFromDb()
         playRingtoneAdapter.setCurrentPlayingPosition(position, shouldAutoPlay)
 
         binding.currentRingtoneName.text = selectedRingtone.name
@@ -692,7 +692,6 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
         exoPlayer.prepare()
     }
 
-    private var duration = 0L
     @SuppressLint("ClickableViewAccessibility")
     private fun initViewPager() {
         playRingtoneAdapter.submitList(allRingtones)
@@ -738,10 +737,8 @@ class RingtoneActivity : BaseActivity<ActivityRingtoneBinding>(ActivityRingtoneB
                 }
                 shouldAutoPlay = false
                 carousel.scrollSpeed(300f)
-                duration = event.eventTime - event.downTime
                 when (event.action) {
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
-                        duration = event.eventTime - event.downTime
 
                         val touchedChild = horizontalRingtones.findChildViewUnder(event.x, event.y)
                         if (touchedChild != null) {

@@ -20,6 +20,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.TagViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
+import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.TagTrendingAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PreviewLiveWallpaperActivity
@@ -66,9 +67,9 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
 
             // Load wallpapers
             wallpaperViewModel.searchWallpaperByTag(tag.id)
-            wallpaperViewModel.searchSingleWallpaperByTag(tag.id)
-            wallpaperViewModel.searchSlideWallpaperByTag(tag.id)
-            wallpaperViewModel.searchVideoWallpaperByTag(tag.id)
+            wallpaperViewModel.searchSingleWallpaperByTag(tag.id, 5)
+            wallpaperViewModel.searchSlideWallpaperByTag(tag.id, 5)
+            wallpaperViewModel.searchVideoWallpaperByTag(tag.id, 5)
         }
     }
 
@@ -152,7 +153,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                     val lastPos = lm.findLastVisibleItemPosition()
                     val total = lm.itemCount
                     if (lastPos >= total - 5) { // threshold = 5 items
-                        wallpaperViewModel.searchSingleWallpaperByTag(tagId)
+                        wallpaperViewModel.searchSingleWallpaperByTag(tagId, 5)
                     }
                 }
             })
@@ -164,7 +165,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                     val lastPos = lm.findLastVisibleItemPosition()
                     val total = lm.itemCount
                     if (lastPos >= total - 5) {
-                        wallpaperViewModel.searchSlideWallpaperByTag(tagId)
+                        wallpaperViewModel.searchSlideWallpaperByTag(tagId, 5)
                     }
                 }
             })
@@ -176,7 +177,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                     val lastPos = lm.findLastVisibleItemPosition()
                     val total = lm.itemCount
                     if (lastPos >= total - 5) {
-                        wallpaperViewModel.searchVideoWallpaperByTag(tagId)
+                        wallpaperViewModel.searchVideoWallpaperByTag(tagId, 5)
                     }
                 }
             })
@@ -191,13 +192,13 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                     trendingIcon.gone()
                     trendingRecyclerView.gone()
                 } else {
+                    noDataLayout.gone()
                     if (currentState == ScreenState.TRENDING) {
                         trendingTitle.visible()
                         trendingIcon.visible()
                         trendingRecyclerView.visible()
                     }
                     wallpaperAdapter.submitList(items)
-                    noDataLayout.gone()
                 }
             }
 
@@ -216,9 +217,11 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                 updateUIBySearchQuery(searchText.text.toString())
                 if (items.isNullOrEmpty()) {
                     allResults1.gone()
+                    openAll1.gone()
                     singleWallpaper.gone()
                 } else {
                     allResults1.visible()
+                    openAll1.visible()
                     singleWallpaper.visible()
                     searchWallpaperAdapter1.submitList(items)
                 }
@@ -228,9 +231,11 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                 updateUIBySearchQuery(searchText.text.toString())
                 if (items.isNullOrEmpty()) {
                     allResults2.gone()
+                    openAll2.gone()
                     slideWallpaper.gone()
                 } else {
                     allResults2.visible()
+                    openAll2.visible()
                     slideWallpaper.visible()
                     searchWallpaperAdapter2.submitList(items)
                 }
@@ -240,9 +245,11 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                 updateUIBySearchQuery(searchText.text.toString())
                 if (items.isNullOrEmpty()) {
                     allResults3.gone()
+                    openAll3.gone()
                     videoWallpaper.gone()
                 } else {
                     allResults3.visible()
+                    openAll3.visible()
                     videoWallpaper.visible()
                     searchWallpaperAdapter3.submitList(items)
                 }
@@ -289,6 +296,39 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                 searchText.setText("")
                 tagViewModel.loadAllTags()
                 showTrending()
+            }
+
+            openAll1.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@SearchWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("wallpaperCategoryId", -201)
+                        putExtra("tagId", tagId)
+                    })
+            }
+
+            openAll2.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@SearchWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("wallpaperCategoryId", -202)
+                        putExtra("tagId", tagId)
+                    })
+            }
+
+            openAll3.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@SearchWallpaperActivity,
+                        PreviewWallpaperActivity::class.java
+                    ).apply {
+                        putExtra("wallpaperCategoryId", -203)
+                        putExtra("tagId", tagId)
+                    })
             }
         }
     }

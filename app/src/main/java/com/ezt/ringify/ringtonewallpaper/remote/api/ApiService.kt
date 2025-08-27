@@ -86,7 +86,8 @@ interface ApiService {
 
     @GET("api/v1/categories?app=1&where=type+1")
     suspend fun getAllWallpaperCategories(
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 30
     ): CategoriesResponse
 
     @GET("api/v1/wallpapers?app=1&where=trend+1,type+1")
@@ -138,7 +139,8 @@ interface ApiService {
         @Query("with") with: String = "tags+id,name-apps+id,name",
         @Query("tag") tagId: Int,
         @Query("where") where: String = "type+4, private+1",
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 30,
     ): WallpaperResponse
 
 

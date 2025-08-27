@@ -17,6 +17,10 @@
     <string name = "desc_3">Más información encontrada aquí</string>
     <string name = "high_light_3">Más información</string>
 
+    <string name="search_image">Bild suchen</string>
+    <string name="search_slide">Folie suchen</string>
+    <string name="search_video">Video suchen</string>
+
     <string name="favourite1">Imagen favorita</string>
     <string name="favourite2">Video favorito</string>
     <string name="favourite3">Diapositiva favorita</string>

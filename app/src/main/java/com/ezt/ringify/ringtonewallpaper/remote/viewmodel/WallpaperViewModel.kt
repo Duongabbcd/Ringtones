@@ -327,13 +327,16 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun searchSingleWallpaperByTag(tagId: Int) = viewModelScope.launch {
-
+    fun searchSingleWallpaperByTag(tagId: Int, limit: Int = 30) = viewModelScope.launch {
+        val first = if (limit == 5) 2 else limit
+        val second = if (limit == 5) 3 else limit
         if (!hasMorePages1 || _loading1.value == true) return@launch
         _loading1.value = true
         try {
-            val result1 = repository.getWallPapersByTag(tagId, 1, page = currentPage1)
-            val result2 = repository.getWallPapersByTag(tagId, 3, isActive = 1, currentPage1)
+            val result1 =
+                repository.getWallPapersByTag(tagId, 1, page = currentPage1, limit = first)
+            val result2 =
+                repository.getWallPapersByTag(tagId, 3, isActive = 1, currentPage1, limit = second)
             hasMorePages1 = result1.data.nextPageUrl != null && result2.data.nextPageUrl != null
             currentPage1++
 
@@ -351,11 +354,12 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun searchSlideWallpaperByTag(tagId: Int) = viewModelScope.launch {
+    fun searchSlideWallpaperByTag(tagId: Int, limit: Int = 30) = viewModelScope.launch {
         if (!hasMorePages2 || _loading2.value == true) return@launch
         _loading2.value = true
         try {
-            val result1 = repository.getWallPapersByTag(tagId, 3, page = currentPage2)
+            val result1 =
+                repository.getWallPapersByTag(tagId, 3, page = currentPage2, limit = limit)
             hasMorePages2 = result1.data.nextPageUrl != null
             currentPage2++
 
@@ -371,12 +375,16 @@ class WallpaperViewModel @Inject constructor(
         }
     }
 
-    fun searchVideoWallpaperByTag(tagId: Int) = viewModelScope.launch {
+    fun searchVideoWallpaperByTag(tagId: Int, limit: Int = 30) = viewModelScope.launch {
+        val first = if (limit == 5) 2 else limit
+        val second = if (limit == 5) 3 else limit
         if (!hasMorePages3 || _loading3.value == true) return@launch
         _loading3.value = true
         try {
-            val result1 = repository.getWallPapersByTag(tagId, 2, page = currentPage3)
-            val result2 = repository.getWallPapersByTag(tagId, 4, page = currentPage3)
+            val result1 =
+                repository.getWallPapersByTag(tagId, 2, page = currentPage3, limit = first)
+            val result2 =
+                repository.getWallPapersByTag(tagId, 4, page = currentPage3, limit = second)
 
             hasMorePages3 = result1.data.nextPageUrl != null && result2.data.nextPageUrl != null
             currentPage3++

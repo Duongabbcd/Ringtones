@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(ActivityRingtoneCategoryBinding::inflate){
     private val categoryViewModel: CategoryViewModel by viewModels()
-    private val viewModel: FavouriteRingtoneViewModel by viewModels()
+    private val favouriteViewModel: FavouriteRingtoneViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val categoryDetailAdapter: CategoryDetailAdapter by lazy {
         CategoryDetailAdapter { category ->
@@ -59,7 +59,7 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
             categoryViewModel.ringtoneCategory.observe(this@RingtoneCategoryActivity) {items ->
                 val allCategories = mutableListOf<Category>()
 
-                viewModel.allRingtones.observe(this@RingtoneCategoryActivity ) { result ->
+                favouriteViewModel.allRingtones.observe(this@RingtoneCategoryActivity) { result ->
                     println("categoryViewModel: $result")
                     allCategories.add(EMPTY_CATEGORY.copy(contentCount = result.size))
 
@@ -80,7 +80,7 @@ class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(Ac
         } else {
             binding.origin.visible()
             categoryViewModel.loadRingtoneCategories()
-            viewModel.loadAllRingtones()
+            favouriteViewModel.loadAllRingtones()
             loadMoreData()
             binding.noInternet.root.gone()
         }

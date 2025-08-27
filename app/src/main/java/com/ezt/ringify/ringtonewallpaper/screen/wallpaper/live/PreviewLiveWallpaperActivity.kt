@@ -61,7 +61,7 @@ class PreviewLiveWallpaperActivity :
     private var isLoadingMore = false
     private val addedWallpaperIds = mutableSetOf<Int>() // Track already added
 
-    private val type by lazy {
+    private val selectedType by lazy {
         intent.getIntExtra("type", -1)
     }
     private val tagId by lazy {
@@ -98,7 +98,7 @@ class PreviewLiveWallpaperActivity :
         loadBanner(this, BANNER_HOME)
         handler = Handler(Looper.getMainLooper())
         checkDownloadPermissions()
-        Log.d(TAG, "savedInstanceState: ${savedInstanceState == null} and $type and $tagId")
+        Log.d(TAG, "savedInstanceState: ${savedInstanceState == null} and $selectedType and $tagId")
         if (savedInstanceState != null) {
             liveWallpaperIndex = savedInstanceState.getInt("current_index", 0)
             Log.d(TAG, "savedInstanceState 0: $liveWallpaperIndex")
@@ -110,16 +110,14 @@ class PreviewLiveWallpaperActivity :
         }
 
         binding.apply {
-            observeRingtoneFromDb()
-
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(
                     this@PreviewLiveWallpaperActivity,
                     "INTER_WALLPAPER"
                 )
             }
-            favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
             favouriteViewModel.loadLiveAllWallpapers()
+            setUpNewPlayer(liveWallpaperIndex)
 
             favourite.setOnClickListener { displayFavouriteIcon(true) }
             loadMoreData()
@@ -132,7 +130,7 @@ class PreviewLiveWallpaperActivity :
             Log.d(TAG, "isConnected: $isConnected")
             checkInternetConnected(isConnected)
         }
-        when (type) {
+        when (selectedType) {
             -10 -> wallpaperViewModel.searchWallpapers3.observe(this@PreviewLiveWallpaperActivity) { items ->
                 appendNewRingtones(items)
             }
@@ -466,6 +464,8 @@ class PreviewLiveWallpaperActivity :
                 "setUpNewPlayer: position= $position wallpaper= ${currentWallpaper.id} and $tag"
             )
             favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
+
+            observeRingtoneFromDb()
             liveWallpaperIndex = position
         }
     }
@@ -525,9 +525,9 @@ class PreviewLiveWallpaperActivity :
 
                 val isAtEnd = firstVisibleItemPosition + visibleItemCount >= totalItemCount - 2
 
-                if (isAtEnd && !isLoadingMore && type != 1) {
+                if (isAtEnd && !isLoadingMore && selectedType != 1) {
                     isLoadingMore = true
-                    when (type) {
+                    when (selectedType) {
                         -10 -> wallpaperViewModel.searchVideoWallpaperByTag(tagId = tagId)
                         2 -> wallpaperViewModel.loadLiveWallpapers()
 

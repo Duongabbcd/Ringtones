@@ -141,11 +141,24 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/openAll1"
+                    style="@style/CustomTextStyleMedium12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:text="@string/see_all"
+                    android:textColor="#8246FF"
+                    app:layout_constraintBottom_toBottomOf="@id/singleWallpaper"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/singleWallpaper" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/allResults1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:clipToPadding="false"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -163,11 +176,24 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/allResults1" />
 
+                <TextView
+                    android:id="@+id/openAll2"
+                    style="@style/CustomTextStyleMedium12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:text="@string/see_all"
+                    android:textColor="#8246FF"
+                    app:layout_constraintBottom_toBottomOf="@id/slideWallpaper"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/slideWallpaper" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/allResults2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:clipToPadding="false"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -186,11 +212,24 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/allResults2" />
 
+                <TextView
+                    android:id="@+id/openAll3"
+                    style="@style/CustomTextStyleMedium12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:text="@string/see_all"
+                    android:textColor="#8246FF"
+                    app:layout_constraintBottom_toBottomOf="@id/videoWallpaper"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/videoWallpaper" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/allResults3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:clipToPadding="false"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -205,7 +244,7 @@
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:orientation="vertical"
             android:gravity="center"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/searchText"

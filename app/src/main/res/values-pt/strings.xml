@@ -24,6 +24,11 @@
 
     <string name="fav_desc">Você deve selecionar 3 itens favoritos</string>
 
+    <string name="search_image">Buscar imagem</string>
+    <string name="search_slide">Buscar slide</string>
+    <string name="search_video">Buscar vídeo</string>
+
+
     <string name="favourite1">Imagem favorita</string>
     <string name="favourite2">Vídeo favorito</string>
     <string name="favourite3">Slide favorito</string>

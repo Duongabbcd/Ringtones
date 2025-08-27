@@ -23,6 +23,11 @@
     <string name="favourite2">즐겨찾는 비디오</string>
     <string name="favourite3">즐겨찾는 슬라이드</string>
 
+    <string name="search_image">이미지 검색</string>
+    <string name="search_slide">슬라이드 검색</string>
+    <string name="search_video">동영상 검색</string>
+
+
     <string name="set_alarm">전환 시간</string>
     <string name="email_feedback_title">통화 테마 버전에 대한 피드백: %1$s</string>
 

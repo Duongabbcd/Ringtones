@@ -64,6 +64,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
                 categoryWallpaperAdapter.submitList(categories)
                 // trigger wallpaper loading for each category
                 categories.filter { it.id != 75 }.forEach {
+                    println("categoryWallpaperAdapter: ${it.id} and ${it.name}")
                     categoryViewModel.loadWallpapersByCategory(it.id, categoryWallpaperAdapter)
                 }
             }
@@ -86,7 +87,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            categoryViewModel.loadWallpaperCategories()
+            categoryViewModel.loadWallpaperCategories(limit = 10)
             loadMoreData()
             binding.noInternet.root.gone()
         }
@@ -101,11 +102,12 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
                     val visibleItemCount = layoutManager.childCount
                     val totalItemCount = layoutManager.itemCount
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                    println("loadMoreData: $visibleItemCount and $firstVisibleItemPosition and $totalItemCount")
 
                     val isAtBottom =
-                        firstVisibleItemPosition + visibleItemCount >= totalItemCount - 5
+                        firstVisibleItemPosition + visibleItemCount >= totalItemCount - 3
                     if (isAtBottom) {
-                        categoryViewModel.loadWallpaperCategories()
+                        categoryViewModel.loadWallpaperCategories(limit = 5)
                     }
                 }
             })
@@ -127,9 +129,8 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
     }
 }
 
-class CategoryWallpaperAdapter(
-    private val onClickListener: (Category) -> Unit
-) : RecyclerView.Adapter<CategoryWallpaperAdapter.CategoryWallpaperViewHolder>() {
+class CategoryWallpaperAdapter(private val onClickListener: (Category) -> Unit) :
+    RecyclerView.Adapter<CategoryWallpaperAdapter.CategoryWallpaperViewHolder>() {
 
     private val allCategories: MutableList<Category> = mutableListOf()
     private val wallpapersMap = mutableMapOf<Int, List<Wallpaper>>()

@@ -74,11 +74,11 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun loadWallpaperCategories() = viewModelScope.launch {
+    fun loadWallpaperCategories(limit: Int = 30) = viewModelScope.launch {
         if (!hasMorePages1 || _loading.value == true) return@launch
         _loading.value = true
         try {
-            val result = repository.fetchAllWallpaperCategories(currentPage1)
+            val result = repository.fetchAllWallpaperCategories(currentPage1, limit)
             hasMorePages1 = result.dataPage.nextPageUrl != null
             currentPage1++
             println("loadWallpaperCategories 123: ${result.dataPage.nextPageUrl}")
@@ -159,7 +159,6 @@ class CategoryViewModel @Inject constructor(
     private val loadingCategories = mutableSetOf<Int>()
 
     fun loadWallpapersByCategory(categoryId: Int, adapter: CategoryWallpaperAdapter) {
-        // If already cached or loading, skip
         if (wallpaperCache.containsKey(categoryId) || loadingCategories.contains(categoryId)) return
 
         adapter.setCategoryLoading(categoryId, true)
@@ -167,36 +166,20 @@ class CategoryViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                var page = currentPageMap[categoryId] ?: 1
-                var hasMorePages = hasMorePagesMap[categoryId] != false
-                val wallpapersForCategory =
-                    wallpaperCache[categoryId]?.toMutableList() ?: mutableListOf()
+                // Always fetch page 1 only
+                val result = repository.fetchWallpaperByCategory(
+                    categoryId = categoryId,
+                    page = 1,
+                    limit = 5
+                )
 
-                while (hasMorePages) {
-                    val result =
-                        repository.fetchWallpaperByCategory(
-                            categoryId = categoryId,
-                            page = page,
-                            limit = 5
-                        )
-                    wallpapersForCategory.addAll(result.data.data)
-
-                    hasMorePages = result.data.nextPageUrl != null
-                    page++
-
-                    // Update pagination maps for this category
-                    currentPageMap[categoryId] = page
-                    hasMorePagesMap[categoryId] = hasMorePages
-                }
-
-                // Cache the full list for the category
-                wallpaperCache[categoryId] = wallpapersForCategory
+                wallpaperCache[categoryId] = result.data.data.toMutableList()
                 _wallpapersMap.value = wallpaperCache.toMap()
                 _error.value = null
 
             } catch (e: Exception) {
-                Log.e("ViewModel", "Failed: ${e.message}")
-                _wallpapersMap.value = emptyMap<Int, List<Wallpaper>>()
+                Log.e("ViewModel", "loadWallpapersByCategory error: ${e.message}")
+                _wallpapersMap.value = emptyMap()
                 _error.value = e.message
             } finally {
                 loadingCategories.remove(categoryId)
@@ -204,6 +187,4 @@ class CategoryViewModel @Inject constructor(
             }
         }
     }
-
-
 }

@@ -19,6 +19,10 @@
 
     <string name="fav_desc">Sie müssen 3 Lieblingselemente auswählen</string>
 
+    <string name="search_image">Bild suchen</string>
+    <string name="search_slide">Folie suchen</string>
+    <string name="search_video">Video suchen</string>
+
     <string name="favourite1">Lieblingsbild</string>
     <string name="favourite2">Lieblingsvideo</string>
     <string name="favourite3">Lieblingsfolie</string>

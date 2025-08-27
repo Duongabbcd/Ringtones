@@ -45,6 +45,8 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         }
     }
     private lateinit var sortOrder: String
+    private lateinit var bottomSheet: SortWallpaperBottomSheet
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +55,14 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         }
 
         loadBanner(this)
-        sortOrder = Common.getSortWppOrder(this)
+        sortOrder = ""
+
+        bottomSheet = SortWallpaperBottomSheet(this@LiveWallpaperActivity) { result ->
+            sortOrder = result
+            Common.setSortWppOrder(this@LiveWallpaperActivity, result)
+            displayItems()
+        }
+        bottomSheet.sortOrder = ""
 
         connectionViewModel.isConnectedLiveData.observe(this@LiveWallpaperActivity) { isConnected ->
             Log.d(TAG, "isConnected: $isConnected and $sortOrder")
@@ -61,7 +70,14 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         }
 
         wallpaperViewModel.liveWallpapers.observe(this@LiveWallpaperActivity) { items ->
-            wallpaperAdapter.submitList(items, live = true, premium = false)
+            binding.allCategories.visible()
+            binding.noDataLayout.gone()
+            if (items.isEmpty()) {
+                binding.allCategories.gone()
+                binding.noDataLayout.visible()
+            } else {
+                wallpaperAdapter.submitList(items, live = true, premium = false)
+            }
         }
 
         wallpaperViewModel.loading1.observe(this@LiveWallpaperActivity) { isLoading ->
@@ -74,14 +90,8 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
             }
 
             sort.setOnClickListener {
-                val bottomSheet = SortWallpaperBottomSheet(this@LiveWallpaperActivity) { result ->
-                    Common.setSortWppOrder(this@LiveWallpaperActivity, result)
-                    sortOrder = Common.getSortWppOrder(this@LiveWallpaperActivity)
-                    displayItems()
-                }
                 bottomSheet.show()
             }
-
 
             val layoutManager = GridLayoutManager(this@LiveWallpaperActivity, 3)
 

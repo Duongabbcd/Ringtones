@@ -54,6 +54,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     private lateinit var sortOrder: String
 
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
+    private lateinit var dialog: SortBottomSheet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +64,27 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
         loadBanner(this@FilteredRingtonesActivity, BANNER_HOME)
         sortOrder = "name+asc"
+
+        dialog = SortBottomSheet(this@FilteredRingtonesActivity) { newSort ->
+            println("SortBottomSheet: $newSort and $sortOrder")
+            // Reset pagination state before loading sorted data
+            ringtoneViewModel.apply {
+                hasMorePages1 = true
+                hasMorePages2 = true
+                hasMorePages3 = true
+                currentPage1 = 1
+                currentPage2 = 1
+                currentPage3 = 1
+                allWallpapers1.clear()
+                allWallpapers2.clear()
+                allWallpapers3.clear()
+            }
+            sortOrder = newSort
+            Common.setSortOrder(this@FilteredRingtonesActivity, newSort)
+            displayItems(true)
+        }
+        dialog.currentSortOrder = ""
+
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(this@FilteredRingtonesActivity)
@@ -78,26 +100,11 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
             allCategories.adapter = ringtoneAdapter
 
             sortIcon.setOnClickListener {
-                val dialog = SortBottomSheet(this@FilteredRingtonesActivity) { newSort ->
-                    println("SortBottomSheet: $newSort and $sortOrder")
-                    // Reset pagination state before loading sorted data
-                    ringtoneViewModel.apply {
-                        hasMorePages1 = true
-                        hasMorePages2 = true
-                        hasMorePages3 = true
-                        currentPage1 = 1
-                        currentPage2 = 1
-                        currentPage3 = 1
-                        allWallpapers1.clear()
-                        allWallpapers2.clear()
-                        allWallpapers3.clear()
-                    }
-                    sortOrder = newSort
-                    Common.setSortOrder(this@FilteredRingtonesActivity, newSort)
-                    displayItems(true)
-                }
-                dialog.currentSortOrder = ""
                 dialog.show()
+            }
+
+            favourite.loading1.observe(this@FilteredRingtonesActivity) { isLoading ->
+                progressBar.isVisible = isLoading
             }
 
             ringtoneViewModel.loading1.observe(this@FilteredRingtonesActivity) { isLoading ->
@@ -129,7 +136,6 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     }
 
     private fun handleDataResult(items: List<Ringtone>) {
-        println
         if (items.isEmpty()) {
             binding.noDataLayout.visible()
             binding.allCategories.gone()

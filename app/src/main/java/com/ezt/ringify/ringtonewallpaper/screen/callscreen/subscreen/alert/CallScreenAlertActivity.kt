@@ -126,6 +126,11 @@ class CallScreenAlertActivity :
         startActivity(intent)
     }
 
+    override fun onStop() {
+        super.onStop()
+        flashVibrationManager.stopFlashAndVibration()
+    }
+
     private fun togglePlayPreview() {
         val flash = FlashType.fromLabel(flashTypeValue) ?: FlashType.None
         val vibration = VibrationType.fromLabel(vibrationValue) ?: VibrationType.None

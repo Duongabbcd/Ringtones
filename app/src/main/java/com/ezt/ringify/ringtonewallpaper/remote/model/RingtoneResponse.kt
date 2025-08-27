@@ -27,7 +27,7 @@ data class Ringtone(
     var author: Author? = Author(-1, "", 0),
 
     @SerializedName("categories")
-    val categories: List<Category>,
+    var categories: List<Category>? = emptyList(),
 
     val active: Int,
     @SerializedName("alert_license") val alertLicense: Int,

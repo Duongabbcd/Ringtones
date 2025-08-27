@@ -50,6 +50,9 @@
     <string name="retry">إعادة المحاولة</string>
     <string name="send">إرسال</string>
 
+    <string name="search_image">البحث عن صورة</string>
+    <string name="search_slide">البحث عن شريحة</string>
+    <string name="search_video">البحث عن فيديو</string>
 
     <string name="ringTone">نغمة الرنين</string>
     <string name="ringTones">نغمات الرنين</string>

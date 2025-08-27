@@ -66,6 +66,7 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
             val wallpaper = limitedWallpapers[position]
             binding.apply {
                 val content = wallpaper.contents.firstOrNull()
+
                 if (content == null) {
                     wallPaper.setImageResource(R.drawable.item_wallpaper_default)
                     return@apply
@@ -73,8 +74,16 @@ class WallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit): Recycl
 
                 premiumIcon.isVisible = premium
                 progressBar.visible()
-                val url = content.url.medium
-                url?.let {
+                val url = when (wallpaper.type) {
+                    1 -> content.url.full
+                    2 -> wallpaper.thumbnail?.url?.full ?: ""
+                    3 -> content.url.full
+                    4 -> wallpaper.thumbnail?.url?.full ?: ""
+                    else -> content.url.full
+                }
+                println("WallpaperViewHolder 123: ${wallpaper.type} $url")
+
+                url.let {
                     Glide.with(context)
                         .load(url)
                         .placeholder(R.drawable.item_wallpaper_default)

@@ -90,7 +90,7 @@ class FavouriteRepository @Inject constructor(
 
 fun Ringtone.toEntity() : RingtoneEntity =
     RingtoneEntity( id = id, name = name, contents = contents,
-        author = author ?: Author(-1, "", 0), category = categories,
+        author = author ?: Author(-1, "", 0), category = categories ?: listOf(),
         active = active, alertLicense = alertLicense, order = order,
         isPrivate = isPrivate, trend = trend, popular = popular,
         dailyRating = dailyRating, weeklyRating = weeklyRating,

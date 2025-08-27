@@ -19,6 +19,7 @@
 
     <string name="fav_desc">Вы должны выбрать 3 избранных элемента</string>
 
+
     <string name="favourite1">Избранное изображение</string>
     <string name="favourite2">Избранное видео</string>
     <string name="favourite3">Избранный слайд</string>
@@ -38,6 +39,10 @@
     <string name="reset_wallpaper_question">Вы действительно хотите сбросить текущие обои?</string>
     <string name="reset_ringtone_question">Вы действительно хотите сбросить текущий рингтон?</string>
     <string name="reset_cache_question">Вы действительно хотите очистить кэш?</string>
+
+    <string name="search_image">Найти изображение</string>
+    <string name="search_slide">Найти слайд</string>
+    <string name="search_video">Найти видео</string>
 
     <string name="reset_wallpaper">Сбросить обои</string>
     <string name="reset_ringtone">Сбросить рингтон</string>

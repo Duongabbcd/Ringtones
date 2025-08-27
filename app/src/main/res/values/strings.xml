@@ -226,4 +226,8 @@
 
     <string name="set_alarm">Transition duration</string>
     <string name="email_feedback_title">Feedback Call Theme version: %1$s</string>
+
+    <string name="search_image">Search Image</string>
+    <string name="search_slide">Search Slide</string>
+    <string name="search_video">Search Video</string>
 </resources>

@@ -51,8 +51,8 @@ class RingtoneRepository @Inject constructor(
         apiService.getNewWallpapers(page = page, limit)
 
     //    suspend fun fetchWallpaperCategories(): CategoriesResponse = apiService.getWallpaperCategory()
-    suspend fun fetchAllWallpaperCategories(page: Int): CategoriesResponse =
-        apiService.getAllWallpaperCategories(page)
+    suspend fun fetchAllWallpaperCategories(page: Int, limit: Int = 5): CategoriesResponse =
+        apiService.getAllWallpaperCategories(page, limit)
 
     suspend fun fetchTrendingWallpapers(page: Int, limit: Int = 15): WallpaperResponse =
         apiService.getTrendingWallpapers(page, limit)
@@ -84,11 +84,18 @@ class RingtoneRepository @Inject constructor(
     suspend fun updateStatus(request: InteractionRequest) = apiService.updateStatus(request)
 
     suspend fun getAllWallPapersByTag(tagId: Int) = apiService.getAllWallpapersByTag(tagId = tagId)
-    suspend fun getWallPapersByTag(tagId: Int, typeNumber: Int = 1, isActive: Int = 0, page: Int) =
+    suspend fun getWallPapersByTag(
+        tagId: Int,
+        typeNumber: Int = 1,
+        isActive: Int = 0,
+        page: Int,
+        limit: Int = 30
+    ) =
         apiService.getWallpapersByTag(
             tagId = tagId,
             where = "type+$typeNumber, private+$isActive",
-            page = page
+            page = page,
+            limit = limit
         )
 
     suspend fun getPremiumWallpaper() = apiService.getPremiumWallpaper()

@@ -64,6 +64,7 @@ class PreviewWallpaperActivity :
 
     private val categoryId by lazy { intent.getIntExtra("wallpaperCategoryId", -1) }
     private val selectedType by lazy { intent.getIntExtra("type", 1) }
+    private val tagId by lazy { intent.getIntExtra("tagId", -1) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +124,9 @@ class PreviewWallpaperActivity :
 
                 if (firstVisiblePosition + visibleItemCount >= totalItemCount - 5) {
                     when (categoryId) {
+                        -201 -> wallPaperViewModel.searchSingleWallpaperByTag(tagId)
+                        -202 -> wallPaperViewModel.searchSingleWallpaperByTag(tagId)
+                        -203 -> wallPaperViewModel.searchSingleWallpaperByTag(tagId)
                         -3 -> favourite.loadLiveAllWallpapers()
                         -2 -> wallPaperViewModel.loadTrendingWallpapers()
                         -1 -> wallPaperViewModel.loadNewWallpapers()
@@ -173,6 +177,33 @@ class PreviewWallpaperActivity :
             }
 
             when (categoryId) {
+                -201 -> {
+                    nameScreen.text = getString(R.string.search_image)
+                    wallPaperViewModel.searchSingleWallpaperByTag(tagId)
+                    previewSelectItems(
+                        wallPaperViewModel.searchWallpapers1,
+                        wallPaperViewModel.loading1
+                    )
+                }
+
+                -202 -> {
+                    nameScreen.text = getString(R.string.search_slide)
+                    wallPaperViewModel.searchSlideWallpaperByTag(tagId)
+                    previewSelectItems(
+                        wallPaperViewModel.searchWallpapers2,
+                        wallPaperViewModel.loading2
+                    )
+                }
+
+                -203 -> {
+                    nameScreen.text = getString(R.string.search_video)
+                    wallPaperViewModel.searchVideoWallpaperByTag(tagId)
+                    previewSelectItems(
+                        wallPaperViewModel.searchWallpapers3,
+                        wallPaperViewModel.loading3
+                    )
+                }
+
                 -5 -> {
                     nameScreen.text = getString(R.string.favourite1)
                     // Attach observer only once
