@@ -139,7 +139,7 @@ class SlideWallpaperActivity :
             println("imageWallpaperIndex: $imageWallpaperIndex")
             centerItem(imageWallpaperIndex)
             playSlideWallpaperAdapter.setCurrentPlayingPosition(imageWallpaperIndex)
-            setUpNewPlayer(imageWallpaperIndex)
+            setUpNewPlayer(imageWallpaperIndex, "onCreate")
         }
 
         addedWallpaperIds.addAll(allWallpapers.map { it.id })
@@ -630,7 +630,7 @@ class SlideWallpaperActivity :
                     )
                     if (closestPos != RecyclerView.NO_POSITION && closestPos != imageWallpaperIndex) {
                         imageWallpaperIndex = closestPos
-                        setUpNewPlayer(imageWallpaperIndex)
+                        setUpNewPlayer(imageWallpaperIndex, "onScrollStateChanged")
                         playSlideWallpaperAdapter.setCurrentPlayingPosition(imageWallpaperIndex)
                     }
                 }
@@ -641,7 +641,11 @@ class SlideWallpaperActivity :
 
     private fun centerItem(position: Int) {
         val rv = binding.horizontalWallpapers
-        val lm = rv.layoutManager as? LinearLayoutManager ?: return
+        val lm = rv.layoutManager as? LinearLayoutManager
+        println("centerItem 0: $lm")
+        if (lm == null) {
+            return
+        }
 
         val rvCenter = rv.paddingLeft + (rv.width - rv.paddingLeft - rv.paddingRight) / 2
 
@@ -663,15 +667,18 @@ class SlideWallpaperActivity :
         val childCenter = lm.getDecoratedLeft(child) + childWidth / 2
 
         val offset = rvCenter - childCenter
-        lm.scrollToPositionWithOffset(position, offset)
+        println("centerItem 1: $child and $offset")
+        if (position in listOf(0, 1)) {
+            binding.horizontalWallpapers.smoothScrollToPosition(position)
+        } else {
+            lm.scrollToPositionWithOffset(position, offset)
+        }
+
     }
 
 
     private fun setUpNewPlayer(position: Int, tag: String = "") {
-        if (position !in allWallpapers.indices) return
-
         val newWallpaper = allWallpapers[position]
-        if (currentWallpaper.id == newWallpaper.id) return
 
         currentWallpaper = newWallpaper
         RingtonePlayerRemote.currentPlayingWallpaper = currentWallpaper

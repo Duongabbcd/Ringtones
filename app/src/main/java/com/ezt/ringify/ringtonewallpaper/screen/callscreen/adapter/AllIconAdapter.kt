@@ -35,11 +35,10 @@ class AllIConAdapter(private val onClickListener: (ImageContent, ImageContent) -
         holder.bind(position)
     }
 
-    fun submitList(list: List<Pair<ImageContent, ImageContent>>, index: Int? = null) {
-        allBackgrounds.clear()
+    fun submitList(list: List<Pair<ImageContent, ImageContent>>) {
+        val startPosition = allBackgrounds.size
         allBackgrounds.addAll(list)
-        selectedPosition = index ?: RecyclerView.NO_POSITION
-        notifyDataSetChanged()
+        notifyItemRangeInserted(startPosition, list.size)
     }
 
 

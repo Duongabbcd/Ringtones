@@ -26,7 +26,7 @@ interface ApiService {
     @GET("api/v1/ringtones")
     suspend fun getPopularRingtones(
         @Query("app") app: Int = 1,
-        @Query("with") with: String = "author:id,name;categories:id,name,thumbnail,active,content_count",
+        @Query("with") with: String = "author+id,name-categories+id,name,thumbnail,active,content_count",
         @Query("page") page: Int = 1,
         @Query("order_by") orderBy: String = "name+asc",
         @Query("where") where: String = "popular+1;active+1"
@@ -35,7 +35,7 @@ interface ApiService {
     @GET("api/v1/ringtones")
     suspend fun getTrendingRingtones(
         @Query("app") app: Int = 1,
-        @Query("with") with: String = "author:id,name;categories:id,name,thumbnail,active,content_count",
+        @Query("with") with: String = "author+id,name-categories+id,name,thumbnail,active,content_count",
         @Query("page") page: Int = 1,
         @Query("order_by") orderBy: String = "name+asc",
         @Query("where") where: String = "trend+1;active+1",
@@ -45,7 +45,7 @@ interface ApiService {
     @GET("api/v1/ringtones")
     suspend fun fetchPrivateRingtones(
         @Query("app") app: Int = 1,
-        @Query("with") with: String = "author:id,name;categories:id,name,thumbnail,active,content_count",
+        @Query("with") with: String = "author+id,name;categories+id,name,thumbnail,active,content_count",
         @Query("page") page: Int = 1,
         @Query("order_by") orderBy: String = "name+asc",
         @Query("where") where: String = "private+1;active+1",

@@ -115,6 +115,11 @@ class CallScreenFragment :
                     requireContext().getString(R.string.setup_complete),
                     Toast.LENGTH_SHORT
                 ).show()
+
+                if (callScreenSetupInProgress && requireContext().isAlreadyDefaultDialer()) {
+                    callScreenSetupInProgress = false
+                    runDownloadStep(requireContext().applicationContext)
+                }
             }
 
         binding.apply {
@@ -338,13 +343,14 @@ class CallScreenFragment :
     }
 
     private fun triggerCallScreenPermission(ctx: Context) {
+        println("triggerCallScreenPermission: ${ctx.isAlreadyDefaultDialer()}")
         if (!ctx.isAlreadyDefaultDialer()) {
             callScreenSetupInProgress = true
             launchSetDefaultDialerIntent(ctx) { granted ->
                 if (granted) openOverlayPermissionSettings()
             }
         } else {
-            openOverlayPermissionSettings()
+            runDownloadStep(ctx)
         }
     }
 
@@ -352,6 +358,21 @@ class CallScreenFragment :
         val input = if (videoBackgroundUrl.isEmpty()) photoBackgroundUrl else videoBackgroundUrl
         println("saveCallScreenPreference: $photoBackgroundUrl and $videoBackgroundUrl")
         println("saveCallScreenPreference 123: $endCall and $startCall")
+
+        if (input.isEmpty()) {
+            Toast.makeText(ctx, getString(R.string.select_bg_value), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (avatarUrl.isEmpty()) {
+            Toast.makeText(ctx, getString(R.string.select_avatar_value), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (endCall.isEmpty() || startCall.isEmpty()) {
+            Toast.makeText(ctx, getString(R.string.select_icon_value), Toast.LENGTH_SHORT).show()
+            return
+        }
 
         lifecycleScope.launch {
             Toast.makeText(ctx, getString(R.string.processing), Toast.LENGTH_SHORT).show()
@@ -371,15 +392,6 @@ class CallScreenFragment :
             }
 
             Toast.makeText(ctx, getString(R.string.successful_setup), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if (callScreenSetupInProgress && requireContext().isAlreadyDefaultDialer()) {
-            callScreenSetupInProgress = false
-            runDownloadStep(requireContext().applicationContext)
         }
     }
 

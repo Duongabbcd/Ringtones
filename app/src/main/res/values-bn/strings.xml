@@ -17,6 +17,10 @@
     <string name="desc_3">ডায়নামিক কল স্ক্রিন থিম</string>
     <string name="high_light_3">কল স্ক্রিন</string>
 
+    <string name="select_bg_value">পরীক্ষার আগে ব্যাকগ্রাউন্ড নির্বাচন করুন।</string>
+    <string name="select_avatar_value">পরীক্ষার আগে অ্যাভাটার নির্বাচন করুন।</string>
+    <string name="select_icon_value">পরীক্ষার আগে আইকন নির্বাচন করুন।</string>
+
     <string name="search_image">ছবি অনুসন্ধান করুন</string>
     <string name="search_slide">স্লাইড অনুসন্ধান করুন</string>
     <string name="search_video">ভিডিও অনুসন্ধান করুন</string>

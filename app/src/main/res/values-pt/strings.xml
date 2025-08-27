@@ -48,6 +48,11 @@
     <string name="reset_cache">Limpar cache</string>
     <string name="preview">Pré-visualização</string>
 
+    <string name="select_bg_value">Selecione o fundo antes de testar.</string>
+    <string name="select_avatar_value">Selecione o avatar antes de testar.</string>
+    <string name="select_icon_value">Selecione o ícone antes de testar.</string>
+
+
     <string name="cache_1">Cache limpa com sucesso</string>
     <string name="cache_2">Falha ao limpar cache</string>
     <string name="ringtone_1">Toque redefinido para o padrão</string>

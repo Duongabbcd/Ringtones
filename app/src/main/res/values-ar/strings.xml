@@ -210,4 +210,9 @@
 
     <string name="set_alarm">مدة الانتقال</string>
     <string name="email_feedback_title">ملاحظات حول إصدار سمة الاتصال: %1$s</string>
+
+    <string name="select_bg_value">اختر الخلفية قبل الاختبار.</string>
+    <string name="select_avatar_value">اختر الصورة الرمزية قبل الاختبار.</string>
+    <string name="select_icon_value">اختر الأيقونة قبل الاختبار.</string>
+
 </resources>

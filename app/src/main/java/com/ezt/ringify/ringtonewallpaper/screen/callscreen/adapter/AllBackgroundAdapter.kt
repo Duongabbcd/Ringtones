@@ -37,11 +37,10 @@ class AllBackgroundAdapter(private val onClickListener: (ContentItem) -> Unit) :
         holder.bind(position)
     }
 
-    fun submitList(list: List<ContentItem>, index: Int? = null) {
-        allBackgrounds.clear()
+    fun submitList(list: List<ContentItem>) {
+        val startPosition = allBackgrounds.size
         allBackgrounds.addAll(list)
-        selectedPosition = index ?: RecyclerView.NO_POSITION
-        notifyDataSetChanged()
+        notifyItemRangeInserted(startPosition, list.size)
     }
 
 

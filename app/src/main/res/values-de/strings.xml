@@ -17,6 +17,10 @@
     <string name="desc_3">Dynamische Anrufbildschirm-Themen</string>
     <string name="high_light_3">Anrufbildschirm</string>
 
+    <string name="select_bg_value">Hintergrund vor dem Test auswählen.</string>
+    <string name="select_avatar_value">Avatar vor dem Test auswählen.</string>
+    <string name="select_icon_value">Symbol vor dem Test auswählen.</string>
+
     <string name="fav_desc">Sie müssen 3 Lieblingselemente auswählen</string>
 
     <string name="search_image">Bild suchen</string>

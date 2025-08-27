@@ -24,7 +24,7 @@ data class Ringtone(
     val id: Int,
     val name: String,
     val contents: RingtoneContents,
-    var author: Author? = Author(-1, "", 0),
+    var author: Author? = Author.EMPTY,
 
     @SerializedName("categories")
     var categories: List<Category>? = emptyList(),
@@ -67,4 +67,8 @@ data class Author(
     val id: Int,
     var name: String? = "",
     val active: Int
-)
+) {
+    companion object {
+        val EMPTY = Author(-1, "", -1)
+    }
+}

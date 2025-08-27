@@ -161,7 +161,7 @@ class FavouriteWallpaperActivity :
                         PreviewWallpaperActivity::class.java
                     ).apply {
                         putExtra("wallpaperCategoryId", -3)
-                        putExtra("type", 1)
+                        putExtra("type", 4)
                     })
             }
 

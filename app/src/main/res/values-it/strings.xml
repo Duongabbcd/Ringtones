@@ -21,6 +21,9 @@
     <string name="search_slide">Cerca diapositiva</string>
     <string name="search_video">Cerca video</string>
 
+    <string name="select_bg_value">Seleziona lo sfondo prima del test.</string>
+    <string name="select_avatar_value">Seleziona l’avatar prima del test.</string>
+    <string name="select_icon_value">Seleziona l’icona prima del test.</string>
 
     <string name="fav_desc">Devi selezionare 3 elementi preferiti</string>
 

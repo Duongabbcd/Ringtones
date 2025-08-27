@@ -33,11 +33,10 @@ class AllAvatarAdapter(private val onClickListener: (ImageContent) -> Unit) :
         holder.bind(position)
     }
 
-    fun submitList(list: List<ImageContent>, index: Int? = null) {
-        allBackgrounds.clear()
+    fun submitList(list: List<ImageContent>) {
+        val startPosition = allBackgrounds.size
         allBackgrounds.addAll(list)
-        selectedPosition = index ?: RecyclerView.NO_POSITION
-        notifyDataSetChanged()
+        notifyItemRangeInserted(startPosition, list.size)
     }
 
 

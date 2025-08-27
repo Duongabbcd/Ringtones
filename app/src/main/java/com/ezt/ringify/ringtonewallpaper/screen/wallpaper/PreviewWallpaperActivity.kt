@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.ads.AdmobUtils
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
@@ -35,7 +34,7 @@ class PreviewWallpaperActivity :
     BaseActivity<ActivityPreviewWallpaperBinding>(ActivityPreviewWallpaperBinding::inflate) {
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
-    private val favourite: FavouriteWallpaperViewModel by viewModels()
+    private val favouriteViewModel: FavouriteWallpaperViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
@@ -72,9 +71,6 @@ class PreviewWallpaperActivity :
             binding.frBanner.root.gone()
         }
         loadBanner(this@PreviewWallpaperActivity)
-        if (AdmobUtils.isNetworkConnected(this)) {
-            displayItems()
-        }
 
         binding.apply {
             backBtn.setOnClickListener {
@@ -108,6 +104,7 @@ class PreviewWallpaperActivity :
         } else {
             binding.origin.visible()
             loadMoreData()
+            displayItems()
             binding.noInternet.root.gone()
         }
     }
@@ -127,7 +124,9 @@ class PreviewWallpaperActivity :
                         -201 -> wallPaperViewModel.searchSingleWallpaperByTag(tagId)
                         -202 -> wallPaperViewModel.searchSingleWallpaperByTag(tagId)
                         -203 -> wallPaperViewModel.searchSingleWallpaperByTag(tagId)
-                        -3 -> favourite.loadLiveAllWallpapers()
+                        -5 -> favouriteViewModel.loadAllWallpapers()
+                        -4 -> favouriteViewModel.loadSlideAllWallpapers()
+                        -3 -> favouriteViewModel.loadLiveAllWallpapers()
                         -2 -> wallPaperViewModel.loadTrendingWallpapers()
                         -1 -> wallPaperViewModel.loadNewWallpapers()
                         else -> {
@@ -156,11 +155,11 @@ class PreviewWallpaperActivity :
             allCategories.visible()
             progressBar.visible()
 
-            favourite.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
+            favouriteViewModel.loading1.observe(this@PreviewWallpaperActivity) { isLoading ->
                 progressBar.isVisible = isLoading
             }
 
-            favourite.loading2.observe(this@PreviewWallpaperActivity) { isLoading ->
+            favouriteViewModel.loading2.observe(this@PreviewWallpaperActivity) { isLoading ->
                 progressBar.isVisible = isLoading
             }
 
@@ -207,22 +206,31 @@ class PreviewWallpaperActivity :
                 -5 -> {
                     nameScreen.text = getString(R.string.favourite1)
                     // Attach observer only once
-                    favourite.loadAllWallpapers()
-                    previewLiveFavouriteItems(favourite.loading1, favourite.allWallpapers)
+                    favouriteViewModel.loadAllWallpapers()
+                    previewLiveFavouriteItems(
+                        favouriteViewModel.loading1,
+                        favouriteViewModel.allWallpapers
+                    )
                 }
 
                 -4 -> {
                     nameScreen.text = getString(R.string.favourite3)
                     // Attach observer only once
-                    favourite.loadSlideAllWallpapers()
-                    previewLiveFavouriteItems(favourite.loading2, favourite.allSlideWallpapers)
+                    favouriteViewModel.loadSlideAllWallpapers()
+                    previewLiveFavouriteItems(
+                        favouriteViewModel.loading2,
+                        favouriteViewModel.allSlideWallpapers
+                    )
                 }
 
                 -3 -> {
                     nameScreen.text = getString(R.string.favourite2)
                     // Attach observer only once
-                    favourite.loadLiveAllWallpapers()
-                    previewLiveFavouriteItems(favourite.loading1, favourite.allLiveWallpapers)
+                    favouriteViewModel.loadLiveAllWallpapers()
+                    previewLiveFavouriteItems(
+                        favouriteViewModel.loading1,
+                        favouriteViewModel.allLiveWallpapers
+                    )
                 }
 
                 -2 -> {
@@ -375,8 +383,8 @@ class PreviewWallpaperActivity :
 
 
     private fun removeAllObservers() {
-        favourite.allLiveWallpapers.removeObservers(this)
-        favourite.liveWallpaper.removeObservers(this)
+        favouriteViewModel.allLiveWallpapers.removeObservers(this)
+        favouriteViewModel.liveWallpaper.removeObservers(this)
         wallPaperViewModel.trendingWallpaper.removeObservers(this)
         wallPaperViewModel.newWallpaper.removeObservers(this)
         wallPaperViewModel.slideWallpaper.removeObservers(this)

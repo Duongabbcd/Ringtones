@@ -230,4 +230,9 @@
     <string name="search_image">Search Image</string>
     <string name="search_slide">Search Slide</string>
     <string name="search_video">Search Video</string>
+
+    <string name="select_bg_value">Select background before testing.</string>
+    <string name="select_avatar_value">Select avatar before testing.</string>
+    <string name="select_icon_value">Select icon before testing.</string>
+
 </resources>

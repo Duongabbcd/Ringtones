@@ -33,6 +33,11 @@
     <string name="set_alarm">Durée de la transition</string>
     <string name="email_feedback_title">Retour sur la version du thème d\'appel : %1$s</string>
 
+    <string name="select_bg_value">Sélectionnez l’arrière-plan avant de tester.</string>
+    <string name="select_avatar_value">Sélectionnez l’avatar avant de tester.</string>
+    <string name="select_icon_value">Sélectionnez l’icône avant de tester.</string>
+
+
     <string name="callscreen_setting">Définir comme écran d\'appel</string>
     <string name="no_connection">Toujours pas de connexion Internet</string>
     <string name="avatar">Avatar</string>

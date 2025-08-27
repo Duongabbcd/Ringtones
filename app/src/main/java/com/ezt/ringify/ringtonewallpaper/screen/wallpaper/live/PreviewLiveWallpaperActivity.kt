@@ -107,6 +107,8 @@ class PreviewLiveWallpaperActivity :
             isOpenActivity = true
             currentWallpaper = RingtonePlayerRemote.currentPlayingWallpaper
             liveWallpaperIndex = allWallpapers.indexOf(currentWallpaper).takeIf { it >= 0 } ?: 0
+            favouriteViewModel.loadLiveAllWallpapers()
+            setUpNewPlayer(liveWallpaperIndex)
         }
 
         binding.apply {
@@ -116,9 +118,6 @@ class PreviewLiveWallpaperActivity :
                     "INTER_WALLPAPER"
                 )
             }
-            favouriteViewModel.loadLiveAllWallpapers()
-            setUpNewPlayer(liveWallpaperIndex)
-
             favourite.setOnClickListener { displayFavouriteIcon(true) }
             loadMoreData()
             initViewPager()
@@ -456,7 +455,6 @@ class PreviewLiveWallpaperActivity :
 
     private fun setUpNewPlayer(position: Int, tag: String = "") {
         binding.horizontalWallpapers.smoothScrollToPosition(position)
-        if (currentWallpaper.id != allWallpapers[position].id) {
             currentWallpaper = allWallpapers[position]
             RingtonePlayerRemote.currentPlayingWallpaper = currentWallpaper
             Log.d(
@@ -464,10 +462,9 @@ class PreviewLiveWallpaperActivity :
                 "setUpNewPlayer: position= $position wallpaper= ${currentWallpaper.id} and $tag"
             )
             favouriteViewModel.loadLiveWallpaperById(currentWallpaper.id)
-
             observeRingtoneFromDb()
-            liveWallpaperIndex = position
-        }
+        liveWallpaperIndex = position
+
     }
 
     private var isFavorite: Boolean = false

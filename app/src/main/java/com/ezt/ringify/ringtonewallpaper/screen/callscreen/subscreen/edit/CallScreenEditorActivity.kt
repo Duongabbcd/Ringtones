@@ -3,13 +3,13 @@ package com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.CacheDataSource
@@ -58,7 +58,7 @@ class CallScreenEditorActivity :
     private val addedWallpaperIds = mutableSetOf<Int>() // Track already added
     private val addedAvatarIds = mutableSetOf<String>() // Track already added
     private val addedIconIds =
-        mutableSetOf<Pair<ImageContent, ImageContent>>() // Track already added
+        mutableSetOf<Pair<String, String>>() // Track already added
 
     private val allBackgroundAdapter: AllBackgroundAdapter by lazy {
         AllBackgroundAdapter { input ->
@@ -117,8 +117,8 @@ class CallScreenEditorActivity :
         AllIConAdapter { end, start ->
             Log.d(TAG, "AllBackgroundAdapter: $end and $start")
             selectedIcon = Pair(end, start)
-            val result1 = end.url.medium
-            val result2 = start.url.medium
+            val result1 = end.url.full
+            val result2 = start.url.full
             if (result1.isEmpty() || result2.isEmpty()) {
                 return@AllIConAdapter
             }
@@ -235,6 +235,7 @@ class CallScreenEditorActivity :
         connectionViewModel.isConnectedLiveData.observe(this) { isConnected ->
             checkInternetConnected(isConnected)
         }
+        loadMoreData()
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(
@@ -278,10 +279,10 @@ class CallScreenEditorActivity :
 
             contentViewModel.loading.observe(this@CallScreenEditorActivity) { isLoading ->
                 if (isLoading) {
-                    val loadingItems = List(5) {
+                    List(5) {
                         ContentItem.CONTENT_EMPTY
                     }
-                    allBackgroundAdapter.submitList(loadingItems)
+//                    allBackgroundAdapter.submitList(loadingItems)
 
                     // Disable scrolling
                     this@CallScreenEditorActivity.window.setFlags(
@@ -301,10 +302,10 @@ class CallScreenEditorActivity :
 
             contentViewModel.loading1.observe(this@CallScreenEditorActivity) { isLoading ->
                 if (isLoading) {
-                    val loadingItems = List(5) {
+                    List(5) {
                         ImageContent.IMAGE_EMPTY
                     }
-                    allAvatarAdapter.submitList(loadingItems)
+//                    allAvatarAdapter.submitList(loadingItems)
 
                     // Disable scrolling
                     this@CallScreenEditorActivity.window.setFlags(
@@ -314,6 +315,8 @@ class CallScreenEditorActivity :
                 } else {
                     contentViewModel.backgroundContent.value?.let { items ->
                         Log.d(TAG, "allAvatarAdapter: $items")
+                        allAvatars.clear()
+                        addedAvatarIds.clear()
                         appendNewRingtones2(items)
                     }
                     // Re-enable touch
@@ -323,13 +326,12 @@ class CallScreenEditorActivity :
 
             contentViewModel.loading2.observe(this@CallScreenEditorActivity) { isLoading ->
                 if (isLoading) {
-                    val loadingItems = List(5) {
+                    List(5) {
                         Pair<ImageContent, ImageContent>(
                             ImageContent.IMAGE_EMPTY,
                             ImageContent.IMAGE_EMPTY
                         )
                     }
-                    allIconAdapter.submitList(loadingItems)
 
                     // Disable scrolling
                     this@CallScreenEditorActivity.window.setFlags(
@@ -362,38 +364,34 @@ class CallScreenEditorActivity :
     }
 
     private fun appendNewRingtones3(newItems: List<Pair<ImageContent, ImageContent>>) {
-        val oldSize = allIcons.size
-        android.util.Log.d(TAG, "appendNewRingtones 0: $oldSize")
-        val distinctItems = newItems.filter { !addedIconIds.contains(it) }
+        val distinctItems = newItems.filter {
+            val key = it.first.path to it.second.path
+            !addedIconIds.contains(key)
+        }
 
         if (distinctItems.isNotEmpty()) {
             allIcons.addAll(distinctItems)
-            val index = allIcons.indexOf(selectedIcon)
-            binding.allBackground.scrollToPosition(index)
 
-            distinctItems.forEach { addedIconIds.add(it) }
-            android.util.Log.d(TAG, "appendNewRingtones 1: $oldSize")
-            allIconAdapter.submitList(allIcons.toList(), index)
-            allIconAdapter.notifyItemInserted(oldSize - 1)
+            distinctItems.forEach {
+                val key = it.first.path to it.second.path
+                addedIconIds.add(key)
+            }
+
+            allIconAdapter.submitList(distinctItems) // ✅ use new method
         }
 
         isLoadingMore = false
     }
 
+
     private fun appendNewRingtones2(newItems: List<ImageContent>) {
-        val oldSize = allAvatars.size
-        android.util.Log.d(TAG, "appendNewRingtones 0: $oldSize")
         val distinctItems = newItems.filter { it.path !in addedAvatarIds }
 
         if (distinctItems.isNotEmpty()) {
             allAvatars.addAll(distinctItems)
-            val index = allAvatars.indexOf(selectedAvatar)
-            binding.allBackground.scrollToPosition(index)
 
             distinctItems.forEach { addedAvatarIds.add(it.path) }
-            android.util.Log.d(TAG, "appendNewRingtones 1: $oldSize")
-            allAvatarAdapter.submitList(allAvatars.toList(), index)
-            allAvatarAdapter.notifyItemInserted(oldSize - 1)
+            allAvatarAdapter.submitList(allAvatars.toList())
         }
 
         isLoadingMore = false
@@ -401,20 +399,12 @@ class CallScreenEditorActivity :
 
 
     private fun appendNewRingtones(newItems: List<ContentItem>) {
-        allBackgrounds.size
-        android.util.Log.d(TAG, "appendNewRingtones 0: ${newItems.size}")
         val distinctItems = newItems.filter { it.id !in addedWallpaperIds }
 
         if (distinctItems.isNotEmpty()) {
             allBackgrounds.addAll(distinctItems)
-
-            val index = allBackgrounds.indexOf(selectedBackground)
-            binding.allBackground.scrollToPosition(index)
-
             distinctItems.forEach { addedWallpaperIds.add(it.id) }
-            android.util.Log.d(TAG, "appendNewRingtones 1: ${allBackgrounds.size}")
-            allBackgroundAdapter.submitList(allBackgrounds.toList(), index)
-            allBackgroundAdapter.notifyItemInserted(allBackgrounds.size - 1)
+            allBackgroundAdapter.submitList(allBackgrounds.toList())
         }
 
         isLoadingMore = false
@@ -427,12 +417,19 @@ class CallScreenEditorActivity :
         } else {
             binding.origin.visible()
             when (editorType) {
-                1 -> contentViewModel.getAllCallScreenBackgrounds()
-                2 -> contentViewModel.getAllCallScreenAvatars()
-                3 -> contentViewModel.getAllCallScreenIcons()
-            }
+                1 -> {
+                    contentViewModel.getAllCallScreenBackgrounds()
+                }
 
-            loadMoreData()
+                2 -> {
+                    contentViewModel.getAllCallScreenAvatars()
+                }
+
+                3 -> {
+                    contentViewModel.getAllCallScreenIcons()
+
+                }
+            }
             binding.noInternet.root.gone()
         }
     }
