@@ -74,6 +74,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topPurchase" />
 
+        <TextView
+            android:id="@+id/noAddTitle"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Ad-Free Experience"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/noAdd"
+            app:layout_constraintStart_toEndOf="@+id/noAdd"
+            app:layout_constraintTop_toTopOf="@id/noAdd" />
+
         <ImageView
             android:id="@+id/noLimit"
             android:layout_width="@dimen/_26sdp"
@@ -85,6 +97,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/noAdd" />
 
+        <TextView
+            android:id="@+id/noLimitTitle"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Unlimited Access to All Ringtones"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/noLimit"
+            app:layout_constraintStart_toEndOf="@+id/noLimit"
+            app:layout_constraintTop_toTopOf="@id/noLimit" />
 
         <ImageView
             android:id="@+id/dynamicCallScreen"
@@ -97,6 +120,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/noLimit" />
 
+        <TextView
+            android:id="@+id/dynamicCallScreenTitle"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Unlock Dynamic Call Screens Pro"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/dynamicCallScreen"
+            app:layout_constraintStart_toEndOf="@+id/dynamicCallScreen"
+            app:layout_constraintTop_toTopOf="@id/dynamicCallScreen" />
+
         <ImageView
             android:id="@+id/exclusiveContent"
             android:layout_width="@dimen/_26sdp"
@@ -107,6 +142,98 @@
             android:src="@drawable/icon_exclusive"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dynamicCallScreen" />
+
+        <TextView
+            android:id="@+id/exclusiveContentTitle"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Exclusive Weekly Content Updates"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/exclusiveContent"
+            app:layout_constraintStart_toEndOf="@+id/exclusiveContent"
+            app:layout_constraintTop_toTopOf="@id/exclusiveContent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/yearlyPackage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_90sdp"
+            android:layout_marginHorizontal="@dimen/_22sdp"
+            android:layout_marginTop="@dimen/_23sdp"
+            android:background="@drawable/background_radius_12_dark_purple_stroke"
+            android:padding="@dimen/_11sdp"
+            app:layout_constraintTop_toBottomOf="@id/exclusiveContent">
+
+            <ImageView
+                android:id="@+id/yearlyEnable"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_unselect_purple_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/yearlyPrice"
+                app:layout_constraintEnd_toStartOf="@+id/yearlyPrice"
+                app:layout_constraintStart_toEndOf="@+id/yearlyEnable"
+                app:layout_constraintTop_toTopOf="@+id/yearlyPrice">
+
+                <TextView
+                    android:id="@+id/yearlyName"
+                    style="@style/CustomTextStyleBold20sp"
+                    android:layout_width="@dimen/_67sdp"
+                    android:layout_height="wrap_content"
+                    android:text="Yearly"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/yearlyDesc1"
+                    style="@style/CustomTextStyleMedium14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Just 0.3$/week"
+                    android:textColor="#B3BDD0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/yearlyPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/yearlyNumber"
+                    style="@style/CustomTextStyleBold20sp"
+                    android:layout_width="@dimen/_67sdp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="$ 14.99"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/yearlyDesc2"
+                    style="@style/CustomTextStyleMedium14sp"
+                    android:layout_width="@dimen/_67sdp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Per year"
+                    android:textColor="#B3BDD0" />
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/_126sdp"
@@ -120,26 +247,82 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/yearlyPackage"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_90sdp"
-            android:layout_marginHorizontal="@dimen/_22sdp"
-            android:layout_marginTop="@dimen/_23sdp"
-            android:background="@drawable/background_radius_12_dark_purple_stroke"
-            app:layout_constraintTop_toBottomOf="@id/exclusiveContent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/weeklyPackage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_90sdp"
+            android:padding="@dimen/_11sdp"
             android:layout_marginHorizontal="@dimen/_22sdp"
             android:layout_marginTop="@dimen/_16sdp"
             android:background="@drawable/background_radius_12_dark_purple_stroke"
             app:layout_constraintTop_toBottomOf="@id/yearlyPackage">
+
+            <ImageView
+                android:id="@+id/weeklyEnable"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:contentDescription="@string/imageview"
+                android:src="@drawable/icon_unselect_purple_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/weeklyPrice"
+                app:layout_constraintEnd_toStartOf="@+id/weeklyPrice"
+                app:layout_constraintStart_toEndOf="@+id/weeklyEnable"
+                app:layout_constraintTop_toTopOf="@+id/weeklyPrice">
+
+                <TextView
+                    android:id="@+id/weeklyName"
+                    style="@style/CustomTextStyleBold20sp"
+                    android:layout_width="@dimen/_67sdp"
+                    android:layout_height="wrap_content"
+                    android:text="Yearly"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/weeklyDesc1"
+                    style="@style/CustomTextStyleMedium14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Try it, low cost!"
+                    android:textColor="#B3BDD0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/weeklyPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/weeklyNumber"
+                    style="@style/CustomTextStyleBold20sp"
+                    android:layout_width="@dimen/_67sdp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="$ 0.9"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/weeklyDesc2"
+                    style="@style/CustomTextStyleMedium14sp"
+                    android:layout_width="@dimen/_67sdp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Per week"
+                    android:textColor="#B3BDD0" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -166,8 +349,89 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:src="@drawable/icon_next_cs"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+        <TextView
+            android:id="@+id/iapTitle"
+            style="@style/CustomTextStyle14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:text="Billed yearly, cancel anytime."
+            android:textColor="#8C97AA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/continueBtn" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_21sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
+            app:layout_constraintEnd_toEndOf="@id/iapTitle"
+            app:layout_constraintStart_toStartOf="@id/iapTitle"
+            app:layout_constraintTop_toBottomOf="@id/iapTitle">
+
+            <TextView
+                android:id="@+id/privacyPolicy"
+                style="@style/CustomTextStyle14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/privacy_policy"
+                android:textColor="#8C97AA"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                style="@style/CustomTextStyle14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="|"
+                android:textColor="#8C97AA"
+                app:layout_constraintEnd_toStartOf="@id/terms"
+                app:layout_constraintStart_toEndOf="@+id/privacyPolicy" />
+
+
+            <TextView
+                android:id="@+id/terms"
+                style="@style/CustomTextStyle14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Term of us"
+                android:textColor="#8C97AA"
+                app:layout_constraintEnd_toStartOf="@id/restore"
+                app:layout_constraintStart_toEndOf="@id/privacyPolicy" />
+
+
+            <TextView
+                style="@style/CustomTextStyle14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="|"
+                android:textColor="#8C97AA"
+                app:layout_constraintEnd_toStartOf="@id/restore"
+                app:layout_constraintStart_toEndOf="@+id/terms" />
+
+
+            <TextView
+                android:id="@+id/restore"
+                style="@style/CustomTextStyle14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Restore"
+                android:textColor="#8C97AA"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

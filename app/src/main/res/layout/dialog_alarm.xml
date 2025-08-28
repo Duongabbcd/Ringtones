@@ -45,7 +45,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle" />
+                    android:src="@drawable/icon_unselect_gray_circle" />
 
                 <TextView
                     style="@style/CustomTextStyle14sp"
@@ -69,7 +69,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle" />
+                    android:src="@drawable/icon_unselect_gray_circle" />
 
                 <TextView
                     style="@style/CustomTextStyle14sp"
@@ -92,7 +92,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle" />
+                    android:src="@drawable/icon_unselect_gray_circle" />
 
                 <TextView
                     style="@style/CustomTextStyle14sp"
@@ -115,7 +115,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle" />
+                    android:src="@drawable/icon_unselect_gray_circle" />
 
                 <TextView
                     style="@style/CustomTextStyle14sp"
@@ -138,7 +138,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle" />
+                    android:src="@drawable/icon_unselect_gray_circle" />
 
                 <TextView
                     style="@style/CustomTextStyle14sp"
@@ -161,7 +161,7 @@
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle" />
+                    android:src="@drawable/icon_unselect_gray_circle" />
 
                 <TextView
                     style="@style/CustomTextStyle14sp"

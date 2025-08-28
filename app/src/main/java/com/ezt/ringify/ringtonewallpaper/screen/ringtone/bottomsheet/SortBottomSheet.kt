@@ -98,7 +98,7 @@ class SortBottomSheet(private val context: Context,private val onClickListener: 
                 it.setImageResource(R.drawable.icon_select_circle)
             }
             unselected.onEach {
-                it.setImageResource(R.drawable.icon_unselect_circle)
+                it.setImageResource(R.drawable.icon_unselect_gray_circle)
             }
         }
     }

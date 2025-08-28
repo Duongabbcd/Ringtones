@@ -121,7 +121,7 @@ class TypeAlertAdapter(private val onClickListener: (String) -> Unit) :
                 if (position == selectedPosition) {
                     binding.selectButton.setImageResource(R.drawable.icon_select_circle)
                 } else {
-                    binding.selectButton.setImageResource(R.drawable.icon_unselect_circle)
+                    binding.selectButton.setImageResource(R.drawable.icon_unselect_gray_circle)
                 }
 
                 root.setOnClickListener {

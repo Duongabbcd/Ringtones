@@ -10,7 +10,7 @@
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"
         android:contentDescription="@string/imageview"
-        android:src="@drawable/icon_unselect_circle"
+        android:src="@drawable/icon_unselect_gray_circle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -43,7 +43,7 @@
                 <ImageView
                     android:id="@+id/firstSortIcon"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle"
+                    android:src="@drawable/icon_unselect_gray_circle"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"/>
 
@@ -67,7 +67,7 @@
                 <ImageView
                     android:id="@+id/secondSortIcon"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle"
+                    android:src="@drawable/icon_unselect_gray_circle"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"/>
 
@@ -90,7 +90,7 @@
                 <ImageView
                     android:id="@+id/thirdSortIcon"
                     android:contentDescription="@string/imageview"
-                    android:src="@drawable/icon_unselect_circle"
+                    android:src="@drawable/icon_unselect_gray_circle"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"/>
 
