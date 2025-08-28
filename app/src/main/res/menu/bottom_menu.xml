@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/ringTone"
         android:icon="@drawable/icon_ringtone"
-        app:showAsAction=""
-        android:title="@string/ringTone" />
+        android:title="Ringtone" />
     <item
         android:id="@+id/wallPaper"
         android:icon="@drawable/icon_wallpaper"
-        android:title="@string/wallPaper" />
+        android:title="Wallpaper" />
     <item
         android:id="@+id/callScreen"
         android:icon="@drawable/icon_callscreen"
-        android:title="@string/callScreen" />
+        android:title="Callscreen" />
     <item
         android:id="@+id/setting"
         android:icon="@drawable/icon_setting"
-        android:title="@string/setting" />
+        android:title="Setting" />
 </menu>

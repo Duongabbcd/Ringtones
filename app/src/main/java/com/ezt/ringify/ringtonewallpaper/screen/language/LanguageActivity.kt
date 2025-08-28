@@ -13,6 +13,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLanguageBinding
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew
 import com.ezt.ringify.ringtonewallpaper.screen.language.adapter.Language
 import com.ezt.ringify.ringtonewallpaper.screen.language.adapter.LanguageAdapter
@@ -21,17 +22,24 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.GlobalConstant
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageBinding::inflate){
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+
     private var adapter2: LanguageAdapter? = null
     private var start = false
+    private var now = 0L
 
     private lateinit var allLanguages : ArrayList<Language>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         allLanguages = GlobalConstant.getListLocation(this@LanguageActivity)
-
+        now = System.currentTimeMillis()
         if (RemoteConfig.INTER_WALLPAPER != "0") {
             InterAds.preloadInterAds(
                 this@LanguageActivity,
@@ -84,6 +92,8 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                 )
                 if(!start) {
                     startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
+                    val duration = System.currentTimeMillis() - now
+                    analyticsLogger.logScreenGo("setting_screen", "language_screen", duration)
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
                         InterAds.showPreloadInter(
@@ -110,6 +120,8 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
     }
 
     private fun nextScreenByCondition() {
+        val duration = System.currentTimeMillis() - now
+        analyticsLogger.logScreenGo("intro_screen", "language_screen", duration)
         val intent = Intent(this@LanguageActivity, IntroActivityNew::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
@@ -123,9 +135,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                 if(language.key != selectedLanguage || language.name != selectedLanguageName) {
                     binding.applyBtn.setTextColor(resources.getColor(R.color.white))
                     binding.applyBtn.setBackgroundResource(R.drawable.background_radius_16_purple)
-                } else {
-                    binding.applyBtn.setTextColor(resources.getColor(R.color.main_color))
-                    binding.applyBtn.setBackgroundResource(R.drawable.background_radius_16_gray)
                 }
                 selectedLanguage = language.key
                 selectedLanguageFlag = language.img

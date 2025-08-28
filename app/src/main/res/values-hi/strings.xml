@@ -19,8 +19,9 @@
 
     <string name="slide_running">स्लाइड वॉलपेपर चल रहा है</string>
     <string name="live_running">लाइव वॉलपेपर चल रहा है</string>
+    <string name="do_you_want_to_exit_app">क्या आप ऐप से बाहर निकलना चाहते हैं?</string>
 
-
+    <string name="slide">स्लाइड</string>
     <string name="select_bg_value">परीक्षण से पहले पृष्ठभूमि चुनें।</string>
     <string name="select_avatar_value">परीक्षण से पहले अवतार चुनें।</string>
     <string name="select_icon_value">परीक्षण से पहले आइकन चुनें।</string>

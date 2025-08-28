@@ -19,6 +19,8 @@
 
     <string name="slide_running">Lo sfondo a scorrimento è in esecuzione</string>
     <string name="live_running">Lo sfondo animato è in esecuzione</string>
+    <string name="slide">Diapositiva</string>
+    <string name="do_you_want_to_exit_app">Vuoi uscire dall\'app?</string>
 
     <string name="search_image">Cerca immagine</string>
     <string name="search_slide">Cerca diapositiva</string>

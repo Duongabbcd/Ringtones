@@ -14,7 +14,6 @@ import com.ezt.ringify.ringtonewallpaper.BuildConfig
 import com.ezt.ringify.ringtonewallpaper.MyApplication
 import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
-import com.ezt.ringify.ringtonewallpaper.ads.helper.Prefs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -73,93 +72,6 @@ object RewardAds {
     }
 
     fun isShowing(): Boolean = isShowing
-
-    fun loadAndShowAds(context: Activity, callback: RewardCallback) {
-        try {
-            val isPro = Prefs(context).premium
-            val isSub = Prefs(context).isRemoveAd
-            if (isPro || isSub) {
-                callback.onPremium()
-                Log.e(TAG, "pro/subbed")
-                return
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        if (isCanLoadAds() && mRewardAds == null) {
-            mRewardAds = null
-            isLoading = true
-            mLoadingDialog = createLoadingDialog(context)
-            mLoadingDialog?.show()
-
-            RewardedAd.load(
-                context,
-                if (BuildConfig.DEBUG) REWARDED_INTER_TEST_ID else REWARDED_INTER_ID_DEFAULT,
-                AdRequest.Builder().build(),
-                object : RewardedAdLoadCallback() {
-                    override fun onAdLoaded(ad: RewardedAd) {
-                        Log.d(TAG, "Load OK")
-                        mRewardAds = ad
-                        ad.setOnPaidEventListener { adValue ->
-                            try {
-                                MyApplication.initROAS(adValue.valueMicros, adValue.currencyCode)
-                                val adRevenue =
-                                    AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB).apply {
-                                        setRevenue(
-                                            adValue.valueMicros / 1_000_000.0,
-                                            adValue.currencyCode
-                                        )
-                                    }
-                                Adjust.trackAdRevenue(adRevenue)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                        isLoading = false
-
-                        mRewardAds?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                dismissAdsDialog()
-                                Log.e(TAG, adError.message ?: "Ad failed to show")
-                                mRewardAds = null
-                                isShowing = false
-                                callback.onAdFailedToShow()
-                            }
-
-                            override fun onAdShowedFullScreenContent() {
-                                dismissAdsDialog()
-                                isShowing = true
-                                initRewardAds(context)
-                                callback.onAdShowed()
-                            }
-
-                            override fun onAdDismissedFullScreenContent() {
-                                isShowing = false
-                                mRewardAds = null
-                                callback.onAdDismiss()
-                            }
-                        }
-
-                        mRewardAds?.show(context) {
-                            callback.onEarnedReward()
-                        }
-                    }
-
-                    override fun onAdFailedToLoad(error: LoadAdError) {
-                        dismissAdsDialog()
-                        Log.d(TAG, error.toString())
-                        mRewardAds = null
-                        isLoading = false
-                    }
-                }
-            )
-        } else if (mRewardAds != null) {
-            showAds(context, callback)
-        } else {
-            callback.onAdFailedToShow()
-        }
-    }
 
     private fun createLoadingDialog(context: Activity): Dialog {
         return Dialog(context).apply {

@@ -237,5 +237,6 @@
 
     <string name="slide_running">Slide wallpaper is running</string>
     <string name="live_running">Live wallpaper is running</string>
+    <string name="do_you_want_to_exit_app">Do you want to exit app?</string>
 
 </resources>

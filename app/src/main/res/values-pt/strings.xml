@@ -23,6 +23,8 @@
     <string name="call_screen_feedback_2">A tela de chamada não funciona após definir como tela de chamada</string>
 
     <string name="fav_desc">Você deve selecionar 3 itens favoritos</string>
+    <string name="slide">Slide</string>
+    <string name="do_you_want_to_exit_app">Você quer sair do aplicativo?</string>
 
     <string name="search_image">Buscar imagem</string>
     <string name="search_slide">Buscar slide</string>

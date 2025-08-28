@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/_10sdp"
     android:paddingBottom="@dimen/_10sdp"
+    android:layoutDirection="ltr"
+    android:textDirection="locale"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView

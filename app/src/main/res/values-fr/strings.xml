@@ -16,7 +16,7 @@
     <string name="high_light_2">fonds d’écran</string>
     <string name="desc_3">Thèmes d’écran d’appel dynamiques</string>
     <string name="high_light_3">Écran d\'appel</string>
-
+    <string name="slide">Diapositive</string>
     <string name="fav_desc">Vous devez sélectionner 3 éléments préférés</string>
 
     <string name="search_image">Rechercher une image</string>
@@ -39,6 +39,7 @@
 
     <string name="slide_running">Le fond d’écran diaporama est en cours d’exécution</string>
     <string name="live_running">Le fond d’écran animé est en cours d’exécution</string>
+    <string name="do_you_want_to_exit_app">Voulez-vous quitter l\'application ?</string>
 
     <string name="callscreen_setting">Définir comme écran d\'appel</string>
     <string name="no_connection">Toujours pas de connexion Internet</string>

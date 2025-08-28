@@ -16,9 +16,11 @@
     <string name = "high_light_2">Resaltar</string>
     <string name = "desc_3">Más información encontrada aquí</string>
     <string name = "high_light_3">Más información</string>
+    <string name="slide">Diapositiva</string>
 
     <string name="slide_running">El fondo de diapositivas se está ejecutando</string>
     <string name="live_running">El fondo animado se está ejecutando</string>
+    <string name="do_you_want_to_exit_app">¿Quieres salir de la aplicación?</string>
 
     <string name="select_bg_value">Selecciona el fondo antes de probar.</string>
     <string name="select_avatar_value">Selecciona el avatar antes de probar.</string>

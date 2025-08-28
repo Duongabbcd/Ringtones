@@ -16,6 +16,8 @@
     <string name="high_light_2">ওয়ালপেপার</string>
     <string name="desc_3">ডায়নামিক কল স্ক্রিন থিম</string>
     <string name="high_light_3">কল স্ক্রিন</string>
+    <string name="slide">স্লাইড</string>
+    <string name="do_you_want_to_exit_app">আপনি কি অ্যাপ থেকে বের হতে চান?</string>
 
     <string name="select_bg_value">পরীক্ষার আগে ব্যাকগ্রাউন্ড নির্বাচন করুন।</string>
     <string name="select_avatar_value">পরীক্ষার আগে অ্যাভাটার নির্বাচন করুন।</string>

@@ -18,7 +18,9 @@
     <string name="high_light_3">Экран звонка</string>
 
     <string name="fav_desc">Вы должны выбрать 3 избранных элемента</string>
+    <string name="slide">Слайд</string>
 
+    <string name="do_you_want_to_exit_app">Вы хотите выйти из приложения?</string>
 
     <string name="favourite1">Избранное изображение</string>
     <string name="favourite2">Избранное видео</string>

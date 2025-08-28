@@ -18,10 +18,12 @@
     <string name="high_light_3">통화 화면</string>
 
     <string name="fav_desc">즐겨찾는 항목 3개를 선택해야 합니다</string>
+    <string name="do_you_want_to_exit_app">앱을 종료하시겠습니까?</string>
 
     <string name="favourite1">즐겨찾는 이미지</string>
     <string name="favourite2">즐겨찾는 비디오</string>
     <string name="favourite3">즐겨찾는 슬라이드</string>
+    <string name="slide">슬라이드</string>
 
     <string name="search_image">이미지 검색</string>
     <string name="search_slide">슬라이드 검색</string>

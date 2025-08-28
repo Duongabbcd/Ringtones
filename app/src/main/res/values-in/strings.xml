@@ -19,7 +19,8 @@
 
     <string name="slide_running">Wallpaper slide sedang berjalan</string>
     <string name="live_running">Wallpaper hidup sedang berjalan</string>
-
+    <string name="slide">Slide</string>
+    <string name="do_you_want_to_exit_app">Apakah Anda ingin keluar dari aplikasi?</string>
 
     <string name="search_image">Cari Gambar</string>
     <string name="search_slide">Cari Slide</string>

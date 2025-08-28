@@ -74,7 +74,7 @@
     <string name="find_wallpaper">البحث عن خلفية الشاشة</string>
     <string name="notification">إشعار</string>
     <string name="download">تنزيل</string>
-    <string name="set_ringtone">تعيين كـ Ringtone</string>
+    <string name="set_ringtone">تعيين كنغمة رنين</string>
     <string name="set_wallpaper">تعيين كخلفية</string>
 
     <string name="phone_settings">إعدادات الهاتف</string>
@@ -141,6 +141,8 @@
     <string name="reset">إعادة تعيين</string>
     <string name="crop">قص</string>
     <string name="wallpaper_desc">وصف ورق الجدران</string>
+    <string name="slide">شريحة</string>
+    <string name="do_you_want_to_exit_app">هل تريد الخروج من التطبيق؟</string>
 
     <string name="callscreen_setting">تعيين كشاشة مكالمة</string>
     <string name="no_connection">لا توجد بعد اتصال بالإنترنت</string>

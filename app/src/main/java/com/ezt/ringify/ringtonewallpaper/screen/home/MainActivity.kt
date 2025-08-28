@@ -1,12 +1,16 @@
 package com.ezt.ringify.ringtonewallpaper.screen.home
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +25,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.ads.new.RewardAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityMainBinding
+import com.ezt.ringify.ringtonewallpaper.databinding.BottomSheetExitAppBinding
 import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.screen.home.dialog.NotificationDialog
@@ -38,14 +43,13 @@ import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import javax.inject.Inject
-import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     @Inject
     lateinit var analyticsLogger: AnalyticsLogger
-
+    private var now = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,9 +88,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         binding.searchButton.setOnClickListener {
             if(selectedTab == 0) {
                 analyticsLogger.logTagClick(100, "Search Ringtone", "search_ringtone_clicked")
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo("search_ringtone_screen", "main_screen", duration)
                 startActivity(Intent(this, SearchRingtoneActivity::class.java))
             } else {
                 analyticsLogger.logTagClick(101, "Search Wallpaper", "search_wallpaper_clicked")
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo("search_wallpaper_screen", "main_screen", duration)
                 startActivity(Intent(this, SearchWallpaperActivity::class.java))
             }
 
@@ -252,6 +260,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
 
             3 -> {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo("setting_screen", "main_screen", duration)
                 startActivity(Intent(this@MainActivity, SettingActivity::class.java))
             }
 
@@ -292,7 +302,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        exitProcess(-1)
+        val dialogBinding = BottomSheetExitAppBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+
+        dialog.setContentView(dialogBinding.root)
+        dialog.setCancelable(true) // optional, can cancel by tapping outside
+
+        // Optional: customize dialog appearance
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        dialogBinding.apply {
+            textCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+            textExit.setOnClickListener {
+                moveTaskToBack(true)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
+
 }

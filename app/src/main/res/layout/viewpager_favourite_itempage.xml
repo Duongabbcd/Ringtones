@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
+    android:layoutDirection="ltr"
+    android:textDirection="locale"
     android:paddingTop="@dimen/_40sdp">
 
     <!-- Top Title -->

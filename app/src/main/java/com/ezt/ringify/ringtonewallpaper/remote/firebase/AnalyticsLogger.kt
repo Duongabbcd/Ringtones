@@ -2,7 +2,6 @@ package com.ezt.ringify.ringtonewallpaper.remote.firebase
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.logEvent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,11 +18,12 @@ class AnalyticsLogger @Inject constructor(
         firebaseAnalytics.logEvent(eventName.lowercase(), bundle)
     }
 
-    fun logScreenView(screenName: String, screenClass: String) {
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-            param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
-            param(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
+    fun logScreenGo(screenName: String, prevScreenName: String, prevScreenDuration: Long) {
+        val bundle = Bundle().apply {
+            putString("screen_name", screenName)
+            putString("prev_screen_name", prevScreenName)
+            putLong("prev_screen_duration", prevScreenDuration)
         }
+        firebaseAnalytics.logEvent("screen_go", bundle)
     }
-
 }
