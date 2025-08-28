@@ -43,6 +43,10 @@
     <string name="reset_ringtone_question">Você realmente quer redefinir seu toque atual?</string>
     <string name="reset_cache_question">Você realmente quer limpar o cache?</string>
 
+    <string name="slide_running">O papel de parede de slides está em execução</string>
+    <string name="live_running">O papel de parede ao vivo está em execução</string>
+
+
     <string name="reset_wallpaper">Redefinir papel de parede</string>
     <string name="reset_ringtone">Redefinir toque</string>
     <string name="reset_cache">Limpar cache</string>

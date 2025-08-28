@@ -214,4 +214,7 @@
 
     <string name="call_screen_feedback_1">Möchten Sie mehr Anpassungen</string>
     <string name="call_screen_feedback_2">Anrufbildschirm funktioniert nicht nach dem Festlegen als Anrufbildschirm</string>
+
+    <string name="slide_running">Diashow-Hintergrund läuft</string>
+    <string name="live_running">Live-Hintergrund läuft</string>
 </resources>

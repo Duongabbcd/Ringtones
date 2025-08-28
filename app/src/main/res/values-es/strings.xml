@@ -17,6 +17,9 @@
     <string name = "desc_3">Más información encontrada aquí</string>
     <string name = "high_light_3">Más información</string>
 
+    <string name="slide_running">El fondo de diapositivas se está ejecutando</string>
+    <string name="live_running">El fondo animado se está ejecutando</string>
+
     <string name="select_bg_value">Selecciona el fondo antes de probar.</string>
     <string name="select_avatar_value">Selecciona el avatar antes de probar.</string>
     <string name="select_icon_value">Selecciona el ícono antes de probar.</string>

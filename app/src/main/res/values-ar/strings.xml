@@ -215,4 +215,6 @@
     <string name="select_avatar_value">اختر الصورة الرمزية قبل الاختبار.</string>
     <string name="select_icon_value">اختر الأيقونة قبل الاختبار.</string>
 
+    <string name="slide_running">خلفية الشرائح قيد التشغيل</string>
+    <string name="live_running">الخلفية الحية قيد التشغيل</string>
 </resources>

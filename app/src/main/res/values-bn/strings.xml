@@ -216,4 +216,8 @@
     <string name="ringtone_2">রিংটোন রিসেট করতে ব্যর্থ</string>
     <string name="wallpaper_1">ওয়ালপেপার ডিফল্টে রিসেট করা হয়েছে</string>
     <string name="wallpaper_2">ওয়ালপেপার রিসেট করতে ব্যর্থ</string>
+
+    <string name="slide_running">স্লাইড ওয়ালপেপার চলছে</string>
+    <string name="live_running">লাইভ ওয়ালপেপার চলছে</string>
+
 </resources>

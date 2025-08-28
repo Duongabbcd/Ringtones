@@ -17,6 +17,10 @@
     <string name="desc_3">Tema Layar Panggilan Dinamis</string>
     <string name="high_light_3">Layar Panggilan</string>
 
+    <string name="slide_running">Wallpaper slide sedang berjalan</string>
+    <string name="live_running">Wallpaper hidup sedang berjalan</string>
+
+
     <string name="search_image">Cari Gambar</string>
     <string name="search_slide">Cari Slide</string>
     <string name="search_video">Cari Video</string>

@@ -60,6 +60,9 @@
     <string name="select_avatar_value">Выберите аватар перед тестированием.</string>
     <string name="select_icon_value">Выберите значок перед тестированием.</string>
 
+    <string name="slide_running">Слайд-обои запущены</string>
+    <string name="live_running">Живые обои запущены</string>
+
 
     <string name="fav_light_1">музыкальные жанры</string>
     <string name="fav_2">Выберите любимые обои</string>

@@ -17,6 +17,9 @@
     <string name="desc_3">Temi dinamici per schermata di chiamata</string>
     <string name="high_light_3">Schermata chiamata</string>
 
+    <string name="slide_running">Lo sfondo a scorrimento è in esecuzione</string>
+    <string name="live_running">Lo sfondo animato è in esecuzione</string>
+
     <string name="search_image">Cerca immagine</string>
     <string name="search_slide">Cerca diapositiva</string>
     <string name="search_video">Cerca video</string>

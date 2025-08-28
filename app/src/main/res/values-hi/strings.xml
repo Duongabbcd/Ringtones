@@ -17,6 +17,10 @@
     <string name="desc_3">डायनामिक कॉल स्क्रीन थीम</string>
     <string name="high_light_3">कॉल स्क्रीन</string>
 
+    <string name="slide_running">स्लाइड वॉलपेपर चल रहा है</string>
+    <string name="live_running">लाइव वॉलपेपर चल रहा है</string>
+
+
     <string name="select_bg_value">परीक्षण से पहले पृष्ठभूमि चुनें।</string>
     <string name="select_avatar_value">परीक्षण से पहले अवतार चुनें।</string>
     <string name="select_icon_value">परीक्षण से पहले आइकन चुनें।</string>
