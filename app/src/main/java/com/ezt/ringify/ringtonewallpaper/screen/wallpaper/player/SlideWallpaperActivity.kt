@@ -40,6 +40,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperView
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.reward.RewardBottomSheet
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper.setWallpaperFromUrl
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.WallpaperTarget
@@ -112,6 +113,12 @@ class SlideWallpaperActivity :
     private val addedWallpaperIds = mutableSetOf<Int>() // Track already added
     private var isOpenActivity = false
 
+    private var isFromSlideService = false
+
+    private val snapHelper: OneItemSnapHelper by lazy {
+        OneItemSnapHelper()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (RemoteConfig.BANNER_ALL == "0") {
@@ -126,7 +133,7 @@ class SlideWallpaperActivity :
             checkInternetConnected(isConnected)
         }
 
-        Log.d("PreviewLive", "savedInstanceState: $type and $wallpaperCategoryId")
+        Log.d(TAG, "savedInstanceState: $selectedType and $wallpaperCategoryId")
         if (savedInstanceState != null) {
             imageWallpaperIndex = savedInstanceState.getInt("wallpaper_index", 0)
         } else {
@@ -159,6 +166,18 @@ class SlideWallpaperActivity :
             appendNewRingtones(items)
         }
         wallpaperViewModel.subWallpaper1.observe(this) { items ->
+            appendNewRingtones(items)
+        }
+
+        wallpaperViewModel.singleWallpapers.observe(this) { items ->
+            appendNewRingtones(items)
+        }
+
+        wallpaperViewModel.slideWallpaper.observe(this) { items ->
+            appendNewRingtones(items)
+        }
+
+        wallpaperViewModel.premiumWallpapers.observe(this) { items ->
             appendNewRingtones(items)
         }
     }
@@ -233,6 +252,9 @@ class SlideWallpaperActivity :
 
             share.setOnClickListener {
                 val total = currentWallpaper.contents.size
+                if (currentWallpaper.contents.isEmpty()) {
+                    return@setOnClickListener
+                }
                 if (total == 1) {
                     checkPayBeforeNormalWallpaper {
                         val imageUrl = currentWallpaper.contents.first().url.full
@@ -261,6 +283,9 @@ class SlideWallpaperActivity :
 
             download.setOnClickListener {
                 val imageUrl = currentWallpaper.contents
+                if (imageUrl.isEmpty()) {
+                    return@setOnClickListener
+                }
                 if (imageUrl.size == 1) {
                     checkPayBeforeNormalWallpaper {
                         downloadWallpaper()
@@ -274,6 +299,9 @@ class SlideWallpaperActivity :
 
             wallpaper.setOnClickListener {
                 val imageUrl = currentWallpaper.contents
+                if (imageUrl.isEmpty()) {
+                    return@setOnClickListener
+                }
                 if (imageUrl.size == 1) {
                     checkPayBeforeNormalWallpaper {
                         val dialog = SetWallpaperDialog(this@SlideWallpaperActivity) { result ->
@@ -494,6 +522,7 @@ class SlideWallpaperActivity :
                 ComponentName(this@SlideWallpaperActivity, SlideshowWallpaperService::class.java)
             )
         }
+        isFromSlideService = false
         startActivity(intent)
     }
 
@@ -603,35 +632,20 @@ class SlideWallpaperActivity :
             }
             false
         }
-
+        snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
         // 🔑 Listen for swipe + snapping
         binding.horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-
-                    val rvCenter = recyclerView.width / 2
-                    var closestPos = RecyclerView.NO_POSITION
-                    var minDistance = Int.MAX_VALUE
-
-                    for (i in 0 until lm.childCount) {
-                        val child = lm.getChildAt(i) ?: continue
-                        val childCenter = (child.left + child.right) / 2
-                        val distance = kotlin.math.abs(childCenter - rvCenter)
-
-                        if (distance < minDistance) {
-                            minDistance = distance
-                            closestPos = lm.getPosition(child)
+                    val snapView = snapHelper.findSnapView(lm)
+                    snapView?.let {
+                        val newPos = lm.getPosition(it)
+                        if (newPos != RecyclerView.NO_POSITION && newPos != imageWallpaperIndex) {
+                            imageWallpaperIndex = newPos
+                            setUpNewPlayer(newPos, "onScrollStateChanged")
+                            playSlideWallpaperAdapter.setCurrentPlayingPosition(newPos)
                         }
-                    }
-                    Log.d(
-                        TAG,
-                        "Idle → new index = $isOpenActivity and $imageWallpaperIndex and $closestPos"
-                    )
-                    if (closestPos != RecyclerView.NO_POSITION && closestPos != imageWallpaperIndex) {
-                        imageWallpaperIndex = closestPos
-                        setUpNewPlayer(imageWallpaperIndex, "onScrollStateChanged")
-                        playSlideWallpaperAdapter.setCurrentPlayingPosition(imageWallpaperIndex)
                     }
                 }
             }
@@ -678,18 +692,24 @@ class SlideWallpaperActivity :
 
 
     private fun setUpNewPlayer(position: Int, tag: String = "") {
-        val newWallpaper = allWallpapers[position]
+        if (position in allWallpapers.indices) {
+            currentWallpaper = allWallpapers[position]
+            val newWallpaper = allWallpapers[position]
 
-        currentWallpaper = newWallpaper
-        RingtonePlayerRemote.currentPlayingWallpaper = currentWallpaper
-        Log.d(TAG, "setUpNewPlayer: position= $position wallpaper= ${currentWallpaper.id} ($tag)")
+            currentWallpaper = newWallpaper
+            RingtonePlayerRemote.currentPlayingWallpaper = currentWallpaper
+            Log.d(
+                TAG,
+                "setUpNewPlayer: position= $position wallpaper= ${currentWallpaper.id} ($tag)"
+            )
 
-        if (currentWallpaper.contents.size > 1) {
-            favouriteViewModel.loadSlideWallpaperById(currentWallpaper.id)
-        } else {
-            favouriteViewModel.loadWallpaperById(currentWallpaper.id)
+            if (currentWallpaper.contents.size > 1) {
+                favouriteViewModel.loadSlideWallpaperById(currentWallpaper.id)
+            } else {
+                favouriteViewModel.loadWallpaperById(currentWallpaper.id)
+            }
+            observeRingtoneFromDb()
         }
-        observeRingtoneFromDb()
     }
 
 
@@ -800,6 +820,26 @@ class SlideWallpaperActivity :
                             wallpaperViewModel.loadNewWallpapers()
                         }
 
+                        75 -> {
+                            when (selectedType) {
+                                3 -> {
+                                    wallpaperViewModel.loadSingleWallpaper()
+                                }
+
+                                2 -> {
+                                    wallpaperViewModel.loadSlideWallpaper()
+                                }
+
+                                4 -> {
+                                    wallpaperViewModel.loadPremiumVideoWallpaper()
+                                }
+
+                                else -> {
+                                    wallpaperViewModel.loadSingleWallpaper()
+                                }
+                            }
+                        }
+
                         else -> {
                             wallpaperViewModel.loadSubWallpapers1(wallpaperCategoryId)
                         }
@@ -827,6 +867,26 @@ class SlideWallpaperActivity :
                 wallpaperViewModel.loadNewWallpapers()
             }
 
+            75 -> {
+                when (selectedType) {
+                    3 -> {
+                        wallpaperViewModel.loadSingleWallpaper()
+                    }
+
+                    2 -> {
+                        wallpaperViewModel.loadSlideWallpaper()
+                    }
+
+                    4 -> {
+                        wallpaperViewModel.loadPremiumVideoWallpaper()
+                    }
+
+                    else -> {
+                        wallpaperViewModel.loadSingleWallpaper()
+                    }
+                }
+            }
+
             else -> {
                 wallpaperViewModel.loadSubWallpapers1(wallpaperCategoryId)
             }
@@ -843,6 +903,27 @@ class SlideWallpaperActivity :
         RewardAds.initRewardAds(this)
         binding.horizontalWallpapers.isEnabled = true
         binding.horizontalWallpapers.suppressLayout(false)
+
+        if (isFromSlideService) {
+            isFromSlideService = false
+            if (isMySlideWallpaperRunning()) {
+                try {
+                    Log.d(TAG, "My slide wallpaper is currently active.")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Toast failed: ${e.message}")
+                }
+            } else {
+                Log.d(TAG, "My slide wallpaper is NOT active.")
+            }
+        }
+    }
+
+    private fun isMySlideWallpaperRunning(): Boolean {
+        val wallpaperManager = WallpaperManager.getInstance(this)
+        val info = wallpaperManager.wallpaperInfo
+
+        return info?.packageName == packageName &&
+                info.serviceName == SlideshowWallpaperService::class.java.name
     }
 
     override fun onPause() {

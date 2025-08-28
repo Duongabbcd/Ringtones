@@ -190,6 +190,16 @@ class PlaySlideWallpaperAdapter(
             slideshowHandler = Handler(Looper.getMainLooper())
             currentImageIndex = 0
 
+            Glide.with(context)
+                .load(R.drawable.item_wallpaper_default)
+                .error(R.drawable.item_wallpaper_default)
+                .into(binding.wallpaper)
+
+            Glide.with(context)
+                .load(R.drawable.item_wallpaper_default)
+                .error(R.drawable.item_wallpaper_default)
+                .into(binding.wallpaper2)
+
             slideshowRunnable = object : Runnable {
                 override fun run() {
                     if (currentImageIndex >= imageUrls.size) currentImageIndex = 0

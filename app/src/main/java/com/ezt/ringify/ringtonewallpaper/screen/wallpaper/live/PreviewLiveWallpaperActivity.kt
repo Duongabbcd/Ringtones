@@ -36,6 +36,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperView
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.reward.RewardBottomSheet
+import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.OneItemSnapHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneHelper
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.bottomsheet.DownloadWallpaperBottomSheet
@@ -87,6 +88,11 @@ class PreviewLiveWallpaperActivity :
     private var duration = 0L
     private var isOpenActivity = false
     private lateinit var handler: Handler
+    private var isFromLiveService = false
+
+    private val snapHelper: OneItemSnapHelper by lazy {
+        OneItemSnapHelper()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,6 +219,9 @@ class PreviewLiveWallpaperActivity :
     private fun setupButtons() {
         binding.apply {
             share.setOnClickListener {
+                if (currentWallpaper.contents.isEmpty()) {
+                    return@setOnClickListener
+                }
                 checkPayBeforeUsingVideoWallpaper {
                     val videoUrl = currentWallpaper.contents.first().url.full
                     val shareIntent = Intent(Intent.ACTION_SEND).apply {
@@ -225,12 +234,18 @@ class PreviewLiveWallpaperActivity :
             }
 
             download.setOnClickListener {
+                if (currentWallpaper.contents.isEmpty()) {
+                    return@setOnClickListener
+                }
                 checkPayBeforeUsingVideoWallpaper {
                     downloadVideoWallpaper()
                 }
             }
 
             wallpaper.setOnClickListener {
+                if (currentWallpaper.contents.isEmpty()) {
+                    return@setOnClickListener
+                }
                 checkPayBeforeUsingVideoWallpaper {
                     val videoUrl = currentWallpaper.contents.first().url.full
                     setUpVideoByCondition(videoUrl)
@@ -305,6 +320,7 @@ class PreviewLiveWallpaperActivity :
             )
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
+        isFromLiveService = false
         context.startActivity(intent)
     }
 
@@ -393,37 +409,20 @@ class PreviewLiveWallpaperActivity :
             false
         }
 
+        snapHelper.attachToRecyclerView(binding.horizontalWallpapers)
         // 🔑 Listen for swipe + snapping
         binding.horizontalWallpapers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-
-                    val rvCenter = recyclerView.width / 2
-                    var closestPos = RecyclerView.NO_POSITION
-                    var minDistance = Int.MAX_VALUE
-
-                    for (i in 0 until lm.childCount) {
-                        val child = lm.getChildAt(i) ?: continue
-                        val childCenter = (child.left + child.right) / 2
-                        val distance = kotlin.math.abs(childCenter - rvCenter)
-
-                        if (distance < minDistance) {
-                            minDistance = distance
-                            closestPos = lm.getPosition(child)
+                    val snapView = snapHelper.findSnapView(lm)
+                    snapView?.let {
+                        val newPos = lm.getPosition(it)
+                        if (newPos != RecyclerView.NO_POSITION && newPos != liveWallpaperIndex) {
+                            liveWallpaperIndex = newPos
+                            setUpNewPlayer(newPos, "onScrollStateChanged")
+                            playSlideWallpaperAdapter.setCurrentPlayingPosition(newPos)
                         }
-                    }
-
-                    if (closestPos != RecyclerView.NO_POSITION && closestPos != liveWallpaperIndex) {
-                        Log.d(
-                            TAG,
-                            "Idle → new index = $isOpenActivity and $liveWallpaperIndex and $closestPos"
-                        )
-                        val selectedIndex = if (isOpenActivity) liveWallpaperIndex else closestPos
-                        isOpenActivity = false
-
-                        setUpNewPlayer(selectedIndex, tag = "idleScroll")
-                        playSlideWallpaperAdapter.setCurrentPlayingPosition(selectedIndex)
                     }
                 }
             }
@@ -435,21 +434,40 @@ class PreviewLiveWallpaperActivity :
 
     // Helper function to center item (used at startup or programmatic jumps)
     private fun centerItem(position: Int) {
-        val lm = binding.horizontalWallpapers.layoutManager as? LinearLayoutManager ?: return
-        val child =
-            binding.horizontalWallpapers.findViewHolderForAdapterPosition(position)?.itemView
-
-        if (child == null) {
-            lm.scrollToPositionWithOffset(position, 0)
-            binding.horizontalWallpapers.post { centerItem(position) }
+        val rv = binding.horizontalWallpapers
+        val lm = rv.layoutManager as? LinearLayoutManager
+        println("centerItem 0: $lm")
+        if (lm == null) {
             return
         }
 
-        val itemWidth = child.width
-        val recyclerWidth = binding.horizontalWallpapers.width
-        val offset = (recyclerWidth - itemWidth) / 2
+        val rvCenter = rv.paddingLeft + (rv.width - rv.paddingLeft - rv.paddingRight) / 2
 
-        lm.scrollToPositionWithOffset(position, offset)
+        val child = lm.findViewByPosition(position)
+
+        if (child == null) {
+            // Step 1: Bring it into view without offset
+            lm.scrollToPositionWithOffset(position, 0)
+
+            // Step 2: Re-center *after* layout has happened
+            rv.post { centerItem(position) }
+            return
+        }
+
+        // Step 3: Calculate decorated width and center properly
+        val params = child.layoutParams as RecyclerView.LayoutParams
+        val childWidth =
+            lm.getDecoratedMeasuredWidth(child) + params.leftMargin + params.rightMargin
+        val childCenter = lm.getDecoratedLeft(child) + childWidth / 2
+
+        val offset = rvCenter - childCenter
+        println("centerItem 1: $child and $offset")
+        if (position in listOf(0, 1)) {
+            binding.horizontalWallpapers.smoothScrollToPosition(position)
+        } else {
+            lm.scrollToPositionWithOffset(position, offset)
+        }
+
     }
 
 
@@ -560,6 +578,27 @@ class PreviewLiveWallpaperActivity :
         }
         binding.horizontalWallpapers.isEnabled = true
         binding.horizontalWallpapers.suppressLayout(false)
+
+        if (isFromLiveService) {
+            isFromLiveService = false
+            if (isMyLiveWallpaperRunning()) {
+                Log.d(TAG, "My live wallpaper is currently active.")
+                try {
+                } catch (e: Exception) {
+                    Log.e(TAG, "Toast failed: ${e.message}")
+                }
+            } else {
+                Log.d(TAG, "My live wallpaper is NOT active.")
+            }
+        }
+    }
+
+    private fun isMyLiveWallpaperRunning(): Boolean {
+        val wallpaperManager = WallpaperManager.getInstance(this)
+        val info = wallpaperManager.wallpaperInfo
+
+        return info?.packageName == packageName &&
+                info.serviceName == LiveVideoWallpaperService::class.java.name
     }
 
     override fun onPause() {

@@ -235,4 +235,7 @@
     <string name="select_avatar_value">Select avatar before testing.</string>
     <string name="select_icon_value">Select icon before testing.</string>
 
+    <string name="slide_running">Slide wallpaper is running</string>
+    <string name="live_running">Live wallpaper is running</string>
+
 </resources>
