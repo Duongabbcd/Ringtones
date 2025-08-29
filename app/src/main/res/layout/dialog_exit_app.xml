@@ -4,14 +4,17 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_20sdp"
     android:background="@drawable/background_radius_16"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:orientation="vertical"
+    android:layoutDirection="ltr"
+    android:textDirection="locale"
     android:paddingHorizontal="@dimen/_20sdp"
     android:paddingBottom="@dimen/_16sdp">
 
     <TextView
         style="@style/CustomTextStyleSemiBold16sp"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_200sdp"
+        android:maxLines="2"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
         android:gravity="center"
