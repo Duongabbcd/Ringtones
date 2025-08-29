@@ -12,6 +12,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPremiumWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
@@ -23,6 +24,7 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperA
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.getValue
 
 
@@ -30,10 +32,20 @@ import kotlin.getValue
 class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     ActivityPremiumWallpaperBinding::inflate
 ) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
+
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val liveAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "preview_live_wallpaper_screen",
+                "premium_wallpaper_screen",
+                duration
+            )
             Log.d(TAG, "Wallpaper: $it")
             startActivity(
                 Intent(
@@ -47,6 +59,12 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
 
     private val singleAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "slide_wallpaper_screen",
+                "premium_wallpaper_screen",
+                duration
+            )
             Log.d(TAG, "Wallpaper: $it")
             startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
                 putExtra("wallpaperCategoryId", 75)
@@ -56,6 +74,12 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
     }
     private val slideAdapter: WallpaperAdapter by lazy {
         WallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "slide_wallpaper_screen",
+                "premium_wallpaper_screen",
+                duration
+            )
             Log.d(TAG, "Wallpaper: $it")
             startActivity(Intent(this, SlideWallpaperActivity::class.java).apply {
                 putExtra("wallpaperCategoryId", 75)
@@ -69,7 +93,7 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
-
+        now = System.currentTimeMillis()
         loadBanner(this@PremiumWallpaperActivity, BANNER_HOME)
         binding.apply {
             backBtn.setOnClickListener {
@@ -95,6 +119,12 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
 
 
             openAll1.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "preview_wallpaper_screen",
+                    "premium_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@PremiumWallpaperActivity,
@@ -106,6 +136,12 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             }
 
             openAll2.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "preview_wallpaper_screen",
+                    "premium_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@PremiumWallpaperActivity,
@@ -117,6 +153,12 @@ class PremiumWallpaperActivity : BaseActivity<ActivityPremiumWallpaperBinding>(
             }
 
             openAll3.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "preview_wallpaper_screen",
+                    "premium_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@PremiumWallpaperActivity,

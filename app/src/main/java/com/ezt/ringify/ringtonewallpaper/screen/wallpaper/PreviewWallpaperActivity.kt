@@ -16,6 +16,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityPreviewWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteWallpaperViewModel
@@ -28,10 +29,15 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperA
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PreviewWallpaperActivity :
     BaseActivity<ActivityPreviewWallpaperBinding>(ActivityPreviewWallpaperBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
+
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
     private val favouriteViewModel: FavouriteWallpaperViewModel by viewModels()
@@ -40,6 +46,12 @@ class PreviewWallpaperActivity :
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter { wallpaper ->
             if (selectedType in listOf<Int>(4, -3)) {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "preview_live_wallpaper_screen",
+                    "preview_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(this, PreviewLiveWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", categoryId)
@@ -47,6 +59,12 @@ class PreviewWallpaperActivity :
                     }
                 )
             } else {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "search_wallpaper_screen",
+                    "slide_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(this, SlideWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", categoryId)
@@ -70,6 +88,7 @@ class PreviewWallpaperActivity :
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
+        now = System.currentTimeMillis()
         loadBanner(this@PreviewWallpaperActivity)
 
         binding.apply {

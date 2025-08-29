@@ -91,9 +91,9 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>(ActivityLanguageB
                     "changeLanguageDone: $selectedLanguage and $selectedLanguageName"
                 )
                 if(!start) {
-                    startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                     val duration = System.currentTimeMillis() - now
                     analyticsLogger.logScreenGo("setting_screen", "language_screen", duration)
+                    startActivity(Intent(this@LanguageActivity, SettingActivity::class.java))
                 } else {
                     if (RemoteConfig.INTER_LANGUAGE != "0") {
                         InterAds.showPreloadInter(

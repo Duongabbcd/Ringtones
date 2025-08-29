@@ -17,6 +17,7 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityAllWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemCategoryWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
@@ -28,13 +29,24 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
 
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAllWallpaperBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
+
     private val categoryViewModel: CategoryViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val categoryWallpaperAdapter: CategoryWallpaperAdapter by lazy {
         CategoryWallpaperAdapter { category->
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "preview_wallpaper_screen",
+                "all_wallpaper_screen",
+                duration
+            )
             startActivity(Intent(this, PreviewWallpaperActivity::class.java).apply {
                 Log.d(TAG, "AllWallpaperActivity: $category")
                 putExtra("wallpaperCategoryId", category.id)
@@ -48,7 +60,7 @@ class AllWallpaperActivity: BaseActivity<ActivityAllWallpaperBinding>(ActivityAl
             binding.frBanner.root.gone()
         }
         MainActivity.loadBanner(this, BANNER_HOME)
-
+        now = System.currentTimeMillis()
         binding.apply {
             backBtn.setOnClickListener {
                 SearchRingtoneActivity.backToScreen(this@AllWallpaperActivity, "INTER_WALLPAPER")

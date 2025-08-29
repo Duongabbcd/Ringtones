@@ -14,6 +14,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityLiveWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
@@ -24,15 +25,26 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
     ActivityLiveWallpaperBinding::inflate
 ) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
+
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val wallpaperViewModel: WallpaperViewModel by viewModels()
     private val wallpaperAdapter: GridWallpaperAdapter by lazy {
         GridWallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "preview_live_wallpaper_screen",
+                "live_wallpaper_screen",
+                duration
+            )
             Log.d(TAG, "Wallpaper: $it")
             startActivity(
                 Intent(
@@ -53,6 +65,7 @@ class LiveWallpaperActivity : BaseActivity<ActivityLiveWallpaperBinding>(
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
+        now = System.currentTimeMillis()
 
         loadBanner(this)
         sortOrder = ""

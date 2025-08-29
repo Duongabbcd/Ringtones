@@ -23,6 +23,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenBackgroundBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
@@ -47,11 +48,16 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.getValue
 
 @AndroidEntryPoint
 class CallScreenEditorActivity :
     BaseActivity<ActivityCallscreenBackgroundBinding>(ActivityCallscreenBackgroundBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
+
     private val contentViewModel: ContentViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
 
@@ -223,6 +229,7 @@ class CallScreenEditorActivity :
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
+        now = System.currentTimeMillis()
         loadBanner(this)
         Glide.with(this@CallScreenEditorActivity).load(avatarUrl)
             .placeholder(R.drawable.default_cs_avt).error(R.drawable.default_cs_avt)
@@ -349,6 +356,12 @@ class CallScreenEditorActivity :
             }
 
             previewBtn.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "preview_callscreen_screen",
+                    "call_screen_editor_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@CallScreenEditorActivity,

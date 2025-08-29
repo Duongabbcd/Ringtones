@@ -22,8 +22,10 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.player.RingtoneActivity
@@ -39,12 +41,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.getValue
 import kotlin.toString
 
 @AndroidEntryPoint
 class SearchRingtoneActivity :
     BaseActivity<ActivitySearchRingtoneBinding>(ActivitySearchRingtoneBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val ringtoneTrendingAdapter: TrendingAdapter by lazy {
         TrendingAdapter()
@@ -52,8 +58,12 @@ class SearchRingtoneActivity :
 
     private val ringToneAdapter: RingtoneAdapter by lazy {
         RingtoneAdapter { ringTone ->
+            val duration = System.currentTimeMillis() - MainActivity.Companion.now
+            analyticsLogger.logScreenGo("play_ringtone_screen", "search_ringtone_screen", duration)
+
             RingtonePlayerRemote.setCurrentRingtone(ringTone)
             startActivity(Intent(this, RingtoneActivity::class.java))
+
         }
     }
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
@@ -66,6 +76,7 @@ class SearchRingtoneActivity :
         }
 
         loadBanner(this, BANNER_HOME)
+        now = System.currentTimeMillis()
         binding.apply {
             backBtn.setOnClickListener {
                 backToScreen(this@SearchRingtoneActivity)

@@ -11,24 +11,37 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityRingtoneCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category.Companion.EMPTY_CATEGORY
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.now
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.adapter.CategoryDetailAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity.Companion.backToScreen
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RingtoneCategoryActivity: BaseActivity<ActivityRingtoneCategoryBinding>(ActivityRingtoneCategoryBinding::inflate){
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+
     private val categoryViewModel: CategoryViewModel by viewModels()
     private val favouriteViewModel: FavouriteRingtoneViewModel by viewModels()
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
     private val categoryDetailAdapter: CategoryDetailAdapter by lazy {
         CategoryDetailAdapter { category ->
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "filter_ringtone_screen",
+                "ringtone_category_screen",
+                duration
+            )
+
             startActivity(Intent(this, FilteredRingtonesActivity::class.java).apply {
                 putExtra("categoryId", category.id)
                 putExtra("categoryName", category.name)

@@ -16,6 +16,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivitySearchWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.TagViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
@@ -33,11 +34,15 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     ActivitySearchWallpaperBinding::inflate
 ) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
 
     private val wallpaperViewModel: WallpaperViewModel by viewModels()
     private val tagViewModel: TagViewModel by viewModels()
@@ -78,18 +83,36 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     // Search result adapters
     private val searchWallpaperAdapter1: WallpaperAdapter by lazy {
         WallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "search_wallpaper_screen",
+                "slide_wallpaper_screen",
+                duration
+            )
             startActivity(Intent(this@SearchWallpaperActivity, SlideWallpaperActivity::class.java))
         }
     }
 
     private val searchWallpaperAdapter2: WallpaperAdapter by lazy {
         WallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "search_wallpaper_screen",
+                "slide_wallpaper_screen",
+                duration
+            )
             startActivity(Intent(this@SearchWallpaperActivity, SlideWallpaperActivity::class.java))
         }
     }
 
     private val searchWallpaperAdapter3: WallpaperAdapter by lazy {
         WallpaperAdapter {
+            val duration = System.currentTimeMillis() - now
+            analyticsLogger.logScreenGo(
+                "search_wallpaper_screen",
+                "preview_live_wallpaper_screen",
+                duration
+            )
             startActivity(
                 Intent(
                     this@SearchWallpaperActivity,
@@ -107,7 +130,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
-
+        now = System.currentTimeMillis()
         loadBanner(this, BANNER_HOME)
         tagViewModel.loadAllTags()
         binding.apply {
@@ -314,6 +337,12 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             }
 
             openAll1.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "search_wallpaper_screen",
+                    "preview_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@SearchWallpaperActivity,
@@ -325,6 +354,12 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             }
 
             openAll2.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "search_wallpaper_screen",
+                    "preview_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@SearchWallpaperActivity,
@@ -336,6 +371,12 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             }
 
             openAll3.setOnClickListener {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo(
+                    "search_wallpaper_screen",
+                    "preview_wallpaper_screen",
+                    duration
+                )
                 startActivity(
                     Intent(
                         this@SearchWallpaperActivity,

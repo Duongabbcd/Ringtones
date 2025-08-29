@@ -14,9 +14,11 @@ import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityFilteredCategoryBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Ringtone
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.FavouriteRingtoneViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.bottomsheet.SortBottomSheet
@@ -27,15 +29,23 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
     ActivityFilteredCategoryBinding::inflate
 ) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
+
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val favourite: FavouriteRingtoneViewModel by viewModels()
     private val ringtoneAdapter : RingtoneAdapter by lazy {
         RingtoneAdapter { ringTone ->
+            val duration = System.currentTimeMillis() - MainActivity.Companion.now
+            analyticsLogger.logScreenGo("play_ringtone_screen", "filter_category_screen", duration)
+
             RingtonePlayerRemote.setCurrentRingtone(ringTone)
             startActivity(Intent(this, RingtoneActivity::class.java).apply {
                 putExtra("categoryId", categoryId)
@@ -64,7 +74,7 @@ class FilteredRingtonesActivity : BaseActivity<ActivityFilteredCategoryBinding>(
 
         loadBanner(this@FilteredRingtonesActivity, BANNER_HOME)
         sortOrder = "name+asc"
-
+        now = System.currentTimeMillis()
         dialog = SortBottomSheet(this@FilteredRingtonesActivity) { newSort ->
             println("SortBottomSheet: $newSort and $sortOrder")
             // Reset pagination state before loading sorted data

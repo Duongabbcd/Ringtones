@@ -10,6 +10,7 @@ import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
 import com.ezt.ringify.ringtonewallpaper.base.BaseActivity
 import com.ezt.ringify.ringtonewallpaper.databinding.ActivityCallscreenAlertBinding
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashType
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.FlashVibrationManager
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.VibrationType
@@ -17,9 +18,13 @@ import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.type.AllTyp
 import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.loadBanner
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.search.SearchRingtoneActivity
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import javax.inject.Inject
 
 class CallScreenAlertActivity :
     BaseActivity<ActivityCallscreenAlertBinding>(ActivityCallscreenAlertBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+    private var now = 0L
 
     private lateinit var prefs: SharedPreferences
     private lateinit var flashVibrationManager: FlashVibrationManager
@@ -40,6 +45,7 @@ class CallScreenAlertActivity :
         if (RemoteConfig.BANNER_ALL == "0") {
             binding.frBanner.root.gone()
         }
+        now = System.currentTimeMillis()
         loadBanner(this, BANNER_HOME)
         loadInitialSettings()
 
@@ -119,6 +125,9 @@ class CallScreenAlertActivity :
     }
 
     private fun openTypeSelector(alertType: String, currentValue: String) {
+        val duration = System.currentTimeMillis() - now
+        analyticsLogger.logScreenGo("all_type_alert_screen", "call_screen_alert_screen", duration)
+
         val intent = Intent(this, AllTypeAlertActivity::class.java).apply {
             putExtra("alertType", alertType)
             putExtra("currentValue", currentValue)
