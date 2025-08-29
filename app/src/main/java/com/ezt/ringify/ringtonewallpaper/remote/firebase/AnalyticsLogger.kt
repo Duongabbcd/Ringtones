@@ -26,4 +26,12 @@ class AnalyticsLogger @Inject constructor(
         }
         firebaseAnalytics.logEvent("screen_go", bundle)
     }
+
+    fun logScreenExit(prevScreenName: String, prevScreenDuration: Long) {
+        val bundle = Bundle().apply {
+            putString("prev_screen_name", prevScreenName)
+            putLong("prev_screen_duration", prevScreenDuration)
+        }
+        firebaseAnalytics.logEvent("screen_exit", bundle)
+    }
 }

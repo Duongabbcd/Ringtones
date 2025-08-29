@@ -32,11 +32,14 @@ class TagViewModel @Inject constructor(
     val allTags1 = mutableListOf<Tag>()
 
 
-    fun loadAllTags() = viewModelScope.launch {
+    fun loadAllTags(isReset: Boolean = false) = viewModelScope.launch {
         println("loadWallpaperCategories 123: $hasMorePages1 and ${_loading.value}")
         if (!hasMorePages1 || _loading.value == true) return@launch
         _loading.value = true
         try {
+            if (isReset) {
+                allTags1.clear()
+            }
             val result = repository.getAllTags()
             allTags1.addAll(result.data.data)
             println("loadWallpaperCategories 123: $allTags1")

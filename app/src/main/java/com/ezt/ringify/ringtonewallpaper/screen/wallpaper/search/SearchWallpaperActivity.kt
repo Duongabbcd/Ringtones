@@ -109,7 +109,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
         }
 
         loadBanner(this, BANNER_HOME)
-
+        tagViewModel.loadAllTags()
         binding.apply {
             // Back button
             backBtn.setOnClickListener {
@@ -276,7 +276,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
 
                     val query = s.toString()
                     if (query.isEmpty()) {
-                        tagViewModel.loadAllTags()
+                        tagViewModel.loadAllTags(true)
                     } else {
                         tagViewModel.searchTag(query)
                     }
@@ -309,7 +309,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             closeButton.setOnClickListener {
                 searchText.setText("")
                 displayByCondition("")
-                tagViewModel.loadAllTags()
+                tagViewModel.loadAllTags(isReset = true)
                 showTrending()
             }
 
@@ -390,7 +390,6 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            tagViewModel.loadAllTags()
             binding.noInternet.root.gone()
         }
     }

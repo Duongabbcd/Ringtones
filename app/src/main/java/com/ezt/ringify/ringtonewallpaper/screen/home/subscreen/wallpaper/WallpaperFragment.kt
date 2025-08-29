@@ -12,9 +12,11 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentWallpaperBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Wallpaper
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.WallpaperViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.now
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.AllWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.PreviewWallpaperActivity
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.adapter.WallpaperAdapter
@@ -27,11 +29,14 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.formatWithComma
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.getValue
 
 @AndroidEntryPoint
 class WallpaperFragment :
     BaseFragment<FragmentWallpaperBinding>(FragmentWallpaperBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
 
     private val wallPaperViewModel: WallpaperViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
@@ -43,7 +48,10 @@ class WallpaperFragment :
             withSafeContext { ctx ->
                 startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
                     putExtra("wallpaperCategoryId", -2)
-                })
+                }).also {
+                    val duration = System.currentTimeMillis() - now
+                    analyticsLogger.logScreenGo("slide_wallpaper_screen", "main_screen", duration)
+                }
             }
         }
     }
@@ -53,6 +61,9 @@ class WallpaperFragment :
             withSafeContext { ctx ->
                 startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
                     putExtra("wallpaperCategoryId", -1)
+                }.also {
+                    val duration = System.currentTimeMillis() - now
+                    analyticsLogger.logScreenGo("slide_wallpaper_screen", "main_screen", duration)
                 })
             }
         }
@@ -89,6 +100,13 @@ class WallpaperFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", -2)
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "preview_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
                     })
                 }
             }
@@ -96,6 +114,13 @@ class WallpaperFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", -1)
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "preview_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
                     })
                 }
             }
@@ -104,6 +129,13 @@ class WallpaperFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", resultList[0])
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "preview_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
                     })
                 }
             }
@@ -111,6 +143,13 @@ class WallpaperFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", resultList[1])
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "preview_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
                     })
                 }
             }
@@ -119,6 +158,13 @@ class WallpaperFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, PreviewWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", resultList[2])
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "preview_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
                     })
                 }
             }
@@ -146,13 +192,23 @@ class WallpaperFragment :
 
             premium.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, PremiumWallpaperActivity::class.java))
+                    startActivity(Intent(ctx, PremiumWallpaperActivity::class.java).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "premium_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
+                    })
                 }
             }
 
             categories.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, AllWallpaperActivity::class.java))
+                    startActivity(Intent(ctx, AllWallpaperActivity::class.java).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo("all_wallpaper_screen", "main_screen", duration)
+                    })
                 }
             }
 
@@ -160,13 +216,27 @@ class WallpaperFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, FavouriteWallpaperActivity::class.java).apply {
                         putExtra("wallpaperCategoryId", -3)
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "favourite_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
                     })
                 }
             }
 
             live.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, LiveWallpaperActivity::class.java))
+                    startActivity(Intent(ctx, LiveWallpaperActivity::class.java).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "live_wallpaper_screen",
+                            "main_screen",
+                            duration
+                        )
+                    })
                 }
             }
 
@@ -379,6 +449,9 @@ class WallpaperFragment :
             withSafeContext { ctx ->
                 startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
                     putExtra("wallpaperCategoryId", resultList[0])
+                }.also {
+                    val duration = System.currentTimeMillis() - now
+                    analyticsLogger.logScreenGo("slide_wallpaper_screen", "main_screen", duration)
                 })
             }
         }
@@ -388,6 +461,9 @@ class WallpaperFragment :
             withSafeContext { ctx ->
                 startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
                     putExtra("wallpaperCategoryId", resultList[1])
+                }.also {
+                    val duration = System.currentTimeMillis() - now
+                    analyticsLogger.logScreenGo("slide_wallpaper_screen", "main_screen", duration)
                 })
             }
         }
@@ -397,6 +473,9 @@ class WallpaperFragment :
             withSafeContext { ctx ->
                 startActivity(Intent(ctx, SlideWallpaperActivity::class.java).apply {
                     putExtra("wallpaperCategoryId", resultList[2])
+                }.also {
+                    val duration = System.currentTimeMillis() - now
+                    analyticsLogger.logScreenGo("slide_wallpaper_screen", "main_screen", duration)
                 })
             }
         }

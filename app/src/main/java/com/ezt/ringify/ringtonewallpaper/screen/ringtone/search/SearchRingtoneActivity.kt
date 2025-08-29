@@ -140,6 +140,14 @@ class SearchRingtoneActivity :
                 }
             })
 
+            trendingRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    if (newState != RecyclerView.SCROLL_STATE_IDLE) {
+                        this@SearchRingtoneActivity.hideKeyBoard(binding.searchText)
+                    }
+                }
+            })
+
             closeButton.setOnClickListener {
                 searchText.setText("")
                 displayByCondition("")
@@ -199,7 +207,7 @@ class SearchRingtoneActivity :
             binding.noInternet.root.visible()
         } else {
             binding.origin.visible()
-            ringtoneViewModel.loadTrending()
+            ringtoneViewModel.loadTrending(limit = 30)
             binding.noInternet.root.gone()
         }
     }

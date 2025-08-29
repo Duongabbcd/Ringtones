@@ -45,6 +45,7 @@ import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentCallscreenBinding
 import com.ezt.ringify.ringtonewallpaper.databinding.ItemCallscreenBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.CallScreenItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ContentItem
 import com.ezt.ringify.ringtonewallpaper.remote.model.ImageContent
@@ -52,6 +53,7 @@ import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CallScreenViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.ContentViewModel
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.alert.CallScreenAlertActivity
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.subscreen.edit.CallScreenEditorActivity
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.now
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.CacheUtil
 import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.live.PlayerManager
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
@@ -62,11 +64,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import javax.inject.Inject
 import kotlin.apply
 
 @AndroidEntryPoint
 class CallScreenFragment :
     BaseFragment<FragmentCallscreenBinding>(FragmentCallscreenBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
 
     private val callScreenViewModel: CallScreenViewModel by viewModels()
     private val contentViewModel: ContentViewModel by viewModels()
@@ -247,14 +252,20 @@ class CallScreenFragment :
                 withSafeContext {  ctx ->
                     startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
                         putExtra("editorType", 1)
-                    })
+                    }).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo("call_screen_editor", "main_screen", duration)
+                    }
                 }
             }
             avatarCs.setOnClickListener {
                 withSafeContext {  ctx ->
                     startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
                         putExtra("editorType", 2)
-                    })
+                    }).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo("call_screen_editor", "main_screen", duration)
+                    }
                 }
             }
 
@@ -262,13 +273,19 @@ class CallScreenFragment :
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, CallScreenEditorActivity::class.java).apply {
                         putExtra("editorType", 3)
-                    })
+                    }).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo("call_screen_editor", "main_screen", duration)
+                    }
                 }
             }
 
             alertCs.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, CallScreenAlertActivity::class.java))
+                    startActivity(Intent(ctx, CallScreenAlertActivity::class.java)).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo("call_screen_alert", "main_screen", duration)
+                    }
                 }
             }
         }

@@ -86,11 +86,11 @@ class RingtoneViewModel @Inject constructor(
         }
     }
 
-    fun loadTrending() = viewModelScope.launch {
+    fun loadTrending(limit: Int = 15, isReset: Boolean = true) = viewModelScope.launch {
         if (!hasMorePages2 || _loading.value ==  true ) return@launch
         _loading.value = true
         try {
-            val result = repository.fetchTrendingRingtones(currentPage2)
+            val result = repository.fetchTrendingRingtones(currentPage2, limit = limit)
 
             hasMorePages2 = result.data.nextPageUrl != null
             currentPage2++

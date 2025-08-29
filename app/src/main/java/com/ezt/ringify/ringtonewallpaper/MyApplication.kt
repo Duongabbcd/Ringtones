@@ -7,14 +7,19 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import com.admob.max.dktlibrary.application.AdsApplication
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import com.ezt.ringify.ringtonewallpaper.utils.Common
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
 class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+
     private var activityReferences = 0
     private var isActivityChangingConfigurations = false
     private val activityStartTimes = mutableMapOf<String, Long>()
@@ -69,10 +74,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
                 val durationMs = System.currentTimeMillis() - startTime
                 Log.d("onActivityStopped", "$name was active for ${durationMs}ms")
                 // Optionally, send to Firebase:
-                Bundle().apply {
-                    putString("activity_name", name)
-                    putLong("duration_ms", durationMs)
-                }
+                analyticsLogger.logScreenExit(name, durationMs)
             }
         }
     }
@@ -89,10 +91,7 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
             val durationMs = System.currentTimeMillis() - startTime
             Log.d("onActivityDestroyed", "$name was active for ${durationMs}ms")
             // Optionally, send to Firebase:
-            Bundle().apply {
-                putString("activity_name", name)
-                putLong("duration_ms", durationMs)
-            }
+            analyticsLogger.logScreenExit(name, durationMs)
         }
     }
 

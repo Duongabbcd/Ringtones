@@ -13,9 +13,11 @@ import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.base.BaseFragment
 import com.ezt.ringify.ringtonewallpaper.databinding.FragmentRingtoneBinding
 import com.ezt.ringify.ringtonewallpaper.remote.connection.InternetConnectionViewModel
+import com.ezt.ringify.ringtonewallpaper.remote.firebase.AnalyticsLogger
 import com.ezt.ringify.ringtonewallpaper.remote.model.Category
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.CategoryViewModel
 import com.ezt.ringify.ringtonewallpaper.remote.viewmodel.RingtoneViewModel
+import com.ezt.ringify.ringtonewallpaper.screen.home.MainActivity.Companion.now
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.CategoryAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.home.subscreen.ringtone.adapter.RingtoneAdapter
 import com.ezt.ringify.ringtonewallpaper.screen.ringtone.FilteredRingtonesActivity
@@ -26,9 +28,13 @@ import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.RingtonePlayerRemote
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBinding::inflate) {
+    @Inject
+    lateinit var analyticsLogger: AnalyticsLogger
+
     private val ringtoneViewModel: RingtoneViewModel by viewModels()
     private val categoryViewModel: CategoryViewModel by viewModels()
 
@@ -40,7 +46,10 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             ctx.startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
                 putExtra("categoryId", category.id)
                 putExtra("categoryName", category.name)
-            })
+            }).also {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo("filter_ringtone_screen", "main_screen", duration)
+            }
         }
     }
 
@@ -50,7 +59,10 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
             val ctx = context ?: return@RingtoneAdapter
             ctx.startActivity(Intent(ctx, RingtoneActivity::class.java).apply {
                 putExtra("categoryId", -100)
-            })
+            }).also {
+                val duration = System.currentTimeMillis() - now
+                analyticsLogger.logScreenGo("play_ringtone_screen", "main_screen", duration)
+            }
         }
     }
 
@@ -73,13 +85,27 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
 
             openAll1.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, RingtoneCategoryActivity::class.java))
+                    startActivity(Intent(ctx, RingtoneCategoryActivity::class.java)).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "ringtone_category_screen",
+                            "main_screen",
+                            duration
+                        )
+                    }
                 }
             }
 
             openAll2.setOnClickListener {
                 withSafeContext { ctx ->
-                    startActivity(Intent(ctx, FilteredRingtonesActivity::class.java))
+                    startActivity(Intent(ctx, FilteredRingtonesActivity::class.java)).also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "filter_ringtone_screen",
+                            "main_screen",
+                            duration
+                        )
+                    }
                 }
             }
 
@@ -122,6 +148,13 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
                         putExtra("categoryId", -101)
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "filter_ringtone_screen",
+                            "main_screen",
+                            duration
+                        )
                     }
                     )
                 }
@@ -131,6 +164,13 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
                         putExtra("categoryId", -102)
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "filter_ringtone_screen",
+                            "main_screen",
+                            duration
+                        )
                     }
                     )
                 }
@@ -140,6 +180,13 @@ class RingtoneFragment: BaseFragment<FragmentRingtoneBinding>(FragmentRingtoneBi
                 withSafeContext { ctx ->
                     startActivity(Intent(ctx, FilteredRingtonesActivity::class.java).apply {
                         putExtra("categoryId", -103)
+                    }.also {
+                        val duration = System.currentTimeMillis() - now
+                        analyticsLogger.logScreenGo(
+                            "filter_ringtone_screen",
+                            "main_screen",
+                            duration
+                        )
                     }
                     )
                 }

@@ -47,7 +47,7 @@ import javax.inject.Inject
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     @Inject
     lateinit var analyticsLogger: AnalyticsLogger
-    private var now = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -98,15 +98,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
-            binding.topFeedback.gone()
-            binding.searchButton.visible()
             when (menuItem.itemId) {
                 R.id.ringTone -> {
+                    binding.topFeedback.gone()
+                    binding.searchButton.visible()
                     selectedTab = 0
                     displayScreen()
                 }
 
                 R.id.wallPaper -> {
+                    binding.topFeedback.gone()
+                    binding.searchButton.visible()
                     selectedTab = 1
                     displayScreen()
                 }
@@ -129,6 +131,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 }
 
                 else -> {
+                    binding.topFeedback.gone()
+                    binding.searchButton.visible()
                     selectedTab = 0
                     displayScreen()
                 }
@@ -286,6 +290,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     companion object {
         var selectedTab = 0
         var isChangeTheme = false
+        var now = 0L
         private var TAG = MainActivity::class.java.simpleName
 
         fun loadBanner(activity: AppCompatActivity, banner: String = BANNER_HOME) {
