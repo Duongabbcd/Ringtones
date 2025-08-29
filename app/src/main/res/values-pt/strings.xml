@@ -155,7 +155,9 @@
     <string name="credits_desc">Este toque foi criado por [%1$s] sob licença [%2$s]</string>
     <string name="categories">Categorias</string>
     <string name="trending">Em tendência</string>
-    <string name="hot_search">Buscas populares</string>
+    <string name="total_result">Resultados totais: %1$s</string>
+    <string name="hot_search">Tag de pesquisa popular</string>
+
     <string name="favourite">Favorito</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Papel de parede novo</string>

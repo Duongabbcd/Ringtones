@@ -150,7 +150,9 @@
 
     <string name="categories">বিভাগসমূহ</string>
     <string name="trending">ট্রেন্ডিং</string>
-    <string name="hot_search">জনপ্রিয় অনুসন্ধান</string>
+    <string name="total_result">মোট ফলাফল: %1$s</string>
+    <string name="hot_search">জনপ্রিয় অনুসন্ধান ট্যাগ</string>
+
     <string name="favourite">প্রিয়</string>
     <string name="premiums">প্রিমিয়াম</string>
     <string name="new_wallpaper">নতুন ওয়ালপেপার</string>

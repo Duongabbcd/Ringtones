@@ -57,7 +57,6 @@ class SearchRingtoneActivity :
         }
     }
     private val connectionViewModel: InternetConnectionViewModel by viewModels()
-    private var inputText = ""
     private var searchJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +70,7 @@ class SearchRingtoneActivity :
             backBtn.setOnClickListener {
                 backToScreen(this@SearchRingtoneActivity)
             }
+            displayByCondition("")
             connectionViewModel.isConnectedLiveData.observe(this@SearchRingtoneActivity) { isConnected ->
                 Log.d(TAG, "isConnected: $isConnected")
                 checkInternetConnected(isConnected)
@@ -106,6 +106,7 @@ class SearchRingtoneActivity :
                         if (searchText.isEmpty()) {
                             binding.noDataLayout.gone()
                             binding.allResults.gone()
+                            binding.totalResult.gone()
                         } else {
                             ringtoneViewModel.searchRingtonesByName(searchText)
                         }
@@ -146,6 +147,9 @@ class SearchRingtoneActivity :
             }
 
             ringtoneViewModel.search.observe(this@SearchRingtoneActivity) { result ->
+                totalResult.visible()
+                totalResult.text =
+                    resources.getString(R.string.total_result, result.size.toString())
                 if (result.isEmpty()) {
                     noDataLayout.gone()
                     allResults.gone()
@@ -173,6 +177,7 @@ class SearchRingtoneActivity :
                 trendingRecyclerView.visible()
 
                 allResults.gone()
+                totalResult.gone()
                 closeButton.gone()
             } else {
                 trendingTitle.gone()
@@ -180,6 +185,7 @@ class SearchRingtoneActivity :
                 trendingRecyclerView.gone()
 
                 allResults.visible()
+                totalResult.visible()
                 closeButton.visible()
             }
         }

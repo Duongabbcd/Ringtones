@@ -149,7 +149,6 @@ class RingtoneViewModel @Inject constructor(
 
     fun searchRingtonesByName(input: String) = viewModelScope.launch {
         val trimmedInput = input.trim()
-        _search.value = emptyList()
         if (trimmedInput.isEmpty()) {
             _search.value = emptyList()
             _error.value = null

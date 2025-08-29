@@ -176,7 +176,8 @@
 
     <string name="categories">Kategorien</string>
     <string name="trending">Im Trend</string>
-    <string name="hot_search">Beliebte Suchen</string>
+    <string name="total_result">Gesamtergebnisse: %1$s</string>
+    <string name="hot_search">Beliebter Such-Tag</string>
 
     <string name="favourite">Favoriten</string>
     <string name="premiums">Premium</string>

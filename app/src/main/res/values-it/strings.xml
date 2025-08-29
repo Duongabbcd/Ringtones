@@ -148,7 +148,9 @@
     <string name="credits_desc">Questa suoneria è stata creata da [%1$s] sotto licenza [%2$s]</string>
     <string name="categories">Categorie</string>
     <string name="trending">In tendenza</string>
-    <string name="hot_search">Ricerche popolari</string>
+    <string name="total_result">Risultati totali: %1$s</string>
+    <string name="hot_search">Tag di ricerca popolare</string>
+
     <string name="favourite">Preferiti</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Nuovo wallpaper</string>

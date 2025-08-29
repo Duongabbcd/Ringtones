@@ -115,8 +115,7 @@ class GridWallpaperAdapter(private val onClickListener: (Wallpaper) -> Unit) :
 //                liveIcon.visibility = if (isLive) View.VISIBLE else View.GONE
 //                premiumIcon.visibility = if (isPremium) View.VISIBLE else View.GONE
 
-                val url = wallpaper.thumbnail?.url?.medium
-                    ?: wallpaper.contents.firstOrNull()?.url?.full
+                val url = wallpaper.contents.firstOrNull()?.url?.full
 
                 println("GridWallpaperViewHolder: ${wallpaper.id}")
                 if (url != null) {

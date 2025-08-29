@@ -146,7 +146,9 @@
     <string name="credits_desc">이 벨소리는 [%1$s]에 의해 [%2$s] 라이선스로 만들어졌습니다</string>
     <string name="categories">카테고리</string>
     <string name="trending">트렌딩</string>
-    <string name="hot_search">인기 검색</string>
+    <string name="total_result">총 결과: %1$s</string>
+    <string name="hot_search">인기 검색 태그</string>
+
     <string name="favourite">즐겨찾기</string>
     <string name="premiums">프리미엄</string>
     <string name="new_wallpaper">새 배경화면</string>

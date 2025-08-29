@@ -129,7 +129,8 @@
 
     <string name="categories">الفئات</string>
     <string name="trending">رائج</string>
-    <string name="hot_search">عمليات البحث الساخنة</string>
+    <string name="total_result">إجمالي النتائج: %1$s</string>
+    <string name="hot_search">علامة البحث الشائعة</string>
     <string name="favourite">المفضلة</string>
     <string name="premiums">الأقساط</string>
     <string name="new_wallpaper">خلفية جديدة</string>

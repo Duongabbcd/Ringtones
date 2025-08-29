@@ -19,7 +19,8 @@ class TagTrendingAdapter(private val onClickListener: (Tag) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HotSearchViewHolder {
         context = parent.context
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_hot_search, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_trending, parent, false)
         return HotSearchViewHolder(view)
     }
 
@@ -33,7 +34,7 @@ class TagTrendingAdapter(private val onClickListener: (Tag) -> Unit) :
 
     override fun onBindViewHolder(holder: HotSearchViewHolder, position: Int) {
         val tag = items[position]
-        holder.tagText.text = "${position + 1}. ${tag.name}"
+        holder.tagText.text = "${tag.name}"
         holder.itemView.setOnClickListener {
             onClickListener(tag)
         }

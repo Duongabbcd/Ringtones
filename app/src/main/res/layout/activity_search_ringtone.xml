@@ -122,6 +122,17 @@
             app:layout_constraintTop_toBottomOf="@+id/trendingIcon"
             app:layout_constraintVertical_bias="1.0" />
 
+        <TextView
+            android:id="@+id/totalResult"
+            style="@style/CustomTextStyleMedium14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:paddingTop="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchText" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/allResults"
             android:visibility="gone"
@@ -133,7 +144,7 @@
             tools:listitem="@layout/item_ringtone"
             android:layout_marginBottom="@dimen/_8sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/searchText"
+            app:layout_constraintTop_toBottomOf="@+id/totalResult"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/frBanner"
             android:clipToPadding="false"/>

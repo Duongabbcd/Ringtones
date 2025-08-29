@@ -155,7 +155,9 @@
     <string name="credits_desc">Этот рингтон создан by [%1$s] по лицензии [%2$s]</string>
     <string name="categories">Категории</string>
     <string name="trending">В тренде</string>
-    <string name="hot_search">Горячие запросы</string>
+    <string name="total_result">Всего результатов: %1$s</string>
+    <string name="hot_search">Популярный поисковый тег</string>
+
     <string name="favourite">Избранное</string>
     <string name="premiums">Премиум</string>
     <string name="new_wallpaper">Новые обои</string>

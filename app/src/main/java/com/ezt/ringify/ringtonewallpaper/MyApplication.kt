@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import com.admob.max.dktlibrary.application.AdsApplication
 import com.ezt.ringify.ringtonewallpaper.remote.repository.RingtoneRepository
 import com.ezt.ringify.ringtonewallpaper.utils.Common
@@ -14,6 +15,10 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
+    private var activityReferences = 0
+    private var isActivityChangingConfigurations = false
+    private val activityStartTimes = mutableMapOf<String, Long>()
+
     override fun onCreate() {
         super.onCreate()
         instance = this // ✅ Fix: Set instance here
@@ -25,6 +30,8 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
         val jwt = Common.generateJwt(deviceId, secret)
         println("MyApplication: $jwt")
         RingtoneRepository.TOKEN = jwt
+
+        registerActivityLifecycleCallbacks(this)
     }
 
     override fun onCreateApplication() {
@@ -37,27 +44,56 @@ class MyApplication : AdsApplication(), Application.ActivityLifecycleCallbacks{
     }
 
     override fun onActivityStarted(activity: Activity) {
-        TODO("Not yet implemented")
+        if (++activityReferences == 1 && !isActivityChangingConfigurations) {
+            // App enters foreground
+            println("App entered foreground")
+        }
     }
 
     override fun onActivityResumed(activity: Activity) {
-        TODO("Not yet implemented")
+        val name = activity::class.java.simpleName
+        activityStartTimes[name] = System.currentTimeMillis()
     }
 
     override fun onActivityPaused(activity: Activity) {
-        TODO("Not yet implemented")
+        //do nothing
     }
 
     override fun onActivityStopped(activity: Activity) {
-        TODO("Not yet implemented")
+        val name = activity::class.java.simpleName
+        val startTime = activityStartTimes.remove(name)
+
+        isActivityChangingConfigurations = activity.isChangingConfigurations
+        if (--activityReferences == 0 && !isActivityChangingConfigurations) {
+            if (startTime != null) {
+                val durationMs = System.currentTimeMillis() - startTime
+                Log.d("onActivityStopped", "$name was active for ${durationMs}ms")
+                // Optionally, send to Firebase:
+                Bundle().apply {
+                    putString("activity_name", name)
+                    putLong("duration_ms", durationMs)
+                }
+            }
+        }
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        TODO("Not yet implemented")
+        //do nothing
     }
 
     override fun onActivityDestroyed(activity: Activity) {
-        TODO("Not yet implemented")
+        val name = activity::class.java.simpleName
+        val startTime = activityStartTimes.remove(name)
+
+        if (startTime != null) {
+            val durationMs = System.currentTimeMillis() - startTime
+            Log.d("onActivityDestroyed", "$name was active for ${durationMs}ms")
+            // Optionally, send to Firebase:
+            Bundle().apply {
+                putString("activity_name", name)
+                putLong("duration_ms", durationMs)
+            }
+        }
     }
 
     companion object {

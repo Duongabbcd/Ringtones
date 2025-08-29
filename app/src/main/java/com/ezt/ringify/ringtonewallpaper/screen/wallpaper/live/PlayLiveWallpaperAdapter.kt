@@ -108,7 +108,7 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
 
                 binding.playerView.visibility = View.GONE
                 binding.playerView.alpha = 0f
-                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                showThumbnail(wallpaper.thumbnail?.url?.full)
                 return
             }
 
@@ -123,7 +123,7 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                 binding.progressBar.visibility = View.GONE
                 binding.playerView.visibility = View.GONE
                 binding.playerView.alpha = 0f
-                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                showThumbnail(wallpaper.thumbnail?.url?.full)
                 return
             }
 
@@ -142,7 +142,7 @@ class PlayLiveWallpaperAdapter(private val context: Context) : CarouselAdapter()
                 binding.playerView.visibility = View.VISIBLE
                 binding.playerView.alpha = 0f
 
-                showThumbnail(wallpaper.thumbnail?.url?.medium)
+                showThumbnail(wallpaper.thumbnail?.url?.full)
                 attachPlayer(videoUrl)
             } else {
                 // Same video URL, restore visibility & alpha based on first frame rendered

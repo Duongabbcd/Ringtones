@@ -130,7 +130,6 @@
 
     <string name="categories">Categories</string>
     <string name="trending">Trending</string>
-    <string name="hot_search">Hot searches</string>
     <string name="favourite">Favourite</string>
     <string name="favourite1">Favourite Image</string>
     <string name="favourite2">Favourite Video</string>
@@ -238,5 +237,6 @@
     <string name="slide_running">Slide wallpaper is running</string>
     <string name="live_running">Live wallpaper is running</string>
     <string name="do_you_want_to_exit_app">Do you want to exit app?</string>
-
+    <string name="total_result">Total results: %1$s</string>
+    <string name="hot_search">Hot searching tag</string>
 </resources>

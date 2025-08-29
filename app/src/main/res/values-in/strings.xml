@@ -148,7 +148,9 @@
     <string name="credits_desc">Nada dering ini dibuat oleh [%1$s] di bawah lisensi [%2$s]</string>
     <string name="categories">Kategori</string>
     <string name="trending">Dalam Tren</string>
-    <string name="hot_search">Pencarian Terpopuler</string>
+    <string name="total_result">Total hasil: %1$s</string>
+    <string name="hot_search">Tag pencarian populer</string>
+
     <string name="favourite">Favorit</string>
     <string name="premiums">Premium</string>
     <string name="new_wallpaper">Wallpaper Baru</string>

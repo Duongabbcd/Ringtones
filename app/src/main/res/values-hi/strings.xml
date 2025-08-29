@@ -153,7 +153,9 @@
     <string name="credits_desc">यह रिंगटोन [%1$s] द्वारा [%2$s] लाइसेंस के तहत बनाई गई है</string>
     <string name="categories">श्रेणियाँ</string>
     <string name="trending">ट्रेंडिंग</string>
-    <string name="hot_search">लोकप्रिय खोजें</string>
+    <string name="total_result">कुल परिणाम: %1$s</string>
+    <string name="hot_search">लोकप्रिय खोज टैग</string>
+
 
     <string name="favourite">पसंदीदा</string>
     <string name="premiums">प्रीमियम</string>

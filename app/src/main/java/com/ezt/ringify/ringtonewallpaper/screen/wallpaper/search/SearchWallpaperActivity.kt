@@ -7,9 +7,9 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ezt.ringify.ringtonewallpaper.R
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.BANNER_HOME
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
 import com.ezt.ringify.ringtonewallpaper.ads.new.InterAds
@@ -28,6 +28,10 @@ import com.ezt.ringify.ringtonewallpaper.screen.wallpaper.player.SlideWallpaperA
 import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
 import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
 import com.ezt.ringify.ringtonewallpaper.utils.Utils.hideKeyBoard
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,10 +49,9 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
     private enum class ScreenState { TRENDING, SEARCH_RESULT }
 
     private var currentState = ScreenState.TRENDING
-    private var isProgrammaticallySettingText = false
 
     // Trending Adapter
-    private val wallpaperAdapter: TagTrendingAdapter by lazy {
+    private val tagTrendingAdapter: TagTrendingAdapter by lazy {
         TagTrendingAdapter { tag ->
             Log.d(TAG, "TagTrendingAdapter clicked: $tag")
             isFromTagClick = true
@@ -57,10 +60,8 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             wallpaperViewModel.resetSearchPaging()
 
             // Temporarily mark that we're setting text programmatically
-            isProgrammaticallySettingText = true
             binding.searchText.setText(tag.name)
             binding.searchText.setSelection(tag.name.length)
-            isProgrammaticallySettingText = false
 
             // Show search result
             showSearchResult()
@@ -122,13 +123,20 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             }
 
             // Trending RecyclerView
-            trendingRecyclerView.adapter = wallpaperAdapter
-            trendingRecyclerView.layoutManager = GridLayoutManager(this@SearchWallpaperActivity, 2)
+            trendingRecyclerView.adapter = tagTrendingAdapter
+            val layoutManager = FlexboxLayoutManager(this@SearchWallpaperActivity).apply {
+                flexDirection = FlexDirection.ROW
+                justifyContent = JustifyContent.FLEX_START
+                flexWrap = FlexWrap.WRAP
+            }
+            trendingRecyclerView.layoutManager = layoutManager
 
             // Search result RecyclerViews
             allResults1.adapter = searchWallpaperAdapter1
             allResults2.adapter = searchWallpaperAdapter2
             allResults3.adapter = searchWallpaperAdapter3
+
+            displayByCondition("")
 
             allResults1.layoutManager = LinearLayoutManager(
                 this@SearchWallpaperActivity,
@@ -186,11 +194,17 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             // Observe Tags
             tagViewModel.tag.observe(this@SearchWallpaperActivity) { items ->
                 val query = searchText.text.toString()
+                displayByCondition(query)
+                if (query.isEmpty()) {
+                    trendingTitle.text = resources.getString(R.string.hot_search)
+                    trendingIcon.setImageResource(R.drawable.icon_fire)
+                } else {
+                    trendingTitle.text =
+                        resources.getString(R.string.total_result, items.size.toString())
+                    trendingIcon.setImageResource(R.drawable.icon_search)
+                }
                 if (items.isEmpty() && query.isEmpty()) {
-                    noDataLayout.visible()
-                    trendingTitle.gone()
-                    trendingIcon.gone()
-                    trendingRecyclerView.gone()
+                    trendingRecyclerView.visible()
                 } else {
                     noDataLayout.gone()
                     if (currentState == ScreenState.TRENDING) {
@@ -198,7 +212,8 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                         trendingIcon.visible()
                         trendingRecyclerView.visible()
                     }
-                    wallpaperAdapter.submitList(items)
+                    tagTrendingAdapter.submitList(items)
+
                 }
             }
 
@@ -258,7 +273,6 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             // Search text watcher
             searchText.addTextChangedListener(object : TextWatcher {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (isProgrammaticallySettingText) return // ignore programmatic changes
 
                     val query = s.toString()
                     if (query.isEmpty()) {
@@ -294,6 +308,7 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
             // Clear button
             closeButton.setOnClickListener {
                 searchText.setText("")
+                displayByCondition("")
                 tagViewModel.loadAllTags()
                 showTrending()
             }
@@ -342,6 +357,31 @@ class SearchWallpaperActivity : BaseActivity<ActivitySearchWallpaperBinding>(
                 }
             }
         })
+    }
+
+    private fun displayByCondition(input: String) {
+        binding.apply {
+            if (input.isEmpty()) {
+                trendingTitle.visible()
+                trendingIcon.visible()
+                trendingRecyclerView.visible()
+
+                allResults1.gone()
+                allResults2.gone()
+                allResults3.gone()
+                closeButton.gone()
+            } else {
+                trendingTitle.gone()
+                trendingIcon.gone()
+                trendingRecyclerView.gone()
+
+                allResults1.visible()
+                allResults2.visible()
+                allResults3.visible()
+                closeButton.visible()
+            }
+        }
+
     }
 
     private fun checkInternetConnected(isConnected: Boolean = true) {

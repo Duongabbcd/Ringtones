@@ -119,8 +119,8 @@ class WallpaperViewModel @Inject constructor(
 
             hasMorePages1 = result.data.nextPageUrl != null && result2.data.nextPageUrl != null
             currentPage1++
-            allWallpapers1.addAll(result.data.data)
-            allWallpapers1.addAll(result2.data.data)
+            allWallpapers1.addAll(result.data.data.filter { it.contents.isNotEmpty() })
+            allWallpapers1.addAll(result2.data.data.filter { it.contents.isNotEmpty() })
             _trendingWallpaper.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
@@ -140,7 +140,7 @@ class WallpaperViewModel @Inject constructor(
             _total2.value = result.data.total
             hasMorePages2 = result.data.nextPageUrl != null
             currentPage2++
-            allWallpapers2.addAll(result.data.data)
+            allWallpapers2.addAll(result.data.data.filter { it.contents.isNotEmpty() })
             _newWallpaper.value = allWallpapers2
             _error.value = null
         } catch (e: Exception) {
@@ -160,7 +160,7 @@ class WallpaperViewModel @Inject constructor(
             _total3.value = result.data.total
             hasMorePages3 = result.data.nextPageUrl != null
             currentPage3++
-            allWallpapers3.addAll(result.data.data)
+            allWallpapers3.addAll(result.data.data.filter { it.contents.isNotEmpty() })
             _subWallpaper1.value = allWallpapers3
             println("loadSubWallpapers1: ${result.data.total}")
             _error.value = null
@@ -181,7 +181,7 @@ class WallpaperViewModel @Inject constructor(
             _total4.value= result.data.total
             hasMorePages4 = result.data.nextPageUrl != null
             currentPage4++
-            allWallpapers4.addAll(result.data.data)
+            allWallpapers4.addAll(result.data.data.filter { it.contents.isNotEmpty() })
             _subWallpaper2.value = allWallpapers4
             _error.value = null
         } catch (e: Exception) {
@@ -201,7 +201,7 @@ class WallpaperViewModel @Inject constructor(
             _total5.value = result.data.total
             hasMorePages5 = result.data.nextPageUrl != null
             currentPage5++
-            allWallpapers5.addAll(result.data.data)
+            allWallpapers5.addAll(result.data.data.filter { it.contents.isNotEmpty() })
             _subWallpaper3.value = allWallpapers5
             _error.value = null
         } catch (e: Exception) {
@@ -235,7 +235,7 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 
-            allWallpapers1.addAll(result.data.data)
+            allWallpapers1.addAll(result.data.data.filter { it.contents.isNotEmpty() })
 
             // ✅ Force LiveData to emit a new list instance
             _liveWallpapers.value = allWallpapers1.toList()
@@ -280,7 +280,7 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages3 = result.data.nextPageUrl != null
             currentPage3++
 
-            allWallpapers3.addAll(result.data.data)
+            allWallpapers3.addAll(result.data.data.filter { it.contents.isNotEmpty() })
             _singleWallpapers.value = allWallpapers3
             _error.value = null
         } catch (e: Exception) {
@@ -300,7 +300,7 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages1 = result.data.nextPageUrl != null
             currentPage1++
 
-            allWallpapers1.addAll(result.data.data)
+            allWallpapers1.addAll(result.data.data.filter { it.contents.isNotEmpty() })
             _premiumWallpapers.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
@@ -340,8 +340,8 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages1 = result1.data.nextPageUrl != null && result2.data.nextPageUrl != null
             currentPage1++
 
-            allWallpapers1.addAll(result1.data.data)
-            allWallpapers1.addAll(result2.data.data)
+            allWallpapers1.addAll(result1.data.data.filter { it.contents.isNotEmpty() })
+            allWallpapers1.addAll(result2.data.data.filter { it.contents.isNotEmpty() })
             println("searchSingleWallpaperByTag: $allWallpapers1")
             _searchWallpapers1.value = allWallpapers1
             _error.value = null
@@ -363,7 +363,7 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages2 = result1.data.nextPageUrl != null
             currentPage2++
 
-            allWallpapers2.addAll(result1.data.data)
+            allWallpapers2.addAll(result1.data.data.filter { it.contents.isNotEmpty() })
             _searchWallpapers2.value = allWallpapers1
             _error.value = null
         } catch (e: Exception) {
@@ -389,8 +389,8 @@ class WallpaperViewModel @Inject constructor(
             hasMorePages3 = result1.data.nextPageUrl != null && result2.data.nextPageUrl != null
             currentPage3++
 
-            allWallpapers3.addAll(result1.data.data)
-            allWallpapers3.addAll(result2.data.data)
+            allWallpapers3.addAll(result1.data.data.filter { it.contents.isNotEmpty() })
+            allWallpapers3.addAll(result2.data.data.filter { it.contents.isNotEmpty() })
             _searchWallpapers3.value = allWallpapers3
             _error.value = null
         } catch (e: Exception) {

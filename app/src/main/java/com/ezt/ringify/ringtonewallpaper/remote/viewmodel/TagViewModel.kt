@@ -55,7 +55,9 @@ class TagViewModel @Inject constructor(
     fun searchTag(searchText: String) = viewModelScope.launch {
         _loading.value = true
         try {
-            _tag.value = mutableListOf<Tag>()// Clear the old tag first
+            if (searchText.isEmpty()) {
+                _tag.value = mutableListOf<Tag>()// Clear the old tag first
+            }
             val result = repository.searchTag(SearchRequest(searchText))
             println("searchTag: $searchText and $result")
             if (result.data.isEmpty()) {
