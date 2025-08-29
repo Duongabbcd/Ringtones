@@ -9,18 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.admob.max.dktlibrary.AdmobUtils
-import kotlin.apply
-import androidx.core.view.isVisible
 import com.ezt.ringify.ringtonewallpaper.R
-import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew.Companion.numberPage
-import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
-import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
-import com.ezt.ringify.ringtonewallpaper.databinding.ViewpagerIntroItempageBinding
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager
 import com.ezt.ringify.ringtonewallpaper.ads.AdsManager.isTestDevice
 import com.ezt.ringify.ringtonewallpaper.ads.RemoteConfig
+import com.ezt.ringify.ringtonewallpaper.databinding.ViewpagerIntroItempageBinding
+import com.ezt.ringify.ringtonewallpaper.screen.intro.IntroActivityNew.Companion.numberPage
+import com.ezt.ringify.ringtonewallpaper.utils.Common.gone
+import com.ezt.ringify.ringtonewallpaper.utils.Common.visible
+import kotlin.apply
 
 class IntroFragmentNew : Fragment() {
     private val binding by lazy { ViewpagerIntroItempageBinding.inflate(layoutInflater) }
@@ -278,11 +278,6 @@ class IntroFragmentNew : Fragment() {
 
     private fun showAds() {
         println("showAds: ${RemoteConfig.ADS_INTRO_070625}")
-        if (RemoteConfig.ADS_INTRO_070625.contains("2")) {
-            AdsManager.loadAndShowNative(requireActivity(), binding.frNative, true, AdsManager.NATIVE_INTRO) {}
-        } else {
-            AdsManager.showNativeLanguageCustom(requireActivity(), binding.frNative, AdsManager.NATIVE_INTRO, isCheckTestDevice = true)
-        }
     }
 
     private fun showNativeIntro(position: Int) {

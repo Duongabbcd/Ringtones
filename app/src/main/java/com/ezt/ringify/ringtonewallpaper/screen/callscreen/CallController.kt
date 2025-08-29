@@ -2,7 +2,6 @@ package com.ezt.ringify.ringtonewallpaper.screen.callscreen
 
 import android.annotation.SuppressLint
 import android.telecom.Call
-import android.telecom.InCallService
 import android.telecom.VideoProfile
 import com.ezt.ringify.ringtonewallpaper.screen.callscreen.ext.getStateCompat
 import java.util.concurrent.CopyOnWriteArraySet
@@ -12,7 +11,6 @@ import kotlin.let
 class CallController {
     companion object {
         @SuppressLint("StaticFieldLeak")
-        var inCallService: InCallService? = null
         private var call: Call? = null
         private val calls = mutableListOf<Call>()
         private val listeners = CopyOnWriteArraySet<CallControllerListener>()

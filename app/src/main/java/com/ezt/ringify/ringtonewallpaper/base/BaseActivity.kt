@@ -108,14 +108,7 @@ abstract class BaseActivity<T : ViewBinding>(private val inflater: Inflate<T>) :
 
 
     companion object {
-        var isThemeInvalidated = false
-        private var lastKnownTheme: Int = -1
         private var TAG = BaseActivity::class.java.simpleName
         var lastKnownUiMode = Configuration.UI_MODE_NIGHT_NO // default light mode
-
-        //Tracking Analytic
-        var screenName = ""
-        var prevScreenName = ""
-        var prevScreenDuration = 0L
     }
 }
